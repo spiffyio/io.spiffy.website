@@ -13,7 +13,16 @@ import io.spiffy.common.Controller;
 public class HomeController extends Controller {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String home(final Locale locale, final Model model) {
+    public String home1(final Locale locale, final Model model) {
+        return home(locale, model);
+    }
+
+    @RequestMapping(value = "/2", method = RequestMethod.GET)
+    public String home2(final Locale locale, final Model model) {
+        return home1(locale, model);
+    }
+
+    protected String home(final Locale locale, final Model model) {
         logger.info(String.format("Welcome home! The client locale is %s.", locale));
 
         final Date date = new Date();
