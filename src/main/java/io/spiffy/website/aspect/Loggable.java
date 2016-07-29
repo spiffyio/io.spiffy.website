@@ -10,7 +10,7 @@ public class Loggable extends Aspect {
 
     @Around("spiffy()")
     public Object around(final ProceedingJoinPoint pjp) throws Throwable {
-        logger.info("yo");
+        logger.info(pjp.getSignature().getName());
         return pjp.proceed();
     }
 }

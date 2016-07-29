@@ -11,7 +11,11 @@
 
   <aop:aspectj-autoproxy />
 
-  <annotation-driven />
+  <annotation-driven>
+    <argument-resolvers>
+      <beans:bean class="io.spiffy.common.resolver.ContextResolver" />
+    </argument-resolvers>
+  </annotation-driven>
 
   <resources mapping="/**" location="/resources/" />
 
