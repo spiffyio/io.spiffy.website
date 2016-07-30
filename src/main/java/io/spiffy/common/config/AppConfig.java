@@ -14,6 +14,12 @@ public class AppConfig {
     private static final String stage;
 
     @Getter
+    private static final String awsAccessKeyId;
+
+    @Getter
+    private static final String awsSecretKey;
+
+    @Getter
     private static final String endpoint;
 
     @Getter
@@ -21,6 +27,8 @@ public class AppConfig {
 
     static {
         stage = System.getProperty("stage");
+        awsAccessKeyId = System.getProperty("AWS_ACCESS_KEY_ID");
+        awsSecretKey = System.getProperty("AWS_SECRET_KEY");
 
         if (LOCAL.equalsIgnoreCase(stage)) {
             endpoint = "http://localhost:1280";

@@ -14,5 +14,10 @@
   <context:component-scan base-package="io.spiffy">
     <context:include-filter type="assignable" expression="io.spiffy.common.Manager" />
   </context:component-scan>
-
+  
+  <bean id="awsCredentials" class="io.spiffy.common.aws.AWSCredentialsImpl" />
+    
+  <bean id="amazonDynamoDBClient" class="com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient">
+      <constructor-arg ref="awsCredentials" />
+  </bean>
 </beans>
