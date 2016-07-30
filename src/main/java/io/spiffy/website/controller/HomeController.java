@@ -11,17 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.spiffy.api.invite.InviteClient;
+import io.spiffy.api.invite.InviteInput;
 import io.spiffy.common.Controller;
 import io.spiffy.common.dto.Context;
-import io.spiffy.invite.service.InviteService;
 
 public class HomeController extends Controller {
 
-    private final InviteService service;
+    private final InviteClient client;
 
     @Inject
-    public HomeController(final InviteService service) {
-        this.service = service;
+    public HomeController(final InviteClient client) {
+        this.client = client;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
@@ -31,7 +32,7 @@ public class HomeController extends Controller {
 
     @RequestMapping(value = "/invite", method = RequestMethod.GET)
     public String invite(final Context context, final @RequestParam String email) {
-        service.post(email);
+        System.out.println(client.call(new InviteInput(email)));
         return home(context.getRequest().getLocale(), context.getModel());
     }
 

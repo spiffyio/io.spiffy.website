@@ -1,6 +1,8 @@
 package io.spiffy.common;
 
-@org.springframework.stereotype.Controller
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@RequestMapping
 public abstract class Controller extends Manager {
 
 }

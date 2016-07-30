@@ -1,0 +1,34 @@
+package io.spiffy.common;
+
+import java.io.IOException;
+
+import javax.ws.rs.core.MediaType;
+
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import com.google.common.io.CharStreams;
+
+import io.spiffy.common.dto.Context;
+import io.spiffy.common.util.JsonUtil;
+
+public abstract class API<Input, Output, Service> extends Controller {
+
+    private final Class<Input> inputClass;
+    protected final Service service;
+
+    protected API(final Class<Input> inputClass, final Service service) {
+        this.inputClass = inputClass;
+        this.service = service;
+    }
+
+    @ResponseBody
+    @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
+    public Output foo(final Context context) throws IOException {
+        final String json = CharStreams.toString(context.getRequest().getReader());
+        return api(JsonUtil.deserialize(inputClass, json));
+    }
+
+    protected abstract Output api(final Input input);
+}
