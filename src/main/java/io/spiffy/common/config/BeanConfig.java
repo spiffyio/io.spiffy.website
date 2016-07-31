@@ -32,6 +32,6 @@ public class BeanConfig {
 
     @Bean
     public WebTarget getWebTarget(final Client client) {
-        return client.target("http://localhost:1280/api/");
+        return client.target(AppConfig.getRestEndpoint());
     }
 }

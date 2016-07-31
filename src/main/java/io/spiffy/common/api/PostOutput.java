@@ -1,4 +1,4 @@
-package io.spiffy.api.invite;
+package io.spiffy.common.api;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class InviteOutput {
+public class PostOutput {
     private Boolean success;
 }

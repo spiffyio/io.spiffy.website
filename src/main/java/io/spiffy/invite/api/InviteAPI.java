@@ -4,21 +4,21 @@ import javax.inject.Inject;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import io.spiffy.api.invite.InviteInput;
-import io.spiffy.api.invite.InviteOutput;
 import io.spiffy.common.API;
+import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.invite.input.InviteInput;
 import io.spiffy.invite.service.InviteService;
 
 @RequestMapping("/api/invite")
-public class InviteAPI extends API<InviteInput, InviteOutput, InviteService> {
+public class InviteAPI extends API<InviteInput, PostOutput, InviteService> {
 
     @Inject
     public InviteAPI(final InviteService service) {
         super(InviteInput.class, service);
     }
 
-    protected InviteOutput api(final InviteInput input) {
+    protected PostOutput api(final InviteInput input) {
         service.post(input.getEmail());
-        return InviteOutput.builder().success(true).build();
+        return PostOutput.builder().success(true).build();
     }
 }

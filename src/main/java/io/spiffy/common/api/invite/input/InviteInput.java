@@ -1,4 +1,4 @@
-package io.spiffy.api.invite;
+package io.spiffy.common.api.invite.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

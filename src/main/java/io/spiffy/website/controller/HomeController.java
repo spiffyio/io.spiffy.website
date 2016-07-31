@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import io.spiffy.api.invite.InviteClient;
-import io.spiffy.api.invite.InviteInput;
 import io.spiffy.common.Controller;
+import io.spiffy.common.api.invite.client.InviteClient;
+import io.spiffy.common.api.invite.input.InviteInput;
 import io.spiffy.common.dto.Context;
 
 public class HomeController extends Controller {
