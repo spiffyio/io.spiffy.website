@@ -27,5 +27,4 @@
   <context:component-scan base-package="io.spiffy">
     <context:include-filter type="assignable" expression="io.spiffy.common.Controller" />
   </context:component-scan>
-
 </beans:beans>

@@ -26,6 +26,9 @@ public class AppConfig {
     private static final String restEndpoint;
 
     @Getter
+    private static final boolean secure;
+
+    @Getter
     private static final String suffix;
 
     static {
@@ -36,14 +39,17 @@ public class AppConfig {
         if (LOCAL.equalsIgnoreCase(stage)) {
             endpoint = "http://localhost:1280";
             restEndpoint = endpoint + "/api/";
+            secure = true;
             suffix = "-beta";
         } else if (BETA.equalsIgnoreCase(stage)) {
             endpoint = "https://beta.spiffy.io";
             restEndpoint = endpoint + "/api/";
+            secure = true;
             suffix = "-beta";
         } else if (PROD.equalsIgnoreCase(stage)) {
             endpoint = "https://spiffy.io";
             restEndpoint = endpoint + "/api/";
+            secure = true;
             suffix = "";
         } else {
             throw new InvalidParameterException(String.format("unknown AppStage: %s", stage));
