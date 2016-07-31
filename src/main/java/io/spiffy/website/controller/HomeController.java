@@ -27,6 +27,14 @@ public class HomeController extends Controller {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
+        System.out.println(context.getSessionId());
+        return home(context.getRequest().getLocale(), context.getModel());
+    }
+
+    @RequestMapping(value = "/extend", method = RequestMethod.GET)
+    public String extend(final Context context) {
+        context.setSessionExpiry(-1);
+        System.out.println(context.getSessionId());
         return home(context.getRequest().getLocale(), context.getModel());
     }
 
