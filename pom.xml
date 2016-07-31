@@ -11,6 +11,7 @@
     <java-version>1.8</java-version>
     <org.springframework-version>4.3.2.RELEASE</org.springframework-version>
     <org.springframework.security-version>4.1.1.RELEASE</org.springframework.security-version>
+    <org.hibernate-version>5.2.1.Final</org.hibernate-version>
     <org.aspectj-version>1.8.9</org.aspectj-version>
     <org.slf4j-version>1.7.21</org.slf4j-version>
   </properties>
@@ -138,6 +139,32 @@
       <artifactId>jersey-media-moxy</artifactId>
       <version>2.23.1</version>
     </dependency>
+    
+    <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>5.1.39</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-core</artifactId>
+      <version>${org.hibernate-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-entitymanager</artifactId>
+      <version>${org.hibernate-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.hibernate</groupId>
+      <artifactId>hibernate-c3p0</artifactId>
+      <version>${org.hibernate-version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.javassist</groupId>
+      <artifactId>javassist</artifactId>
+      <version>3.20.0-GA</version>
+    </dependency>
 
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -209,6 +236,18 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <version>4.12</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hsqldb</groupId>
+      <artifactId>hsqldb</artifactId>
+      <version>2.3.4</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.mockito</groupId>
+      <artifactId>mockito-core</artifactId>
+      <version>1.10.19</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

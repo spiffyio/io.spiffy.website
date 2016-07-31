@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:util="http://www.springframework.org/schema/util"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+  <bean id="hibernateProperties" class="org.springframework.beans.factory.config.PropertiesFactoryBean">
+    <property name="properties">
+      <props>
+        <prop key="hibernate.c3p0.min_size">0</prop>
+        <prop key="hibernate.c3p0.max_size">5</prop>
+        <prop key="hibernate.c3p0.timeout">300</prop>
+        <prop key="hibernate.c3p0.max_statements">50</prop>
+        <prop key="hibernate.c3p0.idle_test_period">3000</prop>
+        
+        <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
+        <prop key="hibernate.connection.url">${db.url}</prop>
+        <prop key="hibernate.connection.username">${db.username}</prop>
+        <prop key="hibernate.connection.password">${db.password}</prop>
+
+        <prop key="hibernate.dialect">org.hibernate.dialect.MySQL5InnoDBDialect</prop>
+        
+        <prop key="hibernate.id.new_generator_mappings">false</prop>
+
+        <prop key="show_sql">${db.show_sql}</prop>
+      </props>
+    </property>
+  </bean>
+</beans>

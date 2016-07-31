@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import io.spiffy.authentication.service.HashedStringService;
 import io.spiffy.common.Controller;
 import io.spiffy.common.api.invite.client.InviteClient;
 import io.spiffy.common.api.invite.input.InviteInput;
@@ -18,16 +19,19 @@ import io.spiffy.common.dto.Context;
 
 public class HomeController extends Controller {
 
+    private final HashedStringService service;
     private final InviteClient client;
 
     @Inject
-    public HomeController(final InviteClient client) {
+    public HomeController(final HashedStringService service, final InviteClient client) {
+        this.service = service;
         this.client = client;
     }
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
         System.out.println(context.getSessionId());
+        System.out.println(service.post("hello world"));
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
     }
