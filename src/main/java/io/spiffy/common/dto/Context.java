@@ -1,9 +1,14 @@
 package io.spiffy.common.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.io.IOException;
 import java.util.List;
 
+import javax.servlet.FilterChain;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -14,33 +19,73 @@ import org.springframework.ui.ModelMap;
 import io.spiffy.common.util.ListUtil;
 
 @Data
+@AllArgsConstructor
 public class Context {
-    private static final String SESSION_ID_COOKIE = "sessionId";
+    public static final String SESSION_ID_COOKIE = "sessionId";
+    public static final String X_FORWARDED_FOR = "X-Forwarded-For";
+    public static final String X_FORWARDED_HOST = "X-Forwarded-Host";
+    public static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
+    public static final String X_SSL_SECURE = "X-SSL-Secure";
 
     private final HttpServletRequest request;
     private final HttpServletResponse response;
+    private final FilterChain chain;
     private final ModelMap model;
+
+    public Context(final HttpServletRequest request, final HttpServletResponse response, final ModelMap model) {
+        this(request, response, null, model);
+    }
+
+    public Context(final ServletRequest request, final ServletResponse response, final FilterChain chain) {
+        this((HttpServletRequest) request, (HttpServletResponse) response, chain, null);
+    }
+
+    public boolean isSecure() {
+        if (request == null) {
+            return false;
+        }
+
+        if (request.isSecure()) {
+            return true;
+        }
+
+        if ("https".equalsIgnoreCase(getHeader(X_FORWARDED_PROTO))) {
+            return true;
+        }
+
+        return "true".equalsIgnoreCase(getHeader(X_SSL_SECURE));
+    }
+
+    public String getHost() {
+        if (request == null) {
+            return null;
+        }
+
+        return request.getServerName();
+    }
+
+    public String getRequestUri() {
+        if (request == null) {
+            return null;
+        }
+
+        return request.getRequestURI();
+    }
 
     public HttpSession getSession() {
         return request.getSession(true);
     }
 
-    public String getSessionId() {
-        return getSession().getId();
-    }
-
-    public void setSessionExpiry(final int expiry) {
-        if (response == null) {
-            return;
+    public String getHeader(final String name) {
+        if (name == null) {
+            return null;
         }
 
-        final Cookie cookie = getCookie(SESSION_ID_COOKIE);
-        if (cookie == null) {
-            return;
+        if (request == null) {
+            return null;
         }
 
-        cookie.setMaxAge(expiry);
-        response.addCookie(cookie);
+        return request.getHeader(name);
     }
 
     public Cookie getCookie(final String name) {
@@ -60,5 +105,39 @@ public class Context {
         }
 
         return null;
+    }
+
+    public String getSessionId() {
+        return getSession().getId();
+    }
+
+    public void sendRedirect(final String uri) throws IOException {
+        if (response == null) {
+            return;
+        }
+
+        response.sendRedirect(uri);
+    }
+
+    public void setSessionExpiry(final int expiry) {
+        if (response == null) {
+            return;
+        }
+
+        final Cookie cookie = getCookie(SESSION_ID_COOKIE);
+        if (cookie == null) {
+            return;
+        }
+
+        cookie.setMaxAge(expiry);
+        response.addCookie(cookie);
+    }
+
+    public void addAttribute(final String name, final Object attribute) {
+        if (model == null) {
+            return;
+        }
+
+        model.addAttribute(name, attribute);
     }
 }

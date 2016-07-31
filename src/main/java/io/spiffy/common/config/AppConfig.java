@@ -10,6 +10,8 @@ public class AppConfig {
     private static final String BETA = "beta";
     private static final String PROD = "prod";
 
+    private static final String TRUE = "true";
+
     @Getter
     private static final String stage;
 
@@ -18,6 +20,9 @@ public class AppConfig {
 
     @Getter
     private static final String awsSecretKey;
+
+    @Getter
+    private static final boolean forwardToProd;
 
     @Getter
     private static final String endpoint;
@@ -35,21 +40,22 @@ public class AppConfig {
         stage = System.getProperty("stage");
         awsAccessKeyId = System.getProperty("AWS_ACCESS_KEY_ID");
         awsSecretKey = System.getProperty("AWS_SECRET_KEY");
+        secure = TRUE.equalsIgnoreCase(System.getProperty("secure"));
 
         if (LOCAL.equalsIgnoreCase(stage)) {
             endpoint = "http://localhost:1280";
             restEndpoint = endpoint + "/api/";
-            secure = true;
+            forwardToProd = false;
             suffix = "-beta";
         } else if (BETA.equalsIgnoreCase(stage)) {
             endpoint = "https://beta.spiffy.io";
             restEndpoint = endpoint + "/api/";
-            secure = true;
+            forwardToProd = true;
             suffix = "-beta";
         } else if (PROD.equalsIgnoreCase(stage)) {
             endpoint = "https://spiffy.io";
             restEndpoint = endpoint + "/api/";
-            secure = true;
+            forwardToProd = false;
             suffix = "";
         } else {
             throw new InvalidParameterException(String.format("unknown AppStage: %s", stage));

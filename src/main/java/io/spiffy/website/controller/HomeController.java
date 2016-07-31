@@ -28,6 +28,8 @@ public class HomeController extends Controller {
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
         System.out.println(context.getSessionId());
+        context.addAttribute("host", context.getHost());
+        context.addAttribute("server", context.getRequest().getServerName());
         return home(context.getRequest().getLocale(), context.getModel());
     }
 

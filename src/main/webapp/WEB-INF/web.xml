@@ -27,6 +27,24 @@
     <servlet-name>servlet</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+  
+  <filter>
+    <filter-name>accessFilter</filter-name>
+    <filter-class>io.spiffy.website.filter.AccessFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>accessFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>httpsFilter</filter-name>
+    <filter-class>io.spiffy.website.filter.HttpsFilter</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>httpsFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
 
   <session-config>
     <cookie-config>
