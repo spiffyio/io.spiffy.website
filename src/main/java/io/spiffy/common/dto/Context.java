@@ -14,14 +14,19 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.ModelMap;
 
+import io.spiffy.common.util.CsrfUtil;
 import io.spiffy.common.util.ListUtil;
 
 @Data
 @AllArgsConstructor
 public class Context {
     public static final String SESSION_ID_COOKIE = "sessionId";
+
+    public static final String SPIFFY_FORWARDED_SESSION = "SPIFFY-Forwarded-Session";
+    public static final String X_CSRF_TOKEN = "X-CSRF-Token";
     public static final String X_FORWARDED_FOR = "X-Forwarded-For";
     public static final String X_FORWARDED_HOST = "X-Forwarded-Host";
     public static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
@@ -54,6 +59,18 @@ public class Context {
         }
 
         return "true".equalsIgnoreCase(getHeader(X_SSL_SECURE));
+    }
+
+    public boolean isCsrfTokenValid(final String name) {
+        return CsrfUtil.validateToken(getSessionId(), name, getCsrfToken());
+    }
+
+    public String generateCsrfToken(final String name) {
+        return CsrfUtil.generateToken(getSessionId(), name);
+    }
+
+    public String getCsrfToken() {
+        return getHeader(X_CSRF_TOKEN);
     }
 
     public String getHost() {
@@ -108,6 +125,11 @@ public class Context {
     }
 
     public String getSessionId() {
+        final String sessionId = getHeader(SPIFFY_FORWARDED_SESSION);
+        if (StringUtils.isNotEmpty(sessionId)) {
+            return sessionId;
+        }
+
         return getSession().getId();
     }
 
