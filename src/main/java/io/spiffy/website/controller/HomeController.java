@@ -17,6 +17,7 @@ import io.spiffy.common.api.email.client.EmailClient;
 import io.spiffy.common.api.security.client.SecurityClient;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Context;
+import io.spiffy.email.manager.EmailManager;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
@@ -25,12 +26,17 @@ public class HomeController extends Controller {
     private final SecurityClient securityClient;
     private final UserClient userClient;
 
+    private final EmailManager emailManager;
+
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
         System.out.println(emailClient.postEmailAddress("me@spiffy.io"));
         System.out.println(securityClient.encryptString("john@spiffy.io"));
         System.out.println(securityClient.decryptString(1000001L));
         System.out.println(userClient.postAccount("john", "me@spiffy.io"));
+
+        emailManager.send("john@spiffy.io");
+
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
     }
