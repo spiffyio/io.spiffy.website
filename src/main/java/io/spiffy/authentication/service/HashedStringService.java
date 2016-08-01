@@ -22,6 +22,16 @@ public class HashedStringService extends Service<HashedStringEntity, HashedStrin
     }
 
     @Transactional
+    public boolean matches(final long id, final String plainString) {
+        final HashedStringEntity entity = get(id);
+        if (entity == null) {
+            return false;
+        }
+
+        return entity.matches(plainString);
+    }
+
+    @Transactional
     public HashedStringEntity get(final long id) {
         return repository.get(id);
     }

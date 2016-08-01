@@ -15,6 +15,12 @@ import io.spiffy.common.util.JsonUtil;
 
 public abstract class API<Input, Output, Service> extends Controller {
 
+    public static final boolean SUCCESS = true;
+    public static final boolean FAILURE = !SUCCESS;
+
+    public static final boolean VALID = true;
+    public static final boolean INVALID = !VALID;
+
     private final Class<Input> inputClass;
     protected final Service service;
 

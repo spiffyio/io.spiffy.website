@@ -1,5 +1,7 @@
 package io.spiffy.website.controller;
 
+import lombok.RequiredArgsConstructor;
+
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -9,43 +11,28 @@ import javax.inject.Inject;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
-import io.spiffy.authentication.service.HashedStringService;
 import io.spiffy.common.Controller;
-import io.spiffy.common.api.invite.client.InviteClient;
-import io.spiffy.common.api.invite.input.InviteInput;
+import io.spiffy.common.api.authentication.client.PostStringClient;
+import io.spiffy.common.api.authentication.client.ValidateStringClient;
+import io.spiffy.common.api.authentication.input.PostStringInput;
+import io.spiffy.common.api.authentication.input.ValidateStringInput;
 import io.spiffy.common.dto.Context;
 
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
-    private final HashedStringService service;
-    private final InviteClient client;
-
-    @Inject
-    public HomeController(final HashedStringService service, final InviteClient client) {
-        this.service = service;
-        this.client = client;
-    }
+    private final PostStringClient postClient;
+    private final ValidateStringClient validateClient;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
         System.out.println(context.getSessionId());
-        System.out.println(service.post("hello world"));
+        System.out.println(postClient.call(new PostStringInput("password")));
+        System.out.println(validateClient.call(new ValidateStringInput(1000000L, "password")));
+        System.out.println(validateClient.call(new ValidateStringInput(50L, "password")));
+        System.out.println(validateClient.call(new ValidateStringInput(1000003L, "password")));
         context.addAttribute("csrf", context.generateCsrfToken("home"));
-        return home(context.getRequest().getLocale(), context.getModel());
-    }
-
-    @RequestMapping(value = "/extend", method = RequestMethod.GET)
-    public String extend(final Context context) {
-        context.setSessionExpiry(-1);
-        System.out.println(context.getSessionId());
-        return home(context.getRequest().getLocale(), context.getModel());
-    }
-
-    @RequestMapping(value = "/invite", method = RequestMethod.GET)
-    public String invite(final Context context, final @RequestParam String email) {
-        System.out.println(client.call(new InviteInput(email)));
         return home(context.getRequest().getLocale(), context.getModel());
     }
 
