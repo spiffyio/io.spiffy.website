@@ -1,4 +1,4 @@
-package io.spiffy.common.api.security.output;
+package io.spiffy.common.api.user.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MatchesOutput {
-    private Boolean matches;
+public class PostAccountInput {
+    private String userName;
+    private String emailAddress;
 }

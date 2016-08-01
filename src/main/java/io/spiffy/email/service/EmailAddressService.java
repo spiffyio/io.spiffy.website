@@ -5,27 +5,19 @@ import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
-import io.spiffy.common.api.GetInput;
-import io.spiffy.common.api.PostOutput;
-import io.spiffy.common.api.security.client.EncryptStringClient;
-import io.spiffy.common.api.security.client.GetEncryptedStringClient;
-import io.spiffy.common.api.security.input.PostStringInput;
-import io.spiffy.common.api.security.output.GetStringOutput;
+import io.spiffy.common.api.security.client.SecurityClient;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.email.entity.EmailAddressEntity;
 import io.spiffy.email.repository.EmailAddressRepository;
 
 public class EmailAddressService extends Service<EmailAddressEntity, EmailAddressRepository> {
 
-    private final EncryptStringClient encryptClient;
-    private final GetEncryptedStringClient getEncryptClient;
+    private final SecurityClient securityClient;
 
     @Inject
-    public EmailAddressService(final EmailAddressRepository repository, final EncryptStringClient encryptClient,
-            final GetEncryptedStringClient getEncryptClient) {
+    public EmailAddressService(final EmailAddressRepository repository, final SecurityClient securityClient) {
         super(repository);
-        this.encryptClient = encryptClient;
-        this.getEncryptClient = getEncryptClient;
+        this.securityClient = securityClient;
     }
 
     @Transactional
@@ -79,13 +71,10 @@ public class EmailAddressService extends Service<EmailAddressEntity, EmailAddres
     private long getEncryptedAddressId(final String address) {
         validateAddress(address);
         final String sanitizedAddress = address.toLowerCase();
-
-        final PostOutput output = encryptClient.call(new PostStringInput(sanitizedAddress));
-        return output.getId();
+        return securityClient.encryptString(sanitizedAddress);
     }
 
     private String getAddress(final long encryptedAddressId) {
-        final GetStringOutput output = getEncryptClient.call(new GetInput(encryptedAddressId));
-        return output.getPlainString();
+        return securityClient.decryptString(encryptedAddressId);
     }
 }

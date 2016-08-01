@@ -13,7 +13,7 @@ import io.spiffy.common.HibernateEntity;
 @NoArgsConstructor
 @Table(name = "USER_ACCOUNTS", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_name", "archived_at" }),
         @UniqueConstraint(columnNames = { "email_address_id", "archived_at" }) })
-public class UserAccountEntity extends HibernateEntity {
+public class AccountEntity extends HibernateEntity {
 
     public static final int MIN_USER_NAME_LENGTH = 3;
     public static final int MAX_USER_NAME_LENGTH = 25;

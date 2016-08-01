@@ -1,16 +1,22 @@
 package io.spiffy.common.api.invite.client;
 
+import lombok.RequiredArgsConstructor;
+
 import javax.inject.Inject;
-import javax.ws.rs.client.WebTarget;
 
 import io.spiffy.common.Client;
 import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.invite.call.InviteCall;
 import io.spiffy.common.api.invite.input.InviteInput;
 
-public class InviteClient extends Client<InviteInput, PostOutput> {
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
+public class InviteClient extends Client {
 
-    @Inject
-    public InviteClient(final WebTarget target) {
-        super(PostOutput.class, target.path("invite"));
+    private final InviteCall inviteCall;
+
+    public boolean invite(final String emailAddress) {
+        final InviteInput input = new InviteInput(emailAddress);
+        final PostOutput output = inviteCall.call(input);
+        return output.getId() != null;
     }
 }

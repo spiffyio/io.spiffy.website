@@ -1,16 +1,16 @@
-package io.spiffy.common.api.email.client;
+package io.spiffy.common.api.email.call;
 
 import javax.inject.Inject;
 import javax.ws.rs.client.WebTarget;
 
-import io.spiffy.common.Client;
+import io.spiffy.common.Call;
 import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.email.input.PostEmailAddressInput;
 
-public class PostEmailAddressClient extends Client<PostEmailAddressInput, PostOutput> {
+public class PostEmailAddressCall extends Call<PostEmailAddressInput, PostOutput> {
 
     @Inject
-    public PostEmailAddressClient(final WebTarget target) {
+    public PostEmailAddressCall(final WebTarget target) {
         super(PostOutput.class, target.path("email/postaddress"));
     }
 }

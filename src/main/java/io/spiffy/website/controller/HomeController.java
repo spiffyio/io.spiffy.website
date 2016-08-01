@@ -13,33 +13,24 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import io.spiffy.common.Controller;
-import io.spiffy.common.api.GetInput;
-import io.spiffy.common.api.email.client.PostEmailAddressClient;
-import io.spiffy.common.api.email.input.PostEmailAddressInput;
-import io.spiffy.common.api.security.client.EncryptStringClient;
-import io.spiffy.common.api.security.client.GetEncryptedStringClient;
-import io.spiffy.common.api.security.client.HashStringClient;
-import io.spiffy.common.api.security.client.MatchesHashedStringClient;
-import io.spiffy.common.api.security.input.PostStringInput;
+import io.spiffy.common.api.email.client.EmailClient;
+import io.spiffy.common.api.security.client.SecurityClient;
+import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Context;
-import io.spiffy.user.service.UserAccountService;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
-    private final HashStringClient postClient;
-    private final MatchesHashedStringClient validateClient;
-    private final PostEmailAddressClient postEmailAddressClient;
-    private final EncryptStringClient encryptClient;
-    private final GetEncryptedStringClient getEncryptedClient;
-    private final UserAccountService userService;
+    private final EmailClient emailClient;
+    private final SecurityClient securityClient;
+    private final UserClient userClient;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
-        System.out.println(postEmailAddressClient.call(new PostEmailAddressInput("me@spiffy.io")));
-        System.out.println(encryptClient.call(new PostStringInput("john@spiffy.io")));
-        System.out.println(getEncryptedClient.call(new GetInput(1000001L)));
-        System.out.println(userService.post("john", "me@spiffy.io"));
+        System.out.println(emailClient.postEmailAddress("me@spiffy.io"));
+        System.out.println(securityClient.encryptString("john@spiffy.io"));
+        System.out.println(securityClient.decryptString(1000001L));
+        System.out.println(userClient.postAccount("john", "me@spiffy.io"));
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
     }
