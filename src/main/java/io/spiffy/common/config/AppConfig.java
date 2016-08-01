@@ -22,6 +22,15 @@ public class AppConfig {
     private static final String awsSecretKey;
 
     @Getter
+    private static final String encryptionKey;
+
+    @Getter
+    private static final String encryptionIV;
+
+    @Getter
+    private static final boolean secure;
+
+    @Getter
     private static final boolean forwardToProd;
 
     @Getter
@@ -31,15 +40,14 @@ public class AppConfig {
     private static final String restEndpoint;
 
     @Getter
-    private static final boolean secure;
-
-    @Getter
     private static final String suffix;
 
     static {
         stage = System.getProperty("stage");
         awsAccessKeyId = System.getProperty("AWS_ACCESS_KEY_ID");
         awsSecretKey = System.getProperty("AWS_SECRET_KEY");
+        encryptionKey = System.getProperty("encryption.key");
+        encryptionIV = System.getProperty("encryption.init_vector");
         secure = TRUE.equalsIgnoreCase(System.getProperty("secure"));
 
         if (LOCAL.equalsIgnoreCase(stage)) {

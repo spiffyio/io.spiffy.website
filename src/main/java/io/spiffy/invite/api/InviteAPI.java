@@ -19,6 +19,6 @@ public class InviteAPI extends API<InviteInput, PostOutput, InviteService> {
 
     protected PostOutput api(final InviteInput input) {
         service.post(input.getEmail());
-        return new PostOutput(SUCCESS);
+        return new PostOutput(1L);
     }
 }

@@ -7,10 +7,10 @@ import io.spiffy.common.Client;
 import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.security.input.PostStringInput;
 
-public class PostStringClient extends Client<PostStringInput, PostOutput> {
+public class HashStringClient extends Client<PostStringInput, PostOutput> {
 
     @Inject
-    public PostStringClient(final WebTarget target) {
-        super(PostOutput.class, target.path("security/poststring"));
+    public HashStringClient(final WebTarget target) {
+        super(PostOutput.class, target.path("security/hashstring"));
     }
 }

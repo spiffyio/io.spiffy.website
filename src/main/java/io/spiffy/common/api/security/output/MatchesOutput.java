@@ -1,4 +1,4 @@
-package io.spiffy.common.api;
+package io.spiffy.common.api.security.output;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostOutput {
-    private Long id;
+public class MatchesOutput {
+    private Boolean matches;
 }

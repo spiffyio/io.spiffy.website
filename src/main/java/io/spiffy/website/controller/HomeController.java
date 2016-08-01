@@ -13,29 +13,30 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import io.spiffy.common.Controller;
+import io.spiffy.common.api.GetInput;
 import io.spiffy.common.api.email.client.PostEmailAddressClient;
 import io.spiffy.common.api.email.input.PostEmailAddressInput;
-import io.spiffy.common.api.security.client.PostStringClient;
-import io.spiffy.common.api.security.client.ValidateStringClient;
+import io.spiffy.common.api.security.client.EncryptStringClient;
+import io.spiffy.common.api.security.client.GetEncryptedStringClient;
+import io.spiffy.common.api.security.client.HashStringClient;
+import io.spiffy.common.api.security.client.MatchesHashedStringClient;
 import io.spiffy.common.api.security.input.PostStringInput;
-import io.spiffy.common.api.security.input.ValidateStringInput;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
-    private final PostStringClient postClient;
-    private final ValidateStringClient validateClient;
+    private final HashStringClient postClient;
+    private final MatchesHashedStringClient validateClient;
     private final PostEmailAddressClient postEmailAddressClient;
+    private final EncryptStringClient encryptClient;
+    private final GetEncryptedStringClient getEncryptedClient;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
-        System.out.println(context.getSessionId());
-        System.out.println(postClient.call(new PostStringInput("password")));
-        System.out.println(validateClient.call(new ValidateStringInput(1000000L, "password")));
-        System.out.println(validateClient.call(new ValidateStringInput(50L, "password")));
-        System.out.println(validateClient.call(new ValidateStringInput(1000003L, "password")));
         System.out.println(postEmailAddressClient.call(new PostEmailAddressInput("john@spiffy.io")));
+        System.out.println(encryptClient.call(new PostStringInput("john@spiffy.io")));
+        System.out.println(getEncryptedClient.call(new GetInput(1000000L)));
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
     }

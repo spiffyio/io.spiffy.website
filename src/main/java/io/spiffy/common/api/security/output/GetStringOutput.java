@@ -1,4 +1,4 @@
-package io.spiffy.common.api.security.input;
+package io.spiffy.common.api.security.output;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ValidateStringInput {
-    private Long id;
+public class GetStringOutput {
     private String plainString;
 }

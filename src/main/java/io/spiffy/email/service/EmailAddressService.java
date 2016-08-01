@@ -33,19 +33,19 @@ public class EmailAddressService extends Service<EmailAddressEntity, EmailAddres
     public EmailAddressEntity post(final String address) {
         validateAddress(address);
 
-        EmailAddressEntity emailAddress = get(address);
+        EmailAddressEntity entity = get(address);
 
-        if (emailAddress == null) {
-            emailAddress = new EmailAddressEntity(address);
+        if (entity == null) {
+            entity = new EmailAddressEntity(address);
         } else {
             // TODO: no archiving
         }
 
         // TODO: change additional attributes
 
-        repository.saveOrUpdate(emailAddress);
+        repository.saveOrUpdate(entity);
 
-        return emailAddress;
+        return entity;
     }
 
     protected void validateAddress(final String address) {
