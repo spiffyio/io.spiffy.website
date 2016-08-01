@@ -13,7 +13,8 @@ import io.spiffy.common.util.SecurityUtil;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "SECURITY_ENCRYPTED_STRINGS", uniqueConstraints = @UniqueConstraint(columnNames = { "encrypted", "archived_at" }))
+@Table(name = "SECURITY_ENCRYPTED_STRINGS", uniqueConstraints = @UniqueConstraint(columnNames = { "encrypted",
+        "archived_at" }) )
 public class EncryptedStringEntity extends HibernateEntity {
 
     public static final int MIN_ENCRYPTED_LENGTH = 1;

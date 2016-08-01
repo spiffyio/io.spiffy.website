@@ -56,8 +56,6 @@ public class EmailAddressService extends Service<EmailAddressEntity, EmailAddres
 
     @Transactional
     public EmailAddressEntity post(final String address) {
-        validateAddress(address);
-
         final long encryptedAddressId = getEncryptedAddressId(address);
         EmailAddressEntity entity = getByEncryptedAddressId(encryptedAddressId);
 
@@ -79,7 +77,10 @@ public class EmailAddressService extends Service<EmailAddressEntity, EmailAddres
     }
 
     private long getEncryptedAddressId(final String address) {
-        final PostOutput output = encryptClient.call(new PostStringInput(address));
+        validateAddress(address);
+        final String sanitizedAddress = address.toLowerCase();
+
+        final PostOutput output = encryptClient.call(new PostStringInput(sanitizedAddress));
         return output.getId();
     }
 
