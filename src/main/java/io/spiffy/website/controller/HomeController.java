@@ -35,7 +35,7 @@ public class HomeController extends Controller {
         System.out.println(securityClient.decryptString(1000001L));
         System.out.println(userClient.postAccount("john", "me@spiffy.io"));
 
-        emailManager.send("john@spiffy.io");
+        // emailManager.send("john <john@spiffy.io>");
 
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
