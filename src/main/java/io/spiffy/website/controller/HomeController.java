@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import io.spiffy.common.Controller;
+import io.spiffy.common.api.email.client.PostEmailAddressClient;
+import io.spiffy.common.api.email.input.PostEmailAddressInput;
 import io.spiffy.common.api.security.client.PostStringClient;
 import io.spiffy.common.api.security.client.ValidateStringClient;
 import io.spiffy.common.api.security.input.PostStringInput;
@@ -24,6 +26,7 @@ public class HomeController extends Controller {
 
     private final PostStringClient postClient;
     private final ValidateStringClient validateClient;
+    private final PostEmailAddressClient postEmailAddressClient;
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
@@ -32,6 +35,7 @@ public class HomeController extends Controller {
         System.out.println(validateClient.call(new ValidateStringInput(1000000L, "password")));
         System.out.println(validateClient.call(new ValidateStringInput(50L, "password")));
         System.out.println(validateClient.call(new ValidateStringInput(1000003L, "password")));
+        System.out.println(postEmailAddressClient.call(new PostEmailAddressInput("john@spiffy.io")));
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
     }
