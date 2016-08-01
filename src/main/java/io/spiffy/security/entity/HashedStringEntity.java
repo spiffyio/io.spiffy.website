@@ -13,7 +13,7 @@ import io.spiffy.common.util.SecurityUtil;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "AUTHENTICATION_HASHED_STRINGS")
+@Table(name = "SECURITY_HASHED_STRINGS")
 public class HashedStringEntity extends HibernateEntity {
 
     public static final int MIN_HASH_LENGTH = 2048;
