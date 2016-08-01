@@ -1,4 +1,4 @@
-package io.spiffy.authentication.entity;
+package io.spiffy.security.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;

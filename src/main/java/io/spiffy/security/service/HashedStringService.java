@@ -1,4 +1,4 @@
-package io.spiffy.authentication.service;
+package io.spiffy.security.service;
 
 import static io.spiffy.common.util.SecurityUtil.*;
 
@@ -6,10 +6,10 @@ import javax.inject.Inject;
 
 import org.springframework.transaction.annotation.Transactional;
 
-import io.spiffy.authentication.entity.HashedStringEntity;
-import io.spiffy.authentication.repository.HashedStringRepository;
 import io.spiffy.common.Service;
 import io.spiffy.common.util.ValidationUtil;
+import io.spiffy.security.entity.HashedStringEntity;
+import io.spiffy.security.repository.HashedStringRepository;
 
 public class HashedStringService extends Service<HashedStringEntity, HashedStringRepository> {
 

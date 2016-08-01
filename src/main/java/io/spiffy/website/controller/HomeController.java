@@ -13,10 +13,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import io.spiffy.common.Controller;
-import io.spiffy.common.api.authentication.client.PostStringClient;
-import io.spiffy.common.api.authentication.client.ValidateStringClient;
-import io.spiffy.common.api.authentication.input.PostStringInput;
-import io.spiffy.common.api.authentication.input.ValidateStringInput;
+import io.spiffy.common.api.security.client.PostStringClient;
+import io.spiffy.common.api.security.client.ValidateStringClient;
+import io.spiffy.common.api.security.input.PostStringInput;
+import io.spiffy.common.api.security.input.ValidateStringInput;
 import io.spiffy.common.dto.Context;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject) )

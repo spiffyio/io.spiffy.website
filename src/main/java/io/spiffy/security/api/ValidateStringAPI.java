@@ -1,15 +1,15 @@
-package io.spiffy.authentication.api;
+package io.spiffy.security.api;
 
 import javax.inject.Inject;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import io.spiffy.authentication.service.HashedStringService;
 import io.spiffy.common.API;
 import io.spiffy.common.api.ValidateOutput;
-import io.spiffy.common.api.authentication.input.ValidateStringInput;
+import io.spiffy.common.api.security.input.ValidateStringInput;
+import io.spiffy.security.service.HashedStringService;
 
-@RequestMapping("/api/authentication/validatestring")
+@RequestMapping("/api/security/validatestring")
 public class ValidateStringAPI extends API<ValidateStringInput, ValidateOutput, HashedStringService> {
 
     @Inject

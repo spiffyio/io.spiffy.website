@@ -1,4 +1,4 @@
-package io.spiffy.common.api.authentication.input;
+package io.spiffy.common.api.security.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
