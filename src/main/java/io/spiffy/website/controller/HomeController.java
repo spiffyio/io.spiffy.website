@@ -23,7 +23,7 @@ import io.spiffy.common.api.security.client.MatchesHashedStringClient;
 import io.spiffy.common.api.security.input.PostStringInput;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private final HashStringClient postClient;
@@ -34,9 +34,9 @@ public class HomeController extends Controller {
 
     @RequestMapping(value = "/", method = RequestMethod.GET)
     public String home(final Context context) {
-        System.out.println(postEmailAddressClient.call(new PostEmailAddressInput("john@spiffy.io")));
+        System.out.println(postEmailAddressClient.call(new PostEmailAddressInput("me@spiffy.io")));
         System.out.println(encryptClient.call(new PostStringInput("john@spiffy.io")));
-        System.out.println(getEncryptedClient.call(new GetInput(1000000L)));
+        System.out.println(getEncryptedClient.call(new GetInput(1000001L)));
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
     }

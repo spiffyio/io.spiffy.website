@@ -16,9 +16,9 @@ public class EmailAddressRepository extends HibernateRepository<EmailAddressEnti
         super(EmailAddressEntity.class, sessionFactory);
     }
 
-    public EmailAddressEntity get(final String address) {
+    public EmailAddressEntity getByEncryptedAddressId(final long encryptedAddressId) {
         final Criteria c = createCriteria();
-        c.add(Restrictions.eq("address", address).ignoreCase());
+        c.add(Restrictions.eq("encryptedAddressId", encryptedAddressId));
         return (EmailAddressEntity) c.uniqueResult();
     }
 }

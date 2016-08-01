@@ -1,26 +1,28 @@
 package io.spiffy.email.entity;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
+import javax.persistence.*;
 
 import io.spiffy.common.HibernateEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor
-@AllArgsConstructor
-@Table(name = "EMAIL_ADDRESSES", uniqueConstraints = @UniqueConstraint(columnNames = { "address", "archived_at" }) )
+@Table(name = "EMAIL_ADDRESSES", uniqueConstraints = @UniqueConstraint(columnNames = { "encrypted_address_id",
+        "archived_at" }) )
 public class EmailAddressEntity extends HibernateEntity {
 
-    public static final int MIN_ADDRESS_LENGTH = 5;
-    public static final int MAX_ADDRESS_LENGTH = 256;
+    @Column(name = "encrypted_address_id")
+    private Long encryptedAddressId;
 
-    @Column(name = "address")
+    public EmailAddressEntity(final long encryptedAddressId) {
+        this.encryptedAddressId = encryptedAddressId;
+    }
+
+    @Setter
+    @Transient
     private String address;
 }

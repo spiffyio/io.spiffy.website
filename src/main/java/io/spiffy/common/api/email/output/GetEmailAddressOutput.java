@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostEmailAddressOutput {
-    private Long id;
+public class GetEmailAddressOutput {
+    private String address;
 }
