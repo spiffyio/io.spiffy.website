@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+</head>
+<body>
+	<h3>Howdy $name,</h3>
+	<p>Please verify your email address by clicking <a href="$endpoint/verify?token=$token">here.</a><p>
+	<br />
+	<p>$endpoint/verify?token=$token</p>
+</body>
+</html>

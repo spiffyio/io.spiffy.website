@@ -19,7 +19,7 @@ import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Context;
 import io.spiffy.email.manager.EmailManager;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private final EmailClient emailClient;

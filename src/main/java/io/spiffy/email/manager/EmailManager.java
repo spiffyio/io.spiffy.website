@@ -6,6 +6,7 @@ import java.io.StringWriter;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.inject.Inject;
 
@@ -17,8 +18,9 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.mail.javamail.MimeMessagePreparator;
 
 import io.spiffy.common.Manager;
+import io.spiffy.common.config.AppConfig;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class EmailManager extends Manager {
 
     private final JavaMailSender sender;
@@ -32,9 +34,12 @@ public class EmailManager extends Manager {
             helper.setSubject("foo");
 
             final Map<String, Object> properties = new HashMap<>();
+            properties.put("name", "john");
+            properties.put("endpoint", AppConfig.getEndpoint());
+            properties.put("token", UUID.randomUUID().toString());
 
-            final String text = getString("text/" + "template", properties);
-            final String html = getString("html/" + "template", properties);
+            final String text = getString("text/" + "verify", properties);
+            final String html = getString("html/" + "verify", properties);
 
             helper.setText(text, html);
 
