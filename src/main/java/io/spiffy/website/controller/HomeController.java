@@ -39,7 +39,7 @@ public class HomeController extends Controller {
 
         // emailManager.send("john <john@spiffy.io>");
 
-        credentialService.post(1000000L, "Yoloswag420!");
+        credentialService.post(1000000L, "password");
 
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
