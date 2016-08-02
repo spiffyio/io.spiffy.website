@@ -1,3 +1,7 @@
-Howdy $name,
+Howdy $name! You have received this email because this email address was used to register an account on SPIFFY.io. In an ideal world this is something that sounds familiar.  
 
-Please verify your email address by visiting this link $endpoint/verify?token=$token.
+You will not be able to receive future emails from SPIFFY.io until this email address has been verified. Well, unless you are requesting this specific email to be resent, but at some point that stops being fun, right?
+
+$url
+
+SPIFFY.io, LLC (c) 2016

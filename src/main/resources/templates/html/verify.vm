@@ -1,11 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
-<body>
-	<h3>Howdy $name,</h3>
-	<p>Please verify your email address by clicking <a href="$endpoint/verify?token=$token">here.</a><p>
-	<br />
-	<p>$endpoint/verify?token=$token</p>
+<body style="margin: 0; padding: 0; height: 100%; width: 100%; color: #3D3D3D;">
+  <table style="margin: 2em auto; width: 80%; max-width: 800px; border: 0.25em solid #3D3D3D;">
+    <tr style="font-size: 75%; font-weight: bold; height: 5em; background: #C0EFFD; color: #3D3D3D; text-align: center;">
+      <td><span style="font-size: 300%;">Verify Email</span></td>
+    </tr>
+    <tr style="background: #FFECC0; color: #3D3D3D; text-align: center;">
+      <td>
+        <table style="padding: 2em 2em 0 2em; text-align: justify;">
+          <tr><td>
+          	Howdy $name! You have received this email because this email address was used to register an account on SPIFFY.io. In an ideal world this is something that sounds familiar.  
+      	  </td></tr>
+          <tr style="height: 0.5em;"><td></td></tr>
+          <tr><td>
+			You will not be able to receive future emails from SPIFFY.io until this email address has been verified. Well, unless you are requesting this specific email to be resent, but at some point that stops being fun, right?
+          </td></tr>
+          <tr style="height: 1em;"><td></td></tr>
+          <tr style="text-align: center;"><td>
+            <a href="$url" style="text-decoration: none; display: inline-block; padding: 1em 2em; font-style: bold; background: #39C6EE; color: #F5F5F5;">verify</a>
+          </td></tr>
+          <tr style="height: 1em;"><td></td></tr>
+          <tr style="text-align: center;"><td>
+            <a href="$url" style="text-decoration: none;"><span style="font-size: 75%; color: #3D3D3D;">$url</span></a>
+          </td></tr>
+        </table>
+      </td>
+    </tr>
+    <tr style="font-size: 75%; font-weight: bold; height: 5em; background: #3D3D3D; color: #F5F5F5; text-align: center;">
+      <td><span style="font-size: 150%; color: #39C6EE">SPIFFY</span><span style="font-size: 150%; color: #FFC336">.io</span>, LLC &copy; 2016</td>
+    </tr>
+  </table>
 </body>
 </html>

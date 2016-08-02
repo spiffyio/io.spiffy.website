@@ -31,12 +31,11 @@ public class EmailManager extends Manager {
             final MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
             helper.setTo(emailAddress);
-            helper.setSubject("foo");
+            helper.setSubject("Verify Email");
 
             final Map<String, Object> properties = new HashMap<>();
             properties.put("name", "john");
-            properties.put("endpoint", AppConfig.getEndpoint());
-            properties.put("token", UUID.randomUUID().toString());
+            properties.put("url", AppConfig.getEndpoint() + "/verify?token=" + UUID.randomUUID().toString());
 
             final String text = getString("text/" + "verify", properties);
             final String html = getString("html/" + "verify", properties);
