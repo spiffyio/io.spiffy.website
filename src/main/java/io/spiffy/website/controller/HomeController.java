@@ -38,6 +38,10 @@ public class HomeController extends Controller {
         System.out.println(userClient.postAccount("john", "me@spiffy.io"));
 
         // emailManager.send("john <john@spiffy.io>");
+        // emailClient.sendEmailCall(EmailType.Verify, "john@spiffy.io", "registration", 1L, new
+        // EmailProperties());
+
+        userClient.registerAccount("john", "john@spiffy.io", "password");
 
         credentialService.post(1000000L, "password");
 

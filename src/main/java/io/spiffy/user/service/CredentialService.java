@@ -52,6 +52,16 @@ public class CredentialService extends Service<CredentialEntity, CredentialRepos
         return entity;
     }
 
+    @Transactional
+    public boolean matches(final long accountId, final String password) {
+        final CredentialEntity entity = getByAccountId(accountId);
+        if (entity == null) {
+            return false;
+        }
+
+        return securityClient.matchesHashedString(entity.getPasswordId(), password);
+    }
+
     protected void validatePassword(final String password) {
         ValidationUtil.validatePassword("CredentialEntity.password", password);
     }

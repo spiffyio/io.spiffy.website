@@ -53,11 +53,10 @@ public class EmailAddressService extends Service<EmailAddressEntity, EmailAddres
 
         if (entity == null) {
             entity = new EmailAddressEntity(encryptedAddressId);
+            entity.setAddress(address);
         } else {
-            // TODO: no archiving
+            entity.setAddress(getAddress(entity.getEncryptedAddressId()));
         }
-
-        // TODO: change additional attributes
 
         repository.saveOrUpdate(entity);
 

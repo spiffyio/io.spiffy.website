@@ -11,11 +11,10 @@ import io.spiffy.common.HibernateEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "EMAIL_ADDRESSES", uniqueConstraints = @UniqueConstraint(columnNames = { "encrypted_address_id",
-        "archived_at" }) )
+@Table(name = "EMAIL_ADDRESSES", uniqueConstraints = @UniqueConstraint(columnNames = { "encrypted_address_id", "archived_at" }))
 public class EmailAddressEntity extends HibernateEntity {
 
-    @Column(name = "encrypted_address_id")
+    @Column(name = "encrypted_address_id", nullable = false)
     private Long encryptedAddressId;
 
     public EmailAddressEntity(final long encryptedAddressId) {
