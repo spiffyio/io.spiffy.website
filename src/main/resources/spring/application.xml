@@ -9,4 +9,8 @@
   <bean id="amazonDynamoDBClient" class="com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient">
       <constructor-arg ref="awsCredentials" />
   </bean>
+  
+  <bean id="amazonS3Client" class="com.amazonaws.services.s3.AmazonS3Client">
+    <constructor-arg ref="awsCredentials" />
+  </bean>
 </beans>

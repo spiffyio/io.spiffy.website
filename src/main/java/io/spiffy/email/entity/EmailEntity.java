@@ -9,8 +9,8 @@ import java.util.Date;
 import javax.persistence.*;
 
 import io.spiffy.common.HibernateEntity;
-import io.spiffy.common.api.email.dto.EmailType;
 import io.spiffy.common.api.email.dto.EmailProperties;
+import io.spiffy.common.api.email.dto.EmailType;
 
 @Entity
 @Getter
@@ -18,7 +18,10 @@ import io.spiffy.common.api.email.dto.EmailProperties;
 @Table(name = "EMAIL_EMAILS", uniqueConstraints = @UniqueConstraint(columnNames = { "idempotent_id", "archived_at" }))
 public class EmailEntity extends HibernateEntity {
 
-    @Column(name = "idempotent_id", nullable = false)
+    public static final int MIN_IDEMPOTENT_ID_LENGTH = 1;
+    public static final int MAX_IDEMPOTENT_ID_LENGTH = 256;
+
+    @Column(name = "idempotent_id", length = MAX_IDEMPOTENT_ID_LENGTH, nullable = false)
     private String idempotentId;
 
     @ManyToOne
