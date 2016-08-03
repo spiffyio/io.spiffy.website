@@ -6,6 +6,7 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
 
+import io.spiffy.common.HibernateEntity;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.exception.ValidationException;
 
@@ -91,5 +92,19 @@ public class ValidationUtil {
             throw new ValidationException(message);
         }
 
+    }
+
+    public static void validateSameOrNull(final String message, final HibernateEntity a, final HibernateEntity b) {
+        if (a == null) {
+            return;
+        }
+
+        if (b == null) {
+            return;
+        }
+
+        if (a.getId() != b.getId()) {
+            throw new ValidationException(message);
+        }
     }
 }

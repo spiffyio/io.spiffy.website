@@ -16,6 +16,9 @@ public class AppConfig {
     private static final String stage;
 
     @Getter
+    private static final String apiKey;
+
+    @Getter
     private static final String awsAccessKeyId;
 
     @Getter
@@ -50,6 +53,7 @@ public class AppConfig {
 
     static {
         stage = System.getProperty("stage");
+        apiKey = System.getProperty("apiKey");
         awsAccessKeyId = System.getProperty("AWS_ACCESS_KEY_ID");
         awsSecretKey = System.getProperty("AWS_SECRET_KEY");
         encryptionKey = System.getProperty("encryption.key");

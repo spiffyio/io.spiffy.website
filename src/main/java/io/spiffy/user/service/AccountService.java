@@ -11,7 +11,6 @@ import io.spiffy.common.api.email.client.EmailClient;
 import io.spiffy.common.api.email.dto.EmailProperties;
 import io.spiffy.common.api.email.dto.EmailType;
 import io.spiffy.common.config.AppConfig;
-import io.spiffy.common.exception.ValidationException;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.user.entity.AccountEntity;
 import io.spiffy.user.repository.AccountRepository;
@@ -68,11 +67,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         final long emailAddressId = getEmailAddressId(emailAddress);
         final AccountEntity entityByEmailAddressId = getByEmailAddressId(emailAddressId);
 
-        if (entityByUserName != null && entityByEmailAddressId != null
-                && entityByUserName.getId() != entityByEmailAddressId.getId()) {
-            throw new ValidationException(String.format(
-                    "returned different accounts for the userName: %s and emailAddressId: %d", userName, emailAddressId));
-        }
+        ValidationUtil.validateSameOrNull("AccountEntity userName, emailAddressId", entityByUserName, entityByEmailAddressId);
 
         AccountEntity entity = entityByUserName != null ? entityByUserName : entityByEmailAddressId;
         if (entity == null) {

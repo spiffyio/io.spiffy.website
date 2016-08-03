@@ -26,6 +26,7 @@ public class Context {
     public static final String SESSION_ID_COOKIE = "sessionId";
 
     public static final String SPIFFY_FORWARDED_SESSION = "SPIFFY-Forwarded-Session";
+    public static final String SPIFFY_API_CERTIFICATE = "SPIFFY-API-Certificate";
     public static final String X_CSRF_TOKEN = "X-CSRF-Token";
     public static final String X_FORWARDED_FOR = "X-Forwarded-For";
     public static final String X_FORWARDED_HOST = "X-Forwarded-Host";

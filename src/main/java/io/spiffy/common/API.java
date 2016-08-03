@@ -10,7 +10,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.google.common.io.CharStreams;
 
+import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.util.CsrfUtil;
 import io.spiffy.common.util.JsonUtil;
 
 public abstract class API<Input, Output, Service> extends Controller {
@@ -33,6 +35,8 @@ public abstract class API<Input, Output, Service> extends Controller {
     @RequestMapping(method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON, produces = MediaType.APPLICATION_JSON)
     public Output foo(final Context context) throws IOException {
         final String json = CharStreams.toString(context.getRequest().getReader());
+        CsrfUtil.validateToken(json, AppConfig.getApiKey(), context.getHeader(Context.SPIFFY_API_CERTIFICATE));
+
         return api(JsonUtil.deserialize(inputClass, json));
     }
 
