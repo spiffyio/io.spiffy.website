@@ -27,6 +27,7 @@ import io.spiffy.common.api.email.client.EmailClient;
 import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.security.client.SecurityClient;
+import io.spiffy.common.api.source.client.SourceClient;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Context;
 import io.spiffy.email.manager.EmailManager;
@@ -38,6 +39,7 @@ public class HomeController extends Controller {
     private final EmailClient emailClient;
     private final MediaClient mediaClient;
     private final SecurityClient securityClient;
+    private final SourceClient sourceClient;
     private final UserClient userClient;
 
     private final EmailManager emailManager;
@@ -63,7 +65,10 @@ public class HomeController extends Controller {
         try {
             is = url.openStream();
             final byte[] imageBytes = IOUtils.toByteArray(is);
-            mediaClient.postMedia(post.getImage(), MediaType.PNG, imageBytes);
+
+            final String idempotentId = "url:" + sourceClient.postUrl(post.getImage(), "imgs.xkcd.com", "303", "xkcd");
+
+            mediaClient.postMedia(idempotentId, MediaType.PNG, imageBytes);
         } catch (final IOException e) {
             e.printStackTrace();
         } finally {
