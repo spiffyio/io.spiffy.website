@@ -21,8 +21,8 @@ public class MediaEntity extends HibernateEntity {
     public static final int MIN_TYPE_LENGTH = 1;
     public static final int MAX_TYPE_LENGTH = 16;
 
-    public static final int MIN_MD5_LENGTH = 32;
-    public static final int MAX_MD5_LENGTH = 32;
+    public static final int MIN_MD5_LENGTH = 22;
+    public static final int MAX_MD5_LENGTH = 24;
 
     public static final int MIN_NAME_LENGTH = 5;
     public static final int MAX_NAME_LENGTH = 64;

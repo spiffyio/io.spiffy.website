@@ -16,10 +16,11 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.util.IOUtils;
 
+import io.spiffy.common.Manager;
 import io.spiffy.common.config.AppConfig;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public abstract class MediaManager {
+public class MediaManager extends Manager {
 
     private static final String BUCKET = "spiffyio" + AppConfig.getSuffix();
 
@@ -46,7 +47,7 @@ public abstract class MediaManager {
         try {
             is = new ByteArrayInputStream(value);
             final ObjectMetadata metadata = new ObjectMetadata();
-            metadata.setCacheControl("max-age=604800");
+            metadata.setCacheControl("public, max-age=604800");
             metadata.setContentLength(value.length);
             metadata.setContentMD5(md5);
             metadata.setContentType(contentType);
@@ -54,7 +55,9 @@ public abstract class MediaManager {
             final PutObjectRequest request = new PutObjectRequest(BUCKET, key, is, metadata);
             client.putObject(request);
         } catch (final AmazonServiceException e) {
+            e.printStackTrace();
         } catch (final AmazonClientException e) {
+            e.printStackTrace();
         } finally {
             if (is != null) {
                 try {

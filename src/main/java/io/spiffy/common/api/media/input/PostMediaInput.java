@@ -14,6 +14,6 @@ import io.spiffy.common.api.media.dto.MediaType;
 public class PostMediaInput {
     private String idempotentId;
     private MediaType type;
-    private String isoString;
+    private byte[] value;
 
 }

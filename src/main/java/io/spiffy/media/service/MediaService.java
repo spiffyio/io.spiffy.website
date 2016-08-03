@@ -1,5 +1,7 @@
 package io.spiffy.media.service;
 
+import java.util.Base64;
+
 import javax.inject.Inject;
 
 import org.apache.commons.lang3.StringUtils;
@@ -33,7 +35,7 @@ public class MediaService extends Service<MediaEntity, MediaRepository> {
     public MediaEntity post(final String idempotentId, final MediaType type, final byte[] value) {
         validateIdempotentId(idempotentId);
 
-        final String md5 = DigestUtils.md5DigestAsHex(value);
+        final String md5 = Base64.getEncoder().encodeToString(DigestUtils.md5Digest(value));
 
         MediaEntity entity = get(idempotentId);
         if (entity == null) {

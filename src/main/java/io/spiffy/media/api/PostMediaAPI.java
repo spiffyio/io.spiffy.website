@@ -19,7 +19,7 @@ public class PostMediaAPI extends API<PostMediaInput, PostOutput, MediaService> 
     }
 
     protected PostOutput api(final PostMediaInput input) {
-        final MediaEntity entity = service.post(input.getIdempotentId(), input.getType(), input.getIsoString().getBytes());
+        final MediaEntity entity = service.post(input.getIdempotentId(), input.getType(), input.getValue());
         final Long id = entity != null ? entity.getId() : null;
         return new PostOutput(id);
     }

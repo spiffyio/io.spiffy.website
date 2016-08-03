@@ -7,5 +7,7 @@
 </head>
 <body>
   i like turtles.
+  
+  <img src="http://cdn-beta.spiffy.io/images/pngs/KsvKJh.png" />
 </body>
 </html>
