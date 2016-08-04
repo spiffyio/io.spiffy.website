@@ -12,6 +12,7 @@
 <meta name="author" content="SPIFFY.io, LLC">
 
 <link rel="stylesheet" type="text/css" href="/css/application.min.css">
+<link rel="stylesheet" type="text/css" href="http://yolo.richio.co/css/main.css">
 </head>
 <body>
   <div class="header">
@@ -26,10 +27,12 @@
     </div>
   </div>
   
-  <form action="/upload" class="dropzone" id="dz-form" enctype="multipart/form-data"></form>
+  <form style="margin: 10% 25%; width: 50%; height: calc(50% - 5em); border: 5px black dashed;" action="/upload" class="dropzone" id="dz-form" enctype="multipart/form-data" hidden>
+    <div class="dz-message"></div>
+  </form>
   
   <script type="text/javascript" src="/js/jquery.min.js"></script>
   <script type="text/javascript" src="/js/dropzone.min.js"></script>
-  <script type="text/javascript" src="/js/application.min.js"></script>
+  <script type="text/javascript" src="/js/application.js"></script>
 </body>
 </html>

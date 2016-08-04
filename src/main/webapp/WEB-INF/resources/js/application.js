@@ -3,7 +3,6 @@ var menu;
 Dropzone.options.dzForm = {
   paramName: 'file',
   maxFilesize: 2,
-  dictDefaultMessage: '<img style="width: 5em; height: auto;" src="https://cdn.spiffy.io/static/svg/icon.svg" />',
   accept: function(file, done) {
     return done();
   }
@@ -29,6 +28,14 @@ $(document).ready(function(e) {
       }
     };
     setTimeout(func, 500);
+  });
+  window.addEventListener('dragenter', function(e) {
+    $('#dz-form').show();
+  });
+  window.addEventListener('dragleave', function(e) {
+    if (e.target === $('div.header')[0]) {
+      $('#dz-form').hide();
+    }
   });
 });
 

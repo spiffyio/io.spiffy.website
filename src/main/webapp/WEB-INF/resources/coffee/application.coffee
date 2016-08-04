@@ -1,7 +1,6 @@
 Dropzone.options.dzForm = {
   paramName: 'file',
   maxFilesize: 2,
-  dictDefaultMessage: '<img style="width: 5em; height: auto;" src="https://cdn.spiffy.io/static/svg/icon.svg" />',
   accept: (file, done) ->
     done()
 }
@@ -24,6 +23,16 @@ $(document).ready (e) ->
       return
     setTimeout(func, 500)
     return
+
+  window.addEventListener 'dragenter', (e) ->
+    $('#dz-form').show()
+    return
+
+  window.addEventListener 'dragleave', (e) ->
+    if (e.target is $('div.header')[0]) # not correct, but works for now
+      $('#dz-form').hide()
+    return
+
   return
 
 menu = (top) ->
