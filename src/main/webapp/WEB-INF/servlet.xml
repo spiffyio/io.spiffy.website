@@ -17,7 +17,7 @@
     </argument-resolvers>
   </annotation-driven>
 
-  <resources mapping="/**" location="/resources/" />
+  <resources mapping="/**" location="/WEB-INF/resources/" />
 
   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <beans:property name="prefix" value="/WEB-INF/views/" />

@@ -31,7 +31,7 @@ import io.spiffy.common.dto.Context;
 import io.spiffy.email.manager.EmailManager;
 import io.spiffy.user.service.CredentialService;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private final EmailClient emailClient;
@@ -58,7 +58,7 @@ public class HomeController extends Controller {
         // userClient.registerAccount("john", "john@spiffy.io", "password");
         // credentialService.post(1000000L, "password");
 
-        System.out.println(streamClient.getPosts(1000097L, 6));
+        // System.out.println(streamClient.getPosts(1000097L, 6));
 
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
