@@ -37,7 +37,12 @@ public abstract class API<Input, Output, Service> extends Controller {
         final String json = CharStreams.toString(context.getRequest().getReader());
         CsrfUtil.validateToken(json, AppConfig.getApiKey(), context.getHeader(Context.SPIFFY_API_CERTIFICATE));
 
-        return api(JsonUtil.deserialize(inputClass, json));
+        try {
+            return api(JsonUtil.deserialize(inputClass, json));
+        } catch (final Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     protected abstract Output api(final Input input);

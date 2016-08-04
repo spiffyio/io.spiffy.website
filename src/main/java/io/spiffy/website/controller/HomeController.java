@@ -1,8 +1,5 @@
 package io.spiffy.website.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -28,6 +25,7 @@ import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.security.client.SecurityClient;
 import io.spiffy.common.api.source.client.SourceClient;
+import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Context;
 import io.spiffy.email.manager.EmailManager;
@@ -40,6 +38,7 @@ public class HomeController extends Controller {
     private final MediaClient mediaClient;
     private final SecurityClient securityClient;
     private final SourceClient sourceClient;
+    private final StreamClient streamClient;
     private final UserClient userClient;
 
     private final EmailManager emailManager;
@@ -59,23 +58,19 @@ public class HomeController extends Controller {
         // userClient.registerAccount("john", "john@spiffy.io", "password");
         // credentialService.post(1000000L, "password");
 
-        final XKCDPost post = getXKCDPost("303");
-        final URL url = new URL(post.getImage());
-        InputStream is = null;
-        try {
-            is = url.openStream();
-            final byte[] imageBytes = IOUtils.toByteArray(is);
+        System.out.println(streamClient.getPosts(1000097L, 6));
 
-            final String idempotentId = "url:" + sourceClient.postUrl(post.getImage(), "imgs.xkcd.com", "303", "xkcd");
+        context.addAttribute("csrf", context.generateCsrfToken("home"));
+        return home(context.getRequest().getLocale(), context.getModel());
+    }
 
-            mediaClient.postMedia(idempotentId, MediaType.PNG, imageBytes);
-        } catch (final IOException e) {
-            e.printStackTrace();
-        } finally {
-            if (is != null) {
-                is.close();
-            }
-        }
+    @RequestMapping(value = "/xkcd", method = RequestMethod.GET)
+    public String xkcd(final Context context) throws IOException {
+        // final long accountId = userClient.registerAccount("xkcd", "xkcd@spiffy.io",
+        // "password");
+        // for (int i = 1; i < 100; i++) {
+        // post(accountId, "" + i);
+        // }
 
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
@@ -94,25 +89,29 @@ public class HomeController extends Controller {
         return "home";
     }
 
-    private XKCDPost getXKCDPost(final String id) {
+    private void post(final long accountId, final String id) {
         try {
             final Document document = Jsoup.connect("http://xkcd.com/" + id).get();
             final Element comic = document.getElementById("comic");
             final Element image = comic.getElementsByTag("img").first();
 
-            return new XKCDPost(id, image.attr("alt"), "https:" + image.attr("src"), image.attr("title"));
-        } catch (final Exception e) {
-            return null;
-        }
-    }
+            final String src = "https:" + image.attr("src");
+            final long mediaId;
 
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class XKCDPost {
-        private String id;
-        private String title;
-        private String image;
-        private String description;
+            final String idempotentId = "url:" + sourceClient.postUrl(src, "imgs.xkcd.com", id, "xkcd");
+
+            final URL url = new URL(src);
+            try (final InputStream is = url.openStream()) {
+                final byte[] imageBytes = IOUtils.toByteArray(is);
+                mediaId = mediaClient.postMedia(idempotentId, MediaType.PNG, imageBytes);
+            }
+
+            final String title = image.attr("alt");
+            final String description = image.attr("title");
+
+            streamClient.postPost(idempotentId, accountId, mediaId, title, description);
+
+        } catch (final Exception e) {
+        }
     }
 }
