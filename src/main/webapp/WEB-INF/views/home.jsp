@@ -19,15 +19,17 @@
     <div class="menu">
       <ul>
         <li>&nbsp;</li>
-        <li>&nbsp;</li>
-        <li>&nbsp;</li>
+        <li><a href="">new post</a></li>
         <li><a href="">sign in</a></li>
+        <li>&nbsp;</li>
       </ul>
     </div>
   </div>
   
+  <form action="/upload" class="dropzone" id="dz-form" enctype="multipart/form-data"></form>
+  
   <script type="text/javascript" src="/js/jquery.min.js"></script>
-  <script type="text/javascript" src="/js/fine-uploader.min.js"></script>
+  <script type="text/javascript" src="/js/dropzone.min.js"></script>
   <script type="text/javascript" src="/js/application.min.js"></script>
 </body>
 </html>

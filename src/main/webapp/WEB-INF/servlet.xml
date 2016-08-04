@@ -16,7 +16,7 @@
       <beans:bean class="io.spiffy.common.resolver.ContextResolver" />
     </argument-resolvers>
   </annotation-driven>
-
+  
   <resources mapping="/**" location="/WEB-INF/resources/" />
 
   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

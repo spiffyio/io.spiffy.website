@@ -18,6 +18,9 @@ import org.jsoup.nodes.Element;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.spiffy.common.Controller;
 import io.spiffy.common.api.email.client.EmailClient;
@@ -31,7 +34,7 @@ import io.spiffy.common.dto.Context;
 import io.spiffy.email.manager.EmailManager;
 import io.spiffy.user.service.CredentialService;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private final EmailClient emailClient;
@@ -74,6 +77,17 @@ public class HomeController extends Controller {
 
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    public String upload(final Context context, @RequestParam(value = "file") final MultipartFile file) throws IOException {
+
+        final long accountId = userClient.registerAccount("john", "john@spiffy.io", "password");
+        final long mediaId = mediaClient.postMedia("test0001", MediaType.JPG, file.getBytes());
+        streamClient.postPost("test0001", accountId, mediaId, "title", "description");
+
+        return "{\"success\":true}";
     }
 
     protected String home(final Locale locale, final ModelMap model) {

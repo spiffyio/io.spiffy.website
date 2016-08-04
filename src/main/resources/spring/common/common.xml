@@ -10,6 +10,8 @@
   <aop:aspectj-autoproxy />
   <context:property-placeholder />
 
+  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver" />
+    
   <context:component-scan base-package="io.spiffy">
     <context:include-filter type="assignable" expression="io.spiffy.common.Manager" />
   </context:component-scan>
