@@ -38,6 +38,10 @@ public class Context {
     private final FilterChain chain;
     private final ModelMap model;
 
+    public Context(final HttpServletRequest request, final HttpServletResponse response) {
+        this(request, response, null, null);
+    }
+
     public Context(final HttpServletRequest request, final HttpServletResponse response, final ModelMap model) {
         this(request, response, null, model);
     }

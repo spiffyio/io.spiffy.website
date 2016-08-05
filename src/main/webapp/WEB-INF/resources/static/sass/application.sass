@@ -1,0 +1,169 @@
+@import constants.sass
+
+=buffer($margin, $padding)
+  margin: $margin
+  padding: $padding
+
+=size($height, $width)
+  height: $height
+  width: $width
+
+=width($min, $max)
+  @media only screen and (min-width: $min) and (max-width: $max - 1)
+    @content
+
+=min-width($width)
+  @media only screen and (min-width: $width)
+    @content
+
+=max-width($width)
+  @media only screen and (max-width: $width - 1)
+    @content
+
+=center
+  margin-left: auto
+  margin-right: auto
+
+=hidden
+  display: none
+
+=visible
+  visibility: visible
+
+*
+  padding: 0
+  margin: 0
+
+html, body
+  height: 100%
+  background: #F5F5F5
+
+div.header
+  height: 3em
+  width: 100%
+  position: fixed
+  top: 0
+  background: #C0EFFD
+
+  div.logo
+    width: 3em
+    height: 100%
+    position: absolute
+    top: 0
+    left: calc(50% - 1.5em)
+    z-index: 2
+
+    img
+      padding: 10%
+      width: 80%
+      height: 80%
+
+  div.menu
+    width: 800px
+    height: 100%
+    position: absolute
+    top: -3em
+    left: calc(50% - 400px)
+    z-index: 1
+
+    ul
+      list-style-type: none
+      height: 100%
+      line-height: 3em
+
+      li
+        float: left
+        width: 25%
+        display: block
+        text-align: center
+
+        a
+          font-weight: bold
+
+a
+  color: $b3
+  text-decoration: none
+
+div.body
+  min-height: 100%
+  height: auto !important
+  margin: 0 auto 0-$header_height
+  background: linear-gradient(#C0EFFD, #FFECC0)
+  background-size: 200% 200%
+  animation: background-animation 15s ease infinite
+
+@keyframes background-animation
+  0%
+    background-position: 50% 25%
+  50%
+    background-position: 50% 75%
+  100%
+    background-position: 50% 25%
+
+div.header-padding
+  +size($header_height + 0.5em, 100%)
+
+div.footer-padding
+  +size($header_height, 100%)
+
+div.footer
+  +size($header_height, 100%)
+  background: $w1
+  color: $w2
+  line-height: $header_height
+
+  div.content
+    +center
+
+  +max-width($lg)
+    .content
+      width: 90%
+      max-width: $md
+
+  +min-width($lg)
+    .content
+      width: $md
+
+  +min-width($xl)
+    .content
+      width: $lg
+
++max-width($xs)
+  .xs-visible
+    +hidden
+
++max-width($sm)
+  .sm-visible
+    +hidden
+
++max-width($md)
+  .md-visible
+    +hidden
+
++max-width($lg)
+  .lg-visible
+    +hidden
+
++max-width($xl)
+  .xl-visible
+    +hidden
+
++min-width($xs)
+  .xs-hidden
+    +hidden
+
++min-width($sm)
+  .sm-hidden
+    +hidden
+
++min-width($md)
+  .md-hidden
+    +hidden
+
++min-width($lg)
+  .lg-hidden
+    +hidden
+
++min-width($xl)
+  .xl-hidden
+    +hidden
