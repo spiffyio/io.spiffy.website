@@ -33,6 +33,7 @@ import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Context;
 import io.spiffy.email.manager.EmailManager;
 import io.spiffy.user.service.CredentialService;
+import io.spiffy.website.annotation.Csrf;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
@@ -77,6 +78,15 @@ public class HomeController extends Controller {
 
         context.addAttribute("csrf", context.generateCsrfToken("home"));
         return home(context.getRequest().getLocale(), context.getModel());
+    }
+
+    @Csrf("sign-up")
+    @ResponseBody
+    @RequestMapping(value = "/signup", method = RequestMethod.POST)
+    public String signup(final Context context, final @RequestParam String username, final @RequestParam String email,
+            final @RequestParam String password) {
+        userClient.registerAccount(username, email, password);
+        return "{\"success\":true}";
     }
 
     @ResponseBody

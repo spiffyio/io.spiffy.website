@@ -33,7 +33,7 @@ public class CsrfTag extends SimpleTagSupport {
     public void doTag() throws JspException, IOException {
         final PageContext pageContext = (PageContext) getJspContext();
         final HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        final HttpServletResponse response = (HttpServletResponse) pageContext.getRequest();
+        final HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
         final Context context = new Context(request, response);
 
         getJspContext().getOut().print(format.format(context.generateCsrfToken(name)));

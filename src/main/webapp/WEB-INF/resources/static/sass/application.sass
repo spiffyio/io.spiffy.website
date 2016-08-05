@@ -77,8 +77,12 @@ div.header
         display: block
         text-align: center
 
-        a
+        span
+          color: $b3
+          text-decoration: none
           font-weight: bold
+          cursor: pointer
+          display: block
 
 a
   color: $b3
@@ -111,22 +115,164 @@ div.footer
   background: $w1
   color: $w2
   line-height: $header_height
+  text-align: center
 
-  div.content
+.modal-overlay
+  +size(100%, 100%)
+  display: none
+  position: fixed
+  z-index: 1
+  left: 0
+  top: 0
+  overflow: auto
+  background-color: rgb(0,0,0)
+  background-color: rgba(0,0,0,0.4)
+
+  .modal
+    width: 300px
+    max-width: 80%
+    display: none
+    background-color: $w1
+    box-shadow: 0 0 100px $w4
+    margin: 30px auto
+    padding: 1em
+    overflow: scroll
+
+.modal-header
+  .content
+    +center
+    color: $w3
+    line-height: $header_height
+    border-bottom: 2px solid $w2
+
+    .close
+      +size($header_height - 1, $header_height - 1)
+      float: right
+      margin-top: 0.25-$header_height
+
+.modal-body
+  form
+    text-align: center
+    input
+      +size($header_height, 100%)
+      font-size: 100%
+      line-height: $header_height
+      text-align: center
+    div.g-recaptcha
+      display: inline-block
+
+.button
+  +size(2em, auto)
+  padding: 0 1em
+  display: inline-block
+  cursor: pointer
+  line-height: 2em
+  text-align: center
+  color: $w1
+  background: $w5
+  border: none
+
+.button:hover
+  background: $w3
+
+.button.primary
+  background: $b5
+
+.button.primary:hover
+  background: $b3
+
+.button.danger
+  color: $w5
+  background: $o5
+
+.button.danger:hover
+  background: $o3
+
+.content, .panel
+  overflow: auto
+  width: 100%
+
+  .center
     +center
 
-  +max-width($lg)
-    .content
-      width: 90%
-      max-width: $md
+  .left
+    float: left
 
-  +min-width($lg)
-    .content
-      width: $md
+  .right
+    float: right
 
-  +min-width($xl)
-    .content
-      width: $lg
+.logo
+  cursor: pointer
+
+.close
+  cursor: pointer
+
+  .outer
+    fill: $w1
+    stroke: $w3
+
+  .inner
+    fill: $w3
+
+.close:hover
+  .outer
+    fill: $w2
+    stroke: $w5
+
+  .inner
+    fill: $b5
+
+.heart
+  cursor: pointer
+
+.heart, .heart.active:hover
+  fill: $w2
+
+.heart:hover, .heart.active
+  fill: $r3
+
+.options
+  cursor: pointer
+
+  circle
+    fill: $w2
+
+.options:hover
+  circle
+    fill: $b3
+
+.hamburger
+  cursor: pointer
+
+  .outer
+    fill: $b1
+    stroke: $w3
+
+  .inner
+    fill: $w3
+
+.hamburger:hover
+  .outer
+    fill: $w2
+    stroke: $w5
+
+  .inner
+    fill: $b5
+
+.hamburger.active
+  .outer
+    fill: $w2
+    stroke: $w5
+
+  .inner
+    fill: $o5
+
+.clearfix:before, .clearfix:after
+  content: ""
+  display: table
+
+.clearfix:after
+  clear: both
 
 +max-width($xs)
   .xs-visible

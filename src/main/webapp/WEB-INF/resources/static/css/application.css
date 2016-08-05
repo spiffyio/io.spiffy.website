@@ -53,8 +53,12 @@ div.header div.menu ul li {
   text-align: center;
 }
 
-div.header div.menu ul li a {
+div.header div.menu ul li span {
+  color: #5FD4F5;
+  text-decoration: none;
   font-weight: bold;
+  cursor: pointer;
+  display: block;
 }
 
 a {
@@ -99,30 +103,204 @@ div.footer {
   background: #F5F5F5;
   color: #D3D3D3;
   line-height: 3em;
+  text-align: center;
 }
 
-div.footer div.content {
+.modal-overlay {
+  height: 100%;
+  width: 100%;
+  display: none;
+  position: fixed;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  overflow: auto;
+  background-color: black;
+  background-color: rgba(0, 0, 0, 0.4);
+}
+
+.modal-overlay .modal {
+  width: 300px;
+  max-width: 80%;
+  display: none;
+  background-color: #F5F5F5;
+  box-shadow: 0 0 100px #3D3D3D;
+  margin: 30px auto;
+  padding: 1em;
+  overflow: scroll;
+}
+
+.modal-header .content {
+  margin-left: auto;
+  margin-right: auto;
+  color: #5F5F5F;
+  line-height: 3em;
+  border-bottom: 2px solid #D3D3D3;
+}
+
+.modal-header .content .close {
+  height: 2em;
+  width: 2em;
+  float: right;
+  margin-top: -2.75em;
+}
+
+.modal-body form {
+  text-align: center;
+}
+
+.modal-body form input {
+  height: 3em;
+  width: 100%;
+  font-size: 100%;
+  line-height: 3em;
+  text-align: center;
+}
+
+.modal-body form div.g-recaptcha {
+  display: inline-block;
+}
+
+.button {
+  height: 2em;
+  width: auto;
+  padding: 0 1em;
+  display: inline-block;
+  cursor: pointer;
+  line-height: 2em;
+  text-align: center;
+  color: #F5F5F5;
+  background: #0D0D0D;
+  border: none;
+}
+
+.button:hover {
+  background: #5F5F5F;
+}
+
+.button.primary {
+  background: #12B1DE;
+}
+
+.button.primary:hover {
+  background: #5FD4F5;
+}
+
+.button.danger {
+  color: #0D0D0D;
+  background: #FFB60D;
+}
+
+.button.danger:hover {
+  background: #FFCF5E;
+}
+
+.content, .panel {
+  overflow: auto;
+  width: 100%;
+}
+
+.content .center, .panel .center {
   margin-left: auto;
   margin-right: auto;
 }
 
-@media only screen and (max-width: 991px) {
-  div.footer .content {
-    width: 90%;
-    max-width: 768px;
-  }
+.content .left, .panel .left {
+  float: left;
 }
 
-@media only screen and (min-width: 992px) {
-  div.footer .content {
-    width: 768px;
-  }
+.content .right, .panel .right {
+  float: right;
 }
 
-@media only screen and (min-width: 1200px) {
-  div.footer .content {
-    width: 992px;
-  }
+.logo {
+  cursor: pointer;
+}
+
+.close {
+  cursor: pointer;
+}
+
+.close .outer {
+  fill: #F5F5F5;
+  stroke: #5F5F5F;
+}
+
+.close .inner {
+  fill: #5F5F5F;
+}
+
+.close:hover .outer {
+  fill: #D3D3D3;
+  stroke: #0D0D0D;
+}
+
+.close:hover .inner {
+  fill: #12B1DE;
+}
+
+.heart {
+  cursor: pointer;
+}
+
+.heart, .heart.active:hover {
+  fill: #D3D3D3;
+}
+
+.heart:hover, .heart.active {
+  fill: #FF735E;
+}
+
+.options {
+  cursor: pointer;
+}
+
+.options circle {
+  fill: #D3D3D3;
+}
+
+.options:hover circle {
+  fill: #5FD4F5;
+}
+
+.hamburger {
+  cursor: pointer;
+}
+
+.hamburger .outer {
+  fill: #C0EFFD;
+  stroke: #5F5F5F;
+}
+
+.hamburger .inner {
+  fill: #5F5F5F;
+}
+
+.hamburger:hover .outer {
+  fill: #D3D3D3;
+  stroke: #0D0D0D;
+}
+
+.hamburger:hover .inner {
+  fill: #12B1DE;
+}
+
+.hamburger.active .outer {
+  fill: #D3D3D3;
+  stroke: #0D0D0D;
+}
+
+.hamburger.active .inner {
+  fill: #FFB60D;
+}
+
+.clearfix:before, .clearfix:after {
+  content: "";
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
 }
 
 @media only screen and (max-width: 319px) {
