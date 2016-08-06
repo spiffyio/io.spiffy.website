@@ -10,21 +10,25 @@ import io.spiffy.common.Service;
 import io.spiffy.common.api.email.client.EmailClient;
 import io.spiffy.common.api.email.dto.EmailProperties;
 import io.spiffy.common.api.email.dto.EmailType;
+import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.user.entity.AccountEntity;
+import io.spiffy.user.entity.SessionEntity;
 import io.spiffy.user.repository.AccountRepository;
 
 public class AccountService extends Service<AccountEntity, AccountRepository> {
 
     private final CredentialService credentialService;
+    private final SessionService sessionService;
     private final EmailClient emailClient;
 
     @Inject
     public AccountService(final AccountRepository repository, final CredentialService credentialService,
-            final EmailClient emailClient) {
+            final SessionService sessionService, final EmailClient emailClient) {
         super(repository);
         this.credentialService = credentialService;
+        this.sessionService = sessionService;
         this.emailClient = emailClient;
     }
 
@@ -101,6 +105,27 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         return account;
     }
 
+    @Transactional
+    public AuthenticateAccountOutput authenticate(final String email, final String password, final String sessionId,
+            final String userAgent, final String ipAddress) {
+        final AccountEntity account = getByEmailAddress(email);
+        if (account == null) {
+            return null;
+        }
+
+        if (!credentialService.matches(account.getId(), password)) {
+            return null;
+        }
+
+        final SessionEntity session = sessionService.create(sessionId, account.getId(), userAgent, ipAddress);
+
+        final AuthenticateAccountOutput output = new AuthenticateAccountOutput();
+        output.setAccountId(account.getId());
+        output.setSessionToken(session.getToken());
+
+        return output;
+    }
+
     protected void validateUserName(final String userName) {
         ValidationUtil.validateLength("UserAccountEntity.userName", userName, AccountEntity.MIN_USER_NAME_LENGTH,
                 AccountEntity.MAX_USER_NAME_LENGTH);
@@ -109,5 +134,4 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     private long getEmailAddressId(final String emailAddress) {
         return emailClient.postEmailAddress(emailAddress);
     }
-
 }

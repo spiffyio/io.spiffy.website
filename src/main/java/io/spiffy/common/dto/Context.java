@@ -23,8 +23,10 @@ import io.spiffy.common.util.ListUtil;
 @Data
 @AllArgsConstructor
 public class Context {
-    public static final String SESSION_ID_COOKIE = "sessionId";
+    public static final String SESSION_ID_COOKIE = "session-id";
+    public static final String SESSION_TOKEN_COOKIE = "session-token";
 
+    public static final String USER_AGENT = "User-Agent";
     public static final String SPIFFY_FORWARDED_SESSION = "SPIFFY-Forwarded-Session";
     public static final String SPIFFY_API_CERTIFICATE = "SPIFFY-API-Certificate";
     public static final String X_CSRF_TOKEN = "X-CSRF-Token";
@@ -86,6 +88,15 @@ public class Context {
         return request.getServerName();
     }
 
+    public String getIPAddress() {
+        if (request == null) {
+            return null;
+        }
+
+        final String xff = request.getHeader(X_FORWARDED_FOR);
+        return xff != null ? xff : request.getRemoteAddr();
+    }
+
     public String getRequestUri() {
         if (request == null) {
             return null;
@@ -96,6 +107,10 @@ public class Context {
 
     public HttpSession getSession() {
         return request.getSession(true);
+    }
+
+    public String getUserAgent() {
+        return getHeader(USER_AGENT);
     }
 
     public String getHeader(final String name) {

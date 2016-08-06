@@ -18,6 +18,9 @@ public class CsrfAspect extends Aspect {
         final ClassMap args = new ClassMap(signature.getParameterTypes(), pjp.getArgs());
         final Context context = args.get(Context.class);
 
+        System.out.println(context.getCsrfToken());
+        System.out.println(context.generateCsrfToken(csrf.value()));
+
         if (context.isCsrfTokenValid(csrf.value())) {
             return pjp.proceed();
         }

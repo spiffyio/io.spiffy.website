@@ -33,6 +33,11 @@ $(document).ready (e) ->
     $(this).spiffySubmit '/signup', $(this).spiffyFormData(['username', 'email', 'password']), handler()
     return
 
+  $('form.sign-in').submit (e) ->
+    preventDefault e
+    $(this).spiffySubmit '/signin', $(this).spiffyFormData(['email', 'password']), handler()
+    return
+
   $('.close').click (e) ->
     closeModal()
     return

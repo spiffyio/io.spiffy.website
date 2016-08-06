@@ -311,6 +311,10 @@ $(document).ready(function(e) {
     preventDefault(e);
     $(this).spiffySubmit('/signup', $(this).spiffyFormData(['username', 'email', 'password']), handler());
   });
+  $('form.sign-in').submit(function(e) {
+    preventDefault(e);
+    $(this).spiffySubmit('/signin', $(this).spiffyFormData(['email', 'password']), handler());
+  });
   $('.close').click(function(e) {
     closeModal();
   });

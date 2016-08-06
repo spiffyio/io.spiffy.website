@@ -57,7 +57,7 @@
 
   <session-config>
     <cookie-config>
-      <name>sessionId</name>
+      <name>session-id</name>
       <http-only>true</http-only>
       <secure>${ secure }</secure>
     </cookie-config>
