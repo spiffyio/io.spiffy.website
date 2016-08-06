@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.ModelMap;
 
+import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.CsrfUtil;
 import io.spiffy.common.util.ListUtil;
 
@@ -159,6 +160,17 @@ public class Context {
         }
 
         response.sendRedirect(uri);
+    }
+
+    public void setSessionToken(final String token) {
+        System.out.println(token);
+
+        final Cookie cookie = new Cookie(SESSION_TOKEN_COOKIE, token);
+        cookie.setPath("/");
+        cookie.setSecure(AppConfig.isSecure());
+        cookie.setHttpOnly(true);
+        cookie.setMaxAge(8640000);
+        response.addCookie(cookie);
     }
 
     public void setSessionExpiry(final int expiry) {
