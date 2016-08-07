@@ -81,7 +81,7 @@
       </div>
     </div>
     <div class="modal-body" data-modal-id="sign-in">
-      <form class="sign-in" data-form="sign-in" <s:csrf name="sign-in" />>
+      <form class="sign-in" data-form="sign-in" <s:csrf name="login" />>
         <input type="email" placeholder="email" name="email" required autofocus />
         <input type="password" placeholder="password" name="password" required />
         <input class="button primary" type="submit" value="sign in" />

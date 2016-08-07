@@ -35,7 +35,7 @@ $(document).ready (e) ->
 
   $('form.sign-in').submit (e) ->
     preventDefault e
-    $(this).spiffySubmit '/signin', $(this).spiffyFormData(['email', 'password']), handler()
+    $(this).spiffySubmit '/login', $(this).spiffyFormData(['email', 'password']), handler()
     return
 
   $('.close').click (e) ->

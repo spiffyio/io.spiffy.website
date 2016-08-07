@@ -313,7 +313,7 @@ $(document).ready(function(e) {
   });
   $('form.sign-in').submit(function(e) {
     preventDefault(e);
-    $(this).spiffySubmit('/signin', $(this).spiffyFormData(['email', 'password']), handler());
+    $(this).spiffySubmit('/login', $(this).spiffyFormData(['email', 'password']), handler());
   });
   $('.close').click(function(e) {
     closeModal();

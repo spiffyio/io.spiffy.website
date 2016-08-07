@@ -30,7 +30,6 @@ import io.spiffy.common.api.security.client.SecurityClient;
 import io.spiffy.common.api.source.client.SourceClient;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.user.client.UserClient;
-import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.dto.Context;
 import io.spiffy.email.manager.EmailManager;
 import io.spiffy.user.service.CredentialService;
@@ -87,15 +86,6 @@ public class HomeController extends Controller {
     public String signup(final Context context, final @RequestParam String username, final @RequestParam String email,
             final @RequestParam String password) {
         userClient.registerAccount(username, email, password);
-        return "{\"success\":true}";
-    }
-
-    @Csrf("sign-in")
-    @ResponseBody
-    @RequestMapping(value = "/signin", method = RequestMethod.POST)
-    public String signup(final Context context, final @RequestParam String email, final @RequestParam String password) {
-        final AuthenticateAccountOutput output = userClient.authenticateAccount(email, password, context);
-        context.setSessionToken(output.getSessionToken());
         return "{\"success\":true}";
     }
 
