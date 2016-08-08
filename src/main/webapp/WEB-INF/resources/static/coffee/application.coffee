@@ -28,14 +28,20 @@ $(document).ready (e) ->
     openModal $(this).data('modal')
     return
 
-  $('form.sign-up').submit (e) ->
-    preventDefault e
-    $(this).spiffySubmit '/signup', $(this).spiffyFormData(['username', 'email', 'password']), handler()
+  $('[data-uri]').click (e) ->
+    go $(this).data('uri')
     return
 
-  $('form.sign-in').submit (e) ->
+  $('form.login').submit (e) ->
     preventDefault e
-    $(this).spiffySubmit '/login', $(this).spiffyFormData(['email', 'password']), handler()
+    form = $(this)
+    form.spiffySubmit '/login', $(this).spiffyFormData(['email', 'password']), () -> go(form.data('returnUri'))
+    return
+
+  $('form.register').submit (e) ->
+    preventDefault e
+    form = $(this)
+    form.spiffySubmit '/register', $(this).spiffyFormData(['username', 'email', 'password']), () -> go(form.data('returnUri'))
     return
 
   $('.close').click (e) ->

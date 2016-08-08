@@ -96,6 +96,37 @@ div.body
   background-size: 200% 200%
   animation: background-animation 15s ease infinite
 
+  div.centered
+    +center
+    +size(40%, 40%)
+    max-width: 100vh
+    padding-top: 17.5vh
+
+    +max-width($md)
+      width: 60%
+
+    +max-width($sm)
+      width: 80%
+
+    .logo
+      cursor: default
+
+    form
+      width: 100%
+      margin-top: 1em
+
+      input
+        +size(1.5em, 100%)
+        margin-top: 0.5em
+        display: block
+        font-size: 150%
+        line-height: 1.5em
+        text-align: center
+
+input
+  border: none
+  box-sizing: border-box
+
 @keyframes background-animation
   0%
     background-position: 50% 25%

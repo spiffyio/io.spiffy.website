@@ -2,6 +2,17 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
+<c:choose>
+  <c:when test="${ param.style eq 'simple' }">
+    <c:set var="sLogo" value="true" />
+    <c:set var="sHeaderBar" value="false" />
+  </c:when>
+  <c:otherwise>
+    <c:set var="sLogo" value="false" />
+    <c:set var="sHeaderBar" value="true" />
+  </c:otherwise>
+</c:choose>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -39,17 +50,28 @@
 <link rel="stylesheet" type="text/css" href="<s:resource file="css/application.min.css" />">
 </head>
 <body>
+
+<c:if test="${ sHeaderBar }">
 <div class="header">
   <div class="logo"><a href="/"><img src="<s:resource file="svg/icon.svg" />" /></a></div>
   <div class="menu">
     <ul>
       <li>&nbsp;</li>
       <li><span data-modal="new-post">new post</span></li>
-      <li><span data-modal="sign-in">sign in</span></li>
+      <li><span data-uri="/login">login</span></li>
       <li>&nbsp;</li>
     </ul>
   </div>
 </div>
-  
+</c:if>
+
 <div class="body">
+
+<c:if test="${ sHeaderBar }">
   <div class="header-padding"></div>
+</c:if>
+
+<c:if test="${ sLogo }">
+  <div class="centered">
+    <s:logo />
+</c:if>

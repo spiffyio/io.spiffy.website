@@ -75,6 +75,51 @@ div.body {
   animation: background-animation 15s ease infinite;
 }
 
+div.body div.centered {
+  margin-left: auto;
+  margin-right: auto;
+  height: 40%;
+  width: 40%;
+  max-width: 100vh;
+  padding-top: 17.5vh;
+}
+
+@media only screen and (max-width: 767px) {
+  div.body div.centered {
+    width: 60%;
+  }
+}
+
+@media only screen and (max-width: 479px) {
+  div.body div.centered {
+    width: 80%;
+  }
+}
+
+div.body div.centered .logo {
+  cursor: default;
+}
+
+div.body div.centered form {
+  width: 100%;
+  margin-top: 1em;
+}
+
+div.body div.centered form input {
+  height: 1.5em;
+  width: 100%;
+  margin-top: 0.5em;
+  display: block;
+  font-size: 150%;
+  line-height: 1.5em;
+  text-align: center;
+}
+
+input {
+  border: none;
+  box-sizing: border-box;
+}
+
 @keyframes background-animation {
   0% {
     background-position: 50% 25%;

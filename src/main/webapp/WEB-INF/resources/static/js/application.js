@@ -307,13 +307,24 @@ $(document).ready(function(e) {
   $('[data-modal]').click(function(e) {
     openModal($(this).data('modal'));
   });
-  $('form.sign-up').submit(function(e) {
-    preventDefault(e);
-    $(this).spiffySubmit('/signup', $(this).spiffyFormData(['username', 'email', 'password']), handler());
+  $('[data-uri]').click(function(e) {
+    go($(this).data('uri'));
   });
-  $('form.sign-in').submit(function(e) {
+  $('form.login').submit(function(e) {
+    var form;
     preventDefault(e);
-    $(this).spiffySubmit('/login', $(this).spiffyFormData(['email', 'password']), handler());
+    form = $(this);
+    form.spiffySubmit('/login', $(this).spiffyFormData(['email', 'password']), function() {
+      return go(form.data('returnUri'));
+    });
+  });
+  $('form.register').submit(function(e) {
+    var form;
+    preventDefault(e);
+    form = $(this);
+    form.spiffySubmit('/register', $(this).spiffyFormData(['username', 'email', 'password']), function() {
+      return go(form.data('returnUri'));
+    });
   });
   $('.close').click(function(e) {
     closeModal();

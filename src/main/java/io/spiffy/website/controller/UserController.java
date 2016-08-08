@@ -17,14 +17,22 @@ import io.spiffy.common.dto.Context;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.LoginResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
+
+    private static final String FORM_KEY = "form";
+    private static final String RETURN_URI_KEY = "returnUri";
+
+    private static final String FORM_LOGIN = "login";
+    private static final String FORM_REGISTER = "register";
 
     private final UserClient userClient;
 
     @RequestMapping({ "/login", "/signin" })
     public ModelAndView login(final Context context,
             final @RequestParam(required = false, defaultValue = "/") String returnUri) {
+        context.addAttribute(FORM_KEY, FORM_LOGIN);
+        context.addAttribute(RETURN_URI_KEY, returnUri);
         return mav("authenticate", context);
     }
 
@@ -40,6 +48,8 @@ public class UserController extends Controller {
     @RequestMapping({ "/register", "/signup" })
     public ModelAndView register(final Context context,
             final @RequestParam(required = false, defaultValue = "/") String returnUri) {
+        context.addAttribute(FORM_KEY, FORM_REGISTER);
+        context.addAttribute(RETURN_URI_KEY, returnUri);
         return mav("authenticate", context);
     }
 

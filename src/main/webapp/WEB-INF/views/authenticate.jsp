@@ -2,19 +2,29 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
-<jsp:include page="common/header.jsp" />
+<jsp:include page="common/header.jsp">
+  <jsp:param name="style" value="simple" />
+</jsp:include>
 
-  <form class="login" <s:csrf name="login" />>
+  <c:if test="${ form eq 'login' }">
+  <form class="login" <s:csrf name="login" /> data-return-uri="<c:out value="${ returnUri }" />">
     <input type="email" placeholder="email" name="email" required autofocus />
     <input type="password" placeholder="password" name="password" required />
-    <input class="button primary" type="submit" value="sign in" />
+    <input class="button primary" type="submit" value="login" />
   </form>
+  </c:if>
   
-  <form class="register" <s:csrf name="register" />>
+  <c:if test="${ form eq 'register' }">
+  <form class="register" <s:csrf name="register" /> data-return-uri="<c:out value="${ returnUri }" />">
     <input type="text" placeholder="username" name="username" required autofocus />
     <input type="email" placeholder="email" name="email" required />
     <input type="password" placeholder="password" name="password" required />
-    <input class="button primary" type="submit" value="sign up" />
+    <input class="button danger" type="submit" value="register" />
   </form>
+  </c:if>
 
-<jsp:include page="common/footer.jsp" />
+ </div>
+
+<jsp:include page="common/footer.jsp">
+  <jsp:param name="style" value="simple" />
+</jsp:include>
