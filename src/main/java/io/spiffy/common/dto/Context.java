@@ -24,6 +24,20 @@ import io.spiffy.common.util.ListUtil;
 @Data
 @AllArgsConstructor
 public class Context {
+    private enum CookieAge {
+        DELETE(0), SESSION(-1), STANDARD(10 * 365 * 24 * 60 * 60);
+
+        private final int age;
+
+        private CookieAge(final int age) {
+            this.age = age;
+        }
+
+        public int getAge() {
+            return age;
+        }
+    }
+
     public static final String SESSION_ID_COOKIE = "session-id";
     public static final String SESSION_TOKEN_COOKIE = "session-token";
 
@@ -162,28 +176,39 @@ public class Context {
         response.sendRedirect(uri);
     }
 
-    public void setSessionToken(final String token) {
-        System.out.println(token);
-
-        final Cookie cookie = new Cookie(SESSION_TOKEN_COOKIE, token);
-        cookie.setPath("/");
-        cookie.setSecure(AppConfig.isSecure());
-        cookie.setHttpOnly(true);
-        cookie.setMaxAge(8640000);
-        response.addCookie(cookie);
+    public void initializeSession(final String token) {
+        setCookie(SESSION_ID_COOKIE, CookieAge.STANDARD);
+        setCookie(SESSION_TOKEN_COOKIE, token, CookieAge.STANDARD);
     }
 
-    public void setSessionExpiry(final int expiry) {
+    public void invalidateSession() {
+        deleteCookie(SESSION_TOKEN_COOKIE);
+        getSession().invalidate();
+    }
+
+    public void deleteCookie(final String name) {
+        setCookie(name, CookieAge.DELETE);
+    }
+
+    public void setCookie(final String name, final CookieAge age) {
+        setCookie(name, null, age);
+    }
+
+    public void setCookie(final String name, final String value, final CookieAge age) {
         if (response == null) {
             return;
         }
 
-        final Cookie cookie = getCookie(SESSION_ID_COOKIE);
+        Cookie cookie = getCookie(name);
         if (cookie == null) {
-            return;
+            cookie = new Cookie(name, value);
         }
 
-        cookie.setMaxAge(expiry);
+        cookie.setMaxAge(age.getAge());
+
+        cookie.setPath("/");
+        cookie.setSecure(AppConfig.isSecure());
+        cookie.setHttpOnly(true);
         response.addCookie(cookie);
     }
 
