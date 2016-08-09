@@ -96,6 +96,31 @@ div.body
   background-size: 200% 200%
   animation: background-animation 15s ease infinite
 
+  div.letter
+    +center
+    text-align: justify
+
+    +min-width($md)
+      width: 600px
+
+    +max-width($md)
+      width: 80%
+
+    +max-width($sm)
+      width: 100%
+
+    .logo
+      width: 50%
+      margin: 0 25%
+      cursor: default
+
+    h3
+      margin-top: 1em
+
+    li
+      list-style-position: inside
+      text-indent: 2.5em
+
   div.centered
     +center
     +size(40%, 40%)

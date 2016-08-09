@@ -4,11 +4,18 @@
 
 <c:choose>
   <c:when test="${ param.style eq 'simple' }">
+    <c:set var="sLetter" value="false" />
     <c:set var="sLogo" value="true" />
     <c:set var="sHeaderBar" value="false" />
   </c:when>
+  <c:when test="${ param.style eq 'legal' }">
+    <c:set var="sLetter" value="true" />
+    <c:set var="sLogo" value="false" />
+    <c:set var="sHeaderBar" value="true" />
+  </c:when>
   <c:otherwise>
     <c:set var="sLogo" value="false" />
+    <c:set var="sLetter" value="false" />
     <c:set var="sHeaderBar" value="true" />
   </c:otherwise>
 </c:choose>
@@ -73,5 +80,10 @@
 
 <c:if test="${ sLogo }">
   <div class="centered">
+    <s:logo />
+</c:if>
+
+<c:if test="${ sLetter }">
+  <div class="letter">
     <s:logo />
 </c:if>

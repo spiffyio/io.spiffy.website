@@ -75,6 +75,45 @@ div.body {
   animation: background-animation 15s ease infinite;
 }
 
+div.body div.letter {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: justify;
+}
+
+@media only screen and (min-width: 768px) {
+  div.body div.letter {
+    width: 600px;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  div.body div.letter {
+    width: 80%;
+  }
+}
+
+@media only screen and (max-width: 479px) {
+  div.body div.letter {
+    width: 100%;
+  }
+}
+
+div.body div.letter .logo {
+  width: 50%;
+  margin: 0 25%;
+  cursor: default;
+}
+
+div.body div.letter h3 {
+  margin-top: 1em;
+}
+
+div.body div.letter li {
+  list-style-position: inside;
+  text-indent: 2.5em;
+}
+
 div.body div.centered {
   margin-left: auto;
   margin-right: auto;
