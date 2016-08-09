@@ -53,7 +53,7 @@ div.header div.menu ul li {
   text-align: center;
 }
 
-div.header div.menu ul li span {
+div.header div.menu ul li a, div.header div.menu ul li span {
   color: #5FD4F5;
   text-decoration: none;
   font-weight: bold;
@@ -75,52 +75,11 @@ div.body {
   animation: background-animation 15s ease infinite;
 }
 
-div.body div.letter {
-  margin-left: auto;
-  margin-right: auto;
-  text-align: justify;
-}
-
-@media only screen and (min-width: 768px) {
-  div.body div.letter {
-    width: 600px;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  div.body div.letter {
-    width: 80%;
-  }
-}
-
-@media only screen and (max-width: 479px) {
-  div.body div.letter {
-    width: 100%;
-  }
-}
-
-div.body div.letter .logo {
-  width: 50%;
-  margin: 0 25%;
-  cursor: default;
-}
-
-div.body div.letter h3 {
-  margin-top: 1em;
-}
-
-div.body div.letter li {
-  list-style-position: inside;
-  text-indent: 2.5em;
-}
-
 div.body div.centered {
-  margin-left: auto;
-  margin-right: auto;
   height: 40%;
   width: 40%;
   max-width: 100vh;
-  padding-top: 17.5vh;
+  margin: 2em auto;
 }
 
 @media only screen and (max-width: 767px) {
@@ -135,8 +94,30 @@ div.body div.centered {
   }
 }
 
+div.body div.centered div.letter {
+  text-align: justify;
+}
+
+div.body div.centered div.letter h2 {
+  height: auto;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+div.body div.centered div.letter h3 {
+  margin-top: 1em;
+}
+
+div.body div.centered div.letter li {
+  list-style-position: inside;
+  text-indent: 2.5em;
+}
+
 div.body div.centered .logo {
   cursor: default;
+  padding-top: 17.5vh;
 }
 
 div.body div.centered form {

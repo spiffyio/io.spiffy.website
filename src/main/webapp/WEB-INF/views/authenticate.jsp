@@ -20,6 +20,7 @@
     <input type="text" placeholder="username" name="username" required autofocus />
     <input type="email" placeholder="email" name="email" required />
     <input type="password" placeholder="password" name="password" required />
+    <input type="password" placeholder="retype password" name="confirm_password" required />
     <div class="g-recaptcha"></div>
     <input class="button danger" type="submit" value="register" />
   </form>

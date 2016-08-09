@@ -5,13 +5,13 @@
 <c:choose>
   <c:when test="${ param.style eq 'authenticate' }">
     <c:set var="iCaptcha" value="true" />
-    <c:set var="sLetter" value="false" />
+    <c:set var="sCentered" value="true" />
     <c:set var="sLogo" value="true" />
     <c:set var="sHeaderBar" value="false" />
   </c:when>
-  <c:when test="${ param.style eq 'legal' }">
+  <c:when test="${ param.style eq 'centered' }">
     <c:set var="iCaptcha" value="false" />
-    <c:set var="sLetter" value="true" />
+    <c:set var="sCentered" value="true" />
     <c:set var="sLogo" value="false" />
     <c:set var="sHeaderBar" value="true" />
   </c:when>
@@ -71,7 +71,7 @@
     <ul>
       <li>&nbsp;</li>
       <li><span data-modal="new-post">new post</span></li>
-      <li><span data-uri="/login">login</span></li>
+      <li><a href="/login">login</a></li>
       <li>&nbsp;</li>
     </ul>
   </div>
@@ -84,12 +84,10 @@
   <div class="header-padding"></div>
 </c:if>
 
-<c:if test="${ sLogo }">
+<c:if test="${ sCentered }">
   <div class="centered">
-    <s:logo />
 </c:if>
 
-<c:if test="${ sLetter }">
-  <div class="letter">
+<c:if test="${ sLogo }">
     <s:logo />
 </c:if>

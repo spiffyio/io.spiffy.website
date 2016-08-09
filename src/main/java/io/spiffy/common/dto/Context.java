@@ -50,6 +50,8 @@ public class Context {
     public static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
     public static final String X_SSL_SECURE = "X-SSL-Secure";
 
+    public static final String UNKNOWN_USER_AGENT = "Unknown";
+
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final FilterChain chain;
@@ -125,7 +127,12 @@ public class Context {
     }
 
     public String getUserAgent() {
-        return getHeader(USER_AGENT);
+        final String userAgent = getHeader(USER_AGENT);
+        if (StringUtils.isEmpty(userAgent)) {
+            return UNKNOWN_USER_AGENT;
+        }
+
+        return userAgent;
     }
 
     public String getHeader(final String name) {

@@ -5,6 +5,6 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @EqualsAndHashCode(callSuper = false)
-public class LoginResponse extends AjaxResponse {
-    private final String token;
+public class InvalidRecaptchaResponse extends AjaxResponse {
+    private final String error = "recaptcha";
 }

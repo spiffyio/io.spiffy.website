@@ -8,13 +8,20 @@ import io.spiffy.common.dto.Context;
 
 public class LegalController extends Controller {
 
+    private static final String LETTER_KEY = "letter";
+
+    private static final String LETTER_PRIVACY = "privacy";
+    private static final String LETTER_TERMS = "terms";
+
     @RequestMapping("/privacy")
     public ModelAndView privacy(final Context context) {
-        return mav("privacy", context);
+        context.addAttribute(LETTER_KEY, LETTER_PRIVACY);
+        return mav("legal", context);
     }
 
     @RequestMapping("/terms")
     public ModelAndView terms(final Context context) {
-        return mav("terms", context);
+        context.addAttribute(LETTER_KEY, LETTER_TERMS);
+        return mav("legal", context);
     }
 }
