@@ -6,6 +6,7 @@ import javax.ws.rs.client.WebTarget;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 
 import com.amazonaws.auth.AWSCredentials;
 
@@ -30,8 +31,14 @@ public class BeanConfig {
         return ClientBuilder.newClient();
     }
 
-    @Bean
+    @Primary
+    @Bean(name = "webTarget")
     public WebTarget getWebTarget(final Client client) {
         return client.target(AppConfig.getRestEndpoint());
+    }
+
+    @Bean(name = "googleWebTarget")
+    public WebTarget getGoogleWebTarget(final Client client) {
+        return client.target("https://www.google.com/");
     }
 }

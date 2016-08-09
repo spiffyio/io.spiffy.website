@@ -15,9 +15,10 @@ import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.dto.Context;
 import io.spiffy.website.annotation.Csrf;
+import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.LoginResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -26,6 +27,7 @@ public class UserController extends Controller {
     private static final String FORM_LOGIN = "login";
     private static final String FORM_REGISTER = "register";
 
+    private final GoogleClient googleClient;
     private final UserClient userClient;
 
     @RequestMapping({ "/login", "/signin" })
@@ -39,7 +41,12 @@ public class UserController extends Controller {
     @ResponseBody
     @Csrf("login")
     @RequestMapping(value = { "/login", "signin" }, method = RequestMethod.POST)
-    public LoginResponse login(final Context context, final @RequestParam String email, final @RequestParam String password) {
+    public LoginResponse login(final Context context, final @RequestParam String email, final @RequestParam String password,
+            final @RequestParam("g-recaptcha-response") String recaptcha) {
+        if (!googleClient.recaptcha(context, recaptcha)) {
+            throw new RuntimeException("captcha failed bro");
+        }
+
         final AuthenticateAccountOutput output = userClient.authenticateAccount(email, password, context);
         context.initializeSession(output.getSessionToken());
         return new LoginResponse(output.getSessionToken());
@@ -57,7 +64,7 @@ public class UserController extends Controller {
     @Csrf("register")
     @RequestMapping(value = { "/register", "signup" }, method = RequestMethod.POST)
     public LoginResponse register(final Context context, final @RequestParam String username, final @RequestParam String email,
-            final @RequestParam String password) {
+            final @RequestParam String password, final @RequestParam("g-recaptcha-response") String recaptcha) {
         userClient.registerAccount(username, email, password);
         final AuthenticateAccountOutput output = userClient.authenticateAccount(email, password, context);
         context.initializeSession(output.getSessionToken());

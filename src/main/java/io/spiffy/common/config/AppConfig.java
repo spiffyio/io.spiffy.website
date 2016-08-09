@@ -31,6 +31,9 @@ public class AppConfig {
     private static final String encryptionIV;
 
     @Getter
+    private static final String recaptchaSecretKey;
+
+    @Getter
     private static final boolean secure;
 
     @Getter
@@ -61,6 +64,7 @@ public class AppConfig {
         awsSecretKey = System.getProperty("AWS_SECRET_KEY");
         encryptionKey = System.getProperty("encryptionKey");
         encryptionIV = System.getProperty("encryptionInitVector");
+        recaptchaSecretKey = System.getProperty("recaptchaSecretKey");
         secure = TRUE.equalsIgnoreCase(System.getProperty("secure"));
 
         if (LOCAL.equalsIgnoreCase(stage)) {

@@ -35,13 +35,13 @@ $(document).ready (e) ->
   $('form.login').submit (e) ->
     preventDefault e
     form = $(this)
-    form.spiffySubmit '/login', $(this).spiffyFormData(['email', 'password']), () -> go(form.data('returnUri'))
+    form.spiffySubmit '/login', $(this).spiffyFormData(['email', 'password', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
     return
 
   $('form.register').submit (e) ->
     preventDefault e
     form = $(this)
-    form.spiffySubmit '/register', $(this).spiffyFormData(['username', 'email', 'password']), () -> go(form.data('returnUri'))
+    form.spiffySubmit '/register', $(this).spiffyFormData(['username', 'email', 'password', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
     return
 
   $('.close').click (e) ->

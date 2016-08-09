@@ -314,7 +314,7 @@ $(document).ready(function(e) {
     var form;
     preventDefault(e);
     form = $(this);
-    form.spiffySubmit('/login', $(this).spiffyFormData(['email', 'password']), function() {
+    form.spiffySubmit('/login', $(this).spiffyFormData(['email', 'password', 'g-recaptcha-response']), function() {
       return go(form.data('returnUri'));
     });
   });
@@ -322,7 +322,7 @@ $(document).ready(function(e) {
     var form;
     preventDefault(e);
     form = $(this);
-    form.spiffySubmit('/register', $(this).spiffyFormData(['username', 'email', 'password']), function() {
+    form.spiffySubmit('/register', $(this).spiffyFormData(['username', 'email', 'password', 'g-recaptcha-response']), function() {
       return go(form.data('returnUri'));
     });
   });
