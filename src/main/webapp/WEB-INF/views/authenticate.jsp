@@ -3,13 +3,14 @@
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
 <jsp:include page="common/header.jsp">
-  <jsp:param name="style" value="simple" />
+  <jsp:param name="style" value="authenticate" />
 </jsp:include>
 
   <c:if test="${ form eq 'login' }">
   <form class="login" <s:csrf name="login" /> data-return-uri="<c:out value="${ returnUri }" />">
     <input type="email" placeholder="email" name="email" required autofocus />
     <input type="password" placeholder="password" name="password" required />
+    <div class="g-recaptcha"></div>
     <input class="button primary" type="submit" value="login" />
   </form>
   </c:if>
@@ -19,6 +20,7 @@
     <input type="text" placeholder="username" name="username" required autofocus />
     <input type="email" placeholder="email" name="email" required />
     <input type="password" placeholder="password" name="password" required />
+    <div class="g-recaptcha"></div>
     <input class="button danger" type="submit" value="register" />
   </form>
   </c:if>

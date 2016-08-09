@@ -3,17 +3,20 @@
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
 <c:choose>
-  <c:when test="${ param.style eq 'simple' }">
+  <c:when test="${ param.style eq 'authenticate' }">
+    <c:set var="iCaptcha" value="true" />
     <c:set var="sLetter" value="false" />
     <c:set var="sLogo" value="true" />
     <c:set var="sHeaderBar" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'legal' }">
+    <c:set var="iCaptcha" value="false" />
     <c:set var="sLetter" value="true" />
     <c:set var="sLogo" value="false" />
     <c:set var="sHeaderBar" value="true" />
   </c:when>
   <c:otherwise>
+    <c:set var="iCaptcha" value="false" />
     <c:set var="sLogo" value="false" />
     <c:set var="sLetter" value="false" />
     <c:set var="sHeaderBar" value="true" />
@@ -55,6 +58,9 @@
 <meta name="theme-color" content="#c0effd">
 
 <link rel="stylesheet" type="text/css" href="<s:resource file="css/application.min.css" />">
+<c:if test="${ iCaptcha }">
+<script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit'></script>
+</c:if>
 </head>
 <body>
 

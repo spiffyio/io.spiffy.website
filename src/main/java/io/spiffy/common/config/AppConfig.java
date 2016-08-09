@@ -59,8 +59,8 @@ public class AppConfig {
         apiKey = System.getProperty("apiKey");
         awsAccessKeyId = System.getProperty("AWS_ACCESS_KEY_ID");
         awsSecretKey = System.getProperty("AWS_SECRET_KEY");
-        encryptionKey = System.getProperty("encryption.key");
-        encryptionIV = System.getProperty("encryption.init_vector");
+        encryptionKey = System.getProperty("encryptionKey");
+        encryptionIV = System.getProperty("encryptionInitVector");
         secure = TRUE.equalsIgnoreCase(System.getProperty("secure"));
 
         if (LOCAL.equalsIgnoreCase(stage)) {

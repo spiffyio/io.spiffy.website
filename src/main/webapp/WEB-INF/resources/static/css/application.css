@@ -140,14 +140,16 @@ div.body div.centered .logo {
 }
 
 div.body div.centered form {
-  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
   margin-top: 1em;
 }
 
 div.body div.centered form input {
   height: 1.5em;
   width: 100%;
-  margin-top: 0.5em;
+  margin: 0.5em 0;
   display: block;
   font-size: 150%;
   line-height: 1.5em;
