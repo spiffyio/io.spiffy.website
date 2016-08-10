@@ -6,33 +6,44 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
+
 import io.spiffy.common.Client;
 import io.spiffy.common.api.PostOutput;
-import io.spiffy.common.api.user.call.AuthenticateAccountCall;
-import io.spiffy.common.api.user.call.GetSessionsCall;
-import io.spiffy.common.api.user.call.PostAccountCall;
-import io.spiffy.common.api.user.call.RegisterAccountCall;
+import io.spiffy.common.api.user.call.*;
 import io.spiffy.common.api.user.dto.Session;
-import io.spiffy.common.api.user.input.AuthenticateAccountInput;
-import io.spiffy.common.api.user.input.GetSessionsInput;
-import io.spiffy.common.api.user.input.PostAccountInput;
-import io.spiffy.common.api.user.input.RegisterAccountInput;
+import io.spiffy.common.api.user.input.*;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
+import io.spiffy.common.api.user.output.AuthenticateSessionOutput;
 import io.spiffy.common.api.user.output.GetSessionsOutput;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserClient extends Client {
 
     final AuthenticateAccountCall authenticateAccountCall;
+    final AuthenticateSessionCall authenticateSessionCall;
     final GetSessionsCall getSessionsCall;
     final PostAccountCall postAccountCall;
     final RegisterAccountCall registerAccountCall;
 
-    public AuthenticateAccountOutput authenticateAccount(final String email, final String password, final Context context) {
+    public AuthenticateAccountOutput authenticateAccount(final String email, final String password, final Context context,
+            final String fingerprint) {
         final AuthenticateAccountInput input = new AuthenticateAccountInput(email, password, context.getSessionId(),
-                context.getUserAgent(), context.getIPAddress());
+                fingerprint, context.getUserAgent(), context.getIPAddress());
         return authenticateAccountCall.call(input);
+    }
+
+    public Long authenticateSession(final Context context) {
+        final String token = context.getSessionToken();
+        if (StringUtils.isEmpty(token)) {
+            return null;
+        }
+
+        final AuthenticateSessionInput input = new AuthenticateSessionInput(context.getSessionId(), token,
+                context.getUserAgent(), context.getIPAddress());
+        final AuthenticateSessionOutput output = authenticateSessionCall.call(input);
+        return output.getAccountId();
     }
 
     public List<Session> getSessions(final long accountId) {

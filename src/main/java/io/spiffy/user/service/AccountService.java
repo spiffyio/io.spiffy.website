@@ -107,7 +107,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
 
     @Transactional
     public AuthenticateAccountOutput authenticate(final String email, final String password, final String sessionId,
-            final String userAgent, final String ipAddress) {
+            final String fingerprint, final String userAgent, final String ipAddress) {
         final AccountEntity account = getByEmailAddress(email);
         if (account == null) {
             return null;
@@ -117,7 +117,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
             return null;
         }
 
-        final SessionEntity session = sessionService.create(sessionId, account.getId(), userAgent, ipAddress);
+        final SessionEntity session = sessionService.create(sessionId, account.getId(), fingerprint, userAgent, ipAddress);
 
         final AuthenticateAccountOutput output = new AuthenticateAccountOutput();
         output.setAccountId(account.getId());

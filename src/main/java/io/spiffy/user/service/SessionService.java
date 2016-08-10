@@ -37,26 +37,48 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
     }
 
     @Transactional
+    public SessionEntity getByAccountAndFingerprint(final long accountId, final String fingerprint) {
+        return repository.getByAccountAndFingerprint(accountId, fingerprint);
+    }
+
+    @Transactional
     public List<SessionEntity> getByAccount(final long accountId) {
         final List<SessionEntity> entities = repository.getByAccount(accountId);
-        entities.forEach(e -> e.setIpAddress(securityClient.decryptString(e.getIpAddressId())));
+        entities.forEach(e -> e.setIpAddress(securityClient.decryptString(e.getLastIPAddressId())));
         return entities;
     }
 
     @Transactional
     public SessionEntity post(final String sessionId, final String token, final long accountId, final Date authenticatedAt,
-            final String userAgent, final String ipAddress, final Date invalidatedAt) {
-        SessionEntity entity = get(sessionId);
+            final String fingerprint, final String userAgent, final String ipAddress, final Date invalidatedAt) {
+        final long ipAddressId = securityClient.encryptString(ipAddress);
 
+        SessionEntity entity = get(sessionId);
         if (entity != null) {
-            if (securityClient.matchesHashedString(entity.getTokenId(), token)) {
-                return entity;
+            if (!securityClient.matchesHashedString(entity.getTokenId(), token)) {
+                throw new RuntimeException("invalid token");
             }
         } else {
+            entity = getByAccountAndFingerprint(accountId, fingerprint);
+            if (entity != null) {
+                entity.setInvalidatedAt(new Date());
+                repository.saveOrUpdate(entity);
+            }
+
             final long tokenId = securityClient.hashString(token);
-            final long ipAddressId = securityClient.encryptString(ipAddress);
-            entity = new SessionEntity(sessionId, tokenId, accountId, authenticatedAt, userAgent, ipAddressId);
+            entity = new SessionEntity(sessionId, tokenId, accountId, authenticatedAt, fingerprint, userAgent, ipAddressId);
             entity.setToken(token);
+        }
+
+        entity.setLastAccessedAt(new Date());
+        entity.setLastIPAddressId(ipAddressId);
+
+        if (fingerprint != null) {
+            entity.setLastFingerprint(fingerprint);
+        }
+
+        if (userAgent != null) {
+            entity.setLastUserAgent(userAgent);
         }
 
         entity.setInvalidatedAt(invalidatedAt);
@@ -67,9 +89,25 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
     }
 
     @Transactional
-    public SessionEntity create(final String sessionId, final long accountId, final String userAgent, final String ipAddress) {
-        return post(sessionId, RandomUtil.randomAlphaNumericString(TOKEN_LENGTH), accountId, new Date(), userAgent, ipAddress,
-                null);
+    public SessionEntity create(final String sessionId, final long accountId, final String fingerprint, final String userAgent,
+            final String ipAddress) {
+        return post(sessionId, RandomUtil.randomAlphaNumericString(TOKEN_LENGTH), accountId, new Date(), fingerprint, userAgent,
+                ipAddress, null);
+    }
+
+    @Transactional
+    public SessionEntity authenticate(final String sessionId, final String token, final String userAgent,
+            final String ipAddress) {
+        final SessionEntity entity = get(sessionId);
+        if (entity == null) {
+            return null;
+        }
+
+        if (!securityClient.matchesHashedString(entity.getTokenId(), token)) {
+            return null;
+        }
+
+        return post(sessionId, token, entity.getAccountId(), null, null, userAgent, ipAddress, null);
     }
 
     @Transactional

@@ -69,10 +69,18 @@
   <div class="logo"><a href="/"><img src="<s:resource file="svg/icon.svg" />" /></a></div>
   <div class="menu">
     <ul>
+      <c:if test="${ empty account }">
       <li>&nbsp;</li>
       <li><span data-modal="new-post">new post</span></li>
       <li><a href="/login">login</a></li>
       <li>&nbsp;</li>
+      </c:if>
+      <c:if test="${ not empty account }">
+      <li>&nbsp;</li>
+      <li><span data-modal="new-post">new post</span></li>
+      <li><a href="/logout">logout</a></li>
+      <li>&nbsp;</li>
+      </c:if>
     </ul>
   </div>
 </div>

@@ -13,7 +13,7 @@ import io.spiffy.common.HibernateEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "USER_SESSIONS", uniqueConstraints = @UniqueConstraint(columnNames = { "session_id", "archived_at" }) )
+@Table(name = "USER_SESSIONS", uniqueConstraints = @UniqueConstraint(columnNames = { "session_id", "archived_at" }))
 public class SessionEntity extends HibernateEntity {
 
     public static final int MIN_SESSION_ID_LENGTH = 3;
@@ -33,21 +33,42 @@ public class SessionEntity extends HibernateEntity {
     @Column(name = "authenticated_at", columnDefinition = "DATETIME", nullable = false)
     private Date authenticatedAt;
 
-    @Column(name = "user_agent", nullable = false)
-    private String userAgent;
+    @Column(name = "authenticated_ip_address_id", nullable = false)
+    private Long authenticatedIPAddressId;
 
-    @Column(name = "ip_address_id", nullable = false)
-    private Long ipAddressId;
+    @Column(name = "authenticated_fingerprint")
+    private String authenticatedFingerprint;
+
+    @Column(name = "authenticated_user_agent")
+    private String authenticatedUserAgent;
 
     public SessionEntity(final String sessionId, final long tokenId, final long accountId, final Date authenticatedAt,
-            final String userAgent, final long ipAddressId) {
+            final String fingerprint, final String userAgent, final long ipAddressId) {
         this.sessionId = sessionId;
         this.tokenId = tokenId;
         this.accountId = accountId;
         this.authenticatedAt = authenticatedAt;
-        this.userAgent = userAgent;
-        this.ipAddressId = ipAddressId;
+        authenticatedFingerprint = fingerprint;
+        authenticatedUserAgent = userAgent;
+        authenticatedIPAddressId = ipAddressId;
     }
+
+    @Setter
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "last_accessed_at", columnDefinition = "DATETIME")
+    private Date lastAccessedAt;
+
+    @Setter
+    @Column(name = "last_ip_address_id", nullable = false)
+    private Long lastIPAddressId;
+
+    @Setter
+    @Column(name = "last_fingerprint")
+    private String lastFingerprint;
+
+    @Setter
+    @Column(name = "last_user_agent")
+    private String lastUserAgent;
 
     @Setter
     @Temporal(TemporalType.TIMESTAMP)

@@ -18,7 +18,7 @@ public class AuthenticateAccountAPI extends API<AuthenticateAccountInput, Authen
     }
 
     protected AuthenticateAccountOutput api(final AuthenticateAccountInput input) {
-        return service.authenticate(input.getEmail(), input.getPassword(), input.getSessionId(), input.getUserAgent(),
-                input.getIpAddress());
+        return service.authenticate(input.getEmail(), input.getPassword(), input.getSessionId(), input.getFingerprint(),
+                input.getUserAgent(), input.getIpAddress());
     }
 }

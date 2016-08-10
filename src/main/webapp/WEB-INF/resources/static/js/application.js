@@ -289,6 +289,7 @@ Dropzone.options.dzForm = {
 };
 
 $(document).ready(function(e) {
+  var hash;
   $('div.header').mouseenter(function() {
     if ($(this).is(':hover')) {
       hAnimate('0');
@@ -310,11 +311,19 @@ $(document).ready(function(e) {
   $('[data-uri]').click(function(e) {
     go($(this).data('uri'));
   });
+  if ($('input[name="fingerprint"]')) {
+    hash = fingerprint();
+    if (hash != null) {
+      $('input[name="fingerprint"]').each(function() {
+        $(this).val(hash);
+      });
+    }
+  }
   $('form.login').submit(function(e) {
     var form;
     preventDefault(e);
     form = $(this);
-    form.spiffySubmit('/login', $(this).spiffyFormData(['email', 'password', 'g-recaptcha-response']), function() {
+    form.spiffySubmit('/login', $(this).spiffyFormData(['email', 'password', 'fingerprint', 'g-recaptcha-response']), function() {
       return go(form.data('returnUri'));
     });
   });
@@ -322,7 +331,7 @@ $(document).ready(function(e) {
     var form;
     preventDefault(e);
     form = $(this);
-    form.spiffySubmit('/register', $(this).spiffyFormData(['username', 'email', 'password', 'g-recaptcha-response']), function() {
+    form.spiffySubmit('/register', $(this).spiffyFormData(['username', 'email', 'password', 'fingerprint', 'g-recaptcha-response']), function() {
       return go(form.data('returnUri'));
     });
   });
@@ -360,13 +369,19 @@ closeModal = function() {
 };
 
 fingerprint = function() {
-  var fp;
+  var fp, options;
   fp = sessionStorage.getItem('fingerprint');
   if (fp != null) {
     return fp;
   }
-  new Fingerprint2().get(function(hash) {
+  options = {
+    excludeAdBlock: true
+  };
+  new Fingerprint2(options).get(function(hash) {
     sessionStorage.setItem('fingerprint', hash);
+    $('input[name="fingerprint"]').each(function() {
+      $(this).val(hash);
+    });
   });
   return null;
 };

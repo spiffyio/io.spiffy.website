@@ -20,7 +20,7 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.InvalidRecaptchaResponse;
 import io.spiffy.website.response.LoginResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -51,12 +51,13 @@ public class UserController extends Controller {
     @Csrf("login")
     @RequestMapping(value = { "/login", "signin" }, method = RequestMethod.POST)
     public AjaxResponse login(final Context context, final @RequestParam String email, final @RequestParam String password,
+            final @RequestParam(required = false) String fingerprint,
             final @RequestParam("g-recaptcha-response") String recaptcha) {
         if (!googleClient.recaptcha(context, recaptcha)) {
             return new InvalidRecaptchaResponse();
         }
 
-        final AuthenticateAccountOutput output = userClient.authenticateAccount(email, password, context);
+        final AuthenticateAccountOutput output = userClient.authenticateAccount(email, password, context, fingerprint);
         context.initializeSession(output.getSessionToken());
         return new LoginResponse(output.getSessionToken());
     }
@@ -73,13 +74,14 @@ public class UserController extends Controller {
     @Csrf("register")
     @RequestMapping(value = { "/register", "signup" }, method = RequestMethod.POST)
     public AjaxResponse register(final Context context, final @RequestParam String username, final @RequestParam String email,
-            final @RequestParam String password, final @RequestParam("g-recaptcha-response") String recaptcha) {
+            final @RequestParam String password, final @RequestParam(required = false) String fingerprint,
+            final @RequestParam("g-recaptcha-response") String recaptcha) {
         if (!googleClient.recaptcha(context, recaptcha)) {
             return new InvalidRecaptchaResponse();
         }
 
         userClient.registerAccount(username, email, password);
-        final AuthenticateAccountOutput output = userClient.authenticateAccount(email, password, context);
+        final AuthenticateAccountOutput output = userClient.authenticateAccount(email, password, context, fingerprint);
         context.initializeSession(output.getSessionToken());
         return new LoginResponse(output.getSessionToken());
     }

@@ -10,6 +10,7 @@
   <form class="login" <s:csrf name="login" /> data-return-uri="<c:out value="${ returnUri }" />">
     <input type="email" placeholder="email" name="email" required autofocus />
     <input type="password" placeholder="password" name="password" required />
+    <input type="hidden" name="fingerprint" />
     <div class="g-recaptcha"></div>
     <input class="button primary" type="submit" value="login" />
   </form>
@@ -21,6 +22,7 @@
     <input type="email" placeholder="email" name="email" required />
     <input type="password" placeholder="password" name="password" required />
     <input type="password" placeholder="retype password" name="confirm_password" required />
+    <input type="hidden" name="fingerprint" />
     <div class="g-recaptcha"></div>
     <input class="button danger" type="submit" value="register" />
   </form>

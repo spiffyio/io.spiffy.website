@@ -50,23 +50,26 @@ public class Context {
     public static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
     public static final String X_SSL_SECURE = "X-SSL-Secure";
 
-    public static final String UNKNOWN_USER_AGENT = "Unknown";
-
     private final HttpServletRequest request;
     private final HttpServletResponse response;
     private final FilterChain chain;
     private final ModelMap model;
+    private final Account account;
 
     public Context(final HttpServletRequest request, final HttpServletResponse response) {
-        this(request, response, null, null);
+        this(request, response, null, null, null);
     }
 
     public Context(final HttpServletRequest request, final HttpServletResponse response, final ModelMap model) {
-        this(request, response, null, model);
+        this(request, response, null, model, null);
     }
 
     public Context(final ServletRequest request, final ServletResponse response, final FilterChain chain) {
-        this((HttpServletRequest) request, (HttpServletResponse) response, chain, null);
+        this((HttpServletRequest) request, (HttpServletResponse) response, chain, null, null);
+    }
+
+    public Context(final Context context, final Account account) {
+        this(context.getRequest(), context.getResponse(), context.getChain(), context.getModel(), account);
     }
 
     public boolean isSecure() {
@@ -127,12 +130,7 @@ public class Context {
     }
 
     public String getUserAgent() {
-        final String userAgent = getHeader(USER_AGENT);
-        if (StringUtils.isEmpty(userAgent)) {
-            return UNKNOWN_USER_AGENT;
-        }
-
-        return userAgent;
+        return getHeader(USER_AGENT);
     }
 
     public String getHeader(final String name) {
@@ -173,6 +171,14 @@ public class Context {
         }
 
         return getSession().getId();
+    }
+
+    public String getSessionToken() {
+        final Cookie cookie = getCookie(SESSION_TOKEN_COOKIE);
+        if (cookie == null) {
+            return null;
+        }
+        return cookie.getValue();
     }
 
     public void sendRedirect(final String uri) throws IOException {

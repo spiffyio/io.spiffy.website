@@ -9,11 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticateAccountInput {
-    private String email;
-    private String password;
+public class AuthenticateSessionInput {
     private String sessionId;
-    private String fingerprint;
+    private String token;
     private String userAgent;
     private String ipAddress;
 }

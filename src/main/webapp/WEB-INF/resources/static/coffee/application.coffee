@@ -9,8 +9,6 @@ Dropzone.options.dzForm = {
     done()
 }
 
-
-
 $(document).ready (e) ->
   $('div.header').mouseenter () ->
     if $(this).is ':hover'
@@ -34,16 +32,23 @@ $(document).ready (e) ->
     go $(this).data('uri')
     return
 
+  if $('input[name="fingerprint"]')
+    hash = fingerprint()
+    if hash?
+      $('input[name="fingerprint"]').each () ->
+        $(this).val hash
+        return
+
   $('form.login').submit (e) ->
     preventDefault e
     form = $(this)
-    form.spiffySubmit '/login', $(this).spiffyFormData(['email', 'password', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
+    form.spiffySubmit '/login', $(this).spiffyFormData(['email', 'password', 'fingerprint', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
     return
 
   $('form.register').submit (e) ->
     preventDefault e
     form = $(this)
-    form.spiffySubmit '/register', $(this).spiffyFormData(['username', 'email', 'password', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
+    form.spiffySubmit '/register', $(this).spiffyFormData(['username', 'email', 'password', 'fingerprint', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
     return
 
   $('.close').click (e) ->
@@ -79,7 +84,11 @@ fingerprint = () ->
   fp = sessionStorage.getItem 'fingerprint'
   if fp?
     return fp
-  new Fingerprint2().get (hash) ->
+  options = { excludeAdBlock : true; excludeAvailableScreenResolution = true }
+  new Fingerprint2(options).get (hash) ->
     sessionStorage.setItem 'fingerprint', hash
+    $('input[name="fingerprint"]').each () ->
+      $(this).val hash
+      return
     return
   return null

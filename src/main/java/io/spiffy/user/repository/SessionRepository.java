@@ -26,6 +26,14 @@ public class SessionRepository extends HibernateRepository<SessionEntity> {
         return (SessionEntity) c.uniqueResult();
     }
 
+    public SessionEntity getByAccountAndFingerprint(final long accountId, final String fingerprint) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("accountId", accountId));
+        c.add(Restrictions.eq("lastFingerprint", fingerprint));
+        c.add(Restrictions.isNull("invalidatedAt"));
+        return (SessionEntity) c.uniqueResult();
+    }
+
     public List<SessionEntity> getByAccount(final long accountId) {
         final Criteria c = createCriteria();
         c.add(Restrictions.eq("accountId", accountId));

@@ -26,7 +26,7 @@ public class GetSessionsAPI extends API<GetSessionsInput, GetSessionsOutput, Ses
         final List<SessionEntity> entities = service.getByAccount(input.getAccountId());
 
         final List<Session> sessions = new ArrayList<>();
-        entities.forEach(e -> sessions.add(new Session(e.getAuthenticatedAt(), e.getUserAgent(), e.getIpAddress())));
+        entities.forEach(e -> sessions.add(new Session(e.getAuthenticatedAt(), e.getLastUserAgent(), e.getIpAddress())));
 
         return new GetSessionsOutput(input.getAccountId(), sessions);
     }
