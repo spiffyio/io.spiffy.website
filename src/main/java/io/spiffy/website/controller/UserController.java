@@ -20,11 +20,12 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.InvalidRecaptchaResponse;
 import io.spiffy.website.response.LoginResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
     private static final String RETURN_URI_KEY = "returnUri";
+    private static final String SESSIONS_KEY = "sessions";
 
     private static final String FORM_LOGIN = "login";
     private static final String FORM_REGISTER = "register";
@@ -34,6 +35,7 @@ public class UserController extends Controller {
 
     @RequestMapping("/account")
     public ModelAndView account(final Context context) {
+        context.addAttribute(SESSIONS_KEY, userClient.getSessions(1000000L));
         return mav("account", context);
     }
 

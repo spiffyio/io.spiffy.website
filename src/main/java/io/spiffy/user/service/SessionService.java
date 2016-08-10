@@ -1,6 +1,7 @@
 package io.spiffy.user.service;
 
 import java.util.Date;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -33,6 +34,13 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
     @Transactional
     public SessionEntity get(final String sessionId) {
         return repository.get(sessionId);
+    }
+
+    @Transactional
+    public List<SessionEntity> getByAccount(final long accountId) {
+        final List<SessionEntity> entities = repository.getByAccount(accountId);
+        entities.forEach(e -> e.setIpAddress(securityClient.decryptString(e.getIpAddressId())));
+        return entities;
     }
 
     @Transactional

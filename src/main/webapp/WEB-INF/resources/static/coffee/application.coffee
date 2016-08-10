@@ -9,6 +9,8 @@ Dropzone.options.dzForm = {
     done()
 }
 
+
+
 $(document).ready (e) ->
   $('div.header').mouseenter () ->
     if $(this).is ':hover'
@@ -72,3 +74,12 @@ closeModal = () ->
     $('[data-modal-id]').hide 0
     $('.modal-overlay').hide 0
   return
+
+fingerprint = () ->
+  fp = sessionStorage.getItem 'fingerprint'
+  if fp?
+    return fp
+  new Fingerprint2().get (hash) ->
+    sessionStorage.setItem 'fingerprint', hash
+    return
+  return null

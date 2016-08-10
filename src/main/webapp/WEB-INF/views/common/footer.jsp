@@ -3,8 +3,9 @@
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
 <c:choose>
+  <c:when test="${ param.style eq 'authenticate' }">
+  </c:when>
   <c:when test="${ param.style eq 'simple' }">
-    <c:set var="includeModal" value="false" />
   </c:when>
   <c:otherwise>
     <c:set var="includeModal" value="true" />
@@ -39,6 +40,7 @@
 <script type="text/javascript" src="<s:resource file="js/jquery.min.js" />"></script>
 <script type="text/javascript" src="<s:resource file="js/jquery.validate.min.js" />"></script>
 <script type="text/javascript" src="<s:resource file="js/dropzone.min.js" />"></script>
+<script type="text/javascript" src="<s:resource file="js/fingerprint.min.js" />"></script>
 <script type="text/javascript" src="<s:resource file="js/application.min.js" />"></script>
 </body>
 </html>

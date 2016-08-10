@@ -76,10 +76,12 @@ div.body {
 }
 
 div.body div.centered {
+  margin-left: auto;
+  margin-right: auto;
   height: 40%;
   width: 40%;
   max-width: 100vh;
-  margin: 2em auto;
+  padding: 2em 0;
 }
 
 @media only screen and (max-width: 767px) {

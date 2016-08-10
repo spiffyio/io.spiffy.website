@@ -6,6 +6,12 @@
   <jsp:param name="style" value="centered" />
 </jsp:include>
 
+<c:forEach var="session" items="${ sessions }">
+
+  ${ session }
+
+</c:forEach>
+
 hello world
 
 </div>

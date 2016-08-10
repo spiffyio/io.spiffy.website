@@ -26,8 +26,8 @@
   </form>
   </c:if>
 
- </div>
+</div>
 
 <jsp:include page="common/footer.jsp">
-  <jsp:param name="style" value="simple" />
+  <jsp:param name="style" value="authenticate" />
 </jsp:include>

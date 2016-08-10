@@ -9,6 +9,7 @@ import com.fasterxml.jackson.core.JsonGenerationException;
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.util.ISO8601DateFormat;
 
 public class JsonUtil {
 
@@ -16,6 +17,7 @@ public class JsonUtil {
 
     static {
         mapper.setSerializationInclusion(Include.NON_NULL);
+        mapper.setDateFormat(new ISO8601DateFormat());
     }
 
     public static String serialize(final Object value) {

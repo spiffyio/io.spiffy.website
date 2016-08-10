@@ -22,9 +22,11 @@ public abstract class Call<Input, Output> extends Manager {
         final Invocation.Builder builder = getBuilder(target, input);
         builder.accept(MediaType.APPLICATION_JSON);
 
-        final String json = JsonUtil.serialize(input);
-        final Response response = builder.post(Entity.json(json));
-        return response.readEntity(outputClass);
+        final String injson = JsonUtil.serialize(input);
+        final Response response = builder.post(Entity.json(injson));
+        final String outjson = response.readEntity(String.class);
+
+        return JsonUtil.deserialize(outputClass, outjson);
     }
 
     public Invocation.Builder getBuilder(final WebTarget target, final Input input) {

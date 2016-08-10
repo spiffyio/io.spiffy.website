@@ -278,7 +278,7 @@ jQuery.fn.spiffySubmit = function(options, data, success, error) {
   });
 };
 
-var closeModal, hAnimate, openModal;
+var closeModal, fingerprint, hAnimate, openModal;
 
 Dropzone.options.dzForm = {
   paramName: 'file',
@@ -357,5 +357,17 @@ closeModal = function() {
     $('[data-modal-id]').hide(0);
     return $('.modal-overlay').hide(0);
   });
+};
+
+fingerprint = function() {
+  var fp;
+  fp = sessionStorage.getItem('fingerprint');
+  if (fp != null) {
+    return fp;
+  }
+  new Fingerprint2().get(function(hash) {
+    sessionStorage.setItem('fingerprint', hash);
+  });
+  return null;
 };
 
