@@ -61,6 +61,10 @@ div.header div.menu ul li a, div.header div.menu ul li span {
   display: block;
 }
 
+div.header.hideable div.menu {
+  top: -3em;
+}
+
 a {
   color: #5FD4F5;
   text-decoration: none;

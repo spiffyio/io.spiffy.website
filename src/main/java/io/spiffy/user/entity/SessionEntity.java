@@ -17,7 +17,7 @@ import io.spiffy.common.HibernateEntity;
 public class SessionEntity extends HibernateEntity {
 
     public static final int MIN_SESSION_ID_LENGTH = 3;
-    public static final int MAX_SESSION_ID_LENGTH = 25;
+    public static final int MAX_SESSION_ID_LENGTH = 64;
 
     @Setter
     @Column(name = "session_id", length = MAX_SESSION_ID_LENGTH, nullable = false)

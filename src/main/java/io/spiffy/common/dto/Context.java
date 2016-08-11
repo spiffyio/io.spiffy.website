@@ -4,7 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletRequest;
@@ -12,7 +14,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.ui.ModelMap;
@@ -20,6 +21,7 @@ import org.springframework.ui.ModelMap;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.CsrfUtil;
 import io.spiffy.common.util.ListUtil;
+import io.spiffy.common.util.ObfuscateUtil;
 
 @Data
 @AllArgsConstructor
@@ -125,10 +127,6 @@ public class Context {
         return request.getRequestURI();
     }
 
-    public HttpSession getSession() {
-        return request.getSession(true);
-    }
-
     public String getUserAgent() {
         return getHeader(USER_AGENT);
     }
@@ -164,21 +162,35 @@ public class Context {
         return null;
     }
 
-    public String getSessionId() {
-        final String sessionId = getHeader(SPIFFY_FORWARDED_SESSION);
-        if (StringUtils.isNotEmpty(sessionId)) {
-            return sessionId;
-        }
-
-        return getSession().getId();
-    }
-
-    public String getSessionToken() {
-        final Cookie cookie = getCookie(SESSION_TOKEN_COOKIE);
+    public String getCookieValue(final String name) {
+        final Cookie cookie = getCookie(name);
         if (cookie == null) {
             return null;
         }
+
         return cookie.getValue();
+    }
+
+    public String getSessionId() {
+        final String viaHeader = getHeader(SPIFFY_FORWARDED_SESSION);
+        if (StringUtils.isNotEmpty(viaHeader)) {
+            return viaHeader;
+        }
+
+        final String viaCookie = getCookieValue(SESSION_ID_COOKIE);
+        if (StringUtils.isNotEmpty(viaCookie)) {
+            return viaCookie;
+        }
+
+        final String sessionId = UUID.randomUUID().toString() + "-" + ObfuscateUtil.obfuscate(new Date().getTime());
+        setCookie(SESSION_ID_COOKIE, sessionId, CookieAge.SESSION);
+        deleteCookie(SESSION_TOKEN_COOKIE);
+
+        return sessionId;
+    }
+
+    public String getSessionToken() {
+        return getCookieValue(SESSION_TOKEN_COOKIE);
     }
 
     public void sendRedirect(final String uri) throws IOException {
@@ -195,8 +207,8 @@ public class Context {
     }
 
     public void invalidateSession() {
+        deleteCookie(SESSION_ID_COOKIE);
         deleteCookie(SESSION_TOKEN_COOKIE);
-        getSession().invalidate();
     }
 
     public void deleteCookie(final String name) {

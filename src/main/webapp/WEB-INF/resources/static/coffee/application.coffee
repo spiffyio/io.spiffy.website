@@ -10,12 +10,12 @@ Dropzone.options.dzForm = {
 }
 
 $(document).ready (e) ->
-  $('div.header').mouseenter () ->
+  $('div.header.hideable').mouseenter () ->
     if $(this).is ':hover'
       hAnimate '0'
     return
 
-  $('div.header').mouseleave () ->
+  $('div.header.hideable').mouseleave () ->
     header = $(this)
     func = () ->
       if not header.is ':hover'
@@ -84,7 +84,7 @@ fingerprint = () ->
   fp = sessionStorage.getItem 'fingerprint'
   if fp?
     return fp
-  options = { excludeAdBlock : true; excludeAvailableScreenResolution = true }
+  options = { excludeAdBlock : true, excludeAvailableScreenResolution : true }
   new Fingerprint2(options).get (hash) ->
     sessionStorage.setItem 'fingerprint', hash
     $('input[name="fingerprint"]').each () ->

@@ -290,12 +290,12 @@ Dropzone.options.dzForm = {
 
 $(document).ready(function(e) {
   var hash;
-  $('div.header').mouseenter(function() {
+  $('div.header.hideable').mouseenter(function() {
     if ($(this).is(':hover')) {
       hAnimate('0');
     }
   });
-  $('div.header').mouseleave(function() {
+  $('div.header.hideable').mouseleave(function() {
     var func, header;
     header = $(this);
     func = function() {
@@ -375,7 +375,8 @@ fingerprint = function() {
     return fp;
   }
   options = {
-    excludeAdBlock: true
+    excludeAdBlock: true,
+    excludeAvailableScreenResolution: true
   };
   new Fingerprint2(options).get(function(hash) {
     sessionStorage.setItem('fingerprint', hash);

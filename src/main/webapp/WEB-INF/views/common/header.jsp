@@ -1,4 +1,4 @@
-<%@ page contentType="text/html; charset=UTF-8" trimDirectiveWhitespaces="true"%>
+<%@ page contentType="text/html; charset=UTF-8" session="false" trimDirectiveWhitespaces="true"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
@@ -65,7 +65,7 @@
 <body>
 
 <c:if test="${ sHeaderBar }">
-<div class="header">
+<div class="header hideable">
   <div class="logo"><a href="/"><img src="<s:resource file="svg/icon.svg" />" /></a></div>
   <div class="menu">
     <ul>
