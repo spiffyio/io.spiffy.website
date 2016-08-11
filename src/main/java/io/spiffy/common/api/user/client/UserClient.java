@@ -16,9 +16,10 @@ import io.spiffy.common.api.user.input.*;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.api.user.output.AuthenticateSessionOutput;
 import io.spiffy.common.api.user.output.GetSessionsOutput;
+import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserClient extends Client {
 
     final AuthenticateAccountCall authenticateAccountCall;
@@ -34,7 +35,7 @@ public class UserClient extends Client {
         return authenticateAccountCall.call(input);
     }
 
-    public Long authenticateSession(final Context context) {
+    public Account authenticateSession(final Context context) {
         final String token = context.getSessionToken();
         if (StringUtils.isEmpty(token)) {
             return null;
@@ -43,7 +44,7 @@ public class UserClient extends Client {
         final AuthenticateSessionInput input = new AuthenticateSessionInput(context.getSessionId(), token,
                 context.getUserAgent(), context.getIPAddress());
         final AuthenticateSessionOutput output = authenticateSessionCall.call(input);
-        return output.getAccountId();
+        return output.getAccount();
     }
 
     public List<Session> getSessions(final long accountId) {

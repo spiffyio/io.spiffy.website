@@ -126,6 +126,17 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         return output;
     }
 
+    @Transactional
+    public AccountEntity authenticate(final String sessionId, final String token, final String userAgent,
+            final String ipAddress) {
+        final SessionEntity session = sessionService.authenticate(sessionId, token, userAgent, ipAddress);
+        if (session == null) {
+            return null;
+        }
+
+        return get(session.getAccountId());
+    }
+
     protected void validateUserName(final String userName) {
         ValidationUtil.validateLength("UserAccountEntity.userName", userName, AccountEntity.MIN_USER_NAME_LENGTH,
                 AccountEntity.MAX_USER_NAME_LENGTH);

@@ -71,15 +71,15 @@
     <ul>
       <c:if test="${ empty account }">
       <li>&nbsp;</li>
-      <li><span data-modal="new-post">new post</span></li>
       <li><a href="/login">login</a></li>
+      <li><a href="/register">register</a></li>
       <li>&nbsp;</li>
       </c:if>
       <c:if test="${ not empty account }">
-      <li>&nbsp;</li>
+      <li><a href="/feed">feed</a></li>
       <li><span data-modal="new-post">new post</span></li>
+      <li><a href="/account"><c:out value="${ account.username }" /></a></li>
       <li><a href="/logout">logout</a></li>
-      <li>&nbsp;</li>
       </c:if>
     </ul>
   </div>

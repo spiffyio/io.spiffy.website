@@ -5,10 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import io.spiffy.common.dto.Account;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class AuthenticateSessionOutput {
-    private Long accountId;
+    private Account account;
 }

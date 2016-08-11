@@ -18,7 +18,7 @@ import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class ContextResolver extends Manager implements HandlerMethodArgumentResolver {
 
     private final UserClient userClient;
@@ -34,14 +34,9 @@ public class ContextResolver extends Manager implements HandlerMethodArgumentRes
         final ModelMap model = mavContainer.getModel();
 
         final Context context = new Context(request, response, model);
-        final Long accountId = userClient.authenticateSession(context);
+        final Account account = userClient.authenticateSession(context);
 
-        if (accountId == null) {
-            return context;
-        }
-
-        final Account account = new Account(accountId, "");
-        context.addAttribute("account", accountId);
+        context.addAttribute("account", account);
         return new Context(context, account);
     }
 }
