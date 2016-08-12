@@ -10,8 +10,15 @@ public class LegalController extends Controller {
 
     private static final String LETTER_KEY = "letter";
 
+    private static final String LETTER_LLC = "llc";
     private static final String LETTER_PRIVACY = "privacy";
     private static final String LETTER_TERMS = "terms";
+
+    @RequestMapping("/llc")
+    public ModelAndView llc(final Context context) {
+        context.addAttribute(LETTER_KEY, LETTER_LLC);
+        return mav("legal", context);
+    }
 
     @RequestMapping("/privacy")
     public ModelAndView privacy(final Context context) {

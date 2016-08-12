@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.http.HttpStatus;
 import org.springframework.ui.ModelMap;
 
 import io.spiffy.common.config.AppConfig;
@@ -199,6 +200,14 @@ public class Context {
         }
 
         response.sendRedirect(uri);
+    }
+
+    public void setResponseStatus(final HttpStatus status) {
+        if (response == null) {
+            return;
+        }
+
+        response.setStatus(status.value());
     }
 
     public void initializeSession(final String token) {

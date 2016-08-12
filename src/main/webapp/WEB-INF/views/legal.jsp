@@ -9,6 +9,11 @@
 
 <div class="letter">
 
+<c:if test="${ letter eq 'llc' }">
+<h2>SPIFFY.io, LLC</h2>
+<p>hello</p>
+</c:if>
+
 <c:if test="${ letter eq 'privacy' }">
 <h2>Privacy Policy</h2>
 <p>Your privacy is very important to us. Accordingly, we have developed this Policy in order for you to understand how we

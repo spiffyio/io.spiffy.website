@@ -10,8 +10,6 @@ public class AppConfig {
     private static final String BETA = "beta";
     private static final String PROD = "prod";
 
-    private static final String TRUE = "true";
-
     @Getter
     private static final String stage;
 
@@ -34,9 +32,6 @@ public class AppConfig {
     private static final String recaptchaSecretKey;
 
     @Getter
-    private static final boolean secure;
-
-    @Getter
     private static final String cdnEndpoint;
 
     @Getter
@@ -53,6 +48,12 @@ public class AppConfig {
 
     @Getter
     private static final String restEndpoint;
+
+    @Getter
+    private static final boolean showStacktrace;
+
+    @Getter
+    private static final boolean secure;
 
     @Getter
     private static final String suffix;
@@ -74,6 +75,7 @@ public class AppConfig {
             forwardToProd = false;
             passwordPattern = "^password|testpass$";
             secure = false;
+            showStacktrace = true;
             suffix = "-beta";
         } else if (BETA.equalsIgnoreCase(stage)) {
             cdnEndpoint = "//cdn-beta.spiffy.io";
@@ -83,6 +85,7 @@ public class AppConfig {
             forwardToProd = true;
             passwordPattern = "^password|testpass$";
             secure = true;
+            showStacktrace = false;
             suffix = "-beta";
         } else if (PROD.equalsIgnoreCase(stage)) {
             cdnEndpoint = "//cdn.spiffy.io";
@@ -92,6 +95,7 @@ public class AppConfig {
             forwardToProd = false;
             passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,}$";
             secure = true;
+            showStacktrace = false;
             suffix = "";
         } else {
             throw new InvalidParameterException(String.format("unknown AppStage: %s", stage));

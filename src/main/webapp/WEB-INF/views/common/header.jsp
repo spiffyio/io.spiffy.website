@@ -4,22 +4,20 @@
 
 <c:choose>
   <c:when test="${ param.style eq 'authenticate' }">
-    <c:set var="iCaptcha" value="true" />
-    <c:set var="sCentered" value="true" />
-    <c:set var="sLogo" value="true" />
-    <c:set var="sHeaderBar" value="false" />
+    <c:set var="include_captcha" value="true" />
+    <c:set var="include_centered" value="true" />
+    <c:set var="include_logo" value="true" />
   </c:when>
   <c:when test="${ param.style eq 'centered' }">
-    <c:set var="iCaptcha" value="false" />
-    <c:set var="sCentered" value="true" />
-    <c:set var="sLogo" value="false" />
-    <c:set var="sHeaderBar" value="true" />
+    <c:set var="include_centered" value="true" />
+    <c:set var="include_bar" value="true" />
+  </c:when>
+  <c:when test="${ param.style eq 'exception' }">
+    <c:set var="include_centered" value="true" />
+    <c:set var="include_logo" value="true" />
   </c:when>
   <c:otherwise>
-    <c:set var="iCaptcha" value="false" />
-    <c:set var="sLogo" value="false" />
-    <c:set var="sLetter" value="false" />
-    <c:set var="sHeaderBar" value="true" />
+    <c:set var="include_bar" value="true" />
   </c:otherwise>
 </c:choose>
 
@@ -58,13 +56,13 @@
 <meta name="theme-color" content="#c0effd">
 
 <link rel="stylesheet" type="text/css" href="<s:resource file="css/application.min.css" />">
-<c:if test="${ iCaptcha }">
+<c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit'></script>
 </c:if>
 </head>
 <body>
 
-<c:if test="${ sHeaderBar }">
+<c:if test="${ include_bar }">
 <div class="header hideable">
   <div class="logo"><a href="/"><img src="<s:resource file="svg/icon.svg" />" /></a></div>
   <div class="menu">
@@ -88,14 +86,14 @@
 
 <div class="body">
 
-<c:if test="${ sHeaderBar }">
+<c:if test="${ include_bar }">
   <div class="header-padding"></div>
 </c:if>
 
-<c:if test="${ sCentered }">
+<c:if test="${ include_centered }">
   <div class="centered">
 </c:if>
 
-<c:if test="${ sLogo }">
+<c:if test="${ include_logo }">
     <s:logo />
 </c:if>
