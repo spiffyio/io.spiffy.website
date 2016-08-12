@@ -1,5 +1,7 @@
 package io.spiffy.media.repository;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.hibernate.Criteria;
@@ -20,5 +22,11 @@ public class MediaRepository extends HibernateRepository<MediaEntity> {
         final Criteria c = createCriteria();
         c.add(Restrictions.eq("idempotentId", idempotentId));
         return (MediaEntity) c.uniqueResult();
+    }
+
+    public List<MediaEntity> getByMD5(final String md5) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("md5", md5));
+        return asList(c.list());
     }
 }

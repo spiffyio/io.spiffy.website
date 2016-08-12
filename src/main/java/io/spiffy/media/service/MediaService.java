@@ -1,6 +1,8 @@
 package io.spiffy.media.service;
 
+import java.util.Arrays;
 import java.util.Base64;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -32,12 +34,31 @@ public class MediaService extends Service<MediaEntity, MediaRepository> {
     }
 
     @Transactional
+    public MediaEntity getByValue(final String md5, final byte[] value) {
+        final List<MediaEntity> entities = repository.getByMD5(md5);
+        entities.parallelStream().forEach(e -> e.setValue(mediaManager.get(getKey(e))));
+
+        for (final MediaEntity entity : entities) {
+            if (Arrays.equals(entity.getValue(), value)) {
+                return entity;
+            }
+        }
+
+        return null;
+    }
+
+    @Transactional
     public MediaEntity post(final String idempotentId, final MediaType type, final byte[] value) {
         validateIdempotentId(idempotentId);
 
         final String md5 = Base64.getEncoder().encodeToString(DigestUtils.md5Digest(value));
 
-        MediaEntity entity = get(idempotentId);
+        MediaEntity entity = getByValue(md5, value);
+        if (entity != null) {
+            return entity;
+        }
+
+        entity = get(idempotentId);
         if (entity == null) {
             entity = new MediaEntity(idempotentId, type, md5);
         }

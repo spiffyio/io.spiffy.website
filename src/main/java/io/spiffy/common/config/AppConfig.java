@@ -85,7 +85,7 @@ public class AppConfig {
             forwardToProd = true;
             passwordPattern = "^password|testpass$";
             secure = true;
-            showStacktrace = false;
+            showStacktrace = true;
             suffix = "-beta";
         } else if (PROD.equalsIgnoreCase(stage)) {
             cdnEndpoint = "//cdn.spiffy.io";

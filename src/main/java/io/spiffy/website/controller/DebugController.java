@@ -2,7 +2,6 @@ package io.spiffy.website.controller;
 
 import lombok.RequiredArgsConstructor;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -12,11 +11,6 @@ import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
 import io.spiffy.common.Controller;
 import io.spiffy.common.api.media.client.MediaClient;
@@ -24,7 +18,6 @@ import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.source.client.SourceClient;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.user.client.UserClient;
-import io.spiffy.common.dto.Context;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class DebugController extends Controller {
@@ -33,21 +26,6 @@ public class DebugController extends Controller {
     private final SourceClient sourceClient;
     private final StreamClient streamClient;
     private final UserClient userClient;
-
-    @RequestMapping("/error")
-    public String error(final Context context) throws Exception {
-        throw new Exception("ahhh");
-    }
-
-    @ResponseBody
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String upload(final Context context, @RequestParam(value = "file") final MultipartFile file) throws IOException {
-        final long accountId = userClient.registerAccount("john", "john@spiffy.io", "password");
-        final long mediaId = mediaClient.postMedia("test0002", MediaType.getEnum(file.getContentType()), file.getBytes());
-        streamClient.postPost("test0002", accountId, mediaId, "title", "description");
-
-        return "{\"success\":true}";
-    }
 
     private void post(final long accountId, final String id) {
         try {

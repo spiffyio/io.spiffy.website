@@ -99,6 +99,10 @@ public class Context {
         return CsrfUtil.generateToken(getSessionId(), name);
     }
 
+    public String generateIdempotentId() {
+        return UUID.randomUUID().toString() + "-" + ObfuscateUtil.obfuscate(new Date().getTime());
+    }
+
     public String getCsrfToken() {
         return getHeader(X_CSRF_TOKEN);
     }
@@ -183,7 +187,7 @@ public class Context {
             return viaCookie;
         }
 
-        final String sessionId = UUID.randomUUID().toString() + "-" + ObfuscateUtil.obfuscate(new Date().getTime());
+        final String sessionId = generateIdempotentId();
         setCookie(SESSION_ID_COOKIE, sessionId, CookieAge.SESSION);
         deleteCookie(SESSION_TOKEN_COOKIE);
 
@@ -252,5 +256,13 @@ public class Context {
         }
 
         model.addAttribute(name, attribute);
+    }
+
+    public Long getAccountId() {
+        if (account == null) {
+            return null;
+        }
+
+        return account.getId();
     }
 }

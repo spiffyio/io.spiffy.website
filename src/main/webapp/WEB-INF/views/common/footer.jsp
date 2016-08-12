@@ -8,10 +8,7 @@
   </c:when>
   <c:when test="${ param.style eq 'exception' }">
   </c:when>
-  <c:when test="${ param.style eq 'simple' }">
-  </c:when>
   <c:otherwise>
-    <c:set var="include_modal" value="true" />
   </c:otherwise>
 </c:choose>
 
@@ -21,24 +18,6 @@
 <div class="footer">
   <a href="/llc">SPIFFY.io, LLC</a> &copy; 2016 &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a>
 </div>
-
-<c:if test="${ include_modal }">
-<div class="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="content">
-        <h2 data-modal-id="new post">new post</h2>
-        <s:close />
-      </div>
-    </div>
-    <div class="modal-body" data-modal-id="new-post">
-      <form style="margin: 10% 25%; width: 50%; height: 20em; border: 5px black dashed;" class="new-post dropzone" data-form="new-post" action="/upload" id="dz-form" enctype="multipart/form-data">
-        <div class="dz-message"></div>
-      </form>
-    </div>
-  </div>
-</div>
-</c:if>
   
 <script type="text/javascript" src="<s:resource file="js/jquery.min.js" />"></script>
 <script type="text/javascript" src="<s:resource file="js/jquery.validate.min.js" />"></script>

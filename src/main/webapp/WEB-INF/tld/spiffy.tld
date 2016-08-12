@@ -19,6 +19,16 @@
     </attribute>
   </tag>
   <tag>
+    <name>idempotent</name>
+    <tag-class>io.spiffy.website.tag.IdempotentTag</tag-class>
+    <body-content>emtpy</body-content>
+    <attribute>
+       <name>format</name>
+       <required>false</required>
+       <type>io.spiffy.website.tag.IdempotentTag.Format</type>
+    </attribute>
+  </tag>
+  <tag>
     <name>resource</name>
     <tag-class>io.spiffy.website.tag.ResourceTag</tag-class>
     <body-content>emtpy</body-content>

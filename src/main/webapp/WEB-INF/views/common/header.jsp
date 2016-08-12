@@ -16,6 +16,11 @@
     <c:set var="include_centered" value="true" />
     <c:set var="include_logo" value="true" />
   </c:when>
+  <c:when test="${ param.style eq 'upload' }">
+    <c:set var="include_centered" value="true" />
+    <c:set var="include_dropzone" value="true" />
+    <c:set var="include_bar" value="true" />
+  </c:when>
   <c:otherwise>
     <c:set var="include_bar" value="true" />
   </c:otherwise>
@@ -56,6 +61,9 @@
 <meta name="theme-color" content="#c0effd">
 
 <link rel="stylesheet" type="text/css" href="<s:resource file="css/application.min.css" />">
+<c:if test="${ include_dropzone }">
+<link rel="stylesheet" type="text/css" href="<s:resource file="css/dropzone.css" />">
+</c:if>
 <c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit'></script>
 </c:if>
@@ -75,7 +83,7 @@
       </c:if>
       <c:if test="${ not empty account }">
       <li><a href="/feed">feed</a></li>
-      <li><span data-modal="new-post">new post</span></li>
+      <li><a href="/upload">upload</a></li>
       <li><a href="/account"><c:out value="${ account.username }" /></a></li>
       <li><a href="/logout">logout</a></li>
       </c:if>

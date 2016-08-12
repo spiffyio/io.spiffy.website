@@ -193,8 +193,8 @@ div.footer {
 }
 
 .modal-overlay .modal {
-  width: 300px;
-  max-width: 80%;
+  height: 80%;
+  width: 80%;
   display: none;
   background-color: #F5F5F5;
   box-shadow: 0 0 100px #3D3D3D;

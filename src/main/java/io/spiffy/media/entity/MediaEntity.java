@@ -46,4 +46,8 @@ public class MediaEntity extends HibernateEntity {
         this.type = type;
         this.md5 = md5;
     }
+
+    @Setter
+    @Transient
+    private byte[] value;
 }
