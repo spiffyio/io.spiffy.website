@@ -18,8 +18,11 @@ import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.util.ObfuscateUtil;
+import io.spiffy.website.response.AjaxResponse;
+import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;
@@ -32,11 +35,19 @@ public class UploadController extends Controller {
 
     @ResponseBody
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
-    public String upload(final Context context, @RequestParam("file") final MultipartFile file,
+    public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
+            final @RequestParam String idempotentId) throws IOException {
+        final long mediaId = mediaClient.postMedia(idempotentId, MediaType.getEnum(file.getContentType()), file.getBytes());
+        return new UploadResponse(ObfuscateUtil.obfuscate(mediaId));
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/submit", method = RequestMethod.POST)
+    public String submit(final Context context, final @RequestParam String[] media, final @RequestParam String title,
+            final @RequestParam(required = false) String description,
             final @RequestParam("idempotentId") String idempotentPrefix) throws IOException {
         final String idempotentId = idempotentPrefix + "-" + context.getAccountId();
-        final long mediaId = mediaClient.postMedia(idempotentId, MediaType.getEnum(file.getContentType()), file.getBytes());
-        streamClient.postPost(idempotentId, context.getAccountId(), mediaId, "title", "description");
+        streamClient.postPost(idempotentId, context.getAccountId(), ObfuscateUtil.unobfuscate(media[0]), title, description);
 
         return "{\"success\":true}";
     }

@@ -364,3 +364,102 @@ div.footer
 +min-width($xl)
   .xl-hidden
     +hidden
+
+.grid
+  display: flex
+
+.grid .col
+  +size(auto, 100%)
+  flex: 1
+
++min-width($md)
+  .grid .col
+    +size(auto, 100% / 2)
+
++min-width($xl)
+  .grid .col
+    +size(auto, 100% / 3)
+
+.grid .col .panel.ad
+  +size(calc(1.5em + 250px), 300px)
+  margin-left: calc(50% - 150px)
+  text-align: center
+  color: $w2
+
+.grid .col .panel
+  +size(auto, 95%)
+  margin-left: calc(2.5% - 0.5px)
+  margin-bottom: 0.5em
+  background: $w1
+  border: 1px solid $w1
+  box-shadow: 0px 0px 5px 0px $w3
+
+  img, video, ins
+    +size(auto, 100%)
+    margin: 0
+    border: none
+
+  .source
+    +size(auto, 50%)
+    padding: 0.5em
+    float: left
+
+    .thumbnail
+      +size(3em, 3em)
+      float: left
+      margin-right: 0.5em
+
+    .thumbnail:empty
+      background-color: $w2
+
+    .name
+      +size(1.5em, auto)
+      min-width: 10em
+      margin-left: 3.5em
+
+      .content
+        +size(1em, auto)
+        +buffer(0, 0)
+        font-size: 150%
+        background-color: inherit
+
+    .name:empty
+      background-color: $w2
+
+    .time
+      +size(1em, 4em)
+      margin-left: 3.5em
+      margin-top: 0.5em
+
+      .content
+        +size(1em, auto)
+        +buffer(0, 0)
+        font-size: 100%
+        background-color: inherit
+
+    .time:empty
+      background-color: $w2
+
+    img
+      +size(auto, 3em)
+      float: left
+      margin-right: 0.5em
+
+    h3
+      color: $w3
+
+    p
+      color: $w2
+
+  .heart
+    +size(2em, 2em)
+    margin: 1em
+
+  .options
+    +size(2em, 2em)
+    margin: 1em
+
+.grid .col img
+  +size(auto, 95%)
+  margin-left: calc(2.5% - 0.5px)
+  border: 1px solid $w1

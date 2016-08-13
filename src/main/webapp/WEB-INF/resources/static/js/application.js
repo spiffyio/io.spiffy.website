@@ -278,13 +278,22 @@ jQuery.fn.spiffySubmit = function(options, data, success, error) {
   });
 };
 
-var closeModal, fingerprint, hAnimate, openModal;
+var closeModal, emptyColumn, fillColumn, fingerprint, hAnimate, openModal, sortColumn;
 
 Dropzone.options.dzForm = {
   paramName: 'file',
   maxFilesize: 2,
   accept: function(file, done) {
-    return done();
+    done();
+  },
+  success: function(file, response) {
+    var media;
+    media = $('form.submit').find('input[name="media"]');
+    if (media.val().length) {
+      media.val(media.val() + ',' + response.id);
+    } else {
+      media.val(response.id);
+    }
   }
 };
 
@@ -335,6 +344,14 @@ $(document).ready(function(e) {
       return go(form.data('returnUri'));
     });
   });
+  $('form.submit').submit(function(e) {
+    var form;
+    preventDefault(e);
+    form = $(this);
+    form.spiffySubmit('/submit', $(this).spiffyFormData(['media', 'title', 'description', 'idempotentId']), function() {
+      return go('/');
+    });
+  });
   $('.close').click(function(e) {
     closeModal();
   });
@@ -343,6 +360,20 @@ $(document).ready(function(e) {
       closeModal();
     }
   });
+  $('.col').each(function(i) {
+    var offset;
+    $(this).attr('data-index', i);
+    offset = i;
+    $(this).find('.panel').each(function(i) {
+      $(this).attr('data-index', $('.col').length * i + offset);
+    });
+  });
+  if ($(window).width() < Width.xl) {
+    emptyColumn(2);
+  }
+  if ($(window).width() < Width.md) {
+    emptyColumn(1);
+  }
 });
 
 hAnimate = function(top) {
@@ -386,4 +417,64 @@ fingerprint = function() {
   });
   return null;
 };
+
+emptyColumn = function(i) {
+  var col, panels;
+  col = $('.col[data-index="' + i + '"]');
+  panels = col.find('.panel');
+  panels.each(function() {
+    var index, panel;
+    panel = $(this);
+    index = panel.data('index');
+    index = (i === 1) || (index % 2 === 0) ? index - 1 : index - 2;
+    panel.detach().insertAfter('.panel[data-index="' + index + '"]');
+  });
+  sortColumn(1);
+};
+
+fillColumn = function(i) {
+  var col, panels;
+  col = $('.col[data-index!="' + i + '"]');
+  panels = col.find('.panel');
+  panels.each(function() {
+    var panel;
+    panel = $(this);
+    if (panel.data('index') % 3 !== i) {
+      return;
+    }
+    panel.detach().appendTo('.col[data-index="' + i + '"]');
+  });
+  sortColumn(i);
+};
+
+sortColumn = function(i) {
+  var col, panels, sorted;
+  col = $('.col[data-index="' + i + '"]');
+  panels = col.find('.panel');
+  sorted = panels.sort(function(a, b) {
+    return $(a).data('index') > $(b).data('index');
+  });
+  col.html(sorted);
+};
+
+$(window).resize(function(e) {
+  var width;
+  width = $(window).width();
+  if ((width > window.pWidth) && (width >= Width.md)) {
+    $('.subheader').show();
+    fillColumn(1);
+  }
+  if ((width < window.pWidth) && (width < Width.md)) {
+    $('.subheader').hide();
+    $('.hamburger').removeClass('active');
+    emptyColumn(1);
+  }
+  if ((width > window.pWidth) && (width >= Width.xl)) {
+    fillColumn(2);
+  }
+  if ((width < window.pWidth) && (width < Width.xl)) {
+    emptyColumn(2);
+  }
+  window.pWidth = width;
+});
 

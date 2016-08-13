@@ -7,6 +7,14 @@ Dropzone.options.dzForm = {
   maxFilesize: 2,
   accept: (file, done) ->
     done()
+    return
+  success: (file, response) ->
+    media = $('form.submit').find 'input[name="media"]'
+    if media.val().length
+      media.val media.val() + ',' + response.id
+    else
+      media.val response.id
+    return
 }
 
 $(document).ready (e) ->
@@ -51,6 +59,12 @@ $(document).ready (e) ->
     form.spiffySubmit '/register', $(this).spiffyFormData(['username', 'email', 'password', 'fingerprint', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
     return
 
+  $('form.submit').submit (e) ->
+    preventDefault e
+    form = $(this)
+    form.spiffySubmit '/submit', $(this).spiffyFormData(['media', 'title', 'description', 'idempotentId']), () -> go('/')
+    return
+
   $('.close').click (e) ->
     closeModal()
     return
@@ -58,6 +72,17 @@ $(document).ready (e) ->
   $('.modal-overlay').click (e) ->
     if $(e.target).hasClass 'modal-overlay' then closeModal()
     return
+
+  $('.col').each (i) ->
+    $(this).attr 'data-index', i
+    offset = i
+    $(this).find('.panel').each (i) ->
+      $(this).attr 'data-index', $('.col').length * i + offset
+      return
+    return
+
+  if ($(window).width() < Width.xl) then emptyColumn 2
+  if ($(window).width() < Width.md) then emptyColumn 1
 
   return
 
@@ -92,3 +117,50 @@ fingerprint = () ->
       return
     return
   return null
+
+emptyColumn = (i) ->
+  col = $('.col[data-index="' + i + '"]')
+  panels = col.find '.panel'
+  panels.each () ->
+    panel = $(this)
+    index = panel.data 'index'
+    index = if (i is 1) or (index % 2 is 0) then index - 1 else index - 2
+    panel.detach().insertAfter '.panel[data-index="' +  index + '"]'
+    return
+  sortColumn 1
+  return
+
+fillColumn = (i) ->
+  col = $('.col[data-index!="' + i + '"]')
+  panels = col.find '.panel'
+  panels.each () ->
+    panel = $(this)
+    if panel.data('index') % 3 isnt i then return
+    panel.detach().appendTo '.col[data-index="' + i + '"]'
+    return
+  sortColumn i
+  return
+
+sortColumn = (i) ->
+  col = $('.col[data-index="' + i + '"]')
+  panels = col.find '.panel'
+  sorted = panels.sort (a, b) ->
+    return $(a).data('index') > $(b).data('index')
+  col.html sorted
+  return
+
+$(window).resize (e) ->
+  width = $(window).width()
+  if (width > window.pWidth) and (width >= Width.md)
+    $('.subheader').show()
+    fillColumn 1
+  if (width < window.pWidth) and (width < Width.md)
+    $('.subheader').hide()
+    $('.hamburger').removeClass 'active'
+    emptyColumn 1
+  if (width > window.pWidth) and (width >= Width.xl)
+    fillColumn 2
+  if (width < window.pWidth) and (width < Width.xl)
+    emptyColumn 2
+  window.pWidth = width
+  return

@@ -435,3 +435,144 @@ div.footer {
     display: none;
   }
 }
+
+.grid {
+  display: flex;
+}
+
+.grid .col {
+  height: auto;
+  width: 100%;
+  flex: 1;
+}
+
+@media only screen and (min-width: 768px) {
+  .grid .col {
+    height: auto;
+    width: 50%;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .grid .col {
+    height: auto;
+    width: 33.33333%;
+  }
+}
+
+.grid .col .panel.ad {
+  height: calc(1.5em + 250px);
+  width: 300px;
+  margin-left: calc(50% - 150px);
+  text-align: center;
+  color: #D3D3D3;
+}
+
+.grid .col .panel {
+  height: auto;
+  width: 95%;
+  margin-left: calc(2.5% - 0.5px);
+  margin-bottom: 0.5em;
+  background: #F5F5F5;
+  border: 1px solid #F5F5F5;
+  box-shadow: 0px 0px 5px 0px #5F5F5F;
+}
+
+.grid .col .panel img, .grid .col .panel video, .grid .col .panel ins {
+  height: auto;
+  width: 100%;
+  margin: 0;
+  border: none;
+}
+
+.grid .col .panel .source {
+  height: auto;
+  width: 50%;
+  padding: 0.5em;
+  float: left;
+}
+
+.grid .col .panel .source .thumbnail {
+  height: 3em;
+  width: 3em;
+  float: left;
+  margin-right: 0.5em;
+}
+
+.grid .col .panel .source .thumbnail:empty {
+  background-color: #D3D3D3;
+}
+
+.grid .col .panel .source .name {
+  height: 1.5em;
+  width: auto;
+  min-width: 10em;
+  margin-left: 3.5em;
+}
+
+.grid .col .panel .source .name .content {
+  height: 1em;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  font-size: 150%;
+  background-color: inherit;
+}
+
+.grid .col .panel .source .name:empty {
+  background-color: #D3D3D3;
+}
+
+.grid .col .panel .source .time {
+  height: 1em;
+  width: 4em;
+  margin-left: 3.5em;
+  margin-top: 0.5em;
+}
+
+.grid .col .panel .source .time .content {
+  height: 1em;
+  width: auto;
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  background-color: inherit;
+}
+
+.grid .col .panel .source .time:empty {
+  background-color: #D3D3D3;
+}
+
+.grid .col .panel .source img {
+  height: auto;
+  width: 3em;
+  float: left;
+  margin-right: 0.5em;
+}
+
+.grid .col .panel .source h3 {
+  color: #5F5F5F;
+}
+
+.grid .col .panel .source p {
+  color: #D3D3D3;
+}
+
+.grid .col .panel .heart {
+  height: 2em;
+  width: 2em;
+  margin: 1em;
+}
+
+.grid .col .panel .options {
+  height: 2em;
+  width: 2em;
+  margin: 1em;
+}
+
+.grid .col img {
+  height: auto;
+  width: 95%;
+  margin-left: calc(2.5% - 0.5px);
+  border: 1px solid #F5F5F5;
+}

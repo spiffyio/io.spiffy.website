@@ -11,6 +11,15 @@
   <s:idempotent />
 </form>
 
+
+<form class="submit" action="/submit">
+  <input type="text" name="title" placeholder="title" />
+  <input type="text" name="description" placeholder="description" />
+  <input type="hidden" name="media" />
+  <s:idempotent />
+  <input class="button primary" type="submit" value="submit" />
+</form>
+
 </div>
   
 <jsp:include page="common/footer.jsp" />

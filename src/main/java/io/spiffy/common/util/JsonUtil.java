@@ -52,14 +52,8 @@ public class JsonUtil {
         try {
             return mapper.readValue(json, clazz);
         } catch (final JsonParseException e) {
-            System.out.println(json);
-            e.printStackTrace();
         } catch (final JsonMappingException e) {
-            System.out.println(json);
-            e.printStackTrace();
         } catch (final IOException e) {
-            System.out.println(json);
-            e.printStackTrace();
         }
 
         return null;

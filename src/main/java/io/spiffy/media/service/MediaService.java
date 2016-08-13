@@ -29,6 +29,11 @@ public class MediaService extends Service<MediaEntity, MediaRepository> {
     }
 
     @Transactional
+    public MediaEntity get(final long id) {
+        return repository.get(id);
+    }
+
+    @Transactional
     public MediaEntity get(final String idempotentId) {
         return repository.get(idempotentId);
     }
@@ -80,7 +85,7 @@ public class MediaService extends Service<MediaEntity, MediaRepository> {
                 MediaEntity.MAX_IDEMPOTENT_ID_LENGTH);
     }
 
-    private String getKey(final MediaEntity media) {
+    public static String getKey(final MediaEntity media) {
         final String extension = media.getType().name().toLowerCase();
         return String.format("images/%ss/%s.%s", extension, media.getName(), extension);
     }
