@@ -2,6 +2,7 @@ package io.spiffy.website.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import java.awt.GraphicsEnvironment;
 import java.io.InputStream;
 import java.net.URL;
 
@@ -11,6 +12,8 @@ import org.apache.commons.io.IOUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import io.spiffy.common.Controller;
 import io.spiffy.common.api.media.client.MediaClient;
@@ -18,6 +21,7 @@ import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.source.client.SourceClient;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.user.client.UserClient;
+import io.spiffy.common.dto.Context;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class DebugController extends Controller {
@@ -26,6 +30,12 @@ public class DebugController extends Controller {
     private final SourceClient sourceClient;
     private final StreamClient streamClient;
     private final UserClient userClient;
+
+    @ResponseBody
+    @RequestMapping("/fonts")
+    public String fonts(final Context context) {
+        return String.join(",", GraphicsEnvironment.getLocalGraphicsEnvironment().getAvailableFontFamilyNames());
+    }
 
     private void post(final long accountId, final String id) {
         try {

@@ -21,4 +21,13 @@ public abstract class Controller extends Manager {
 
         return new ModelAndView("redirect:" + uri, model);
     }
+
+    public static ModelAndView forward(final String uri, final Context context) {
+        final ModelMap model = context.getModel();
+        if (model != null) {
+            model.clear();
+        }
+
+        return new ModelAndView("forward:" + uri, model);
+    }
 }
