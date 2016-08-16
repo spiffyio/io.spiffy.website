@@ -15,7 +15,7 @@ public class ResourceTag extends SimpleTagSupport {
 
     @Override
     public void doTag() throws JspException, IOException {
-        getJspContext().getOut().print(RESOURCE_ENDPOINT + file);
+        getJspContext().getOut().print(RESOURCE_ENDPOINT + file + "?v=1");
     }
 
     public void setFile(final String file) {

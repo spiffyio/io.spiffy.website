@@ -44,6 +44,7 @@ public class Context {
     public static final String SESSION_ID_COOKIE = "session-id";
     public static final String SESSION_TOKEN_COOKIE = "session-token";
 
+    public static final String REFERRER = "Referer";
     public static final String USER_AGENT = "User-Agent";
     public static final String SPIFFY_FORWARDED_SESSION = "SPIFFY-Forwarded-Session";
     public static final String SPIFFY_API_CERTIFICATE = "SPIFFY-API-Certificate";
@@ -130,6 +131,10 @@ public class Context {
         }
 
         return request.getRequestURI();
+    }
+
+    public String getReferrer() {
+        return getHeader(REFERRER);
     }
 
     public String getUserAgent() {

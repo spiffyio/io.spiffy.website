@@ -6,11 +6,14 @@
   <c:when test="${ param.style eq 'authenticate' }">
     <c:set var="include_fingerprint" value="true" />
   </c:when>
+  <c:when test="${ param.style eq 'embed' }">
+  </c:when>
   <c:when test="${ param.style eq 'exception' }">
   </c:when>
   <c:otherwise>
   </c:otherwise>
 </c:choose>
+<c:set var="include_fingerprint" value="true" />
 
   <div class="footer-padding"></div>
 </div>
