@@ -21,6 +21,10 @@ public class AccessFilter extends Filter {
             return Result.Continue;
         }
 
+        if (StringUtils.isNotEmpty(context.getHeader(Context.SPIFFY_CDN_CERTIFICATE))) {
+            return Result.Continue;
+        }
+
         if ("24.16.208.98".equalsIgnoreCase(context.getIPAddress())) {
             return Result.Continue;
         }

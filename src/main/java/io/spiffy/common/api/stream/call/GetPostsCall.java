@@ -11,6 +11,6 @@ public class GetPostsCall extends SpiffyCall<GetPostsInput, GetPostsOutput> {
 
     @Inject
     public GetPostsCall(final WebTarget target) {
-        super(GetPostsOutput.class, target.path("stream/getposts"));
+        super(GetPostsOutput.class, target.path("stream/getposts"), null);
     }
 }
