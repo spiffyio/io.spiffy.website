@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
 import io.spiffy.common.api.security.client.SecurityClient;
+import io.spiffy.common.util.DateUtil;
 import io.spiffy.common.util.RandomUtil;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.user.entity.SessionEntity;
@@ -61,7 +62,7 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
         } else {
             entity = getByAccountAndFingerprint(accountId, fingerprint);
             if (entity != null) {
-                entity.setInvalidatedAt(new Date());
+                entity.setInvalidatedAt(DateUtil.now());
                 repository.saveOrUpdate(entity);
             }
 
@@ -70,7 +71,7 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
             entity.setToken(token);
         }
 
-        entity.setLastAccessedAt(new Date());
+        entity.setLastAccessedAt(DateUtil.now());
         entity.setLastIPAddressId(ipAddressId);
 
         if (fingerprint != null) {
@@ -91,8 +92,8 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
     @Transactional
     public SessionEntity create(final String sessionId, final long accountId, final String fingerprint, final String userAgent,
             final String ipAddress) {
-        return post(sessionId, RandomUtil.randomAlphaNumericString(TOKEN_LENGTH), accountId, new Date(), fingerprint, userAgent,
-                ipAddress, null);
+        return post(sessionId, RandomUtil.randomAlphaNumericString(TOKEN_LENGTH), accountId, DateUtil.now(), fingerprint,
+                userAgent, ipAddress, null);
     }
 
     @Transactional

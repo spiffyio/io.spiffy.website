@@ -1,6 +1,5 @@
 package io.spiffy.stream.service;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -8,6 +7,7 @@ import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
+import io.spiffy.common.util.DateUtil;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.stream.entity.PostEntity;
 import io.spiffy.stream.repository.PostRepository;
@@ -36,7 +36,7 @@ public class PostService extends Service<PostEntity, PostRepository> {
 
         PostEntity entity = get(idempotentId);
         if (entity == null) {
-            entity = new PostEntity(idempotentId, accountId, mediaId, new Date());
+            entity = new PostEntity(idempotentId, accountId, mediaId, DateUtil.now());
         }
 
         entity.setTitle(title);

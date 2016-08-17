@@ -9,21 +9,24 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import io.spiffy.common.Client;
+import io.spiffy.common.api.GetInput;
 import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.user.call.*;
 import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.input.*;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.api.user.output.AuthenticateSessionOutput;
+import io.spiffy.common.api.user.output.GetAccountOutput;
 import io.spiffy.common.api.user.output.GetSessionsOutput;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserClient extends Client {
 
     final AuthenticateAccountCall authenticateAccountCall;
     final AuthenticateSessionCall authenticateSessionCall;
+    final GetAccountCall getAccountCall;
     final GetSessionsCall getSessionsCall;
     final PostAccountCall postAccountCall;
     final RegisterAccountCall registerAccountCall;
@@ -51,6 +54,12 @@ public class UserClient extends Client {
         final GetSessionsInput input = new GetSessionsInput(accountId);
         final GetSessionsOutput output = getSessionsCall.call(input);
         return output.getSessions();
+    }
+
+    public String getAccount(final long accountId) {
+        final GetInput input = new GetInput(accountId);
+        final GetAccountOutput output = getAccountCall.call(input);
+        return output.getUsername();
     }
 
     public long postAccount(final String userName, final String emailAddress) {

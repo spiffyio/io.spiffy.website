@@ -9,6 +9,7 @@ import org.springframework.transaction.annotation.Transactional;
 import io.spiffy.common.Service;
 import io.spiffy.common.api.email.dto.EmailProperties;
 import io.spiffy.common.api.email.dto.EmailType;
+import io.spiffy.common.util.DateUtil;
 import io.spiffy.common.util.JsonUtil;
 import io.spiffy.email.entity.EmailAddressEntity;
 import io.spiffy.email.entity.EmailEntity;
@@ -59,7 +60,7 @@ public class EmailService extends Service<EmailEntity, EmailRepository> {
             return entity;
         }
 
-        final Date sentAt = new Date();
+        final Date sentAt = DateUtil.now();
         emailManager.send("verify", "Verify Email Address", entity.getEmailAddress().getAddress(), sentAt,
                 entity.getProperties());
 

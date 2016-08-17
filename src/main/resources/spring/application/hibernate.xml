@@ -15,7 +15,7 @@
         <prop key="hibernate.c3p0.idle_test_period">3000</prop>
         
         <prop key="hibernate.connection.driver_class">com.mysql.jdbc.Driver</prop>
-        <prop key="hibernate.connection.url">${db.url}</prop>
+        <prop key="hibernate.connection.url">${db.url}?useTimezone=true&amp;serverTimezone=UTC</prop>
         <prop key="hibernate.connection.username">${db.username}</prop>
         <prop key="hibernate.connection.password">${db.password}</prop>
 

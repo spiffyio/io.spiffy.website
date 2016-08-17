@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import java.io.IOException;
-import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
@@ -21,6 +20,7 @@ import org.springframework.ui.ModelMap;
 
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.CsrfUtil;
+import io.spiffy.common.util.DateUtil;
 import io.spiffy.common.util.ListUtil;
 import io.spiffy.common.util.ObfuscateUtil;
 
@@ -101,7 +101,7 @@ public class Context {
     }
 
     public String generateIdempotentId() {
-        return UUID.randomUUID().toString() + "-" + ObfuscateUtil.obfuscate(new Date().getTime());
+        return UUID.randomUUID().toString() + "-" + ObfuscateUtil.obfuscate(DateUtil.now().getTime());
     }
 
     public String getCsrfToken() {

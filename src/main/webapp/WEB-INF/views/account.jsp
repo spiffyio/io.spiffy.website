@@ -12,8 +12,6 @@
 
 </c:forEach>
 
-hello world
-
 </div>
   
 <jsp:include page="common/footer.jsp" />

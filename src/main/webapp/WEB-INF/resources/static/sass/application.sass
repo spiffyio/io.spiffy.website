@@ -419,7 +419,7 @@ div.footer
     .thumbnail:empty
       background-color: $w2
 
-    .name
+    .title
       +size(1.5em, auto)
       min-width: 10em
       margin-left: 3.5em
@@ -429,20 +429,23 @@ div.footer
         +buffer(0, 0)
         font-size: 150%
         background-color: inherit
+        overflow: hidden
 
     .name:empty
       background-color: $w2
 
-    .time
-      +size(1em, 4em)
+    .name
+      +size(1em, 10em)
       margin-left: 3.5em
       margin-top: 0.5em
+      overflow: hidden
 
       .content
         +size(1em, auto)
         +buffer(0, 0)
         font-size: 100%
         background-color: inherit
+        overflow: hidden
 
     .time:empty
       background-color: $w2
