@@ -15,6 +15,7 @@ import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.CsrfUtil;
 import io.spiffy.common.util.JsonUtil;
 
+@SuppressWarnings("hiding")
 public abstract class API<Input, Output, Service> extends Controller {
 
     public static final boolean SUCCESS = true;

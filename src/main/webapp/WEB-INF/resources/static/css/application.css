@@ -485,101 +485,38 @@ div.footer {
   background: #F5F5F5;
   border: 1px solid #F5F5F5;
   box-shadow: 0px 0px 5px 0px #5F5F5F;
+  position: relative;
 }
 
 .grid .col .panel img, .grid .col .panel video, .grid .col .panel ins {
   height: auto;
   width: 100%;
-  margin: 0;
+  margin: 0 0 -0.25em 0;
   border: none;
+  cursor: pointer;
 }
 
-.grid .col .panel .source {
-  height: auto;
-  width: 50%;
-  padding: 0.5em;
-  float: left;
-}
-
-.grid .col .panel .source .thumbnail {
+.grid .col .panel .footer {
   height: 3em;
-  width: 3em;
-  float: left;
-  margin-right: 0.5em;
+  width: 100%;
+  margin-top: -3em;
+  position: relative;
+  bottom: 0;
+  background: linear-gradient(to bottom, rgba(44, 44, 44, 0), #2c2c2c);
+  color: #F5F5F5;
+  font-weight: bold;
 }
 
-.grid .col .panel .source .thumbnail:empty {
-  background-color: #D3D3D3;
+.grid .col .panel .footer {
+  opacity: 0.5;
+  filter: alpha(opacity=50);
+  transition: all 0.5s ease;
 }
 
-.grid .col .panel .source .title {
-  height: 1.5em;
-  width: auto;
-  min-width: 10em;
-  margin-left: 3.5em;
-}
-
-.grid .col .panel .source .title .content {
-  height: 1em;
-  width: auto;
-  margin: 0;
-  padding: 0;
-  font-size: 150%;
-  background-color: inherit;
-  overflow: hidden;
-}
-
-.grid .col .panel .source .name:empty {
-  background-color: #D3D3D3;
-}
-
-.grid .col .panel .source .name {
-  height: 1em;
-  width: 10em;
-  margin-left: 3.5em;
-  margin-top: 0.5em;
-  overflow: hidden;
-}
-
-.grid .col .panel .source .name .content {
-  height: 1em;
-  width: auto;
-  margin: 0;
-  padding: 0;
-  font-size: 100%;
-  background-color: inherit;
-  overflow: hidden;
-}
-
-.grid .col .panel .source .time:empty {
-  background-color: #D3D3D3;
-}
-
-.grid .col .panel .source img {
-  height: auto;
-  width: 3em;
-  float: left;
-  margin-right: 0.5em;
-}
-
-.grid .col .panel .source h3 {
-  color: #5F5F5F;
-}
-
-.grid .col .panel .source p {
-  color: #D3D3D3;
-}
-
-.grid .col .panel .heart {
-  height: 2em;
-  width: 2em;
-  margin: 1em;
-}
-
-.grid .col .panel .options {
-  height: 2em;
-  width: 2em;
-  margin: 1em;
+.grid:hover .col:hover .panel:hover .footer {
+  opacity: 1.0;
+  filter: alpha(opacity=100);
+  transition: all 0.5s ease;
 }
 
 .grid .col img {

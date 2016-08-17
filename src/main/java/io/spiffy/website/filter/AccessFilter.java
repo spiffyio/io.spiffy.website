@@ -25,12 +25,7 @@ public class AccessFilter extends Filter {
             return Result.Continue;
         }
 
-        if (true) {
-            return Result.Continue;
-        }
-
         final String uri = context.getRequestUri();
-
         context.sendRedirect("https://spiffy.io" + uri);
         return Result.Halt;
     }

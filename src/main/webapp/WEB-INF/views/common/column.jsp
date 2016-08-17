@@ -6,14 +6,7 @@
   <c:forEach var="post" items="${ posts }" begin="${ param.begin }" step="${ param.step }">
     <div class="panel">
       <img src="<c:out value="${ post.url }" />" />
-      <div class="source">
-        <div class="thumbnail"></div>
-        <div class="title"><div class="content"><c:out value="${ post.title }" /></div></div>
-        <div class="name"><div class="content"><c:out value="${ post.username }" /></div></div>
-      </div>
-      <div class="right"><s:options /></div>
-      <div class="right"><s:heart /></div>
-      <div class="clearfix"></div>
+      <div class="footer"><c:out value="${ post.title }" /></div>
     </div>
   </c:forEach>
 </div>
