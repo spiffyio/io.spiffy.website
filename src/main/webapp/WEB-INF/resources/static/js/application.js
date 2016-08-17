@@ -429,6 +429,9 @@ emptyColumn = function(i) {
   var col, panels;
   col = $('.col[data-index="' + i + '"]');
   panels = col.find('.panel');
+  if (!panels.length) {
+    return;
+  }
   panels.each(function() {
     var index, panel;
     panel = $(this);
@@ -441,6 +444,11 @@ emptyColumn = function(i) {
 
 fillColumn = function(i) {
   var col, panels;
+  col = $('.col[data-index="' + i + '"]');
+  panels = col.find('.panel');
+  if (panels.length) {
+    return;
+  }
   col = $('.col[data-index!="' + i + '"]');
   panels = col.find('.panel');
   panels.each(function() {
@@ -456,10 +464,11 @@ fillColumn = function(i) {
 
 sortColumn = function(i) {
   var col, panels, sorted;
+  console.log('sort');
   col = $('.col[data-index="' + i + '"]');
   panels = col.find('.panel');
   sorted = panels.sort(function(a, b) {
-    return $(a).data('index') > $(b).data('index');
+    return $(a).data('index') - $(b).data('index');
   });
   col.html(sorted);
 };

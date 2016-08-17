@@ -11,7 +11,7 @@ html, body {
 div.header {
   height: 3em;
   width: 100%;
-  position: fixed;
+  position: absolute;
   top: 0;
   background: #C0EFFD;
 }

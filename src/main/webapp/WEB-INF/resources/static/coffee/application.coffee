@@ -121,6 +121,8 @@ fingerprint = () ->
 emptyColumn = (i) ->
   col = $('.col[data-index="' + i + '"]')
   panels = col.find '.panel'
+  if not panels.length
+    return
   panels.each () ->
     panel = $(this)
     index = panel.data 'index'
@@ -131,6 +133,10 @@ emptyColumn = (i) ->
   return
 
 fillColumn = (i) ->
+  col = $('.col[data-index="' + i + '"]')
+  panels = col.find '.panel'
+  if panels.length
+    return
   col = $('.col[data-index!="' + i + '"]')
   panels = col.find '.panel'
   panels.each () ->
@@ -142,10 +148,11 @@ fillColumn = (i) ->
   return
 
 sortColumn = (i) ->
+  console.log 'sort'
   col = $('.col[data-index="' + i + '"]')
   panels = col.find '.panel'
   sorted = panels.sort (a, b) ->
-    return $(a).data('index') > $(b).data('index')
+    return $(a).data('index') - $(b).data('index')
   col.html sorted
   return
 

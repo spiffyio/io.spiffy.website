@@ -75,7 +75,7 @@
 <body <c:if test="${ include_embed_onload }"> onload="document.getElementById('embeded').src = window.location.href;" </c:if>>
 
 <c:if test="${ include_bar }">
-<div class="header hideable">
+<div class="header">
   <div class="logo"><a href="/"><img src="<s:resource file="svg/icon.svg" />" /></a></div>
   <div class="menu">
     <ul>
@@ -86,7 +86,7 @@
       <li>&nbsp;</li>
       </c:if>
       <c:if test="${ not empty account }">
-      <li><a href="/feed">feed</a></li>
+      <li><a href="/">stream</a></li>
       <li><a href="/upload">upload</a></li>
       <li><a href="/account"><c:out value="${ account.username }" /></a></li>
       <li><a href="/logout">logout</a></li>
