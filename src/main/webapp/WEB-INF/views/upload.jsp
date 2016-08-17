@@ -11,10 +11,10 @@
   <s:idempotent />
 </form>
 
+<textarea name="description" placeholder="description" data-form="submit"></textarea>
 
-<form class="submit" action="/submit">
-  <input type="text" name="title" placeholder="title" />
-  <input type="text" name="description" placeholder="description" />
+<form class="submit" action="/submit" data-form="submit">
+  <input type="text" name="title" placeholder="title" required/>
   <input type="hidden" name="media" />
   <s:idempotent />
   <input class="button primary" type="submit" value="submit" />

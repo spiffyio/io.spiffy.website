@@ -21,13 +21,13 @@
 <div class="footer">
   <a href="/llc">SPIFFY.io, LLC</a> &copy; 2016 &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a>
 </div>
-  
-<script type="text/javascript" src="<s:resource file="js/jquery.min.js" />"></script>
-<script type="text/javascript" src="<s:resource file="js/jquery.validate.min.js" />"></script>
-<script type="text/javascript" src="<s:resource file="js/dropzone.min.js" />"></script>
+
+<s:resource file="jquery" type="js" />
+<s:resource file="jquery.validate" type="js" />
+<s:resource file="dropzone" type="js" />
 <c:if test="${ include_fingerprint }">
-<script type="text/javascript" src="<s:resource file="js/fingerprint.min.js" />"></script>
+<s:resource file="fingerprint" type="js" />
 </c:if>
-<script type="text/javascript" src="<s:resource file="js/application.min.js" />"></script>
+<s:resource file="application" type="js" />
 </body>
 </html>

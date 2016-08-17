@@ -64,15 +64,15 @@
 <meta name="msapplication-TileImage" content="<s:resource file="favicon/mstile-144x144.png" />">
 <meta name="theme-color" content="#c0effd">
 
-<link rel="stylesheet" type="text/css" href="<s:resource file="css/application.min.css" />">
+<s:resource file="application" type="css" />
 <c:if test="${ include_dropzone }">
-<link rel="stylesheet" type="text/css" href="<s:resource file="css/dropzone.css" />">
+<s:resource file="dropzone" type="css" />
 </c:if>
 <c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit'></script>
 </c:if>
 </head>
-<body onload="document.getElementById('embeded').src = window.location.href;">
+<body <c:if test="${ include_embed_onload }"> onload="document.getElementById('embeded').src = window.location.href;" </c:if>>
 
 <c:if test="${ include_bar }">
 <div class="header hideable">

@@ -30,7 +30,12 @@ jQuery.fn.spiffyValue = () ->
 
 jQuery.fn.spiffyFormValue = (name) ->
   form = $ this[0]
-  value = $(form.find('[name=' + name + ']')[0]).val()
+  element = form.find('[name=' + name + ']')[0]
+  if not element?
+    element = $('[data-form=' + form.data('form') + '][name=' + name + ']')[0]
+  if not element?
+    return undefined
+  value = $(element).val()
   #value = encodeURIComponent value
   #value.replace /%20/g, '+'
 

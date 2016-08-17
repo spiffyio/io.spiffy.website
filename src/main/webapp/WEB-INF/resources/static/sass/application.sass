@@ -131,6 +131,12 @@ div.body
       cursor: default
       padding-top: 17.5vh
 
+    textarea
+      +size(5em, 100%)
+      margin: 1em 5px 0 5px
+      font-size: 125%
+      line-height: 1.25em
+
     form
       +center
       width: 300px
@@ -144,9 +150,10 @@ div.body
         line-height: 1.5em
         text-align: center
 
-input
+input, textarea
   border: none
   box-sizing: border-box
+  resize: none
 
 @keyframes background-animation
   0%

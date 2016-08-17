@@ -197,9 +197,16 @@ jQuery.fn.spiffyValue = function() {
 };
 
 jQuery.fn.spiffyFormValue = function(name) {
-  var form, value;
+  var element, form, value;
   form = $(this[0]);
-  return value = $(form.find('[name=' + name + ']')[0]).val();
+  element = form.find('[name=' + name + ']')[0];
+  if (element == null) {
+    element = $('[data-form=' + form.data('form') + '][name=' + name + ']')[0];
+  }
+  if (element == null) {
+    return void 0;
+  }
+  return value = $(element).val();
 };
 
 jQuery.fn.spiffyFormData = function(names) {
