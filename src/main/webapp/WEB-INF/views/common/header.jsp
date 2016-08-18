@@ -76,7 +76,7 @@
 
 <c:if test="${ include_bar }">
 <div class="header">
-  <div class="logo"><a href="/"><img src="<s:resource file="svg/icon.svg" />" /></a></div>
+  <div class="logo"><a href="/"><img class="header-logo" src="<s:resource file="svg/icon.svg" />" /></a></div>
   <div class="menu">
     <ul>
       <c:if test="${ empty account }">

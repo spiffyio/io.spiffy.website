@@ -18,16 +18,16 @@ Dropzone.options.dzForm = {
 }
 
 $(document).ready (e) ->
-  $('div.header.hideable').mouseenter () ->
+  $('div.header').mouseenter () ->
     if $(this).is ':hover'
-      hAnimate '0'
+      $(this).removeClass 'hidden'
     return
 
-  $('div.header.hideable').mouseleave () ->
+  $('div.header').mouseleave () ->
     header = $(this)
     func = () ->
-      if not header.is ':hover'
-        hAnimate '-3em'
+      if (not header.is(':hover')) and ($(window).scrollTop() > 400)
+        header.addClass 'hidden'
       return
     setTimeout(func, 500)
     return
@@ -50,7 +50,7 @@ $(document).ready (e) ->
   $('form.load-posts').submit (e) ->
     preventDefault e
     form = $(this)
-    form.spiffySubmit { url: '/posts', method: 'GET' }, $(this).spiffyFormData(['after', 'quantity']), load
+    form.spiffySubmit { url: '/posts', method: 'GET', loading: 'header' }, $(this).spiffyFormData(['after', 'quantity']), load
     return
 
   $('form.login').submit (e) ->
@@ -79,21 +79,8 @@ $(document).ready (e) ->
     if $(e.target).hasClass 'modal-overlay' then closeModal()
     return
 
-  $('.col').each (i) ->
-    $(this).attr 'data-index', i
-    offset = i
-    $(this).find('.panel').each (i) ->
-      $(this).attr 'data-index', $('.col').length * i + offset
-      return
-    return
+  adjustColumns()
 
-  if ($(window).width() < Width.xl) then emptyColumn 2
-  if ($(window).width() < Width.md) then emptyColumn 1
-
-  return
-
-hAnimate = (top) ->
-  $('div.header').find('div.menu').finish().animate {top: top}
   return
 
 openModal = (modal) ->
@@ -128,17 +115,7 @@ load = (json) ->
   loadPosts json.posts
 
   $('form.load-posts').find('input[name="after"]').val json.next
-
-  $('.col').each (i) ->
-    $(this).attr 'data-index', i
-    offset = i
-    $(this).find('.panel').each (i) ->
-      $(this).attr 'data-index', $('.col').length * i + offset
-      return
-    return
-
-  if ($(window).width() < Width.xl) then emptyColumn 2
-  if ($(window).width() < Width.md) then emptyColumn 1
+  adjustColumns()
   return
 
 loadPosts = (posts) ->
@@ -158,6 +135,19 @@ loadPosts = (posts) ->
 
     col = $('.col[data-index="' + (i % 3) + '"]')
     col.append panel
+  return
+
+adjustColumns = () ->
+  $('.col').each (i) ->
+    $(this).attr 'data-index', i
+    offset = i
+    $(this).find('.panel').each (i) ->
+      $(this).attr 'data-index', $('.col').length * i + offset
+      return
+    return
+
+  if ($(window).width() < Width.xl) then emptyColumn 2
+  if ($(window).width() < Width.md) then emptyColumn 1
   return
 
 emptyColumn = (i) ->
@@ -212,4 +202,18 @@ $(window).resize (e) ->
   if (width < window.pWidth) and (width < Width.xl)
     emptyColumn 2
   window.pWidth = width
+  return
+
+$(window).scroll (e) ->
+  if $(window).scrollTop() > 400
+    $('div.header').addClass 'hidden'
+  else
+    $('div.header').removeClass 'hidden'
+
+  $('div.col').each () ->
+    col = $(this)
+    panel = col.find('div.panel:last')
+    if panel.offset().top < $(window).scrollTop()
+      $('form.load-posts').submit()
+    return
   return

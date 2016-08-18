@@ -158,6 +158,7 @@ jQuery.fn.spiffyDisable = function(disable) {
     disable = true;
   }
   element = $(this[0]);
+  element.data('disabled', disable);
   ref = ['input', 'textarea', 'select', 'button'];
   for (i = 0, len = ref.length; i < len; i++) {
     input = ref[i];
@@ -221,8 +222,11 @@ jQuery.fn.spiffyFormData = function(names) {
 };
 
 jQuery.fn.spiffySubmit = function(options, data, success, error) {
-  var disable, form, method, url, validate;
+  var disable, form, img, method, url, validate;
   form = $(this[0]);
+  if (form.data('disabled') === true) {
+    return;
+  }
   validate = form.validate();
   if (validate.numberOfInvalids()) {
     return;
@@ -231,11 +235,16 @@ jQuery.fn.spiffySubmit = function(options, data, success, error) {
   if (disable) {
     form.spiffyDisable();
   }
-  if (form.find('img.loading').length === 0) {
-    form.css('position', 'relative');
-    form.append('<img class="loading" src="https://cdn.spiffy.io/static/svg/loading.svg" style="position:absolute;left:0;top:0;right:0;bottom:0;margin:auto;max-width:100%;max-height:100%;z-index:1000;" hidden="true"/>');
+  if ((defined(options.loading)) && (options.loading === 'header')) {
+    img = $('img.header-logo');
+    img.attr('src', img.attr('src').replace('icon', 'loading'));
+  } else {
+    if (form.find('img.loading').length === 0) {
+      form.css('position', 'relative');
+      form.append('<img class="loading" src="https://cdn.spiffy.io/static/svg/loading.svg" style="position:absolute;left:0;top:0;right:0;bottom:0;margin:auto;max-width:100%;max-height:100%;z-index:1000;" hidden="true"/>');
+    }
+    form.find('img.loading').slideDown();
   }
-  form.find('img.loading').slideDown();
   url = defined(options.url) ? options.url : options;
   method = defined(options.method) ? options.method : 'POST';
   $.ajax({
@@ -248,15 +257,25 @@ jQuery.fn.spiffySubmit = function(options, data, success, error) {
     type: method,
     success: function(data, textStatus, jqXHR) {
       success(data);
-      form.find('img.loading').hide(250);
+      if ((defined(options.loading)) && (options.loading === 'header')) {
+        img = $('img.header-logo');
+        img.attr('src', img.attr('src').replace('loading', 'icon'));
+      } else {
+        form.find('img.loading').hide(250);
+      }
       if (disable) {
-        form.spiffyEnable;
+        form.spiffyEnable();
       }
       validate.resetForm();
     },
     error: function(jqXHR, textStatus, errorThrown) {
       var json;
-      form.find('img.loading').hide(250);
+      if ((defined(options.loading)) && (options.loading === 'header')) {
+        img = $('img.header-logo');
+        img.attr('src', img.attr('src').replace('loading', 'icon'));
+      } else {
+        form.find('img.loading').hide(250);
+      }
       if (disable) {
         form.spiffyEnable;
       }
@@ -286,7 +305,7 @@ jQuery.fn.spiffySubmit = function(options, data, success, error) {
   });
 };
 
-var closeModal, emptyColumn, fillColumn, fingerprint, hAnimate, load, loadPosts, openModal, sortColumn;
+var adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
 
 Dropzone.options.dzForm = {
   paramName: 'file',
@@ -307,17 +326,17 @@ Dropzone.options.dzForm = {
 
 $(document).ready(function(e) {
   var hash;
-  $('div.header.hideable').mouseenter(function() {
+  $('div.header').mouseenter(function() {
     if ($(this).is(':hover')) {
-      hAnimate('0');
+      $(this).removeClass('hidden');
     }
   });
-  $('div.header.hideable').mouseleave(function() {
+  $('div.header').mouseleave(function() {
     var func, header;
     header = $(this);
     func = function() {
-      if (!header.is(':hover')) {
-        hAnimate('-3em');
+      if ((!header.is(':hover')) && ($(window).scrollTop() > 400)) {
+        header.addClass('hidden');
       }
     };
     setTimeout(func, 500);
@@ -342,7 +361,8 @@ $(document).ready(function(e) {
     form = $(this);
     form.spiffySubmit({
       url: '/posts',
-      method: 'GET'
+      method: 'GET',
+      loading: 'header'
     }, $(this).spiffyFormData(['after', 'quantity']), load);
   });
   $('form.login').submit(function(e) {
@@ -377,27 +397,8 @@ $(document).ready(function(e) {
       closeModal();
     }
   });
-  $('.col').each(function(i) {
-    var offset;
-    $(this).attr('data-index', i);
-    offset = i;
-    $(this).find('.panel').each(function(i) {
-      $(this).attr('data-index', $('.col').length * i + offset);
-    });
-  });
-  if ($(window).width() < Width.xl) {
-    emptyColumn(2);
-  }
-  if ($(window).width() < Width.md) {
-    emptyColumn(1);
-  }
+  adjustColumns();
 });
-
-hAnimate = function(top) {
-  $('div.header').find('div.menu').finish().animate({
-    top: top
-  });
-};
 
 openModal = function(modal) {
   if (!$('[data-modal-id="' + modal + '"]').length) {
@@ -438,20 +439,7 @@ fingerprint = function() {
 load = function(json) {
   loadPosts(json.posts);
   $('form.load-posts').find('input[name="after"]').val(json.next);
-  $('.col').each(function(i) {
-    var offset;
-    $(this).attr('data-index', i);
-    offset = i;
-    $(this).find('.panel').each(function(i) {
-      $(this).attr('data-index', $('.col').length * i + offset);
-    });
-  });
-  if ($(window).width() < Width.xl) {
-    emptyColumn(2);
-  }
-  if ($(window).width() < Width.md) {
-    emptyColumn(1);
-  }
+  adjustColumns();
 };
 
 loadPosts = function(posts) {
@@ -469,6 +457,23 @@ loadPosts = function(posts) {
     panel.append(footer);
     col = $('.col[data-index="' + (i % 3) + '"]');
     col.append(panel);
+  }
+};
+
+adjustColumns = function() {
+  $('.col').each(function(i) {
+    var offset;
+    $(this).attr('data-index', i);
+    offset = i;
+    $(this).find('.panel').each(function(i) {
+      $(this).attr('data-index', $('.col').length * i + offset);
+    });
+  });
+  if ($(window).width() < Width.xl) {
+    emptyColumn(2);
+  }
+  if ($(window).width() < Width.md) {
+    emptyColumn(1);
   }
 };
 
@@ -539,5 +544,21 @@ $(window).resize(function(e) {
     emptyColumn(2);
   }
   window.pWidth = width;
+});
+
+$(window).scroll(function(e) {
+  if ($(window).scrollTop() > 400) {
+    $('div.header').addClass('hidden');
+  } else {
+    $('div.header').removeClass('hidden');
+  }
+  $('div.col').each(function() {
+    var col, panel;
+    col = $(this);
+    panel = col.find('div.panel:last');
+    if (panel.offset().top < $(window).scrollTop()) {
+      $('form.load-posts').submit();
+    }
+  });
 });
 

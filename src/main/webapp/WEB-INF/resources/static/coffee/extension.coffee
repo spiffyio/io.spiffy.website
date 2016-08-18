@@ -10,6 +10,7 @@ jQuery.fn.isany = (values) ->
 
 jQuery.fn.spiffyDisable = (disable = true) ->
   element = $ this[0]
+  element.data 'disabled', disable
   element.find(input).prop('disabled', disable) for input in ['input', 'textarea', 'select', 'button']
   element
 
@@ -48,6 +49,7 @@ jQuery.fn.spiffyFormData = (names) ->
 
 jQuery.fn.spiffySubmit = (options, data, success, error) ->
   form = $ this[0]
+  if form.data('disabled') is true then return
 
   validate = form.validate()
   if validate.numberOfInvalids() then return
@@ -55,10 +57,14 @@ jQuery.fn.spiffySubmit = (options, data, success, error) ->
   disable = if defined options.disable then options.disable else true
   if disable then form.spiffyDisable()
 
-  if form.find('img.loading').length is 0
-    form.css 'position', 'relative'
-    form.append '<img class="loading" src="https://cdn.spiffy.io/static/svg/loading.svg" style="position:absolute;left:0;top:0;right:0;bottom:0;margin:auto;max-width:100%;max-height:100%;z-index:1000;" hidden="true"/>'
-  form.find('img.loading').slideDown()
+  if (defined options.loading) and (options.loading is 'header')
+    img = $('img.header-logo')
+    img.attr('src', img.attr('src').replace('icon', 'loading'))
+  else
+    if form.find('img.loading').length is 0
+      form.css 'position', 'relative'
+      form.append '<img class="loading" src="https://cdn.spiffy.io/static/svg/loading.svg" style="position:absolute;left:0;top:0;right:0;bottom:0;margin:auto;max-width:100%;max-height:100%;z-index:1000;" hidden="true"/>'
+    form.find('img.loading').slideDown()
 
   url = if defined options.url then options.url else options
   method = if defined options.method then options.method else 'POST'
@@ -72,16 +78,24 @@ jQuery.fn.spiffySubmit = (options, data, success, error) ->
     type: method
     success: (data, textStatus, jqXHR) ->
       success(data)
-      form
-        .find 'img.loading'
-        .hide 250
-      if disable then form.spiffyEnable
+      if (defined options.loading) and (options.loading is 'header')
+        img = $('img.header-logo')
+        img.attr('src', img.attr('src').replace('loading', 'icon'))
+      else
+        form
+          .find 'img.loading'
+          .hide 250
+      if disable then form.spiffyEnable()
       validate.resetForm()
       return
     error: (jqXHR, textStatus, errorThrown) ->
-      form
-        .find 'img.loading'
-        .hide 250
+      if (defined options.loading) and (options.loading is 'header')
+        img = $('img.header-logo')
+        img.attr('src', img.attr('src').replace('loading', 'icon'))
+      else
+        form
+          .find 'img.loading'
+          .hide 250
       if disable then form.spiffyEnable
       if jqXHR.status is 401
         handler (json) ->

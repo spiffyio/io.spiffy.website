@@ -11,9 +11,10 @@ html, body {
 div.header {
   height: 3em;
   width: 100%;
-  position: absolute;
+  position: fixed;
   top: 0;
   background: #C0EFFD;
+  z-index: 10000;
 }
 
 div.header div.logo {
@@ -35,7 +36,6 @@ div.header div.menu {
   width: 600px;
   height: 100%;
   position: absolute;
-  top: 0;
   left: calc(50% - 300px);
   z-index: 1;
 }
@@ -61,8 +61,14 @@ div.header div.menu ul li a, div.header div.menu ul li span {
   display: block;
 }
 
-div.header.hideable div.menu {
+div.header div.menu {
+  top: 0;
+  transition: all 0.5s ease;
+}
+
+div.header.hidden div.menu {
   top: -3em;
+  transition: all 0.5s ease;
 }
 
 a {
