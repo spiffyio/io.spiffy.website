@@ -122,10 +122,12 @@ load = (json) ->
     go '/stream/' + $(this).data('post')
     return
 
+  start = $('form.load-posts').find('input[name="after"]').val()
+
   $('form.load-posts').find('input[name="after"]').val json.next
   adjustColumns()
 
-  history.replaceState json, 'SPIFFY.io', '/stream?start=' + json.posts[0].postId
+  history.replaceState json, 'SPIFFY.io', '/stream?start=' + start
   return
 
 loadPosts = (posts) ->
@@ -227,4 +229,9 @@ $(window).scroll (e) ->
     if panel.offset().top - panel.height() < $(window).scrollTop()
       $('form.load-posts').submit()
     return
+  return
+
+$(window).on 'beforeunload', () ->
+  if location.search.contains 'start'
+    $(window).scrollTop 0
   return

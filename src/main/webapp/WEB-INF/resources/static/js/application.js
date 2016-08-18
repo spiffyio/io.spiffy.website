@@ -439,13 +439,15 @@ fingerprint = function() {
 };
 
 load = function(json) {
+  var start;
   loadPosts(json.posts);
   $('[data-post]').click(function(e) {
     go('/stream/' + $(this).data('post'));
   });
+  start = $('form.load-posts').find('input[name="after"]').val();
   $('form.load-posts').find('input[name="after"]').val(json.next);
   adjustColumns();
-  history.replaceState(json, 'SPIFFY.io', '/stream?start=' + json.posts[0].postId);
+  history.replaceState(json, 'SPIFFY.io', '/stream?start=' + start);
 };
 
 loadPosts = function(posts) {
@@ -569,5 +571,11 @@ $(window).scroll(function(e) {
       $('form.load-posts').submit();
     }
   });
+});
+
+$(window).on('beforeunload', function() {
+  if (location.search.contains('start')) {
+    $(window).scrollTop(0);
+  }
 });
 

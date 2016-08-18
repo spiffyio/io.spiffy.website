@@ -21,6 +21,7 @@ import io.spiffy.website.response.PostsResponse;
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
+    private static final String POST_KEY = "post";
     private static final String POSTS_KEY = "posts";
 
     private final StreamClient streamClient;
@@ -34,8 +35,11 @@ public class HomeController extends Controller {
         return mav("home", context);
     }
 
-    @RequestMapping("/stream/{post}")
-    public ModelAndView post(final Context context, final @PathVariable String post) {
+    @RequestMapping("/stream/{postId}")
+    public ModelAndView post(final Context context, final @PathVariable String postId) {
+        final Post post = streamClient.getPost(postId == null ? null : ObfuscateUtil.unobfuscate(postId));
+        context.addAttribute(POST_KEY, post);
+
         return mav("post", context);
     }
 

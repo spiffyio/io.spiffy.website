@@ -6,7 +6,13 @@
   <jsp:param name="style" value="centered" />
 </jsp:include>
 
-hello world
+<h2 style="width: 100%; text-align: center;">
+  <c:out value="${ post.title }" />
+</h2>
+
+<div class="panel">
+  <img src="<c:out value="${ post.url }" />" />
+</div>
 
 </div>
 

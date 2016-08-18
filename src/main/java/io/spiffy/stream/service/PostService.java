@@ -20,6 +20,11 @@ public class PostService extends Service<PostEntity, PostRepository> {
     }
 
     @Transactional
+    public PostEntity get(final long id) {
+        return repository.get(id);
+    }
+
+    @Transactional
     public PostEntity get(final String idempotentId) {
         return repository.get(idempotentId);
     }
