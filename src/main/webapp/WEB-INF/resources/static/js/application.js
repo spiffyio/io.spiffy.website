@@ -221,7 +221,7 @@ jQuery.fn.spiffyFormData = function(names) {
 };
 
 jQuery.fn.spiffySubmit = function(options, data, success, error) {
-  var disable, form, url, validate;
+  var disable, form, method, url, validate;
   form = $(this[0]);
   validate = form.validate();
   if (validate.numberOfInvalids()) {
@@ -237,6 +237,7 @@ jQuery.fn.spiffySubmit = function(options, data, success, error) {
   }
   form.find('img.loading').slideDown();
   url = defined(options.url) ? options.url : options;
+  method = defined(options.method) ? options.method : 'POST';
   $.ajax({
     url: url,
     data: data,
@@ -244,7 +245,7 @@ jQuery.fn.spiffySubmit = function(options, data, success, error) {
     headers: {
       'X-CSRF-Token': form.data('csrf-token')
     },
-    type: 'POST',
+    type: method,
     success: function(data, textStatus, jqXHR) {
       success(data);
       form.find('img.loading').hide(250);
@@ -285,7 +286,7 @@ jQuery.fn.spiffySubmit = function(options, data, success, error) {
   });
 };
 
-var closeModal, emptyColumn, fillColumn, fingerprint, hAnimate, openModal, sortColumn;
+var closeModal, emptyColumn, fillColumn, fingerprint, hAnimate, load, loadPosts, openModal, sortColumn;
 
 Dropzone.options.dzForm = {
   paramName: 'file',
@@ -335,6 +336,15 @@ $(document).ready(function(e) {
       });
     }
   }
+  $('form.load-posts').submit(function(e) {
+    var form;
+    preventDefault(e);
+    form = $(this);
+    form.spiffySubmit({
+      url: '/posts',
+      method: 'GET'
+    }, $(this).spiffyFormData(['after', 'quantity']), load);
+  });
   $('form.login').submit(function(e) {
     var form;
     preventDefault(e);
@@ -423,6 +433,43 @@ fingerprint = function() {
     });
   });
   return null;
+};
+
+load = function(json) {
+  loadPosts(json.posts);
+  $('form.load-posts').find('input[name="after"]').val(json.next);
+  $('.col').each(function(i) {
+    var offset;
+    $(this).attr('data-index', i);
+    offset = i;
+    $(this).find('.panel').each(function(i) {
+      $(this).attr('data-index', $('.col').length * i + offset);
+    });
+  });
+  if ($(window).width() < Width.xl) {
+    emptyColumn(2);
+  }
+  if ($(window).width() < Width.md) {
+    emptyColumn(1);
+  }
+};
+
+loadPosts = function(posts) {
+  var col, footer, i, img, j, panel, post, ref;
+  for (i = j = 0, ref = posts.length; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
+    post = posts[i];
+    panel = $(document.createElement('div'));
+    panel.addClass('panel');
+    img = $(document.createElement('img'));
+    img.attr('src', post.url);
+    panel.append(img);
+    footer = $(document.createElement('div'));
+    footer.addClass('footer');
+    footer.html(post.title);
+    panel.append(footer);
+    col = $('.col[data-index="' + (i % 3) + '"]');
+    col.append(panel);
+  }
 };
 
 emptyColumn = function(i) {

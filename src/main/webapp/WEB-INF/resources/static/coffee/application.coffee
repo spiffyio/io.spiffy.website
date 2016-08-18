@@ -47,6 +47,12 @@ $(document).ready (e) ->
         $(this).val hash
         return
 
+  $('form.load-posts').submit (e) ->
+    preventDefault e
+    form = $(this)
+    form.spiffySubmit { url: '/posts', method: 'GET' }, $(this).spiffyFormData(['after', 'quantity']), load
+    return
+
   $('form.login').submit (e) ->
     preventDefault e
     form = $(this)
@@ -117,6 +123,42 @@ fingerprint = () ->
       return
     return
   return null
+
+load = (json) ->
+  loadPosts json.posts
+
+  $('form.load-posts').find('input[name="after"]').val json.next
+
+  $('.col').each (i) ->
+    $(this).attr 'data-index', i
+    offset = i
+    $(this).find('.panel').each (i) ->
+      $(this).attr 'data-index', $('.col').length * i + offset
+      return
+    return
+
+  if ($(window).width() < Width.xl) then emptyColumn 2
+  if ($(window).width() < Width.md) then emptyColumn 1
+  return
+
+loadPosts = (posts) ->
+  for i in [0...posts.length]
+    post = posts[i]
+    panel = $ document.createElement 'div'
+    panel.addClass 'panel'
+
+    img = $ document.createElement 'img'
+    img.attr 'src', post.url
+    panel.append img
+
+    footer = $ document.createElement 'div'
+    footer.addClass 'footer'
+    footer.html post.title
+    panel.append footer
+
+    col = $('.col[data-index="' + (i % 3) + '"]')
+    col.append panel
+  return
 
 emptyColumn = (i) ->
   col = $('.col[data-index="' + i + '"]')

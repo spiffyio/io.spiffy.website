@@ -61,6 +61,7 @@ jQuery.fn.spiffySubmit = (options, data, success, error) ->
   form.find('img.loading').slideDown()
 
   url = if defined options.url then options.url else options
+  method = if defined options.method then options.method else 'POST'
 
   $.ajax
     url: url
@@ -68,7 +69,7 @@ jQuery.fn.spiffySubmit = (options, data, success, error) ->
     dataType: 'json'
     headers:
       'X-CSRF-Token': form.data 'csrf-token'
-    type: 'POST'
+    type: method
     success: (data, textStatus, jqXHR) ->
       success(data)
       form

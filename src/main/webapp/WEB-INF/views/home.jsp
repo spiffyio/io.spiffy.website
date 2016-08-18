@@ -22,4 +22,9 @@
   </jsp:include>
 </div>
 
+<form class="load-posts">
+  <input type="hidden" name="after" value="<c:out value="${ after }" />"/>
+  <input type="hidden" name="quantity" />
+</form>
+
 <jsp:include page="common/footer.jsp" />

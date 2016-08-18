@@ -13,6 +13,7 @@ import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.api.stream.input.GetPostsInput;
 import io.spiffy.common.api.stream.output.GetPostsOutput;
 import io.spiffy.common.api.user.client.UserClient;
+import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.stream.entity.PostEntity;
 import io.spiffy.stream.service.PostService;
 
@@ -33,8 +34,9 @@ public class GetPostsAPI extends API<GetPostsInput, GetPostsOutput, PostService>
         final List<PostEntity> entities = service.get(input.getFirst(), input.getMaxResults());
 
         final List<Post> posts = new ArrayList<>();
-        entities.forEach(e -> posts.add(new Post(e.getAccountId(), e.getMediaId(), e.getTitle(), e.getDescription(),
-                e.getPostedAt(), userClient.getAccount(e.getAccountId()), mediaClient.getMedia(e.getMediaId()))));
+        entities.forEach(e -> posts.add(
+                new Post(ObfuscateUtil.obfuscate(e.getId()), e.getAccountId(), e.getMediaId(), e.getTitle(), e.getDescription(),
+                        e.getPostedAt(), userClient.getAccount(e.getAccountId()), mediaClient.getMedia(e.getMediaId()))));
 
         return new GetPostsOutput(posts);
     }

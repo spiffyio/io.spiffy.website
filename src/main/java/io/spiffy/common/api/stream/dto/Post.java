@@ -12,6 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Post {
+    private String postId;
     private Long accountId;
     private Long mediaId;
     private String title;
