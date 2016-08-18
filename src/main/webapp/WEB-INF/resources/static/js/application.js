@@ -347,6 +347,9 @@ $(document).ready(function(e) {
   $('[data-uri]').click(function(e) {
     go($(this).data('uri'));
   });
+  $('[data-post]').click(function(e) {
+    go('/stream/' + $(this).data('post'));
+  });
   if ($('input[name="fingerprint"]')) {
     hash = fingerprint();
     if (hash != null) {
@@ -361,7 +364,6 @@ $(document).ready(function(e) {
     form = $(this);
     form.spiffySubmit({
       url: '/posts',
-      method: 'GET',
       loading: 'header'
     }, $(this).spiffyFormData(['after', 'quantity']), load);
   });
@@ -438,8 +440,12 @@ fingerprint = function() {
 
 load = function(json) {
   loadPosts(json.posts);
+  $('[data-post]').click(function(e) {
+    go('/stream/' + $(this).data('post'));
+  });
   $('form.load-posts').find('input[name="after"]').val(json.next);
   adjustColumns();
+  history.replaceState(json, 'SPIFFY.io', '/stream?start=' + json.posts[0].postId);
 };
 
 loadPosts = function(posts) {
@@ -448,6 +454,7 @@ loadPosts = function(posts) {
     post = posts[i];
     panel = $(document.createElement('div'));
     panel.addClass('panel');
+    panel.attr('data-post', post.postId);
     img = $(document.createElement('img'));
     img.attr('src', post.url);
     panel.append(img);
@@ -516,7 +523,6 @@ fillColumn = function(i) {
 
 sortColumn = function(i) {
   var col, panels, sorted;
-  console.log('sort');
   col = $('.col[data-index="' + i + '"]');
   panels = col.find('.panel');
   sorted = panels.sort(function(a, b) {
@@ -556,7 +562,10 @@ $(window).scroll(function(e) {
     var col, panel;
     col = $(this);
     panel = col.find('div.panel:last');
-    if (panel.offset().top < $(window).scrollTop()) {
+    if ((panel == null) || (panel.offset() == null)) {
+      return;
+    }
+    if (panel.offset().top - panel.height() < $(window).scrollTop()) {
       $('form.load-posts').submit();
     }
   });

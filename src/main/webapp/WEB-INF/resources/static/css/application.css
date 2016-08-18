@@ -497,7 +497,7 @@ div.footer {
 .grid .col .panel img, .grid .col .panel video, .grid .col .panel ins {
   height: auto;
   width: 100%;
-  margin: 0 0 -0.25em 0;
+  margin: 0;
   border: none;
   cursor: pointer;
 }

@@ -4,7 +4,7 @@
 
 <div class="col ${ param.visibility }">
   <c:forEach var="post" items="${ posts }" begin="${ param.begin }" step="${ param.step }">
-  <div class="panel">
+  <div class="panel" data-post="<c:out value="${ post.postId }" />">
     <img src="<c:out value="${ post.url }" />" />
     <div class="footer"><c:out value="${ post.title }" /></div>
   </div>

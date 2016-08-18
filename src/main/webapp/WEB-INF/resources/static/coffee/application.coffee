@@ -40,6 +40,10 @@ $(document).ready (e) ->
     go $(this).data('uri')
     return
 
+  $('[data-post]').click (e) ->
+    go '/stream/' + $(this).data('post')
+    return
+
   if $('input[name="fingerprint"]')
     hash = fingerprint()
     if hash?
@@ -50,7 +54,7 @@ $(document).ready (e) ->
   $('form.load-posts').submit (e) ->
     preventDefault e
     form = $(this)
-    form.spiffySubmit { url: '/posts', method: 'GET', loading: 'header' }, $(this).spiffyFormData(['after', 'quantity']), load
+    form.spiffySubmit { url: '/posts', loading: 'header' }, $(this).spiffyFormData(['after', 'quantity']), load
     return
 
   $('form.login').submit (e) ->
@@ -114,8 +118,14 @@ fingerprint = () ->
 load = (json) ->
   loadPosts json.posts
 
+  $('[data-post]').click (e) ->
+    go '/stream/' + $(this).data('post')
+    return
+
   $('form.load-posts').find('input[name="after"]').val json.next
   adjustColumns()
+
+  history.replaceState json, 'SPIFFY.io', '/stream?start=' + json.posts[0].postId
   return
 
 loadPosts = (posts) ->
@@ -123,6 +133,7 @@ loadPosts = (posts) ->
     post = posts[i]
     panel = $ document.createElement 'div'
     panel.addClass 'panel'
+    panel.attr 'data-post', post.postId
 
     img = $ document.createElement 'img'
     img.attr 'src', post.url
@@ -180,7 +191,6 @@ fillColumn = (i) ->
   return
 
 sortColumn = (i) ->
-  console.log 'sort'
   col = $('.col[data-index="' + i + '"]')
   panels = col.find '.panel'
   sorted = panels.sort (a, b) ->
@@ -213,7 +223,8 @@ $(window).scroll (e) ->
   $('div.col').each () ->
     col = $(this)
     panel = col.find('div.panel:last')
-    if panel.offset().top < $(window).scrollTop()
+    if (not panel?) or (not panel.offset()?) then return
+    if panel.offset().top - panel.height() < $(window).scrollTop()
       $('form.load-posts').submit()
     return
   return
