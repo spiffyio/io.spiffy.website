@@ -45,7 +45,8 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
     @Transactional
     public List<SessionEntity> getByAccount(final long accountId) {
         final List<SessionEntity> entities = repository.getByAccount(accountId);
-        entities.forEach(e -> e.setIpAddress(securityClient.decryptString(e.getLastIPAddressId())));
+        entities.forEach(e -> e.setAuthenticatedIPAddress(securityClient.decryptString(e.getAuthenticatedIPAddressId())));
+        entities.forEach(e -> e.setLastIPAddress(securityClient.decryptString(e.getLastIPAddressId())));
         return entities;
     }
 
@@ -109,6 +110,21 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
         }
 
         return post(sessionId, token, entity.getAccountId(), null, null, userAgent, ipAddress, null);
+    }
+
+    @Transactional
+    public SessionEntity invalidate(final String sessionId, final String token, final String userAgent,
+            final String ipAddress) {
+        final SessionEntity entity = get(sessionId);
+        if (entity == null) {
+            return null;
+        }
+
+        if (!securityClient.matchesHashedString(entity.getTokenId(), token)) {
+            return null;
+        }
+
+        return post(sessionId, token, entity.getAccountId(), null, null, userAgent, ipAddress, DateUtil.now());
     }
 
     @Transactional

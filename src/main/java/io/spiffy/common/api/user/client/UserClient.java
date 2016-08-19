@@ -21,13 +21,14 @@ import io.spiffy.common.api.user.output.GetSessionsOutput;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserClient extends Client {
 
     final AuthenticateAccountCall authenticateAccountCall;
     final AuthenticateSessionCall authenticateSessionCall;
     final GetAccountCall getAccountCall;
     final GetSessionsCall getSessionsCall;
+    final InvalidateSessionCall invalidateSessionCall;
     final PostAccountCall postAccountCall;
     final RegisterAccountCall registerAccountCall;
 
@@ -60,6 +61,18 @@ public class UserClient extends Client {
         final GetInput input = new GetInput(accountId);
         final GetAccountOutput output = getAccountCall.call(input);
         return output.getUsername();
+    }
+
+    public boolean invalidateSession(final Context context) {
+        final String token = context.getSessionToken();
+        if (StringUtils.isEmpty(token)) {
+            return false;
+        }
+
+        final InvalidateSessionInput input = new InvalidateSessionInput(context.getSessionId(), token, context.getUserAgent(),
+                context.getIPAddress());
+        final PostOutput output = invalidateSessionCall.call(input);
+        return output.getId() != null;
     }
 
     public long postAccount(final String userName, final String emailAddress) {

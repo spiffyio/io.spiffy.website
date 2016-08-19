@@ -13,6 +13,9 @@ import java.util.Date;
 @AllArgsConstructor
 public class Session {
     private Date authenticatedAt;
-    private String userAgent;
-    private String ipAddress;
+    private String authenticatedIPAddress;
+    private String authenticatedUserAgent;
+    private Date lastAccessedAt;
+    private String lastIPAddress;
+    private String lastUserAgent;
 }

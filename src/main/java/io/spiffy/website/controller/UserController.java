@@ -20,7 +20,7 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.InvalidRecaptchaResponse;
 import io.spiffy.website.response.LoginResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -90,6 +90,7 @@ public class UserController extends Controller {
     public ModelAndView logout(final Context context,
             final @RequestParam(required = false, defaultValue = "/") String returnUri) {
         context.invalidateSession();
+        userClient.invalidateSession(context);
         return redirect(returnUri, context);
     }
 }

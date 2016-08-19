@@ -14,6 +14,10 @@
   <img src="<c:out value="${ post.url }" />" />
 </div>
 
+<p style="width: 100%; text-align: center;">
+  <c:out value="${ post.description }" />
+</p>
+
 </div>
 
 <jsp:include page="common/footer.jsp" />

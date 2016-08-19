@@ -13,7 +13,7 @@ import io.spiffy.common.HibernateEntity;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "USER_SESSIONS", uniqueConstraints = @UniqueConstraint(columnNames = { "session_id", "archived_at" }))
+@Table(name = "USER_SESSIONS", uniqueConstraints = @UniqueConstraint(columnNames = { "session_id", "archived_at" }) )
 public class SessionEntity extends HibernateEntity {
 
     public static final int MIN_SESSION_ID_LENGTH = 3;
@@ -81,6 +81,10 @@ public class SessionEntity extends HibernateEntity {
 
     @Setter
     @Transient
-    private String ipAddress;
+    private String authenticatedIPAddress;
+
+    @Setter
+    @Transient
+    private String lastIPAddress;
 
 }
