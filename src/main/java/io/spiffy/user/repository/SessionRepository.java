@@ -38,7 +38,7 @@ public class SessionRepository extends HibernateRepository<SessionEntity> {
         final Criteria c = createCriteria();
         c.add(Restrictions.eq("accountId", accountId));
         c.add(Restrictions.isNull("invalidatedAt"));
-        c.addOrder(Order.desc("authenticatedAt"));
+        c.addOrder(Order.desc("lastAccessedAt"));
         return asList(c.list());
     }
 }

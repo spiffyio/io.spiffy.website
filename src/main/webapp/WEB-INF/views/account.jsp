@@ -7,14 +7,34 @@
 </jsp:include>
 
 
-<c:forEach var="session" items="${ sessions }">
-  <c:out value="${ session.authenticatedIPAddress }" />
-  <br />
-  <c:out value="${ session.lastIPAddress }" />
-  
-  <br />
-  <br />
+
+
+<div class="sessions">
+  <h2>Active Sessions</h2>
+  <table style="width: 100%;">
+<c:forEach var="session" items="${ sessions }" varStatus="loop">
+  <tr>
+    <td>
+      <c:out value="${ session.os }" />
+    </td>
+    <td>
+      <c:out value="${ session.browser }" />
+    </td>
+    <td style="text-align: right;">
+      <c:out value="${ session.lastActivity }" />
+    </td>
+    <td style="text-align: right;">
+    <c:if test="${ loop.index eq 0 }">
+      (current)
+    </c:if>
+    <c:if test="${ loop.index ne 0 }">
+      deactivate
+    </c:if>
+    </td>
+  </tr>
 </c:forEach>
+  </table>
+</div>
 
 </div>
   

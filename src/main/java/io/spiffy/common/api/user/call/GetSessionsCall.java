@@ -11,6 +11,6 @@ public class GetSessionsCall extends SpiffyCall<GetSessionsInput, GetSessionsOut
 
     @Inject
     public GetSessionsCall(final WebTarget target) {
-        super(GetSessionsOutput.class, target.path("user/getsessions"));
+        super(GetSessionsOutput.class, target.path("user/getsessions"), null);
     }
 }

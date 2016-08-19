@@ -1,6 +1,10 @@
 package io.spiffy.website.controller;
 
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -12,15 +16,18 @@ import org.springframework.web.servlet.ModelAndView;
 
 import io.spiffy.common.Controller;
 import io.spiffy.common.api.user.client.UserClient;
+import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.util.DurationUtil;
+import io.spiffy.common.util.UserAgentUtil;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.InvalidRecaptchaResponse;
 import io.spiffy.website.response.LoginResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -35,8 +42,21 @@ public class UserController extends Controller {
 
     @RequestMapping("/account")
     public ModelAndView account(final Context context) {
-        context.addAttribute(SESSIONS_KEY, userClient.getSessions(1000000L));
+        final List<Session> sessions = userClient.getSessions(context.getAccountId());
+
+        final List<FSession> fSessions = new ArrayList<>();
+        sessions.forEach(s -> fSessions.add(new FSession(UserAgentUtil.getOS(s.getLastUserAgent()),
+                UserAgentUtil.getBrowser(s.getLastUserAgent()), DurationUtil.pretty(s.getLastAccessedAt()))));
+
+        context.addAttribute(SESSIONS_KEY, fSessions);
         return mav("account", context);
+    }
+
+    @Data
+    public class FSession {
+        private final String os;
+        private final String browser;
+        private final String lastActivity;
     }
 
     @RequestMapping({ "/login", "/signin" })
