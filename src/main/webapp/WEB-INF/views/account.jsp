@@ -6,9 +6,6 @@
   <jsp:param name="style" value="centered" />
 </jsp:include>
 
-
-
-
 <div class="sessions">
   <h2>Active Sessions</h2>
   <table style="width: 100%;">
@@ -21,20 +18,26 @@
       <c:out value="${ session.browser }" />
     </td>
     <td style="text-align: right;">
-      <c:out value="${ session.lastActivity }" />
-    </td>
-    <td style="text-align: right;">
     <c:if test="${ loop.index eq 0 }">
       (current)
     </c:if>
     <c:if test="${ loop.index ne 0 }">
-      deactivate
+      <s:duration date="${ session.lastActivity }" />
     </c:if>
     </td>
+    <td style="text-align: right;">
+    <c:if test="${ loop.index ne 0 }">
+      <a href="#" class="button danger" data-session-id="<s:obfuscate id="${ session.id }" />">deactivate</a>
+    </c:if>
+    
   </tr>
 </c:forEach>
   </table>
 </div>
+
+<form class="logout" <s:csrf name="logout" />>
+  <input type="hidden" name="session" />
+</form>
 
 </div>
   

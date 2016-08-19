@@ -9,7 +9,7 @@ public class DurationUtil {
 
     private static final PrettyTime pretty = new PrettyTime();
 
-    private static final Pattern MOMENTS_PATTERN = Pattern.compile("^(?=.*moments).*");
+    private static final Pattern MOMENTS_PATTERN = Pattern.compile("^(?=.*from).*");
     private static final String NOW = "now";
 
     public static String pretty(final Date date) {

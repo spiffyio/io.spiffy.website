@@ -58,6 +58,19 @@ $(document).ready (e) ->
     form.spiffySubmit { url: '/posts', loading: 'header' }, $(this).spiffyFormData(['after', 'quantity']), load
     return
 
+  $('a[data-session-id]').click (e) ->
+    preventDefault e
+    form = $ 'form.logout'
+    form.find('input[name="session"]').val($(this).data('session-id'))
+    form.submit()
+    return
+
+  $('form.logout').submit (e) ->
+    preventDefault e
+    form = $(this)
+    form.spiffySubmit '/logout', $(this).spiffyFormData(['session']), refresh
+    return
+
   $('form.login').submit (e) ->
     preventDefault e
     form = $(this)

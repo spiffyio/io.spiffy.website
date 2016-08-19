@@ -19,6 +19,17 @@
     </attribute>
   </tag>
   <tag>
+    <name>duration</name>
+    <tag-class>io.spiffy.website.tag.DurationTag</tag-class>
+    <body-content>emtpy</body-content>
+    <attribute>
+       <name>date</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+       <type>java.util.Date</type>
+    </attribute>
+  </tag>
+  <tag>
     <name>idempotent</name>
     <tag-class>io.spiffy.website.tag.IdempotentTag</tag-class>
     <body-content>emtpy</body-content>
@@ -26,6 +37,17 @@
        <name>format</name>
        <required>false</required>
        <type>io.spiffy.website.tag.IdempotentTag.Format</type>
+    </attribute>
+  </tag>
+  <tag>
+    <name>obfuscate</name>
+    <tag-class>io.spiffy.website.tag.ObfuscateTag</tag-class>
+    <body-content>emtpy</body-content>
+    <attribute>
+       <name>id</name>
+       <required>true</required>
+       <rtexprvalue>true</rtexprvalue>
+       <type>java.lang.Long</type>
     </attribute>
   </tag>
   <tag>

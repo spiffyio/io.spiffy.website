@@ -128,6 +128,25 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
     }
 
     @Transactional
+    public SessionEntity invalidate(final long id, final long accountId, final String userAgent, final String ipAddress) {
+        final SessionEntity entity = get(id);
+
+        if (entity == null) {
+            return null;
+        }
+
+        if (!entity.getAccountId().equals(accountId)) {
+            return null;
+        }
+
+        entity.setInvalidatedAt(DateUtil.now());
+
+        repository.saveOrUpdate(entity);
+
+        return entity;
+    }
+
+    @Transactional
     public boolean matches(final String sessionId, final String token) {
         final SessionEntity entity = get(sessionId);
         if (entity == null) {

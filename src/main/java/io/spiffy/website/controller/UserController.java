@@ -1,9 +1,7 @@
 package io.spiffy.website.controller;
 
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -19,15 +17,15 @@ import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.dto.Context;
-import io.spiffy.common.util.DurationUtil;
-import io.spiffy.common.util.UserAgentUtil;
+import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.InvalidRecaptchaResponse;
 import io.spiffy.website.response.LoginResponse;
+import io.spiffy.website.response.LogoutResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -43,20 +41,8 @@ public class UserController extends Controller {
     @RequestMapping("/account")
     public ModelAndView account(final Context context) {
         final List<Session> sessions = userClient.getSessions(context.getAccountId());
-
-        final List<FSession> fSessions = new ArrayList<>();
-        sessions.forEach(s -> fSessions.add(new FSession(UserAgentUtil.getOS(s.getLastUserAgent()),
-                UserAgentUtil.getBrowser(s.getLastUserAgent()), DurationUtil.pretty(s.getLastAccessedAt()))));
-
-        context.addAttribute(SESSIONS_KEY, fSessions);
+        context.addAttribute(SESSIONS_KEY, sessions);
         return mav("account", context);
-    }
-
-    @Data
-    public class FSession {
-        private final String os;
-        private final String browser;
-        private final String lastActivity;
     }
 
     @RequestMapping({ "/login", "/signin" })
@@ -112,5 +98,13 @@ public class UserController extends Controller {
         context.invalidateSession();
         userClient.invalidateSession(context);
         return redirect(returnUri, context);
+    }
+
+    @ResponseBody
+    @Csrf("logout")
+    @RequestMapping(value = { "/logout", "/signout" }, method = RequestMethod.POST)
+    public AjaxResponse logoutSession(final Context context, final @RequestParam String session) {
+        final boolean success = userClient.invalidateSession(ObfuscateUtil.unobfuscate(session), context);
+        return new LogoutResponse(success);
     }
 }

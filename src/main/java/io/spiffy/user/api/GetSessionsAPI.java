@@ -11,6 +11,7 @@ import io.spiffy.common.API;
 import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.input.GetSessionsInput;
 import io.spiffy.common.api.user.output.GetSessionsOutput;
+import io.spiffy.common.util.UserAgentUtil;
 import io.spiffy.user.entity.SessionEntity;
 import io.spiffy.user.service.SessionService;
 
@@ -26,8 +27,8 @@ public class GetSessionsAPI extends API<GetSessionsInput, GetSessionsOutput, Ses
         final List<SessionEntity> entities = service.getByAccount(input.getAccountId());
 
         final List<Session> sessions = new ArrayList<>();
-        entities.forEach(e -> sessions.add(new Session(e.getAuthenticatedAt(), e.getAuthenticatedIPAddress(),
-                e.getAuthenticatedUserAgent(), e.getLastAccessedAt(), e.getLastIPAddress(), e.getLastUserAgent())));
+        entities.forEach(e -> sessions.add(new Session(e.getId(), UserAgentUtil.getOS(e.getLastUserAgent()),
+                UserAgentUtil.getBrowser(e.getLastUserAgent()), e.getLastAccessedAt())));
 
         return new GetSessionsOutput(input.getAccountId(), sessions);
     }

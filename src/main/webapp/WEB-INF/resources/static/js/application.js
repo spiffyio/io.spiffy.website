@@ -368,6 +368,19 @@ $(document).ready(function(e) {
       loading: 'header'
     }, $(this).spiffyFormData(['after', 'quantity']), load);
   });
+  $('a[data-session-id]').click(function(e) {
+    var form;
+    preventDefault(e);
+    form = $('form.logout');
+    form.find('input[name="session"]').val($(this).data('session-id'));
+    form.submit();
+  });
+  $('form.logout').submit(function(e) {
+    var form;
+    preventDefault(e);
+    form = $(this);
+    form.spiffySubmit('/logout', $(this).spiffyFormData(['session']), refresh);
+  });
   $('form.login').submit(function(e) {
     var form;
     preventDefault(e);

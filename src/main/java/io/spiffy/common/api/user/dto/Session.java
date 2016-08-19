@@ -12,10 +12,8 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 public class Session {
-    private Date authenticatedAt;
-    private String authenticatedIPAddress;
-    private String authenticatedUserAgent;
-    private Date lastAccessedAt;
-    private String lastIPAddress;
-    private String lastUserAgent;
+    private Long id;
+    private String os;
+    private String browser;
+    private Date lastActivity;
 }

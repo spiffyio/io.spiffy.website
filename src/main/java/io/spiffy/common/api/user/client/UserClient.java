@@ -75,6 +75,13 @@ public class UserClient extends Client {
         return output.getId() != null;
     }
 
+    public boolean invalidateSession(final long sessionId, final Context context) {
+        final InvalidateSessionInput input = new InvalidateSessionInput(sessionId, context.getAccountId(),
+                context.getUserAgent(), context.getIPAddress());
+        final PostOutput output = invalidateSessionCall.call(input);
+        return output.getId() != null;
+    }
+
     public long postAccount(final String userName, final String emailAddress) {
         final PostAccountInput input = new PostAccountInput(userName, emailAddress);
         final PostOutput output = postAccountCall.call(input);
