@@ -6,13 +6,16 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 import io.spiffy.common.HibernateEntity;
 
 @Entity
 @Getter
 @NoArgsConstructor
 @Table(name = "USER_ACCOUNTS", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_name", "archived_at" }),
-        @UniqueConstraint(columnNames = { "email_address_id", "archived_at" }) })
+        @UniqueConstraint(columnNames = { "email_address_id", "archived_at" }),
+        @UniqueConstraint(columnNames = { "email_verification_token_id", "archived_at" }) })
 public class AccountEntity extends HibernateEntity {
 
     public static final int MIN_USER_NAME_LENGTH = 3;
@@ -27,6 +30,19 @@ public class AccountEntity extends HibernateEntity {
     private Long emailAddressId;
 
     @Setter
+    @Type(type = "yes_no")
+    @Column(name = "email_verified", nullable = false)
+    private Boolean emailVerified;
+
+    @Setter
+    @Column(name = "email_verification_token_id")
+    private Long emailVerificationTokenId;
+
+    @Setter
     @Transient
     private String emailAddress;
+
+    @Setter
+    @Transient
+    private String emailVerificationToken;
 }

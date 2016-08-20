@@ -11,6 +11,6 @@ public class RegisterAccountCall extends SpiffyCall<RegisterAccountInput, PostOu
 
     @Inject
     public RegisterAccountCall(final WebTarget target) {
-        super(PostOutput.class, target.path("user/registeraccount"));
+        super(PostOutput.class, target.path("user/registeraccount"), null);
     }
 }

@@ -5,7 +5,6 @@ import lombok.Data;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletRequest;
@@ -20,9 +19,8 @@ import org.springframework.ui.ModelMap;
 
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.CsrfUtil;
-import io.spiffy.common.util.DateUtil;
 import io.spiffy.common.util.ListUtil;
-import io.spiffy.common.util.ObfuscateUtil;
+import io.spiffy.common.util.UIDUtil;
 
 @Data
 @AllArgsConstructor
@@ -99,10 +97,6 @@ public class Context {
 
     public String generateCsrfToken(final String name) {
         return CsrfUtil.generateToken(getSessionId(), name);
-    }
-
-    public String generateIdempotentId() {
-        return UUID.randomUUID().toString() + "-" + ObfuscateUtil.obfuscate(DateUtil.now().getTime());
     }
 
     public String getCsrfToken() {
@@ -193,7 +187,7 @@ public class Context {
             return viaCookie;
         }
 
-        final String sessionId = generateIdempotentId();
+        final String sessionId = UIDUtil.generateIdempotentId();
         setCookie(SESSION_ID_COOKIE, sessionId, CookieAge.SESSION);
         deleteCookie(SESSION_TOKEN_COOKIE);
 

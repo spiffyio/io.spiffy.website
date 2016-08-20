@@ -1,17 +1,18 @@
 package io.spiffy.user.service;
 
-import java.util.UUID;
-
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
 import io.spiffy.common.api.email.client.EmailClient;
 import io.spiffy.common.api.email.dto.EmailProperties;
 import io.spiffy.common.api.email.dto.EmailType;
+import io.spiffy.common.api.security.client.SecurityClient;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.config.AppConfig;
+import io.spiffy.common.util.UIDUtil;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.user.entity.AccountEntity;
 import io.spiffy.user.entity.SessionEntity;
@@ -22,14 +23,16 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     private final CredentialService credentialService;
     private final SessionService sessionService;
     private final EmailClient emailClient;
+    private final SecurityClient securityClient;
 
     @Inject
     public AccountService(final AccountRepository repository, final CredentialService credentialService,
-            final SessionService sessionService, final EmailClient emailClient) {
+            final SessionService sessionService, final EmailClient emailClient, final SecurityClient securityClient) {
         super(repository);
         this.credentialService = credentialService;
         this.sessionService = sessionService;
         this.emailClient = emailClient;
+        this.securityClient = securityClient;
     }
 
     @Transactional
@@ -63,6 +66,17 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
+    public AccountEntity getByEmailVerificationToken(final String token) {
+        final long id = securityClient.encryptString(token);
+        return getByEmailVerificationTokenId(id);
+    }
+
+    @Transactional
+    public AccountEntity getByEmailVerificationTokenId(final long id) {
+        return repository.getByEmailVerificationTokenId(id);
+    }
+
+    @Transactional
     public AccountEntity post(final String userName, final String emailAddress) {
         validateUserName(userName);
 
@@ -81,6 +95,14 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         }
 
         entity.setUserName(userName);
+
+        if (entity.getEmailAddressId() == null || emailAddressId != entity.getEmailAddressId()) {
+            final String token = UIDUtil.generateIdempotentId();
+            entity.setEmailVerificationToken(token);
+            entity.setEmailVerificationTokenId(securityClient.encryptString(token));
+            entity.setEmailVerified(false);
+        }
+
         entity.setEmailAddressId(emailAddressId);
 
         repository.saveOrUpdate(entity);
@@ -95,12 +117,16 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         final AccountEntity account = post(userName, emailAddress);
         credentialService.post(account.getId(), password);
 
+        if (StringUtils.isEmpty(account.getEmailVerificationToken())) {
+            return account;
+        }
+
         final EmailProperties properties = new EmailProperties();
         properties.setName(userName);
-        properties.setUrl(AppConfig.getEndpoint() + "/verify?email=" + UUID.randomUUID().toString());
+        properties.setUrl(AppConfig.getEndpoint() + "/verify?email=" + account.getEmailVerificationToken());
 
-        emailClient.sendEmailCall(EmailType.Verify, emailAddress, account.getId() + "registration", account.getId(),
-                properties);
+        emailClient.sendEmailCall(EmailType.Verify, emailAddress,
+                account.getId() + ":verification:" + account.getEmailVerificationTokenId(), account.getId(), properties);
 
         return account;
     }
@@ -135,6 +161,21 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         }
 
         return get(session.getAccountId());
+    }
+
+    @Transactional
+    public AccountEntity verify(final String token) {
+        final AccountEntity account = getByEmailVerificationToken(token);
+        if (account == null) {
+            return null;
+        }
+
+        account.setEmailVerificationTokenId(null);
+        account.setEmailVerified(true);
+
+        repository.saveOrUpdate(account);
+
+        return account;
     }
 
     protected void validateUserName(final String userName) {

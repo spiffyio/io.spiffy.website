@@ -45,6 +45,12 @@ public class UserController extends Controller {
         return mav("account", context);
     }
 
+    @RequestMapping("/verify")
+    public ModelAndView verify(final Context context, final @RequestParam("email") String token) {
+        userClient.verifyEmail(token);
+        return mav("account", context);
+    }
+
     @RequestMapping({ "/login", "/signin" })
     public ModelAndView login(final Context context,
             final @RequestParam(required = false, defaultValue = "/") String returnUri) {

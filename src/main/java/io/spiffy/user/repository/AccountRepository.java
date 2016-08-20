@@ -27,4 +27,10 @@ public class AccountRepository extends HibernateRepository<AccountEntity> {
         c.add(Restrictions.eq("emailAddressId", emailAddressId));
         return (AccountEntity) c.uniqueResult();
     }
+
+    public AccountEntity getByEmailVerificationTokenId(final long id) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("emailVerificationTokenId", id));
+        return (AccountEntity) c.uniqueResult();
+    }
 }

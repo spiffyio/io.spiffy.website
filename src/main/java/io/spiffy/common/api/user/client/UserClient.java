@@ -31,6 +31,7 @@ public class UserClient extends Client {
     final InvalidateSessionCall invalidateSessionCall;
     final PostAccountCall postAccountCall;
     final RegisterAccountCall registerAccountCall;
+    final VerifyEmailCall verifyEmailCall;
 
     public AuthenticateAccountOutput authenticateAccount(final String email, final String password, final Context context,
             final String fingerprint) {
@@ -92,5 +93,11 @@ public class UserClient extends Client {
         final RegisterAccountInput input = new RegisterAccountInput(userName, emailAddress, password);
         final PostOutput output = registerAccountCall.call(input);
         return output.getId();
+    }
+
+    public boolean verifyEmail(final String token) {
+        final VerifyEmailInput input = new VerifyEmailInput(token);
+        final PostOutput output = verifyEmailCall.call(input);
+        return output.getId() != null;
     }
 }
