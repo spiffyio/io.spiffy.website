@@ -20,12 +20,9 @@ import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
-import io.spiffy.website.response.AjaxResponse;
-import io.spiffy.website.response.InvalidRecaptchaResponse;
-import io.spiffy.website.response.LoginResponse;
-import io.spiffy.website.response.LogoutResponse;
+import io.spiffy.website.response.*;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -49,6 +46,14 @@ public class UserController extends Controller {
     public ModelAndView verify(final Context context, final @RequestParam("email") String token) {
         userClient.verifyEmail(token);
         return mav("account", context);
+    }
+
+    @ResponseBody
+    @Csrf("verify")
+    @RequestMapping(value = "/account/verify", method = RequestMethod.POST)
+    public AjaxResponse verifyEmail(final Context context) {
+        final boolean success = userClient.sendVerifyEmail(context, context.getEmail());
+        return new VerifyResponse(success);
     }
 
     @RequestMapping({ "/login", "/signin" })

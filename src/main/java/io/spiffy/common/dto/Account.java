@@ -1,9 +1,15 @@
 package io.spiffy.common.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Account {
-    private final Long id;
-    private final String username;
+    private Long id;
+    private String username;
+    private String email;
+    private Boolean emailVerified;
 }

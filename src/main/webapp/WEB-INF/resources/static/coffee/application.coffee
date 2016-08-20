@@ -58,6 +58,18 @@ $(document).ready (e) ->
     form.spiffySubmit { url: '/posts', loading: 'header' }, $(this).spiffyFormData(['after', 'quantity']), load
     return
 
+  $('a[data-form]').click (e) ->
+    preventDefault e
+    form = $ 'form.' + $(this).data('form')
+    form.submit()
+    return
+
+  $('form.email').submit (e) ->
+    preventDefault e
+    form = $(this)
+    form.spiffySubmit { url: '/account/verify', loading: 'header' }, {}, refresh
+    return
+
   $('a[data-session-id]').click (e) ->
     preventDefault e
     form = $ 'form.logout'

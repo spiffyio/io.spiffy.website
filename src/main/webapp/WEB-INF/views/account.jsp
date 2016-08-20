@@ -6,6 +6,20 @@
   <jsp:param name="style" value="centered" />
 </jsp:include>
 
+<div class="settings">
+  <h2>Settings</h2>
+  <h3 style="width: 100%; text-align: center;">
+    <c:out value="${ account.email }" />:
+    <c:if test="${ account.emailVerified }">
+      verified
+    </c:if>
+    <c:if test="${ not account.emailVerified }">
+      <a href="#" class="button primary" data-form="email">send verification</a>
+      <form class="email" <s:csrf name="verify" />></form>
+    </c:if>
+  </h3>
+</div>
+
 <div class="sessions">
   <h2>Active Sessions</h2>
   <table style="width: 100%;">

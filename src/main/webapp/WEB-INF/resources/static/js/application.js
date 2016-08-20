@@ -368,6 +368,21 @@ $(document).ready(function(e) {
       loading: 'header'
     }, $(this).spiffyFormData(['after', 'quantity']), load);
   });
+  $('a[data-form]').click(function(e) {
+    var form;
+    preventDefault(e);
+    form = $('form.' + $(this).data('form'));
+    form.submit();
+  });
+  $('form.email').submit(function(e) {
+    var form;
+    preventDefault(e);
+    form = $(this);
+    form.spiffySubmit({
+      url: '/account/verify',
+      loading: 'header'
+    }, {}, refresh);
+  });
   $('a[data-session-id]').click(function(e) {
     var form;
     preventDefault(e);

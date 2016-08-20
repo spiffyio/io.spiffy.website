@@ -104,6 +104,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         }
 
         entity.setEmailAddressId(emailAddressId);
+        entity.setEmailAddress(emailAddress);
 
         repository.saveOrUpdate(entity);
 
@@ -121,14 +122,18 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
             return account;
         }
 
-        final EmailProperties properties = new EmailProperties();
-        properties.setName(userName);
-        properties.setUrl(AppConfig.getEndpoint() + "/verify?email=" + account.getEmailVerificationToken());
-
-        emailClient.sendEmailCall(EmailType.Verify, emailAddress,
-                account.getId() + ":verification:" + account.getEmailVerificationTokenId(), account.getId(), properties);
+        sendVerificationEmail(account);
 
         return account;
+    }
+
+    private void sendVerificationEmail(final AccountEntity account) {
+        final EmailProperties properties = new EmailProperties();
+        properties.setName(account.getUserName());
+        properties.setUrl(AppConfig.getEndpoint() + "/verify?email=" + account.getEmailVerificationToken());
+
+        emailClient.sendEmailCall(EmailType.Verify, account.getEmailAddress(),
+                account.getId() + ":verification:" + account.getEmailVerificationTokenId(), account.getId(), properties);
     }
 
     @Transactional
@@ -174,6 +179,29 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         account.setEmailVerified(true);
 
         repository.saveOrUpdate(account);
+
+        return account;
+    }
+
+    @Transactional
+    public AccountEntity sendVerificationEmail(final long accountId, final String email) {
+        final AccountEntity account = get(accountId);
+        if (account == null) {
+            return null;
+        }
+
+        final long emailAddressId = getEmailAddressId(email);
+
+        final String token = UIDUtil.generateIdempotentId();
+        account.setEmailVerificationToken(token);
+        account.setEmailVerificationTokenId(securityClient.encryptString(token));
+        account.setEmailVerified(false);
+        account.setEmailAddressId(emailAddressId);
+        account.setEmailAddress(email);
+
+        repository.saveOrUpdate(account);
+
+        sendVerificationEmail(account);
 
         return account;
     }

@@ -265,4 +265,12 @@ public class Context {
 
         return account.getId();
     }
+
+    public String getEmail() {
+        if (account == null) {
+            return null;
+        }
+
+        return account.getEmail();
+    }
 }
