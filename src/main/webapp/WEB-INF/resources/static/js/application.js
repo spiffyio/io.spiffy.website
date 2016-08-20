@@ -140,16 +140,26 @@ if ((base2 = String.prototype).contains == null) {
   };
 }
 
-jQuery.fn.isany = function(values) {
-  var element, i, len, value;
+jQuery.fn.spiffy = function() {
+  var element, fn;
   element = $(this[0]);
-  for (i = 0, len = values.length; i < len; i++) {
-    value = values[i];
-    if (element.is(value)) {
-      return true;
+  return fn = {
+    end: function() {
+      return element;
+    },
+    disable: function() {
+      element.find('form, input, textarea, select, button').addBack().prop('disabled', true).attr('data-disabled', true);
+      return element.spiffy();
+    },
+    enable: function() {
+      element.find('form, input, textarea, select, button').addBack().removeAttr('disabled').removeAttr('data-disabled');
+      return element.spiffy();
+    },
+    clear: function() {
+      element.find('input, textarea').val('');
+      return element.spiffy();
     }
-  }
-  return false;
+  };
 };
 
 jQuery.fn.spiffyDisable = function(disable) {

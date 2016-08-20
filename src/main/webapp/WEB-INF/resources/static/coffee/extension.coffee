@@ -2,11 +2,30 @@ String::startsWith ?= (s) -> @slice(0, s.length) == s
 String::endsWith   ?= (s) -> s == '' or @slice(-s.length) == s
 String::contains   ?= (s) -> s == '' or @indexOf(s) > -1
 
-jQuery.fn.isany = (values) ->
+jQuery.fn.spiffy = () ->
   element = $ this[0]
-  for value in values
-    if element.is value then return true
-  false
+  fn = {
+    end: () ->
+      element
+    disable: () ->
+      element
+        .find 'form, input, textarea, select, button'
+          .addBack()
+          .prop 'disabled', true
+          .attr 'data-disabled', true
+      element.spiffy()
+    enable: () ->
+      element
+        .find 'form, input, textarea, select, button'
+          .addBack()
+          .removeAttr 'disabled'
+          .removeAttr 'data-disabled'
+      element.spiffy()
+    clear: () ->
+      element.find 'input, textarea'
+        .val ''
+      element.spiffy()
+  }
 
 jQuery.fn.spiffyDisable = (disable = true) ->
   element = $ this[0]
@@ -37,8 +56,6 @@ jQuery.fn.spiffyFormValue = (name) ->
   if not element?
     return undefined
   value = $(element).val()
-  #value = encodeURIComponent value
-  #value.replace /%20/g, '+'
 
 jQuery.fn.spiffyFormData = (names) ->
   form = $ this[0]
