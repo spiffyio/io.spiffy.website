@@ -6,14 +6,14 @@
   <jsp:param name="style" value="upload" />
 </jsp:include>
 
-<form style="width: 100%; height: 20em; border: 5px black dashed;" class="new-post dropzone" data-form="new-post" action="/upload" id="dz-form" enctype="multipart/form-data">
+<form style="width: 100%; height: 20em; border: 5px black dashed;" class="new-post dropzone" data-form="new-post" action="/upload" id="dz-form" enctype="multipart/form-data" <s:csrf name="upload" />>
   <div class="dz-message"></div>
   <s:idempotent />
 </form>
 
 <textarea name="description" placeholder="description" data-form="submit"></textarea>
 
-<form class="submit" action="/submit" data-form="submit">
+<form class="submit" action="/submit" data-form="submit" <s:csrf name="submit" />>
   <input type="text" name="title" placeholder="title" required/>
   <input type="hidden" name="media" />
   <s:idempotent />

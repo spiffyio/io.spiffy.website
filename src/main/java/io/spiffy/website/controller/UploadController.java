@@ -19,6 +19,7 @@ import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
+import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.UploadResponse;
 
@@ -34,6 +35,7 @@ public class UploadController extends Controller {
     }
 
     @ResponseBody
+    @Csrf("upload")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
             final @RequestParam String idempotentId) throws IOException {
@@ -42,6 +44,7 @@ public class UploadController extends Controller {
     }
 
     @ResponseBody
+    @Csrf("submit")
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     public String submit(final Context context, final @RequestParam String[] media, final @RequestParam String title,
             final @RequestParam(required = false) String description,

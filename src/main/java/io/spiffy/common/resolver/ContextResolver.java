@@ -6,6 +6,7 @@ import javax.inject.Inject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.MethodParameter;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.support.WebDataBinderFactory;
@@ -18,7 +19,7 @@ import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class ContextResolver extends Manager implements HandlerMethodArgumentResolver {
 
     private final UserClient userClient;
@@ -35,6 +36,10 @@ public class ContextResolver extends Manager implements HandlerMethodArgumentRes
 
         final Context context = new Context(request, response, model);
         final Account account = userClient.authenticateSession(context);
+
+        if (account == null && StringUtils.isNotEmpty(context.getSessionToken())) {
+            context.invalidateSession();
+        }
 
         context.addAttribute("account", account);
         return new Context(context, account);
