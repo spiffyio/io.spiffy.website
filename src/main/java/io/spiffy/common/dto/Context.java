@@ -1,7 +1,7 @@
 package io.spiffy.common.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
 import java.util.List;
@@ -23,7 +23,7 @@ import io.spiffy.common.util.ListUtil;
 import io.spiffy.common.util.UIDUtil;
 
 @Data
-@AllArgsConstructor
+@RequiredArgsConstructor
 public class Context {
     private enum CookieAge {
         DELETE(0), SESSION(-1), STANDARD(10 * 365 * 24 * 60 * 60);
@@ -58,6 +58,8 @@ public class Context {
     private final FilterChain chain;
     private final ModelMap model;
     private final Account account;
+
+    private String sessionId;
 
     public Context(final HttpServletRequest request, final HttpServletResponse response) {
         this(request, response, null, null, null);
@@ -177,6 +179,10 @@ public class Context {
     }
 
     public String getSessionId() {
+        if (StringUtils.isNotBlank(sessionId)) {
+            return sessionId;
+        }
+
         final String viaHeader = getHeader(SPIFFY_FORWARDED_SESSION);
         if (StringUtils.isNotEmpty(viaHeader)) {
             return viaHeader;
@@ -187,9 +193,7 @@ public class Context {
             return viaCookie;
         }
 
-        final String sessionId = UIDUtil.generateIdempotentId();
-        setCookie(SESSION_ID_COOKIE, sessionId, CookieAge.SESSION);
-        deleteCookie(SESSION_TOKEN_COOKIE);
+        newSession();
 
         return sessionId;
     }
@@ -212,6 +216,12 @@ public class Context {
         }
 
         response.setStatus(status.value());
+    }
+
+    public void newSession() {
+        sessionId = UIDUtil.generateIdempotentId();
+        setCookie(SESSION_ID_COOKIE, sessionId, CookieAge.SESSION);
+        deleteCookie(SESSION_TOKEN_COOKIE);
     }
 
     public void initializeSession(final String token) {
@@ -240,6 +250,8 @@ public class Context {
         Cookie cookie = getCookie(name);
         if (cookie == null) {
             cookie = new Cookie(name, value);
+        } else if (StringUtils.isNotEmpty(value)) {
+            cookie.setValue(value);
         }
 
         cookie.setMaxAge(age.getAge());

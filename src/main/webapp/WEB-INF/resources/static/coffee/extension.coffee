@@ -22,6 +22,7 @@ jQuery.fn.spiffy = () ->
           .addBack()
           .prop 'disabled', true
           .attr 'data-disabled', true
+          .data 'disabled', true
       elements.spiffy()
     enable: () ->
       elements
@@ -29,6 +30,7 @@ jQuery.fn.spiffy = () ->
           .addBack()
           .removeAttr 'disabled'
           .removeAttr 'data-disabled'
+          .data 'disabled', false
       elements.spiffy()
     clear: () ->
       elements.find 'input, textarea'
@@ -65,12 +67,35 @@ jQuery.fn.spiffy = () ->
         .each () ->
           $(this).spiffy().push data
       return data
+    loading: (loading, enable = true) ->
+      form = $ elements[0]
+      if not form.is 'form' then return
+
+      if 'overlay'.equalsIgnoreCase loading
+        img = form.find 'img.loading'
+        if enable and ((not img?) or (not img.is('img.loading')))
+          form.css 'position', 'relative'
+          img = $ document.createElement 'img'
+          img.addClass 'loading'
+          img.attr 'src', 'https://cdn.spiffy.io/static/svg/loading.svg'
+          img.prop 'hidden'
+          form.append img
+        if enable and img? and img.is('img.loading') then img.slideDown()
+        if not enable and img? and img.is('img.loading') then img.slideUp()
+      else if 'header'.equalsIgnoreCase loading
+        img = $ 'img.header-logo'
+        if img? and img.is('img.header-logo')
+          src = img.attr 'src'
+          src = if enable then src.replace 'icon', 'loading' else src.replace 'loading', 'icon'
+          img.attr 'src', src
+
+      return form.spiffy()
     options: (options) ->
       form = $ elements[0]
       if not form.is 'form' then return
 
       if options?
-        form.data 'options', options
+        form.data 'options', $.extend(form.data('options'), options)
         return form.spiffy()
 
       return form.data 'options'
@@ -94,21 +119,7 @@ jQuery.fn.spiffy = () ->
       if disable then form.spiffy().disable()
 
       loading = Spiffy.firstDefined options.loading, form.data('loading'), 'overlay'
-      if 'overlay'.equalsIgnoreCase loading
-        img = form.find 'img.loading'
-        if (not img?) or (not img.is('img.loading'))
-          form.css 'position', 'relative'
-          img = $ document.createElement 'img'
-          img.addClass 'loading'
-          img.attr 'src', 'https://cdn.spiffy.io/static/svg/loading.svg'
-          img.prop 'hidden'
-          form.append img
-        img.slideDown()
-      else if 'header'.equalsIgnoreCase loading
-        img = $ 'img.header-logo'
-        src = img.attr 'src'
-        src = src.replace 'icon', 'loading'
-        img.attr 'src', src
+      form.spiffy().loading loading
 
       data = form.spiffy().data()
 
@@ -120,8 +131,14 @@ jQuery.fn.spiffy = () ->
           'X-CSRF-Token': csrf
         type: type
         success: (data, textStatus, jqXHR) ->
-          console.log data
+          form.spiffy().enable().loading(loading, false)
+          validate.resetForm()
+          if options.success?
+            options.success form, data, textStatus, jqXHR
         error: (jqXHR, textStatus, errorThrown) ->
-          console.log jqXHR.responseJSON
+          form.spiffy().enable().loading(loading, false)
+          validate.resetForm()
+          if options.error?
+            options.error form, jqXHR, textStatus, errorThrown
 
       form.spiffy()

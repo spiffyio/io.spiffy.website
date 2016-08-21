@@ -148,7 +148,8 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
             return null;
         }
 
-        final SessionEntity session = sessionService.create(sessionId, account.getId(), fingerprint, userAgent, ipAddress);
+        final SessionEntity session = sessionService.validatedCreate(sessionId, account.getId(), fingerprint, userAgent,
+                ipAddress);
 
         final AuthenticateAccountOutput output = new AuthenticateAccountOutput();
         output.setAccountId(account.getId());

@@ -91,6 +91,19 @@ public class SessionService extends Service<SessionEntity, SessionRepository> {
     }
 
     @Transactional
+    public SessionEntity validatedCreate(final String sessionId, final long accountId, final String fingerprint,
+            final String userAgent, final String ipAddress) {
+        final SessionEntity entity = get(sessionId);
+        if (entity != null) {
+            entity.setArchivedAt(DateUtil.now());
+            repository.saveOrUpdate(entity);
+        }
+
+        return post(sessionId, RandomUtil.randomAlphaNumericString(TOKEN_LENGTH), accountId, DateUtil.now(), fingerprint,
+                userAgent, ipAddress, null);
+    }
+
+    @Transactional
     public SessionEntity create(final String sessionId, final long accountId, final String fingerprint, final String userAgent,
             final String ipAddress) {
         return post(sessionId, RandomUtil.randomAlphaNumericString(TOKEN_LENGTH), accountId, DateUtil.now(), fingerprint,

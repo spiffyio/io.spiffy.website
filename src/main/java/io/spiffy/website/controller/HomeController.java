@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -18,7 +19,7 @@ import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.PostsResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -50,6 +51,10 @@ public class HomeController extends Controller {
     public AjaxResponse posts(final Context context, final @RequestParam(required = false) String after,
             final @RequestParam(defaultValue = "24") int quantity) {
         final List<Post> posts = streamClient.getPosts(after == null ? null : ObfuscateUtil.unobfuscate(after), quantity);
+        if (CollectionUtils.isEmpty(posts)) {
+            return new PostsResponse(null, null);
+        }
+
         return new PostsResponse(posts, posts.get(posts.size() - 1).getPostId());
     }
 }

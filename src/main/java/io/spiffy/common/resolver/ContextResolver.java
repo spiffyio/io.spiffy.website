@@ -19,7 +19,7 @@ import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class ContextResolver extends Manager implements HandlerMethodArgumentResolver {
 
     private final UserClient userClient;
@@ -38,7 +38,7 @@ public class ContextResolver extends Manager implements HandlerMethodArgumentRes
         final Account account = userClient.authenticateSession(context);
 
         if (account == null && StringUtils.isNotEmpty(context.getSessionToken())) {
-            context.invalidateSession();
+            context.newSession();
         }
 
         context.addAttribute("account", account);

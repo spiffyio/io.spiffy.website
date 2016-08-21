@@ -176,11 +176,11 @@ jQuery.fn.spiffy = function() {
       return elements;
     },
     disable: function() {
-      elements.find('form, input, textarea, select, button').addBack().prop('disabled', true).attr('data-disabled', true);
+      elements.find('form, input, textarea, select, button').addBack().prop('disabled', true).attr('data-disabled', true).data('disabled', true);
       return elements.spiffy();
     },
     enable: function() {
-      elements.find('form, input, textarea, select, button').addBack().removeAttr('disabled').removeAttr('data-disabled');
+      elements.find('form, input, textarea, select, button').addBack().removeAttr('disabled').removeAttr('data-disabled').data('disabled', false);
       return elements.spiffy();
     },
     clear: function() {
@@ -225,6 +225,41 @@ jQuery.fn.spiffy = function() {
       });
       return data;
     },
+    loading: function(loading, enable) {
+      var form, img, src;
+      if (enable == null) {
+        enable = true;
+      }
+      form = $(elements[0]);
+      if (!form.is('form')) {
+        return;
+      }
+      if ('overlay'.equalsIgnoreCase(loading)) {
+        img = form.find('img.loading');
+        if (enable && ((img == null) || (!img.is('img.loading')))) {
+          form.css('position', 'relative');
+          img = $(document.createElement('img'));
+          img.addClass('loading');
+          img.attr('src', 'https://cdn.spiffy.io/static/svg/loading.svg');
+          img.prop('hidden');
+          form.append(img);
+        }
+        if (enable && (img != null) && img.is('img.loading')) {
+          img.slideDown();
+        }
+        if (!enable && (img != null) && img.is('img.loading')) {
+          img.slideUp();
+        }
+      } else if ('header'.equalsIgnoreCase(loading)) {
+        img = $('img.header-logo');
+        if ((img != null) && img.is('img.header-logo')) {
+          src = img.attr('src');
+          src = enable ? src.replace('icon', 'loading') : src.replace('loading', 'icon');
+          img.attr('src', src);
+        }
+      }
+      return form.spiffy();
+    },
     options: function(options) {
       var form;
       form = $(elements[0]);
@@ -232,13 +267,13 @@ jQuery.fn.spiffy = function() {
         return;
       }
       if (options != null) {
-        form.data('options', options);
+        form.data('options', $.extend(form.data('options'), options));
         return form.spiffy();
       }
       return form.data('options');
     },
     submit: function(options) {
-      var csrf, data, disable, form, img, loading, src, type, url, validate;
+      var csrf, data, disable, form, loading, type, url, validate;
       form = $(elements[0]);
       if (!form.is('form')) {
         return;
@@ -262,23 +297,7 @@ jQuery.fn.spiffy = function() {
         form.spiffy().disable();
       }
       loading = Spiffy.firstDefined(options.loading, form.data('loading'), 'overlay');
-      if ('overlay'.equalsIgnoreCase(loading)) {
-        img = form.find('img.loading');
-        if ((img == null) || (!img.is('img.loading'))) {
-          form.css('position', 'relative');
-          img = $(document.createElement('img'));
-          img.addClass('loading');
-          img.attr('src', 'https://cdn.spiffy.io/static/svg/loading.svg');
-          img.prop('hidden');
-          form.append(img);
-        }
-        img.slideDown();
-      } else if ('header'.equalsIgnoreCase(loading)) {
-        img = $('img.header-logo');
-        src = img.attr('src');
-        src = src.replace('icon', 'loading');
-        img.attr('src', src);
-      }
+      form.spiffy().loading(loading);
       data = form.spiffy().data();
       $.ajax({
         url: url,
@@ -289,10 +308,18 @@ jQuery.fn.spiffy = function() {
         },
         type: type,
         success: function(data, textStatus, jqXHR) {
-          return console.log(data);
+          form.spiffy().enable().loading(loading, false);
+          validate.resetForm();
+          if (options.success != null) {
+            return options.success(form, data, textStatus, jqXHR);
+          }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          return console.log(jqXHR.responseJSON);
+          form.spiffy().enable().loading(loading, false);
+          validate.resetForm();
+          if (options.error != null) {
+            return options.error(form, jqXHR, textStatus, errorThrown);
+          }
         }
       });
       return form.spiffy();
@@ -359,6 +386,20 @@ $(document).ready(function(e) {
     preventDefault(e);
     form = $(this);
     form.spiffy().submit();
+  });
+  $('form.load-posts').spiffy().options({
+    success: function(form, json) {
+      if (json.posts == null) {
+        return form.spiffy().disable();
+      } else {
+        return load(json);
+      }
+    }
+  });
+  $('form[data-return-uri]').spiffy().options({
+    success: function(form) {
+      return go(form.data('return-uri'));
+    }
   });
   $('a[data-form]').click(function(e) {
     var form;

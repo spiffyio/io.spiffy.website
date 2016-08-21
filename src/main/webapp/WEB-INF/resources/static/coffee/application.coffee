@@ -58,6 +58,16 @@ $(document).ready (e) ->
     form.spiffy().submit()
     return
 
+  $('form.load-posts').spiffy().options
+    success: (form, json) ->
+      if not json.posts?
+        form.spiffy().disable()
+      else
+        load(json)
+
+  $('form[data-return-uri]').spiffy().options
+    success: (form) -> go(form.data('return-uri'))
+
   $('a[data-form]').click (e) ->
     preventDefault e
     form = $ 'form.' + $(this).data('form')
