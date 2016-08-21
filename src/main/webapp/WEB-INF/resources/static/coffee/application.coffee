@@ -52,10 +52,10 @@ $(document).ready (e) ->
         $(this).val hash
         return
 
-  $('form.load-posts').submit (e) ->
+  $('form:not(#dz-form)').submit (e) ->
     preventDefault e
-    form = $(this)
-    form.spiffySubmit { url: '/posts', loading: 'header' }, $(this).spiffyFormData(['after', 'quantity']), load
+    form = $ this
+    form.spiffy().submit()
     return
 
   $('a[data-form]').click (e) ->
@@ -64,41 +64,11 @@ $(document).ready (e) ->
     form.submit()
     return
 
-  $('form.email').submit (e) ->
-    preventDefault e
-    form = $(this)
-    form.spiffySubmit { url: '/account/verify', loading: 'header' }, {}, refresh
-    return
-
   $('a[data-session-id]').click (e) ->
     preventDefault e
     form = $ 'form.logout'
     form.find('input[name="session"]').val($(this).data('session-id'))
     form.submit()
-    return
-
-  $('form.logout').submit (e) ->
-    preventDefault e
-    form = $(this)
-    form.spiffySubmit '/logout', $(this).spiffyFormData(['session']), refresh
-    return
-
-  $('form.login').submit (e) ->
-    preventDefault e
-    form = $(this)
-    form.spiffySubmit '/login', $(this).spiffyFormData(['email', 'password', 'fingerprint', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
-    return
-
-  $('form.register').submit (e) ->
-    preventDefault e
-    form = $(this)
-    form.spiffySubmit '/register', $(this).spiffyFormData(['username', 'email', 'password', 'fingerprint', 'g-recaptcha-response']), () -> go(form.data('returnUri'))
-    return
-
-  $('form.submit').submit (e) ->
-    preventDefault e
-    form = $(this)
-    form.spiffySubmit '/submit', $(this).spiffyFormData(['media', 'title', 'description', 'idempotentId']), () -> go('/')
     return
 
   $('.close').click (e) ->

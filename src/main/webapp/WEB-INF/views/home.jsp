@@ -22,7 +22,7 @@
   </jsp:include>
 </div>
 
-<form class="load-posts">
+<form class="load-posts" action="/posts" <s:csrf name="posts" /> data-loading="header">
   <input type="hidden" name="after" value="<c:out value="${ after }" />"/>
   <input type="hidden" name="quantity" />
 </form>

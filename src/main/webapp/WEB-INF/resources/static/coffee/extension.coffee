@@ -1,135 +1,127 @@
-String::startsWith ?= (s) -> @slice(0, s.length) == s
-String::endsWith   ?= (s) -> s == '' or @slice(-s.length) == s
-String::contains   ?= (s) -> s == '' or @indexOf(s) > -1
+Array::isArray     ?= (a) -> {}.toString.call(value) is '[object Array]'
+
+String::startsWith         ?= (s) -> @slice(0, s.length) == s
+String::endsWith           ?= (s) -> s == '' or @slice(-s.length) == s
+String::contains           ?= (s) -> s == '' or @indexOf(s) > -1
+String::equalsIgnoreCase   ?= (s) -> @toUpperCase() == s.toUpperCase()
+
+Spiffy =
+  firstDefined : () ->
+    defined = argument for argument in arguments by -1 when argument?
+    if defined? then return defined
+    return undefined
 
 jQuery.fn.spiffy = () ->
-  element = $ this[0]
-  fn = {
+  elements = $ this
+  fn =
     end: () ->
-      element
+      elements
     disable: () ->
-      element
+      elements
         .find 'form, input, textarea, select, button'
           .addBack()
           .prop 'disabled', true
           .attr 'data-disabled', true
-      element.spiffy()
+      elements.spiffy()
     enable: () ->
-      element
+      elements
         .find 'form, input, textarea, select, button'
           .addBack()
           .removeAttr 'disabled'
           .removeAttr 'data-disabled'
-      element.spiffy()
+      elements.spiffy()
     clear: () ->
-      element.find 'input, textarea'
+      elements.find 'input, textarea'
         .val ''
-      element.spiffy()
-  }
-
-jQuery.fn.spiffyDisable = (disable = true) ->
-  element = $ this[0]
-  element.data 'disabled', disable
-  element.find(input).prop('disabled', disable) for input in ['input', 'textarea', 'select', 'button']
-  element
-
-jQuery.fn.spiffyEnable = () ->
-  element = $ this[0]
-  element.spiffyDisable false
-
-jQuery.fn.spiffyClear = () ->
-  form = $ this[0]
-  form.find(input).val('') for input in ['input', 'textarea']
-  form
-
-jQuery.fn.spiffyValue = () ->
-  element = $(this[0])
-  for value in ['accept', 'decline', 'follow', 'unfollow', 'friend', 'unfriend', 'settings', 'like', 'hate', 'favorite', 'download', 'report']
-    if element.hasClass value then return value
-  undefined
-
-jQuery.fn.spiffyFormValue = (name) ->
-  form = $ this[0]
-  element = form.find('[name=' + name + ']')[0]
-  if not element?
-    element = $('[data-form=' + form.data('form') + '][name=' + name + ']')[0]
-  if not element?
-    return undefined
-  value = $(element).val()
-
-jQuery.fn.spiffyFormData = (names) ->
-  form = $ this[0]
-  data = {}
-  for name in names
-    data[name] = form.spiffyFormValue name
-  data
-
-jQuery.fn.spiffySubmit = (options, data, success, error) ->
-  form = $ this[0]
-  if form.data('disabled') is true then return
-
-  validate = form.validate()
-  if validate.numberOfInvalids() then return
-
-  disable = if defined options.disable then options.disable else true
-  if disable then form.spiffyDisable()
-
-  if (defined options.loading) and (options.loading is 'header')
-    img = $('img.header-logo')
-    img.attr('src', img.attr('src').replace('icon', 'loading'))
-  else
-    if form.find('img.loading').length is 0
-      form.css 'position', 'relative'
-      form.append '<img class="loading" src="https://cdn.spiffy.io/static/svg/loading.svg" style="position:absolute;left:0;top:0;right:0;bottom:0;margin:auto;max-width:100%;max-height:100%;z-index:1000;" hidden="true"/>'
-    form.find('img.loading').slideDown()
-
-  url = if defined options.url then options.url else options
-  method = if defined options.method then options.method else 'POST'
-
-  $.ajax
-    url: url
-    data: data
-    dataType: 'json'
-    headers:
-      'X-CSRF-Token': form.data 'csrf-token'
-    type: method
-    success: (data, textStatus, jqXHR) ->
-      success(data)
-      if (defined options.loading) and (options.loading is 'header')
-        img = $('img.header-logo')
-        img.attr('src', img.attr('src').replace('loading', 'icon'))
+      elements.spiffy()
+    push: (data) ->
+      element = $ elements[0]
+      name = element.attr 'name'
+      value = element.val()
+      if not data[name]?
+        data[name] = value
+      else if Array.isArray data[name]
+        data[name].push value
       else
-        form
-          .find 'img.loading'
-          .hide 250
-      if disable then form.spiffyEnable()
-      validate.resetForm()
-      return
-    error: (jqXHR, textStatus, errorThrown) ->
-      if (defined options.loading) and (options.loading is 'header')
-        img = $('img.header-logo')
-        img.attr('src', img.attr('src').replace('loading', 'icon'))
-      else
-        form
-          .find 'img.loading'
-          .hide 250
-      if disable then form.spiffyEnable
-      if jqXHR.status is 401
-        handler (json) ->
-          $('.modal').modal 'hide'
-          $("meta[name='csrf-header']").attr 'content', json.csrf.header
-          $("meta[name='csrf-token']").attr 'content', json.csrf.token
-          form.submit()
-          # TODO: refresh page? (old comment left around)
-          return
-        $('#signin').modal 'show'
-        return
-      json = jqXHR.responseJSON
-      if json.error
-        if form.find 'input[name="error"]'
-          .length is 0 then form.append '<input name="error" hidden="true">'
-        validate.showErrors { 'error': json.error }
-      if defined error then error(validate, json)
-      return
+        data[name] = [data[name], value]
+      data
+    data: () ->
+      if elements.length > 1
+        data = []
+        data.push $(element).spiffy().data() for element in elements
+        return data
 
-  return
+      element = $ elements[0]
+
+      if not element.is 'form'
+        data = element.val()
+        return data
+
+      data = {}
+      element.find '[name]'
+        .each () ->
+          $(this).spiffy().push data
+      $ '[data-form-name="' + element.data('name') + '"]'
+        .each () ->
+          $(this).spiffy().push data
+      return data
+    options: (options) ->
+      form = $ elements[0]
+      if not form.is 'form' then return
+
+      if options?
+        form.data 'options', options
+        return form.spiffy()
+
+      return form.data 'options'
+    submit: (options) ->
+      form = $ elements[0]
+      if not form.is 'form' then return
+      if form.data 'disabled' then return
+
+      options = Spiffy.firstDefined options, $(form).spiffy().options(), {}
+
+      validate = form.validate Spiffy.firstDefined(options.validate, {})
+      if validate.numberOfInvalids() then return
+
+      url = Spiffy.firstDefined options.url, form.data('url'), form.attr('action')
+      type = Spiffy.firstDefined options.type, form.data('type'), form.attr('method'), 'POST'
+
+      csrf = form.data 'csrf-token'
+      if (not csrf?) and (type.equalsIgnoreCase 'POST') then alert 'csrf required'
+
+      disable = Spiffy.firstDefined options.disable, true
+      if disable then form.spiffy().disable()
+
+      loading = Spiffy.firstDefined options.loading, form.data('loading'), 'overlay'
+      if 'overlay'.equalsIgnoreCase loading
+        img = form.find 'img.loading'
+        if (not img?) or (not img.is('img.loading'))
+          form.css 'position', 'relative'
+          img = $ document.createElement 'img'
+          img.addClass 'loading'
+          img.attr 'src', 'https://cdn.spiffy.io/static/svg/loading.svg'
+          img.prop 'hidden'
+          form.append img
+        img.slideDown()
+      else if 'header'.equalsIgnoreCase loading
+        img = $ 'img.header-logo'
+        src = img.attr 'src'
+        src = src.replace 'icon', 'loading'
+        img.attr 'src', src
+
+      data = form.spiffy().data()
+
+      $.ajax
+        url: url
+        data: data
+        dataType: 'json'
+        headers:
+          'X-CSRF-Token': csrf
+        type: type
+        success: (data, textStatus, jqXHR) ->
+          console.log data
+        error: (jqXHR, textStatus, errorThrown) ->
+          console.log jqXHR.responseJSON
+
+      form.spiffy()

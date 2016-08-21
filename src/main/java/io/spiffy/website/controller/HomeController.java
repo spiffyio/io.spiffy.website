@@ -14,6 +14,7 @@ import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
+import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.PostsResponse;
 
@@ -44,6 +45,7 @@ public class HomeController extends Controller {
     }
 
     @ResponseBody
+    @Csrf("posts")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
     public AjaxResponse posts(final Context context, final @RequestParam(required = false) String after,
             final @RequestParam(defaultValue = "24") int quantity) {

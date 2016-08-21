@@ -7,7 +7,7 @@
 </jsp:include>
 
   <c:if test="${ form eq 'login' }">
-  <form class="login" <s:csrf name="login" /> data-return-uri="<c:out value="${ returnUri }" />">
+  <form class="login" <s:csrf name="login" /> data-return-uri="<c:out value="${ returnUri }" />" action="/login">
     <input type="email" placeholder="email" name="email" required autofocus />
     <input type="password" placeholder="password" name="password" required />
     <input type="hidden" name="fingerprint" />
@@ -17,7 +17,7 @@
   </c:if>
   
   <c:if test="${ form eq 'register' }">
-  <form class="register" <s:csrf name="register" /> data-return-uri="<c:out value="${ returnUri }" />">
+  <form class="register" <s:csrf name="register" /> data-return-uri="<c:out value="${ returnUri }" />" action="/register">
     <input type="text" placeholder="username" name="username" required autofocus />
     <input type="email" placeholder="email" name="email" required />
     <input type="password" placeholder="password" name="password" required />

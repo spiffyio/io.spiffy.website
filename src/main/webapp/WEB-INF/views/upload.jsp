@@ -11,9 +11,9 @@
   <s:idempotent />
 </form>
 
-<textarea name="description" placeholder="description" data-form="submit"></textarea>
+<textarea name="description" placeholder="description" data-form-name="submit"></textarea>
 
-<form class="submit" action="/submit" data-form="submit" <s:csrf name="submit" />>
+<form class="submit" action="/submit" data-name="submit" <s:csrf name="submit" />>
   <input type="text" name="title" placeholder="title" required/>
   <input type="hidden" name="media" />
   <s:idempotent />

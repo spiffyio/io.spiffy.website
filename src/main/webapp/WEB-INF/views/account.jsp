@@ -15,7 +15,7 @@
     </c:if>
     <c:if test="${ not account.emailVerified }">
       <a href="#" class="button primary" data-form="email">send verification</a>
-      <form class="email" <s:csrf name="verify" />></form>
+      <form class="email" <s:csrf name="verify" /> action="/verify" data-loading="header"></form>
     </c:if>
   </h3>
 </div>
@@ -49,7 +49,7 @@
   </table>
 </div>
 
-<form class="logout" <s:csrf name="logout" />>
+<form class="logout" <s:csrf name="logout" /> action="/logout" data-loading="header">
   <input type="hidden" name="session" />
 </form>
 

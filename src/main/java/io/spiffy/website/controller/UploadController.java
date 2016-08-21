@@ -35,7 +35,6 @@ public class UploadController extends Controller {
     }
 
     @ResponseBody
-    @Csrf("upload")
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
             final @RequestParam String idempotentId) throws IOException {

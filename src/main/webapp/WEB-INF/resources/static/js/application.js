@@ -120,199 +120,184 @@ initModalSize = function() {
   return height;
 };
 
-var base, base1, base2;
+var Spiffy, base, base1, base2, base3, base4;
 
-if ((base = String.prototype).startsWith == null) {
-  base.startsWith = function(s) {
+if ((base = Array.prototype).isArray == null) {
+  base.isArray = function(a) {
+    return {}.toString.call(value) === '[object Array]';
+  };
+}
+
+if ((base1 = String.prototype).startsWith == null) {
+  base1.startsWith = function(s) {
     return this.slice(0, s.length) === s;
   };
 }
 
-if ((base1 = String.prototype).endsWith == null) {
-  base1.endsWith = function(s) {
+if ((base2 = String.prototype).endsWith == null) {
+  base2.endsWith = function(s) {
     return s === '' || this.slice(-s.length) === s;
   };
 }
 
-if ((base2 = String.prototype).contains == null) {
-  base2.contains = function(s) {
+if ((base3 = String.prototype).contains == null) {
+  base3.contains = function(s) {
     return s === '' || this.indexOf(s) > -1;
   };
 }
 
-jQuery.fn.spiffy = function() {
-  var element, fn;
-  element = $(this[0]);
-  return fn = {
-    end: function() {
-      return element;
-    },
-    disable: function() {
-      element.find('form, input, textarea, select, button').addBack().prop('disabled', true).attr('data-disabled', true);
-      return element.spiffy();
-    },
-    enable: function() {
-      element.find('form, input, textarea, select, button').addBack().removeAttr('disabled').removeAttr('data-disabled');
-      return element.spiffy();
-    },
-    clear: function() {
-      element.find('input, textarea').val('');
-      return element.spiffy();
-    }
+if ((base4 = String.prototype).equalsIgnoreCase == null) {
+  base4.equalsIgnoreCase = function(s) {
+    return this.toUpperCase() === s.toUpperCase();
   };
-};
+}
 
-jQuery.fn.spiffyDisable = function(disable) {
-  var element, i, input, len, ref;
-  if (disable == null) {
-    disable = true;
-  }
-  element = $(this[0]);
-  element.data('disabled', disable);
-  ref = ['input', 'textarea', 'select', 'button'];
-  for (i = 0, len = ref.length; i < len; i++) {
-    input = ref[i];
-    element.find(input).prop('disabled', disable);
-  }
-  return element;
-};
-
-jQuery.fn.spiffyEnable = function() {
-  var element;
-  element = $(this[0]);
-  return element.spiffyDisable(false);
-};
-
-jQuery.fn.spiffyClear = function() {
-  var form, i, input, len, ref;
-  form = $(this[0]);
-  ref = ['input', 'textarea'];
-  for (i = 0, len = ref.length; i < len; i++) {
-    input = ref[i];
-    form.find(input).val('');
-  }
-  return form;
-};
-
-jQuery.fn.spiffyValue = function() {
-  var element, i, len, ref, value;
-  element = $(this[0]);
-  ref = ['accept', 'decline', 'follow', 'unfollow', 'friend', 'unfriend', 'settings', 'like', 'hate', 'favorite', 'download', 'report'];
-  for (i = 0, len = ref.length; i < len; i++) {
-    value = ref[i];
-    if (element.hasClass(value)) {
-      return value;
+Spiffy = {
+  firstDefined: function() {
+    var argument, defined, i;
+    for (i = arguments.length - 1; i >= 0; i += -1) {
+      argument = arguments[i];
+      if (argument != null) {
+        defined = argument;
+      }
     }
-  }
-  return void 0;
-};
-
-jQuery.fn.spiffyFormValue = function(name) {
-  var element, form, value;
-  form = $(this[0]);
-  element = form.find('[name=' + name + ']')[0];
-  if (element == null) {
-    element = $('[data-form=' + form.data('form') + '][name=' + name + ']')[0];
-  }
-  if (element == null) {
+    if (defined != null) {
+      return defined;
+    }
     return void 0;
   }
-  return value = $(element).val();
 };
 
-jQuery.fn.spiffyFormData = function(names) {
-  var data, form, i, len, name;
-  form = $(this[0]);
-  data = {};
-  for (i = 0, len = names.length; i < len; i++) {
-    name = names[i];
-    data[name] = form.spiffyFormValue(name);
-  }
-  return data;
-};
-
-jQuery.fn.spiffySubmit = function(options, data, success, error) {
-  var disable, form, img, method, url, validate;
-  form = $(this[0]);
-  if (form.data('disabled') === true) {
-    return;
-  }
-  validate = form.validate();
-  if (validate.numberOfInvalids()) {
-    return;
-  }
-  disable = defined(options.disable) ? options.disable : true;
-  if (disable) {
-    form.spiffyDisable();
-  }
-  if ((defined(options.loading)) && (options.loading === 'header')) {
-    img = $('img.header-logo');
-    img.attr('src', img.attr('src').replace('icon', 'loading'));
-  } else {
-    if (form.find('img.loading').length === 0) {
-      form.css('position', 'relative');
-      form.append('<img class="loading" src="https://cdn.spiffy.io/static/svg/loading.svg" style="position:absolute;left:0;top:0;right:0;bottom:0;margin:auto;max-width:100%;max-height:100%;z-index:1000;" hidden="true"/>');
-    }
-    form.find('img.loading').slideDown();
-  }
-  url = defined(options.url) ? options.url : options;
-  method = defined(options.method) ? options.method : 'POST';
-  $.ajax({
-    url: url,
-    data: data,
-    dataType: 'json',
-    headers: {
-      'X-CSRF-Token': form.data('csrf-token')
+jQuery.fn.spiffy = function() {
+  var elements, fn;
+  elements = $(this);
+  return fn = {
+    end: function() {
+      return elements;
     },
-    type: method,
-    success: function(data, textStatus, jqXHR) {
-      success(data);
-      if ((defined(options.loading)) && (options.loading === 'header')) {
-        img = $('img.header-logo');
-        img.attr('src', img.attr('src').replace('loading', 'icon'));
-      } else {
-        form.find('img.loading').hide(250);
-      }
-      if (disable) {
-        form.spiffyEnable();
-      }
-      validate.resetForm();
+    disable: function() {
+      elements.find('form, input, textarea, select, button').addBack().prop('disabled', true).attr('data-disabled', true);
+      return elements.spiffy();
     },
-    error: function(jqXHR, textStatus, errorThrown) {
-      var json;
-      if ((defined(options.loading)) && (options.loading === 'header')) {
-        img = $('img.header-logo');
-        img.attr('src', img.attr('src').replace('loading', 'icon'));
+    enable: function() {
+      elements.find('form, input, textarea, select, button').addBack().removeAttr('disabled').removeAttr('data-disabled');
+      return elements.spiffy();
+    },
+    clear: function() {
+      elements.find('input, textarea').val('');
+      return elements.spiffy();
+    },
+    push: function(data) {
+      var element, name, value;
+      element = $(elements[0]);
+      name = element.attr('name');
+      value = element.val();
+      if (data[name] == null) {
+        data[name] = value;
+      } else if (Array.isArray(data[name])) {
+        data[name].push(value);
       } else {
-        form.find('img.loading').hide(250);
+        data[name] = [data[name], value];
       }
-      if (disable) {
-        form.spiffyEnable;
+      return data;
+    },
+    data: function() {
+      var data, element, i, len;
+      if (elements.length > 1) {
+        data = [];
+        for (i = 0, len = elements.length; i < len; i++) {
+          element = elements[i];
+          data.push($(element).spiffy().data());
+        }
+        return data;
       }
-      if (jqXHR.status === 401) {
-        handler(function(json) {
-          $('.modal').modal('hide');
-          $("meta[name='csrf-header']").attr('content', json.csrf.header);
-          $("meta[name='csrf-token']").attr('content', json.csrf.token);
-          form.submit();
-        });
-        $('#signin').modal('show');
+      element = $(elements[0]);
+      if (!element.is('form')) {
+        data = element.val();
+        return data;
+      }
+      data = {};
+      element.find('[name]').each(function() {
+        return $(this).spiffy().push(data);
+      });
+      $('[data-form-name="' + element.data('name') + '"]').each(function() {
+        return $(this).spiffy().push(data);
+      });
+      return data;
+    },
+    options: function(options) {
+      var form;
+      form = $(elements[0]);
+      if (!form.is('form')) {
         return;
       }
-      json = jqXHR.responseJSON;
-      if (json.error) {
-        if (form.find('input[name="error"]').length === 0) {
-          form.append('<input name="error" hidden="true">');
+      if (options != null) {
+        form.data('options', options);
+        return form.spiffy();
+      }
+      return form.data('options');
+    },
+    submit: function(options) {
+      var csrf, data, disable, form, img, loading, src, type, url, validate;
+      form = $(elements[0]);
+      if (!form.is('form')) {
+        return;
+      }
+      if (form.data('disabled')) {
+        return;
+      }
+      options = Spiffy.firstDefined(options, $(form).spiffy().options(), {});
+      validate = form.validate(Spiffy.firstDefined(options.validate, {}));
+      if (validate.numberOfInvalids()) {
+        return;
+      }
+      url = Spiffy.firstDefined(options.url, form.data('url'), form.attr('action'));
+      type = Spiffy.firstDefined(options.type, form.data('type'), form.attr('method'), 'POST');
+      csrf = form.data('csrf-token');
+      if ((csrf == null) && (type.equalsIgnoreCase('POST'))) {
+        alert('csrf required');
+      }
+      disable = Spiffy.firstDefined(options.disable, true);
+      if (disable) {
+        form.spiffy().disable();
+      }
+      loading = Spiffy.firstDefined(options.loading, form.data('loading'), 'overlay');
+      if ('overlay'.equalsIgnoreCase(loading)) {
+        img = form.find('img.loading');
+        if ((img == null) || (!img.is('img.loading'))) {
+          form.css('position', 'relative');
+          img = $(document.createElement('img'));
+          img.addClass('loading');
+          img.attr('src', 'https://cdn.spiffy.io/static/svg/loading.svg');
+          img.prop('hidden');
+          form.append(img);
         }
-        validate.showErrors({
-          'error': json.error
-        });
+        img.slideDown();
+      } else if ('header'.equalsIgnoreCase(loading)) {
+        img = $('img.header-logo');
+        src = img.attr('src');
+        src = src.replace('icon', 'loading');
+        img.attr('src', src);
       }
-      if (defined(error)) {
-        error(validate, json);
-      }
+      data = form.spiffy().data();
+      $.ajax({
+        url: url,
+        data: data,
+        dataType: 'json',
+        headers: {
+          'X-CSRF-Token': csrf
+        },
+        type: type,
+        success: function(data, textStatus, jqXHR) {
+          return console.log(data);
+        },
+        error: function(jqXHR, textStatus, errorThrown) {
+          return console.log(jqXHR.responseJSON);
+        }
+      });
+      return form.spiffy();
     }
-  });
+  };
 };
 
 var adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
@@ -369,14 +354,11 @@ $(document).ready(function(e) {
       });
     }
   }
-  $('form.load-posts').submit(function(e) {
+  $('form:not(#dz-form)').submit(function(e) {
     var form;
     preventDefault(e);
     form = $(this);
-    form.spiffySubmit({
-      url: '/posts',
-      loading: 'header'
-    }, $(this).spiffyFormData(['after', 'quantity']), load);
+    form.spiffy().submit();
   });
   $('a[data-form]').click(function(e) {
     var form;
@@ -384,51 +366,12 @@ $(document).ready(function(e) {
     form = $('form.' + $(this).data('form'));
     form.submit();
   });
-  $('form.email').submit(function(e) {
-    var form;
-    preventDefault(e);
-    form = $(this);
-    form.spiffySubmit({
-      url: '/account/verify',
-      loading: 'header'
-    }, {}, refresh);
-  });
   $('a[data-session-id]').click(function(e) {
     var form;
     preventDefault(e);
     form = $('form.logout');
     form.find('input[name="session"]').val($(this).data('session-id'));
     form.submit();
-  });
-  $('form.logout').submit(function(e) {
-    var form;
-    preventDefault(e);
-    form = $(this);
-    form.spiffySubmit('/logout', $(this).spiffyFormData(['session']), refresh);
-  });
-  $('form.login').submit(function(e) {
-    var form;
-    preventDefault(e);
-    form = $(this);
-    form.spiffySubmit('/login', $(this).spiffyFormData(['email', 'password', 'fingerprint', 'g-recaptcha-response']), function() {
-      return go(form.data('returnUri'));
-    });
-  });
-  $('form.register').submit(function(e) {
-    var form;
-    preventDefault(e);
-    form = $(this);
-    form.spiffySubmit('/register', $(this).spiffyFormData(['username', 'email', 'password', 'fingerprint', 'g-recaptcha-response']), function() {
-      return go(form.data('returnUri'));
-    });
-  });
-  $('form.submit').submit(function(e) {
-    var form;
-    preventDefault(e);
-    form = $(this);
-    form.spiffySubmit('/submit', $(this).spiffyFormData(['media', 'title', 'description', 'idempotentId']), function() {
-      return go('/');
-    });
   });
   $('.close').click(function(e) {
     closeModal();
