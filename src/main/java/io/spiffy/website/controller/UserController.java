@@ -18,11 +18,12 @@ import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
+import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.*;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -35,6 +36,7 @@ public class UserController extends Controller {
     private final GoogleClient googleClient;
     private final UserClient userClient;
 
+    @AccessControl
     @RequestMapping("/account")
     public ModelAndView account(final Context context) {
         final List<Session> sessions = userClient.getSessions(context.getAccountId());
@@ -49,6 +51,7 @@ public class UserController extends Controller {
     }
 
     @ResponseBody
+    @AccessControl
     @Csrf("verify")
     @RequestMapping(value = "/account/verify", method = RequestMethod.POST)
     public AjaxResponse verifyEmail(final Context context) {

@@ -315,6 +315,9 @@ jQuery.fn.spiffy = function() {
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
+          if ((jqXHR.status === 401) && (jqXHR.responseJSON.uri != null)) {
+            go(jqXHR.responseJSON.uri);
+          }
           form.spiffy().enable().loading(loading, false);
           validate.resetForm();
           if (options.error != null) {

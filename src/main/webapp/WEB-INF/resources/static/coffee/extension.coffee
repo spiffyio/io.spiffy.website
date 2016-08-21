@@ -136,6 +136,7 @@ jQuery.fn.spiffy = () ->
           if options.success?
             options.success form, data, textStatus, jqXHR
         error: (jqXHR, textStatus, errorThrown) ->
+          if (jqXHR.status is 401) and (jqXHR.responseJSON.uri?) then go jqXHR.responseJSON.uri
           form.spiffy().enable().loading(loading, false)
           validate.resetForm()
           if options.error?

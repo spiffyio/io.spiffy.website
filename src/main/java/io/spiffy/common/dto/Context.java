@@ -270,6 +270,10 @@ public class Context {
         model.addAttribute(name, attribute);
     }
 
+    public boolean isAuthenticated() {
+        return getAccountId() != null;
+    }
+
     public Long getAccountId() {
         if (account == null) {
             return null;
