@@ -32,7 +32,16 @@ public class AccessControlAspect extends Aspect {
         final Method method = signature.getMethod();
         final Class<?> resultClass = method.getReturnType();
 
-        final String uri = "/login?returnUri=" + context.getRequestUri();
+        final StringBuilder builder = new StringBuilder();
+        builder.append("/login?returnUri=");
+
+        if (AccessControl.DEFAULT_RETURN_URI.equals(accessControl.returnUri())) {
+            builder.append(context.getRequestUri());
+        } else {
+            builder.append(accessControl.returnUri());
+        }
+
+        final String uri = builder.toString();
 
         context.setResponseStatus(HttpStatus.UNAUTHORIZED);
 

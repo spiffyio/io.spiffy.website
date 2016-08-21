@@ -25,7 +25,7 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.SuccessResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;
@@ -47,8 +47,8 @@ public class UploadController extends Controller {
     }
 
     @ResponseBody
-    @AccessControl
     @Csrf("submit")
+    @AccessControl(returnUri = "/upload")
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
     public AjaxResponse submit(final Context context, final @RequestParam String[] media, final @RequestParam String title,
             final @RequestParam(required = false) String description,

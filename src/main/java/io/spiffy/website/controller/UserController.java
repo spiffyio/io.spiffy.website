@@ -23,7 +23,7 @@ import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.*;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -51,8 +51,8 @@ public class UserController extends Controller {
     }
 
     @ResponseBody
-    @AccessControl
     @Csrf("verify")
+    @AccessControl(returnUri = "/account")
     @RequestMapping(value = "/account/verify", method = RequestMethod.POST)
     public AjaxResponse verifyEmail(final Context context) {
         final boolean success = userClient.sendVerifyEmail(context, context.getEmail());
