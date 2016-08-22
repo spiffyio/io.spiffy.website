@@ -90,6 +90,15 @@ jQuery.fn.spiffy = () ->
           src = img.attr 'src'
           src = if enable then src.replace 'icon', 'loading' else src.replace 'loading', 'icon'
           img.attr 'src', src
+        div = $ 'div.header-loading'
+        if div? and div.is('div.header-loading')
+          if enable
+            div.animate { width: '80%' }, 2000
+          else
+            div.finish().animate { width: '100%' }, 250, 'swing', () ->
+              div.animate { opacity: '0' }, 500, 'swing', () ->
+                div.css 'width', '0%'
+                div.css 'opacity', '1'
 
       return form.spiffy()
     options: (options) ->

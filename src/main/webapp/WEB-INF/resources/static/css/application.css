@@ -65,6 +65,13 @@ div.header div.menu ul li a, div.header div.menu ul li span {
   display: block;
 }
 
+div.header div.header-loading {
+  height: 0.25em;
+  width: 0%;
+  margin-top: 3em;
+  background: #FFCF5E;
+}
+
 div.header div.menu {
   top: 0;
   transition: all 0.5s ease;
@@ -263,6 +270,12 @@ div.footer {
 
 .modal-body form div.g-recaptcha {
   display: inline-block;
+}
+
+div.g-recaptcha {
+  min-height: 78px;
+  display: block;
+  background-color: #f9f9f9;
 }
 
 div.disabled:before {

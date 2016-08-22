@@ -122,18 +122,18 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
             return account;
         }
 
-        sendVerificationEmail(account);
+        sendVerificationEmail(account, "register");
 
         return account;
     }
 
-    private void sendVerificationEmail(final AccountEntity account) {
+    private void sendVerificationEmail(final AccountEntity account, final String idempotentId) {
         final EmailProperties properties = new EmailProperties();
         properties.setName(account.getUserName());
         properties.setUrl(AppConfig.getEndpoint() + "/verify?email=" + account.getEmailVerificationToken());
 
         emailClient.sendEmailCall(EmailType.Verify, account.getEmailAddress(),
-                account.getId() + ":verification:" + account.getEmailVerificationTokenId(), account.getId(), properties);
+                account.getId() + ":verification:" + idempotentId, account.getId(), properties);
     }
 
     @Transactional
@@ -185,7 +185,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
-    public AccountEntity sendVerificationEmail(final long accountId, final String email) {
+    public AccountEntity sendVerificationEmail(final long accountId, final String email, final String idempotentId) {
         final AccountEntity account = get(accountId);
         if (account == null) {
             return null;
@@ -202,7 +202,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
 
         repository.saveOrUpdate(account);
 
-        sendVerificationEmail(account);
+        sendVerificationEmail(account, idempotentId);
 
         return account;
     }

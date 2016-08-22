@@ -19,7 +19,8 @@ public class SendVerifyEmailAPI extends API<SendVerifyEmailInput, PostOutput, Ac
     }
 
     protected PostOutput api(final SendVerifyEmailInput input) {
-        final AccountEntity entity = service.sendVerificationEmail(input.getAccountId(), input.getEmail());
+        final AccountEntity entity = service.sendVerificationEmail(input.getAccountId(), input.getEmail(),
+                input.getIdempotentId());
         final Long id = entity != null ? entity.getId() : null;
         return new PostOutput(id);
     }

@@ -87,6 +87,11 @@ div.header
           cursor: pointer
           display: block
 
+  div.header-loading
+    +size(0.25em, 0%)
+    margin-top: 3em
+    background: $o3
+
 div.header
   div.menu
     top: 0
@@ -239,6 +244,11 @@ div.footer
       text-align: center
     div.g-recaptcha
       display: inline-block
+
+div.g-recaptcha
+  min-height: 78px
+  display: block
+  background-color: rgb(249, 249, 249)
 
 div.disabled:before
   +size(100%, 100%)

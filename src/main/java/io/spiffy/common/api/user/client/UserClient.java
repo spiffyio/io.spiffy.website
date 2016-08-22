@@ -96,8 +96,8 @@ public class UserClient extends Client {
         return output.getId();
     }
 
-    public boolean sendVerifyEmail(final Context context, final String email) {
-        final SendVerifyEmailInput input = new SendVerifyEmailInput(context.getAccountId(), email);
+    public boolean sendVerifyEmail(final Context context, final String email, final String idempotentId) {
+        final SendVerifyEmailInput input = new SendVerifyEmailInput(context.getAccountId(), email, idempotentId);
         final PostOutput output = sendVerifyEmailCall.call(input);
         return output.getId() != null;
     }

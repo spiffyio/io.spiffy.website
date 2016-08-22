@@ -40,6 +40,7 @@ public class ExceptonController extends Controller {
 
         if (AppConfig.isShowStacktrace()) {
             context.addAttribute(STACKTRACE_KEY, ExceptionUtils.getStackTrace(e));
+            e.printStackTrace();
         }
 
         return mav("exception", context);

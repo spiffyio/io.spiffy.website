@@ -1,9 +1,3 @@
-recaptchaCallback = () ->
-  $('.g-recaptcha').each (i, e) ->
-    grecaptcha.render e, { 'sitekey': '6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i' }
-    return
-  return
-
 preventDefault = (e) ->
   e.preventDefault()
   return

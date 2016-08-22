@@ -17,15 +17,7 @@ Width = {
   xl: 1200
 };
 
-var blank, confirmation, contains, defined, go, handler, high, initModalSize, medium, overrideHandler, preventDefault, quality, recaptchaCallback, refresh;
-
-recaptchaCallback = function() {
-  $('.g-recaptcha').each(function(i, e) {
-    grecaptcha.render(e, {
-      'sitekey': '6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i'
-    });
-  });
-};
+var blank, confirmation, contains, defined, go, handler, high, initModalSize, medium, overrideHandler, preventDefault, quality, refresh;
 
 preventDefault = function(e) {
   e.preventDefault();
@@ -54,13 +46,13 @@ high = function(img) {
 };
 
 quality = function(img, q, old, callback) {
-  var image, j, len, o, src;
+  var i, image, len, o, src;
   if (old == null) {
     old = ['a', 'l', 'm', 'h'];
   }
   src = img.attr('src');
-  for (j = 0, len = old.length; j < len; j++) {
-    o = old[j];
+  for (i = 0, len = old.length; i < len; i++) {
+    o = old[i];
     src = src.replace('q=' + o, 'q=' + q);
   }
   image = new Image();
@@ -226,7 +218,7 @@ jQuery.fn.spiffy = function() {
       return data;
     },
     loading: function(loading, enable) {
-      var form, img, src;
+      var div, form, img, src;
       if (enable == null) {
         enable = true;
       }
@@ -256,6 +248,25 @@ jQuery.fn.spiffy = function() {
           src = img.attr('src');
           src = enable ? src.replace('icon', 'loading') : src.replace('loading', 'icon');
           img.attr('src', src);
+        }
+        div = $('div.header-loading');
+        if ((div != null) && div.is('div.header-loading')) {
+          if (enable) {
+            div.animate({
+              width: '80%'
+            }, 2000);
+          } else {
+            div.finish().animate({
+              width: '100%'
+            }, 250, 'swing', function() {
+              return div.animate({
+                opacity: '0'
+              }, 500, 'swing', function() {
+                div.css('width', '0%');
+                return div.css('opacity', '1');
+              });
+            });
+          }
         }
       }
       return form.spiffy();
@@ -427,6 +438,15 @@ $(document).ready(function(e) {
     form = $('form.logout');
     form.find('input[name="session"]').val($(this).data('session-id'));
     form.submit();
+  });
+  $('form.logout').spiffy().options({
+    success: function(form) {
+      var button, input, session;
+      input = form.find('input[name="session"]');
+      session = input.val();
+      button = $('[data-session-id="' + session + '"]');
+      button.parent().parent().slideUp();
+    }
   });
   $('.close').click(function(e) {
     closeModal();
@@ -630,7 +650,7 @@ $(window).on('beforeunload', function() {
 
 (function($) {
   'use strict';
-  var floatingLabel, options;
+  var floatingLabel;
   floatingLabel = function(onload) {
     var $input;
     $input = $(this);
@@ -654,31 +674,35 @@ $(window).on('beforeunload', function() {
   $('.input input').keydown(floatingLabel);
   $('.input input').change(floatingLabel);
   window.addEventListener('load', floatingLabel(true), false);
-  options = {};
   $('form').each(function() {
-    return $(this).attr('data-parsley-errors-messages-disabled', '');
-  });
-  $('form').parsley(options).on('form:error', function() {
-    $.each(this.fields, function(key, field) {
-      var div, reason;
-      if (field.validationResult !== true) {
-        reason = field.validationResult[0].assert.name;
-        reason = reason.equalsIgnoreCase('type') ? field.validationResult[0].assert.requirements + ' required' : reason;
-        div = field.$element.parent();
-        div.find('span').html(reason);
+    var form;
+    form = $(this);
+    if (!form.find('input').length) {
+      return;
+    }
+    form.attr('data-parsley-errors-messages-disabled', '');
+    form.parsley().on('form:error', function() {
+      $.each(this.fields, function(key, field) {
+        var div, reason;
+        if (field.validationResult !== true) {
+          reason = field.validationResult[0].assert.name;
+          reason = reason.equalsIgnoreCase('type') ? 'invalid ' + field.validationResult[0].assert.requirements : reason;
+          div = field.$element.parent();
+          div.find('span').html(reason);
+          div.addClass('bt-flabels__error');
+        }
+      });
+    });
+    return form.parsley().on('field:validated', function() {
+      var div;
+      if (this.validationResult === true) {
+        div = this.$element.parent();
+        div.removeClass('bt-flabels__error');
+      } else {
+        div = this.$element.parent();
         div.addClass('bt-flabels__error');
       }
     });
-  });
-  $('form').parsley(options).on('field:validated', function() {
-    var div;
-    if (this.validationResult === true) {
-      div = this.$element.parent();
-      div.removeClass('bt-flabels__error');
-    } else {
-      div = this.$element.parent();
-      div.addClass('bt-flabels__error');
-    }
   });
 })(jQuery);
 

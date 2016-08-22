@@ -12,4 +12,5 @@ import lombok.NoArgsConstructor;
 public class SendVerifyEmailInput {
     private Long accountId;
     private String email;
+    private String idempotentId;
 }

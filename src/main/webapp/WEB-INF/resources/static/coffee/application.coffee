@@ -81,6 +81,15 @@ $(document).ready (e) ->
     form.submit()
     return
 
+  $('form.logout').spiffy().options
+    success: (form) ->
+      input = form.find 'input[name="session"]'
+      session = input.val()
+      button = $ '[data-session-id="' + session + '"]'
+      button.parent().parent().slideUp()
+      return
+
+
   $('.close').click (e) ->
     closeModal()
     return
@@ -282,32 +291,28 @@ $(window).on 'beforeunload', () ->
 
   window.addEventListener 'load', floatingLabel(true), false
 
-  options = {}
-
   $('form').each () ->
-    $(this).attr 'data-parsley-errors-messages-disabled', ''
-
-  # Parsley
-  $('form').parsley(options).on 'form:error', ->
-    $.each this.fields, (key, field) ->
-      if field.validationResult isnt true
-        reason = field.validationResult[0].assert.name
-        reason = if reason.equalsIgnoreCase 'type' then field.validationResult[0].assert.requirements + ' required' else reason
-        div = field.$element.parent()
-        div.find('span').html reason
+    form = $ this
+    if not form.find('input').length then return
+    form.attr 'data-parsley-errors-messages-disabled', ''
+    form.parsley().on 'form:error', ->
+      $.each this.fields, (key, field) ->
+        if field.validationResult isnt true
+          reason = field.validationResult[0].assert.name
+          reason = if reason.equalsIgnoreCase 'type' then 'invalid ' + field.validationResult[0].assert.requirements else reason
+          div = field.$element.parent()
+          div.find('span').html reason
+          div.addClass 'bt-flabels__error'
+          return
+      return
+    form.parsley().on 'field:validated', ->
+      if this.validationResult is true
+        div = this.$element.parent()
+        div.removeClass 'bt-flabels__error'
+        return
+      else
+        div = this.$element.parent()
         div.addClass 'bt-flabels__error'
         return
-    return
-
-  $('form').parsley(options).on 'field:validated', ->
-    if this.validationResult is true
-      div = this.$element.parent()
-      div.removeClass 'bt-flabels__error'
-      return
-    else
-      div = this.$element.parent()
-      div.addClass 'bt-flabels__error'
-      return
-
   return
 ) jQuery

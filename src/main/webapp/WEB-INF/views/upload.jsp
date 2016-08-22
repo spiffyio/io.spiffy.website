@@ -14,10 +14,11 @@
 <textarea name="description" placeholder="description" data-form-name="submit"></textarea>
 
 <form class="submit" action="/submit" data-name="submit" <s:csrf name="submit" />>
-  <input type="text" name="title" placeholder="title" required/>
+  <div class="input"><input type="text" name="title" placeholder="title" required/></div>
   <input type="hidden" name="media" />
   <s:idempotent />
-  <input class="button primary" type="submit" value="submit" />
+  <div class="message"></div> 
+  <div class="input"><input class="button primary" type="submit" value="submit" /></div>
 </form>
 
 </div>

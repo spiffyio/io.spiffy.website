@@ -69,7 +69,7 @@
 <s:resource file="dropzone" type="css" />
 </c:if>
 <c:if test="${ include_captcha }">
-<script src='https://www.google.com/recaptcha/api.js?onload=recaptchaCallback&render=explicit'></script>
+<script src='https://www.google.com/recaptcha/api.js' async defer></script>
 </c:if>
 </head>
 <body <c:if test="${ include_embed_onload }"> onload="document.getElementById('embeded').src = window.location.href;" </c:if>>
@@ -93,6 +93,7 @@
       </c:if>
     </ul>
   </div>
+  <div class="header-loading"></div>
 </div>
 </c:if>
 
