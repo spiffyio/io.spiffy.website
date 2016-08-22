@@ -310,8 +310,25 @@ jQuery.fn.spiffy = function() {
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          if ((jqXHR.status === 401) && (jqXHR.responseJSON.uri != null)) {
+          var div, input, response, span;
+          response = jqXHR.responseJSON;
+          if ((jqXHR.status === 401) && (response.uri != null)) {
             go(jqXHR.responseJSON.uri);
+            return;
+          }
+          if ((jqXHR.status === 400) && (response.error != null)) {
+            input = form.find('input[name="' + response.error + '"]');
+            if ((input != null) && input.is('input[name="' + response.error + '"]')) {
+              div = input.parent();
+              span = div.find('span');
+              div.addClass('bt-flabels__error');
+              span.html(response.reason);
+            } else {
+              div = form.find('div.message');
+              div.addClass('error');
+              div.html(response.reason);
+              div.slideDown();
+            }
           }
           form.spiffy().enable().loading(loading, false);
           if (options.error != null) {
@@ -429,7 +446,7 @@ $(document).ready(function(e) {
     div.prepend(label);
     span = $(document.createElement('span'));
     span.addClass('bt-flabels__error-desc');
-    span.html('required');
+    span.html(Spiffy.firstDefined(div.data('error-message'), 'error'));
     div.append(span);
   });
 });
@@ -613,7 +630,7 @@ $(window).on('beforeunload', function() {
 
 (function($) {
   'use strict';
-  var floatingLabel;
+  var floatingLabel, options;
   floatingLabel = function(onload) {
     var $input;
     $input = $(this);
@@ -637,18 +654,30 @@ $(window).on('beforeunload', function() {
   $('.input input').keydown(floatingLabel);
   $('.input input').change(floatingLabel);
   window.addEventListener('load', floatingLabel(true), false);
-  $('form').parsley().on('form:error', function() {
+  options = {};
+  $('form').each(function() {
+    return $(this).attr('data-parsley-errors-messages-disabled', '');
+  });
+  $('form').parsley(options).on('form:error', function() {
     $.each(this.fields, function(key, field) {
+      var div, reason;
       if (field.validationResult !== true) {
-        field.$element.closest('.input').addClass('bt-flabels__error');
+        reason = field.validationResult[0].assert.name;
+        reason = reason.equalsIgnoreCase('type') ? field.validationResult[0].assert.requirements + ' required' : reason;
+        div = field.$element.parent();
+        div.find('span').html(reason);
+        div.addClass('bt-flabels__error');
       }
     });
   });
-  $('form').parsley().on('field:validated', function() {
+  $('form').parsley(options).on('field:validated', function() {
+    var div;
     if (this.validationResult === true) {
-      this.$element.closest('.input').removeClass('bt-flabels__error');
+      div = this.$element.parent();
+      div.removeClass('bt-flabels__error');
     } else {
-      this.$element.closest('.input').addClass('bt-flabels__error');
+      div = this.$element.parent();
+      div.addClass('bt-flabels__error');
     }
   });
 })(jQuery);

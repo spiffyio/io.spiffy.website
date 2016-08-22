@@ -99,10 +99,9 @@ $(document).ready (e) ->
     div.prepend label
     span = $ document.createElement 'span'
     span.addClass 'bt-flabels__error-desc'
-    span.html 'required'
+    span.html Spiffy.firstDefined div.data('error-message'), 'error'
     div.append span
     return
-
 
   return
 
@@ -283,22 +282,32 @@ $(window).on 'beforeunload', () ->
 
   window.addEventListener 'load', floatingLabel(true), false
 
+  options = {}
+
+  $('form').each () ->
+    $(this).attr 'data-parsley-errors-messages-disabled', ''
+
   # Parsley
-  $('form').parsley().on 'form:error', ->
+  $('form').parsley(options).on 'form:error', ->
     $.each this.fields, (key, field) ->
       if field.validationResult isnt true
-        field.$element.closest('.input').addClass 'bt-flabels__error'
+        reason = field.validationResult[0].assert.name
+        reason = if reason.equalsIgnoreCase 'type' then field.validationResult[0].assert.requirements + ' required' else reason
+        div = field.$element.parent()
+        div.find('span').html reason
+        div.addClass 'bt-flabels__error'
         return
     return
 
-  $('form').parsley().on 'field:validated', ->
+  $('form').parsley(options).on 'field:validated', ->
     if this.validationResult is true
-      this.$element.closest('.input').removeClass 'bt-flabels__error'
+      div = this.$element.parent()
+      div.removeClass 'bt-flabels__error'
       return
     else
-      this.$element.closest('.input').addClass 'bt-flabels__error'
+      div = this.$element.parent()
+      div.addClass 'bt-flabels__error'
       return
-
 
   return
 ) jQuery

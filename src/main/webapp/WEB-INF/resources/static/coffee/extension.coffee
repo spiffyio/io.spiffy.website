@@ -138,7 +138,23 @@ jQuery.fn.spiffy = () ->
           if options.success?
             options.success form, data, textStatus, jqXHR
         error: (jqXHR, textStatus, errorThrown) ->
-          if (jqXHR.status is 401) and (jqXHR.responseJSON.uri?) then go jqXHR.responseJSON.uri
+          response = jqXHR.responseJSON
+          if (jqXHR.status is 401) and (response.uri?)
+            go jqXHR.responseJSON.uri
+            return
+          if (jqXHR.status is 400) and (response.error?)
+            input = form.find 'input[name="' + response.error + '"]'
+            if input? and input.is 'input[name="' + response.error + '"]'
+              div = input.parent()
+              span = div.find 'span'
+              div.addClass 'bt-flabels__error'
+              span.html response.reason
+            else
+              div = form.find 'div.message'
+              div.addClass 'error'
+              div.html response.reason
+              div.slideDown()
+
           form.spiffy().enable().loading(loading, false)
           #validate.resetForm()
           if options.error?

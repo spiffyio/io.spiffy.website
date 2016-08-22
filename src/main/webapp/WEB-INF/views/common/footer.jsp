@@ -23,7 +23,7 @@
 </div>
 
 <s:resource file="jquery" type="js" />
-<s:resource file="parsely" type="js" />
+<s:resource file="parsley" type="js" />
 <s:resource file="dropzone" type="js" />
 <c:if test="${ include_fingerprint }">
 <s:resource file="fingerprint" type="js" />

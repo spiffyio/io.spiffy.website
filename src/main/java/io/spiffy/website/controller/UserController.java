@@ -23,7 +23,7 @@ import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.*;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private static final String FORM_KEY = "form";
