@@ -7,4 +7,5 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = false)
 public class UploadResponse extends AjaxResponse {
     private final String id;
+    private final String url;
 }

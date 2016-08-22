@@ -11,14 +11,14 @@
   <s:idempotent />
 </form>
 
-<textarea name="description" placeholder="description" data-form-name="submit"></textarea>
-
-<form class="submit" action="/submit" data-name="submit" <s:csrf name="submit" />>
-  <div class="input"><input type="text" name="title" placeholder="title" required/></div>
+<form class="submit full" action="/submit" data-name="submit" <s:csrf name="submit" /> hidden>
+  <div class="input center"><input type="text" name="title" placeholder="title" required/></div>
+  <img src="" />
   <input type="hidden" name="media" />
+  <div class="input"><input type="text" name="description" placeholder="description"/></div>
   <s:idempotent />
   <div class="message"></div> 
-  <div class="input"><input class="button primary" type="submit" value="submit" /></div>
+  <div class="input center"><input class="button primary" type="submit" value="submit" /></div>
 </form>
 
 </div>

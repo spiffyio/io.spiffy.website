@@ -10,6 +10,8 @@ Dropzone.options.dzForm = {
     done()
     return
   success: (file, response) ->
+    $('#dz-form').slideUp()
+    $('form.submit').slideDown().find('img').attr 'src', response.url
     media = $('form.submit').find 'input[name="media"]'
     if media.val().length
       media.val media.val() + ',' + response.id
@@ -67,6 +69,9 @@ $(document).ready (e) ->
 
   $('form[data-return-uri]').spiffy().options
     success: (form) -> go(form.data('return-uri'))
+
+  $('form.submit').spiffy().options
+    success: () -> go '/'
 
   $('a[data-form]').click (e) ->
     preventDefault e
@@ -299,7 +304,10 @@ $(window).on 'beforeunload', () ->
       $.each this.fields, (key, field) ->
         if field.validationResult isnt true
           reason = field.validationResult[0].assert.name
-          reason = if reason.equalsIgnoreCase 'type' then 'invalid ' + field.validationResult[0].assert.requirements else reason
+          if reason.equalsIgnoreCase 'type'
+            reason = 'invalid ' + field.validationResult[0].assert.requirements
+          else if reason.equalsIgnoreCase 'equalto'
+            reason = 'unmatched ' + field.$element.parents('form:first').find(field.validationResult[0].assert.requirements).attr 'placeholder'
           div = field.$element.parent()
           div.find('span').html reason
           div.addClass 'bt-flabels__error'

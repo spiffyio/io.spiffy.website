@@ -22,7 +22,7 @@
     <div class="input"><input type="text" placeholder="username" name="username" required autofocus /></div>
     <div class="input"><input type="email" placeholder="email" name="email" required /></div>
     <div class="input"><input type="password" placeholder="password" name="password" required /></div>
-    <div class="input"><input type="password" placeholder="retype password" name="confirm_password" required /></div>
+    <div class="input"><input type="password" placeholder="retype password" name="confirm_password" data-parsley-equalto="[name='password']" required /></div>
     <input type="hidden" name="fingerprint" />
     <div class="input"><div class="g-recaptcha" data-sitekey="6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i"></div></div>
     <div class="message"></div> 

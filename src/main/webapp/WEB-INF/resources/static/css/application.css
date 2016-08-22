@@ -158,14 +158,18 @@ div.body div.centered form {
   margin-top: 1em;
 }
 
-div.body div.centered form imaliger {
-  height: 1.5em;
+div.body div.centered form.full {
   width: 100%;
-  margin: 0.5em 0;
-  display: block;
-  font-size: 150%;
-  line-height: 1.5em;
-  text-align: center;
+}
+
+div.body div.centered form.full img {
+  max-width: 100%;
+}
+
+div.body div.centered form.full div.center {
+  margin-left: auto;
+  margin-right: auto;
+  width: 300px;
 }
 
 form img.loading {

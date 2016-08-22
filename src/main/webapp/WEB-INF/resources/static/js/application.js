@@ -363,6 +363,8 @@ Dropzone.options.dzForm = {
   },
   success: function(file, response) {
     var media;
+    $('#dz-form').slideUp();
+    $('form.submit').slideDown().find('img').attr('src', response.url);
     media = $('form.submit').find('input[name="media"]');
     if (media.val().length) {
       media.val(media.val() + ',' + response.id);
@@ -424,6 +426,11 @@ $(document).ready(function(e) {
   $('form[data-return-uri]').spiffy().options({
     success: function(form) {
       return go(form.data('return-uri'));
+    }
+  });
+  $('form.submit').spiffy().options({
+    success: function() {
+      return go('/');
     }
   });
   $('a[data-form]').click(function(e) {
@@ -686,7 +693,11 @@ $(window).on('beforeunload', function() {
         var div, reason;
         if (field.validationResult !== true) {
           reason = field.validationResult[0].assert.name;
-          reason = reason.equalsIgnoreCase('type') ? 'invalid ' + field.validationResult[0].assert.requirements : reason;
+          if (reason.equalsIgnoreCase('type')) {
+            reason = 'invalid ' + field.validationResult[0].assert.requirements;
+          } else if (reason.equalsIgnoreCase('equalto')) {
+            reason = 'unmatched ' + field.$element.parents('form:first').find(field.validationResult[0].assert.requirements).attr('placeholder');
+          }
           div = field.$element.parent();
           div.find('span').html(reason);
           div.addClass('bt-flabels__error');
