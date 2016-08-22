@@ -151,7 +151,7 @@ div.body
       width: 300px
       margin-top: 1em
 
-      input
+      imaliger
         +size(1.5em, 100%)
         margin: 0.5em 0
         display: block
@@ -239,6 +239,14 @@ div.footer
       text-align: center
     div.g-recaptcha
       display: inline-block
+
+div.disabled:before
+  +size(100%, 100%)
+  padding: 0 1px
+  position: absolute
+  content: ''
+  background: $w3
+  opacity: 0.15
 
 .button
   +size(2em, auto)

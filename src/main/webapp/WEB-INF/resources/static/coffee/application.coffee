@@ -91,6 +91,19 @@ $(document).ready (e) ->
 
   adjustColumns()
 
+  $('div.input').each () ->
+    div = $ this
+    input = div.find 'input'
+    label = $ document.createElement 'label'
+    label.html input.attr('placeholder')
+    div.prepend label
+    span = $ document.createElement 'span'
+    span.addClass 'bt-flabels__error-desc'
+    span.html 'required'
+    div.append span
+    return
+
+
   return
 
 openModal = (modal) ->
@@ -241,3 +254,51 @@ $(window).on 'beforeunload', () ->
   if location.search.contains 'start'
     $(window).scrollTop 0
   return
+
+(($) ->
+  'use strict'
+
+  floatingLabel = (onload) ->
+    $input = $(this)
+
+    # Check for value onload
+    if onload
+      $.each $('.input input'), (index, value) ->
+        $current_input = $(value)
+        if $current_input.val()
+          $current_input.closest('.input').addClass 'bt-flabel__float'
+          return
+
+    setTimeout (->
+      if $input.val()
+        $input.closest('.input').addClass 'bt-flabel__float'
+      else
+        $input.closest('.input').removeClass 'bt-flabel__float'
+      return
+    ), 1
+    return
+
+  $('.input input').keydown floatingLabel
+  $('.input input').change floatingLabel
+
+  window.addEventListener 'load', floatingLabel(true), false
+
+  # Parsley
+  $('form').parsley().on 'form:error', ->
+    $.each this.fields, (key, field) ->
+      if field.validationResult isnt true
+        field.$element.closest('.input').addClass 'bt-flabels__error'
+        return
+    return
+
+  $('form').parsley().on 'field:validated', ->
+    if this.validationResult is true
+      this.$element.closest('.input').removeClass 'bt-flabels__error'
+      return
+    else
+      this.$element.closest('.input').addClass 'bt-flabels__error'
+      return
+
+
+  return
+) jQuery

@@ -18,18 +18,20 @@ jQuery.fn.spiffy = () ->
       elements
     disable: () ->
       elements
-        .find 'form, input, textarea, select, button'
+        .find 'form, input, textarea, select, button, div.g-recaptcha'
           .addBack()
           .prop 'disabled', true
           .attr 'data-disabled', true
+          .addClass 'disabled'
           .data 'disabled', true
       elements.spiffy()
     enable: () ->
       elements
-        .find 'form, input, textarea, select, button'
+        .find 'form, input, textarea, select, button, div.g-recaptcha'
           .addBack()
           .removeAttr 'disabled'
           .removeAttr 'data-disabled'
+          .removeClass 'disabled'
           .data 'disabled', false
       elements.spiffy()
     clear: () ->
@@ -106,8 +108,8 @@ jQuery.fn.spiffy = () ->
 
       options = Spiffy.firstDefined options, $(form).spiffy().options(), {}
 
-      validate = form.validate Spiffy.firstDefined(options.validate, {})
-      if validate.numberOfInvalids() then return
+      #validate = form.validate Spiffy.firstDefined(options.validate, {})
+      #if validate.numberOfInvalids() then return
 
       url = Spiffy.firstDefined options.url, form.data('url'), form.attr('action')
       type = Spiffy.firstDefined options.type, form.data('type'), form.attr('method'), 'POST'
@@ -132,13 +134,13 @@ jQuery.fn.spiffy = () ->
         type: type
         success: (data, textStatus, jqXHR) ->
           form.spiffy().enable().loading(loading, false)
-          validate.resetForm()
+          #validate.resetForm()
           if options.success?
             options.success form, data, textStatus, jqXHR
         error: (jqXHR, textStatus, errorThrown) ->
           if (jqXHR.status is 401) and (jqXHR.responseJSON.uri?) then go jqXHR.responseJSON.uri
           form.spiffy().enable().loading(loading, false)
-          validate.resetForm()
+          #validate.resetForm()
           if options.error?
             options.error form, jqXHR, textStatus, errorThrown
 

@@ -151,7 +151,7 @@ div.body div.centered form {
   margin-top: 1em;
 }
 
-div.body div.centered form input {
+div.body div.centered form imaliger {
   height: 1.5em;
   width: 100%;
   margin: 0.5em 0;
@@ -263,6 +263,16 @@ div.footer {
 
 .modal-body form div.g-recaptcha {
   display: inline-block;
+}
+
+div.disabled:before {
+  height: 100%;
+  width: 100%;
+  padding: 0 1px;
+  position: absolute;
+  content: '';
+  background: #5F5F5F;
+  opacity: 0.15;
 }
 
 .button {

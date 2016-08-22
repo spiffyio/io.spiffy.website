@@ -176,11 +176,11 @@ jQuery.fn.spiffy = function() {
       return elements;
     },
     disable: function() {
-      elements.find('form, input, textarea, select, button').addBack().prop('disabled', true).attr('data-disabled', true).data('disabled', true);
+      elements.find('form, input, textarea, select, button, div.g-recaptcha').addBack().prop('disabled', true).attr('data-disabled', true).addClass('disabled').data('disabled', true);
       return elements.spiffy();
     },
     enable: function() {
-      elements.find('form, input, textarea, select, button').addBack().removeAttr('disabled').removeAttr('data-disabled').data('disabled', false);
+      elements.find('form, input, textarea, select, button, div.g-recaptcha').addBack().removeAttr('disabled').removeAttr('data-disabled').removeClass('disabled').data('disabled', false);
       return elements.spiffy();
     },
     clear: function() {
@@ -273,7 +273,7 @@ jQuery.fn.spiffy = function() {
       return form.data('options');
     },
     submit: function(options) {
-      var csrf, data, disable, form, loading, type, url, validate;
+      var csrf, data, disable, form, loading, type, url;
       form = $(elements[0]);
       if (!form.is('form')) {
         return;
@@ -282,10 +282,6 @@ jQuery.fn.spiffy = function() {
         return;
       }
       options = Spiffy.firstDefined(options, $(form).spiffy().options(), {});
-      validate = form.validate(Spiffy.firstDefined(options.validate, {}));
-      if (validate.numberOfInvalids()) {
-        return;
-      }
       url = Spiffy.firstDefined(options.url, form.data('url'), form.attr('action'));
       type = Spiffy.firstDefined(options.type, form.data('type'), form.attr('method'), 'POST');
       csrf = form.data('csrf-token');
@@ -309,7 +305,6 @@ jQuery.fn.spiffy = function() {
         type: type,
         success: function(data, textStatus, jqXHR) {
           form.spiffy().enable().loading(loading, false);
-          validate.resetForm();
           if (options.success != null) {
             return options.success(form, data, textStatus, jqXHR);
           }
@@ -319,7 +314,6 @@ jQuery.fn.spiffy = function() {
             go(jqXHR.responseJSON.uri);
           }
           form.spiffy().enable().loading(loading, false);
-          validate.resetForm();
           if (options.error != null) {
             return options.error(form, jqXHR, textStatus, errorThrown);
           }
@@ -426,6 +420,18 @@ $(document).ready(function(e) {
     }
   });
   adjustColumns();
+  $('div.input').each(function() {
+    var div, input, label, span;
+    div = $(this);
+    input = div.find('input');
+    label = $(document.createElement('label'));
+    label.html(input.attr('placeholder'));
+    div.prepend(label);
+    span = $(document.createElement('span'));
+    span.addClass('bt-flabels__error-desc');
+    span.html('required');
+    div.append(span);
+  });
 });
 
 openModal = function(modal) {
@@ -604,4 +610,46 @@ $(window).on('beforeunload', function() {
     $(window).scrollTop(0);
   }
 });
+
+(function($) {
+  'use strict';
+  var floatingLabel;
+  floatingLabel = function(onload) {
+    var $input;
+    $input = $(this);
+    if (onload) {
+      $.each($('.input input'), function(index, value) {
+        var $current_input;
+        $current_input = $(value);
+        if ($current_input.val()) {
+          $current_input.closest('.input').addClass('bt-flabel__float');
+        }
+      });
+    }
+    setTimeout((function() {
+      if ($input.val()) {
+        $input.closest('.input').addClass('bt-flabel__float');
+      } else {
+        $input.closest('.input').removeClass('bt-flabel__float');
+      }
+    }), 1);
+  };
+  $('.input input').keydown(floatingLabel);
+  $('.input input').change(floatingLabel);
+  window.addEventListener('load', floatingLabel(true), false);
+  $('form').parsley().on('form:error', function() {
+    $.each(this.fields, function(key, field) {
+      if (field.validationResult !== true) {
+        field.$element.closest('.input').addClass('bt-flabels__error');
+      }
+    });
+  });
+  $('form').parsley().on('field:validated', function() {
+    if (this.validationResult === true) {
+      this.$element.closest('.input').removeClass('bt-flabels__error');
+    } else {
+      this.$element.closest('.input').addClass('bt-flabels__error');
+    }
+  });
+})(jQuery);
 
