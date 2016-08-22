@@ -21,7 +21,7 @@ import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class MemeController extends Controller {
 
     private final MediaClient mediaClient;
@@ -32,7 +32,8 @@ public class MemeController extends Controller {
             final @RequestParam String idempotentId) throws IOException {
         final byte[] macro = ImageUtil.macro(file.getBytes(), "", "make all the memes");
         final long mediaId = mediaClient.postMedia(idempotentId, MediaType.getEnum(file.getContentType()), macro);
+        final String url = mediaClient.getMedia(mediaId);
 
-        return new UploadResponse(ObfuscateUtil.obfuscate(mediaId));
+        return new UploadResponse(ObfuscateUtil.obfuscate(mediaId), url);
     }
 }
