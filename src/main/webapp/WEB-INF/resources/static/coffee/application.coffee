@@ -5,7 +5,7 @@
 Dropzone.options.dzForm = {
   paramName: 'file',
   maxFiles: 1,
-  maxFilesize: 20,
+  maxFilesize: 200,
   accept: (file, done) ->
     done()
     return

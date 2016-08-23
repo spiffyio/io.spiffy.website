@@ -357,7 +357,7 @@ var adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadP
 Dropzone.options.dzForm = {
   paramName: 'file',
   maxFiles: 1,
-  maxFilesize: 20,
+  maxFilesize: 200,
   accept: function(file, done) {
     done();
   },

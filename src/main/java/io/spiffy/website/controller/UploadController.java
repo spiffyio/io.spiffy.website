@@ -18,6 +18,7 @@ import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.util.ConverterUtil;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
@@ -42,8 +43,18 @@ public class UploadController extends Controller {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
             final @RequestParam String idempotentId) throws IOException {
+
         final long mediaId = mediaClient.postMedia(idempotentId, MediaType.getEnum(file.getContentType()), file.getBytes());
         final String url = mediaClient.getMedia(mediaId);
+
+        final MediaType mediaType = MediaType.getEnum(file.getContentType());
+        if (MediaType.GIF.equals(mediaType)) {
+            final byte[] webm = ConverterUtil.convertToWebM(file.getBytes(), "" + mediaId);
+            final long mediaId2 = mediaClient.postMedia(idempotentId, MediaType.WEBM, webm);
+            final String url2 = mediaClient.getMedia(mediaId2);
+            System.out.println(url2);
+        }
+
         return new UploadResponse(ObfuscateUtil.obfuscate(mediaId), url);
     }
 

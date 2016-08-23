@@ -11,8 +11,14 @@
   <s:idempotent />
 </form>
 
-<form class="submit full" action="/submit" data-name="submit" <s:csrf name="submit" /> hidden>
+<form class="submit full" action="/submit" data-name="submit" <s:csrf name="submit" />>
   <div class="input center"><input type="text" name="title" placeholder="title" required/></div>
+  
+  <video autoplay repeat>
+    <source src="//cdn-beta.spiffy.io/images/webms/KLtGGG.webm" type="video/webm">
+    <source src="//cdn-beta.spiffy.io/images/mp4s/FptGrM.mp4" type="video/mp4">
+  </video>
+  
   <img src="" />
   <input type="hidden" name="media" />
   <div class="input"><input type="text" name="description" placeholder="description"/></div>

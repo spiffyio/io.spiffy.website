@@ -23,6 +23,7 @@
   <resources mapping="/static/favicon/**" location="/WEB-INF/resources/static/favicon/" />
   <resources mapping="/static/js/**" location="/WEB-INF/resources/static/js/" />
   <resources mapping="/static/svg/**" location="/WEB-INF/resources/static/svg/" />
+  <resources mapping="/static/zip/**" location="/WEB-INF/resources/static/zip/" />
 
   <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
     <beans:property name="prefix" value="/WEB-INF/views/" />

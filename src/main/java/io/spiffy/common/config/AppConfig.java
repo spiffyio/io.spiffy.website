@@ -32,6 +32,9 @@ public class AppConfig {
     private static final String recaptchaSecretKey;
 
     @Getter
+    private static final String shell;
+
+    @Getter
     private static final String cdnEndpoint;
 
     @Getter
@@ -72,6 +75,7 @@ public class AppConfig {
         encryptionKey = System.getProperty("encryptionKey");
         encryptionIV = System.getProperty("encryptionInitVector");
         recaptchaSecretKey = System.getProperty("recaptchaSecretKey");
+        shell = System.getProperty("shell");
 
         if (LOCAL.equalsIgnoreCase(stage)) {
             cdnEndpoint = "//cdn-beta.spiffy.io";

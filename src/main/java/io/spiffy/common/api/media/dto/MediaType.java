@@ -1,7 +1,7 @@
 package io.spiffy.common.api.media.dto;
 
 public enum MediaType {
-    GIF, JPG, PNG;
+    GIF, JPG, PNG, MP4, WEBM;
 
     public static MediaType getEnum(final String value) {
         if (value == null) {
@@ -20,6 +20,16 @@ public enum MediaType {
             case "png":
             case "image/png":
                 return PNG;
+            case "mpeg":
+            case "mpeg4":
+            case "mp4":
+            case "video/mpeg":
+            case "video/mpeg4":
+            case "video/mp4":
+                return MP4;
+            case "webm":
+            case "video/webm":
+                return WEBM;
         }
 
         return null;
