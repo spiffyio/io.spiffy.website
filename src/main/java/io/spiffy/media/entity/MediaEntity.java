@@ -12,8 +12,9 @@ import io.spiffy.common.api.media.dto.MediaType;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "MEDIA_MEDIA", uniqueConstraints = { @UniqueConstraint(columnNames = { "idempotent_id", "archived_at" }),
-        @UniqueConstraint(columnNames = { "name", "archived_at" }) })
+@Table(name = "MEDIA_MEDIA", uniqueConstraints = {
+        @UniqueConstraint(columnNames = { "idempotent_id", "media_type", "archived_at" }),
+        @UniqueConstraint(columnNames = { "name", "media_type", "archived_at" }) })
 public class MediaEntity extends HibernateEntity {
     public static final int MIN_IDEMPOTENT_ID_LENGTH = 1;
     public static final int MAX_IDEMPOTENT_ID_LENGTH = 256;

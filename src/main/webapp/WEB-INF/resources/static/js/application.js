@@ -362,10 +362,42 @@ Dropzone.options.dzForm = {
     done();
   },
   success: function(file, response) {
-    var media;
+    var form, img, j, k, len, len1, media, preview, ref, ref1, source, type, video;
     $('#dz-form').slideUp();
-    $('form.submit').slideDown().find('img').attr('src', response.url);
-    media = $('form.submit').find('input[name="media"]');
+    form = $('form.submit');
+    preview = form.find('div.preview');
+    video = false;
+    ref = response.types;
+    for (j = 0, len = ref.length; j < len; j++) {
+      type = ref[j];
+      video = video || type.equalsIgnoreCase('MP4') || type.equalsIgnoreCase('WEBM');
+    }
+    if (video) {
+      video = $(document.createElement('video'));
+      video.attr('autoplay', true);
+      video.attr('loop', true);
+      ref1 = response.types;
+      for (k = 0, len1 = ref1.length; k < len1; k++) {
+        type = ref1[k];
+        if (type.equalsIgnoreCase('MP4' || type.equalsIgnoreCase('WEBM'))) {
+          source = $(document.createElement('source'));
+          source.attr('src', response.url + type.toLowerCase());
+          source.attr('type', 'video/' + type.toLowerCase());
+          video.append(source);
+        } else {
+          img = $(document.createElement('img'));
+          img.attr('src', response.url + type.toLowerCase());
+          video.append(img);
+        }
+      }
+      preview.prepend(video);
+    } else {
+      img = $(document.createElement('img'));
+      img.attr('src', response.url + response.types[0].toLowerCase());
+      preview.prepend(img);
+    }
+    form.slideDown();
+    media = form.find('input[name="media"]');
     if (media.val().length) {
       media.val(media.val() + ',' + response.id);
     } else {
@@ -527,15 +559,42 @@ load = function(json) {
 };
 
 loadPosts = function(posts) {
-  var col, footer, i, img, j, panel, post, ref;
+  var col, footer, i, img, j, k, l, len, len1, panel, post, ref, ref1, ref2, source, type, video;
   for (i = j = 0, ref = posts.length; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
     post = posts[i];
     panel = $(document.createElement('div'));
     panel.addClass('panel');
     panel.attr('data-post', post.postId);
-    img = $(document.createElement('img'));
-    img.attr('src', post.url);
-    panel.append(img);
+    video = false;
+    ref1 = post.types;
+    for (k = 0, len = ref1.length; k < len; k++) {
+      type = ref1[k];
+      video = video || type.equalsIgnoreCase('MP4') || type.equalsIgnoreCase('WEBM');
+    }
+    if (video) {
+      video = $(document.createElement('video'));
+      video.attr('autoplay', true);
+      video.attr('loop', true);
+      ref2 = post.types;
+      for (l = 0, len1 = ref2.length; l < len1; l++) {
+        type = ref2[l];
+        if (type.equalsIgnoreCase('MP4' || type.equalsIgnoreCase('WEBM'))) {
+          source = $(document.createElement('source'));
+          source.attr('src', post.url + type.toLowerCase());
+          source.attr('type', 'video/' + type.toLowerCase());
+          video.append(source);
+        } else {
+          img = $(document.createElement('img'));
+          img.attr('src', post.url + type.toLowerCase());
+          video.append(img);
+        }
+      }
+      panel.prepend(video);
+    } else {
+      img = $(document.createElement('img'));
+      img.attr('src', post.url + post.types[0].toLowerCase());
+      panel.prepend(img);
+    }
     footer = $(document.createElement('div'));
     footer.addClass('footer');
     footer.html(post.title);

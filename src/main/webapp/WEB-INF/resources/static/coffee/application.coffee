@@ -11,8 +11,32 @@ Dropzone.options.dzForm = {
     return
   success: (file, response) ->
     $('#dz-form').slideUp()
-    $('form.submit').slideDown().find('img').attr 'src', response.url
-    media = $('form.submit').find 'input[name="media"]'
+    form = $ 'form.submit'
+    preview = form.find 'div.preview'
+    video = false
+    for type in response.types
+      video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
+    if video
+      video = $ document.createElement 'video'
+      video.attr 'autoplay', true
+      video.attr 'loop', true
+      for type in response.types
+        if type.equalsIgnoreCase 'MP4' or type.equalsIgnoreCase 'WEBM'
+          source = $ document.createElement 'source'
+          source.attr 'src', response.url + type.toLowerCase()
+          source.attr 'type', 'video/' + type.toLowerCase()
+          video.append source
+        else
+          img = $ document.createElement 'img'
+          img.attr 'src', response.url + type.toLowerCase()
+          video.append img
+      preview.prepend video
+    else
+      img = $ document.createElement 'img'
+      img.attr 'src', response.url + response.types[0].toLowerCase()
+      preview.prepend img
+    form.slideDown()
+    media = form.find 'input[name="media"]'
     if media.val().length
       media.val media.val() + ',' + response.id
     else
@@ -94,7 +118,6 @@ $(document).ready (e) ->
       button.parent().parent().slideUp()
       return
 
-
   $('.close').click (e) ->
     closeModal()
     return
@@ -169,9 +192,28 @@ loadPosts = (posts) ->
     panel.addClass 'panel'
     panel.attr 'data-post', post.postId
 
-    img = $ document.createElement 'img'
-    img.attr 'src', post.url
-    panel.append img
+    video = false
+    for type in post.types
+      video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
+    if video
+      video = $ document.createElement 'video'
+      video.attr 'autoplay', true
+      video.attr 'loop', true
+      for type in post.types
+        if type.equalsIgnoreCase 'MP4' or type.equalsIgnoreCase 'WEBM'
+          source = $ document.createElement 'source'
+          source.attr 'src', post.url + type.toLowerCase()
+          source.attr 'type', 'video/' + type.toLowerCase()
+          video.append source
+        else
+          img = $ document.createElement 'img'
+          img.attr 'src', post.url + type.toLowerCase()
+          video.append img
+      panel.prepend video
+    else
+      img = $ document.createElement 'img'
+      img.attr 'src', post.url + post.types[0].toLowerCase()
+      panel.prepend img
 
     footer = $ document.createElement 'div'
     footer.addClass 'footer'

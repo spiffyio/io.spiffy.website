@@ -19,7 +19,7 @@ import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.PostsResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -31,6 +31,10 @@ public class HomeController extends Controller {
     @RequestMapping({ "/", "/stream" })
     public ModelAndView home(final Context context, final @RequestParam(required = false) String start) {
         final List<Post> posts = streamClient.getPosts(start == null ? null : ObfuscateUtil.unobfuscate(start), 24);
+        if (CollectionUtils.isEmpty(posts)) {
+            return mav("home", context);
+        }
+
         context.addAttribute(AFTER_KEY, posts.get(posts.size() - 1).getPostId());
         context.addAttribute(POSTS_KEY, posts);
 

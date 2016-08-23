@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
 import io.spiffy.common.api.media.client.MediaClient;
+import io.spiffy.common.api.media.input.GetMediaOutput;
 import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.api.stream.input.GetPostsInput;
 import io.spiffy.common.api.stream.output.GetPostsOutput;
@@ -34,10 +35,14 @@ public class GetPostsAPI extends API<GetPostsInput, GetPostsOutput, PostService>
         final List<PostEntity> entities = service.get(input.getFirst(), input.getMaxResults());
 
         final List<Post> posts = new ArrayList<>();
-        entities.forEach(e -> posts.add(
-                new Post(ObfuscateUtil.obfuscate(e.getId()), e.getAccountId(), e.getMediaId(), e.getTitle(), e.getDescription(),
-                        e.getPostedAt(), userClient.getAccount(e.getAccountId()), mediaClient.getMedia(e.getMediaId()))));
+        entities.forEach(e -> posts.add(transform(e)));
 
         return new GetPostsOutput(posts);
+    }
+
+    public Post transform(final PostEntity e) {
+        final GetMediaOutput media = mediaClient.getMedia(e.getMediaId());
+        return new Post(ObfuscateUtil.obfuscate(e.getId()), e.getAccountId(), e.getMediaId(), e.getTitle(), e.getDescription(),
+                e.getPostedAt(), userClient.getAccount(e.getAccountId()), media.getUrl(), media.getTypes());
     }
 }

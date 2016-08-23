@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
+
+import io.spiffy.common.api.media.dto.MediaType;
 
 @Data
 @Builder
@@ -20,4 +23,5 @@ public class Post {
     private Date postedAt;
     private String username;
     private String url;
+    private List<MediaType> types;
 }

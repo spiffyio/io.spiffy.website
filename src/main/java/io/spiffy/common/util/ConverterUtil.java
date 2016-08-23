@@ -1,5 +1,7 @@
 package io.spiffy.common.util;
 
+import lombok.Getter;
+
 import java.io.*;
 import java.nio.file.Files;
 import java.util.ArrayList;
@@ -14,10 +16,20 @@ public class ConverterUtil {
 
     private static final Logger logger = Logger.getLogger(ConverterUtil.class);
 
-    private ConverterUtil() {
+    @Getter
+    private enum Type {
+        MP4("mp4", MP4_TEMPLATE), WEBM("webm", WEBM_TEMPLATE);
+
+        private final String extension;
+        private final String template;
+
+        private Type(final String extension, final String template) {
+            this.extension = extension;
+            this.template = template;
+        }
     }
 
-    private static final String FLV_TEMPLATE = "ffmpeg -i %s.mp4 -c:v libx264 -ar 22050 -crf 28 -s 640x360 \"%s.flv\"";
+    private static final String MP4_TEMPLATE = "ffmpeg -i \"%s\" -c:v h264 -c:a aac \"%s\"";
     private static final String WEBM_TEMPLATE = "ffmpeg -i \"%s\" -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis \"%s\"";
 
     private static Boolean initialized = true;
@@ -43,27 +55,28 @@ public class ConverterUtil {
         }
     }
 
-    public static boolean convertToFLV(final String mp4) {
-        initialize();
-
-        run(String.format(FLV_TEMPLATE, mp4, mp4));
-        return true;
+    public static byte[] convertToMP4(final byte[] bytes, final String name) {
+        return convert(Type.MP4, bytes, name);
     }
 
     public static byte[] convertToWebM(final byte[] bytes, final String name) {
+        return convert(Type.WEBM, bytes, name);
+    }
+
+    private static byte[] convert(final Type type, final byte[] bytes, final String name) {
         initialize();
 
-        File mp4File = null;
+        File in = null;
         FileOutputStream fos = null;
         try {
-            mp4File = File.createTempFile(name, ".mp4");
-            if (mp4File.exists()) {
-                mp4File.delete();
+            in = File.createTempFile(name, ".in");
+            if (in.exists()) {
+                in.delete();
             }
-            fos = new FileOutputStream(mp4File);
+            fos = new FileOutputStream(in);
             fos.write(bytes);
         } catch (final IOException e) {
-            logger.warn("unable to save mp4: " + name);
+            logger.warn("unable to save in: " + name);
             return null;
         } finally {
             if (fos != null) {
@@ -74,27 +87,27 @@ public class ConverterUtil {
             }
         }
 
-        if (mp4File.getAbsolutePath() == null) {
+        if (in.getAbsolutePath() == null) {
             return null;
         }
 
-        File webmFile = null;
+        File out = null;
         try {
-            webmFile = File.createTempFile(name, ".webm");
-            if (webmFile.exists()) {
-                webmFile.delete();
+            out = File.createTempFile(name, "." + type.getExtension());
+            if (out.exists()) {
+                out.delete();
             }
-            run(String.format(WEBM_TEMPLATE, mp4File.getAbsolutePath(), webmFile.getAbsolutePath()));
-            return Files.readAllBytes(webmFile.toPath());
+            run(String.format(type.getTemplate(), in.getAbsolutePath(), out.getAbsolutePath()));
+            return Files.readAllBytes(out.toPath());
         } catch (final IOException e) {
-            logger.warn("unable to save webm: " + name);
+            logger.warn("unable to save out: " + name);
             return null;
         } finally {
-            if (mp4File != null && mp4File.exists()) {
-                mp4File.delete();
+            if (in != null && in.exists()) {
+                in.delete();
             }
-            if (webmFile != null && webmFile.exists()) {
-                webmFile.delete();
+            if (out != null && out.exists()) {
+                out.delete();
             }
         }
     }

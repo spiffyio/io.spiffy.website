@@ -13,17 +13,16 @@ import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.media.input.GetMediaOutput;
 import io.spiffy.common.api.media.input.PostMediaInput;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class MediaClient extends Client {
 
     private final GetMediaCall getMediaCall;
     private final PostMediaCall postMediaCall;
 
-    public String getMedia(final long id) {
+    public GetMediaOutput getMedia(final long id) {
         final GetInput input = new GetInput(id);
         final GetMediaOutput output = getMediaCall.call(input);
-
-        return output.getUrl();
+        return output;
     }
 
     public long postMedia(final String idempotentId, final MediaType type, final byte[] value) {
