@@ -6,12 +6,13 @@
 <div class="col ${ param.visibility }">
   <c:forEach var="post" items="${ posts }" begin="${ param.begin }" step="${ param.step }">
   <div class="panel" data-post="<c:out value="${ post.postId }" />">
+    <c:set var="video" value="false" />
     <c:forEach var="type" items="${ post.types }">
       <c:set var="type" value="${ fn:toLowerCase(type) }" />
       <c:set var="video" value="${ video or (type eq 'mp4') or (type eq 'webm')}" />
     </c:forEach>
     <c:if test="${ video }">
-    <video autoplay loop>
+    <video loop muted>
     <c:forEach var="type" items="${ post.types }">
       <c:set var="type" value="${ fn:toLowerCase(type) }" />
       <c:if test="${ (type eq 'mp4') or (type eq 'webm')}">

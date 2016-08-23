@@ -18,7 +18,7 @@ Dropzone.options.dzForm = {
       video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
     if video
       video = $ document.createElement 'video'
-      video.attr 'autoplay', true
+      video.attr 'muted', true
       video.attr 'loop', true
       for type in response.types
         if type.equalsIgnoreCase 'MP4' or type.equalsIgnoreCase 'WEBM'
@@ -126,6 +126,15 @@ $(document).ready (e) ->
     if $(e.target).hasClass 'modal-overlay' then closeModal()
     return
 
+  $('video').each () ->
+    video = $ this
+    if video.is ':in-viewport'
+      if video[0].paused
+        video[0].play()
+    else
+      video[0].pause()
+    return
+
   adjustColumns()
 
   $('div.input').each () ->
@@ -197,7 +206,7 @@ loadPosts = (posts) ->
       video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
     if video
       video = $ document.createElement 'video'
-      video.attr 'autoplay', true
+      video.attr 'muted', true
       video.attr 'loop', true
       for type in post.types
         if type.equalsIgnoreCase 'MP4' or type.equalsIgnoreCase 'WEBM'
@@ -288,6 +297,17 @@ $(window).resize (e) ->
   if (width < window.pWidth) and (width < Width.xl)
     emptyColumn 2
   window.pWidth = width
+  return
+
+$(window).scroll (e) ->
+  $('video').each () ->
+    video = $ this
+    if video.is ':in-viewport'
+      if video[0].paused
+        video[0].play()
+    else
+      video[0].pause()
+    return
   return
 
 $(window).scroll (e) ->

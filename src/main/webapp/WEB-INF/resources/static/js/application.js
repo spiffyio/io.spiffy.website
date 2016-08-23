@@ -374,7 +374,7 @@ Dropzone.options.dzForm = {
     }
     if (video) {
       video = $(document.createElement('video'));
-      video.attr('autoplay', true);
+      video.attr('muted', true);
       video.attr('loop', true);
       ref1 = response.types;
       for (k = 0, len1 = ref1.length; k < len1; k++) {
@@ -495,6 +495,17 @@ $(document).ready(function(e) {
       closeModal();
     }
   });
+  $('video').each(function() {
+    var video;
+    video = $(this);
+    if (video.is(':in-viewport')) {
+      if (video[0].paused) {
+        video[0].play();
+      }
+    } else {
+      video[0].pause();
+    }
+  });
   adjustColumns();
   $('div.input').each(function() {
     var div, input, label, span;
@@ -573,7 +584,7 @@ loadPosts = function(posts) {
     }
     if (video) {
       video = $(document.createElement('video'));
-      video.attr('autoplay', true);
+      video.attr('muted', true);
       video.attr('loop', true);
       ref2 = post.types;
       for (l = 0, len1 = ref2.length; l < len1; l++) {
@@ -687,6 +698,20 @@ $(window).resize(function(e) {
     emptyColumn(2);
   }
   window.pWidth = width;
+});
+
+$(window).scroll(function(e) {
+  $('video').each(function() {
+    var video;
+    video = $(this);
+    if (video.is(':in-viewport')) {
+      if (video[0].paused) {
+        video[0].play();
+      }
+    } else {
+      video[0].pause();
+    }
+  });
 });
 
 $(window).scroll(function(e) {

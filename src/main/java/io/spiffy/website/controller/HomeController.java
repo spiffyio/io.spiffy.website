@@ -61,4 +61,10 @@ public class HomeController extends Controller {
 
         return new PostsResponse(posts, posts.get(posts.size() - 1).getPostId());
     }
+
+    @RequestMapping(value = "/posts", method = RequestMethod.GET)
+    public ModelAndView postsGet(final Context context, final @RequestParam(required = false) String after,
+            final @RequestParam(defaultValue = "24") int quantity) {
+        return redirect("/stream?start=" + after, context);
+    }
 }

@@ -48,7 +48,7 @@ public class ConverterUtil {
                 }
             }
 
-            run("wget \"https:" + AppConfig.getCdnEndpoint() + "/static/zip/ffmpeg.zip\" -O \"ffmpeg.zip\"");
+            run("wget \"https:" + AppConfig.getCdnEndpoint() + "/static/zip/ffmpeg.zip?v=3\" -O \"ffmpeg.zip\"");
             run("unzip \"ffmpeg.zip\"");
             run("rm -f \"ffmpeg.zip\"");
             initialized = true;
@@ -138,7 +138,6 @@ public class ConverterUtil {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
                 output.add(line);
             }
 
