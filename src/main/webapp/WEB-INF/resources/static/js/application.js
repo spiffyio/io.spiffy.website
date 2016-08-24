@@ -726,16 +726,20 @@ $(window).resize(function(e) {
 
 $(window).scroll(function(e) {
   $('video').each(function() {
-    var video;
+    var source, top, video;
     video = $(this);
-    if ((!video.is(':in-viewport')) || (!video.is(':in-viewport(' + (video[0].getBoundingClientRect().bottom - video[0].getBoundingClientRect().top) + ')'))) {
+    top = video[0].getBoundingClientRect().top;
+    source = video.parents('.panel:first').find('.source');
+    if ((top < 75) || (!video.is(':in-viewport')) || (!source.is(':in-viewport'))) {
       if (!video[0].paused) {
         video[0].pause();
         video.parents('div.video:first').addClass('paused');
       }
     } else if (video[0].paused) {
       video[0].play();
-      video.parents('div.video:first').removeClass('paused');
+      if (!video[0].paused) {
+        video.parents('div.video:first').removeClass('paused');
+      }
     }
   });
 });

@@ -325,13 +325,15 @@ $(window).resize (e) ->
 $(window).scroll (e) ->
   $('video').each () ->
     video = $ this
-    if (not video.is ':in-viewport') or (not video.is ':in-viewport(' + (video[0].getBoundingClientRect().bottom - video[0].getBoundingClientRect().top) + ')')
+    top = video[0].getBoundingClientRect().top
+    source = video.parents('.panel:first').find '.source'
+    if (top < 75) or (not video.is ':in-viewport') or (not source.is ':in-viewport')
       if not video[0].paused
         video[0].pause()
         video.parents('div.video:first').addClass 'paused'
     else if video[0].paused
       video[0].play()
-      video.parents('div.video:first').removeClass 'paused'
+      if not video[0].paused then video.parents('div.video:first').removeClass 'paused'
     return
   return
 
