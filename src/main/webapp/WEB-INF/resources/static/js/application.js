@@ -429,9 +429,7 @@ $(document).ready(function(e) {
   $('[data-uri]').click(function(e) {
     go($(this).data('uri'));
   });
-  $('[data-post]').click(function(e) {
-    go('/stream/' + $(this).data('post'));
-  });
+  $('[data-post]').click(function(e) {});
   if ($('input[name="fingerprint"]')) {
     hash = fingerprint();
     if (hash != null) {
@@ -495,13 +493,12 @@ $(document).ready(function(e) {
       closeModal();
     }
   });
-  $('video').each(function() {
+  $('video').click(function(e) {
     var video;
+    preventDefault(e);
     video = $(this);
-    if (video.is(':in-viewport')) {
-      if (video[0].paused) {
-        video[0].play();
-      }
+    if (video[0].paused) {
+      video[0].play();
     } else {
       video[0].pause();
     }

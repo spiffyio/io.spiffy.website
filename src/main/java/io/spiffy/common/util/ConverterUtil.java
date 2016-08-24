@@ -18,7 +18,7 @@ public class ConverterUtil {
 
     @Getter
     private enum Type {
-        MP4("mp4", MP4_TEMPLATE), WEBM("webm", WEBM_TEMPLATE);
+        MP4("mp4", MP4_TEMPLATE), WEBM("webm", WEBM_TEMPLATE), PNG("png", PNG_TEMPLATE);
 
         private final String extension;
         private final String template;
@@ -31,6 +31,7 @@ public class ConverterUtil {
 
     private static final String MP4_TEMPLATE = "ffmpeg -i \"%s\" -c:v h264 -c:a aac \"%s\"";
     private static final String WEBM_TEMPLATE = "ffmpeg -i \"%s\" -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis \"%s\"";
+    private static final String PNG_TEMPLATE = "ffmpeg -i \"%s\" -ss 00:00:00.000 -vframes 1 \"%s\"";
 
     private static Boolean initialized = true;
 
@@ -61,6 +62,10 @@ public class ConverterUtil {
 
     public static byte[] convertToWebM(final byte[] bytes, final String name) {
         return convert(Type.WEBM, bytes, name);
+    }
+
+    public static byte[] convertToPNG(final byte[] bytes, final String name) {
+        return convert(Type.PNG, bytes, name);
     }
 
     private static byte[] convert(final Type type, final byte[] bytes, final String name) {

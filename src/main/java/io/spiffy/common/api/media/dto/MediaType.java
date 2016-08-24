@@ -6,11 +6,11 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Getter
 public enum MediaType {
-    GIF("image", "gif", 3), //
+    GIF("image", "gif", 4), //
     JPG("image", "jpg", 1), //
     PNG("image", "png", 1), //
     MP4("video", "mp4", 2), //
-    WEBM("video", "webm", 1);
+    WEBM("video", "webm", 3);
 
     private final String type;
     private final String subtype;

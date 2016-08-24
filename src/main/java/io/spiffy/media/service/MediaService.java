@@ -80,6 +80,12 @@ public class MediaService extends Service<MediaEntity, MediaRepository> {
 
         final String name = entity.getName();
 
+        if (MediaType.GIF.equals(type) || MediaType.MP4.equals(type) || MediaType.MP4.equals(type)) {
+            if (getByNameAndExtension(name, MediaType.PNG) == null) {
+                post(idempotentId, MediaType.PNG, ConverterUtil.convertToPNG(value, name), name);
+            }
+        }
+
         if (MediaType.GIF.equals(type) || MediaType.MP4.equals(type)) {
             if (getByNameAndExtension(name, MediaType.WEBM) == null) {
                 post(idempotentId, MediaType.WEBM, ConverterUtil.convertToWebM(value, name), name);

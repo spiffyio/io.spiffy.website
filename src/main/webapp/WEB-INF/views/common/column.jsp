@@ -12,13 +12,15 @@
       <c:set var="video" value="${ video or (type eq 'mp4') or (type eq 'webm')}" />
     </c:forEach>
     <c:if test="${ video }">
-    <video loop muted>
+    <c:set var="type" value="${ post.types[0] }" />
+    <c:set var="type" value="${ fn:toLowerCase(type) }" />
+    <video loop muted <c:if test="${ type eq 'png' }">poster="<c:out value="${ post.url }" /><c:out value="${ type }" />"</c:if>>
     <c:forEach var="type" items="${ post.types }">
       <c:set var="type" value="${ fn:toLowerCase(type) }" />
       <c:if test="${ (type eq 'mp4') or (type eq 'webm')}">
       <source src="<c:out value="${ post.url }" /><c:out value="${ type }" />" type="video/<c:out value="${ type }" />" />
       </c:if>
-      <c:if test="${ (type ne 'mp4') and (type ne 'webm')}">
+      <c:if test="${ type eq 'gif' }">
       <img src="<c:out value="${ post.url }" /><c:out value="${ type }" />" />
       </c:if>
     </c:forEach>

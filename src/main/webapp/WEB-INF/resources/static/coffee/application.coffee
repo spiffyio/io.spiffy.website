@@ -68,7 +68,7 @@ $(document).ready (e) ->
     return
 
   $('[data-post]').click (e) ->
-    go '/stream/' + $(this).data('post')
+    #go '/stream/' + $(this).data('post')
     return
 
   if $('input[name="fingerprint"]')
@@ -126,11 +126,11 @@ $(document).ready (e) ->
     if $(e.target).hasClass 'modal-overlay' then closeModal()
     return
 
-  $('video').each () ->
+  $('video').click (e) ->
+    preventDefault e
     video = $ this
-    if video.is ':in-viewport'
-      if video[0].paused
-        video[0].play()
+    if video[0].paused
+      video[0].play()
     else
       video[0].pause()
     return
