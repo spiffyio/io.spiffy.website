@@ -67,7 +67,7 @@ $(document).ready (e) ->
     go $(this).data('uri')
     return
 
-  $('[data-post]').click (e) ->
+  $(document).on 'click', '[data-post]', (e) ->
     #go '/stream/' + $(this).data('post')
     return
 
@@ -130,11 +130,10 @@ $(document).ready (e) ->
     video = $ this
     if video[0].paused
       video[0].play()
-      video.parents('div.gif:first').removeClass 'paused'
+      video.parents('div.video:first').removeClass 'paused'
     else
-      console.log 'not paused?'
       video[0].pause()
-      video.parents('div.gif:first').addClass 'paused'
+      video.parents('div.video:first').addClass 'paused'
     return
 
   adjustColumns()
@@ -184,10 +183,6 @@ fingerprint = () ->
 load = (json) ->
   loadPosts json.posts
 
-  $('[data-post]').click (e) ->
-    go '/stream/' + $(this).data('post')
-    return
-
   start = $('form.load-posts').find('input[name="after"]').val()
 
   $('form.load-posts').find('input[name="after"]').val json.next
@@ -207,19 +202,21 @@ loadPosts = (posts) ->
     for type in post.types
       video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
     if video
-      panel.addClass 'gif'
+      panel.addClass 'video'
       panel.addClass 'paused'
       video = $ document.createElement 'video'
       video.attr 'muted', true
       video.attr 'loop', true
       video.attr 'preload', 'none'
+      if post.types[0].equalsIgnoreCase 'PNG'
+        video.attr 'poster', post.url + post.types[0].toLowerCase()
       for type in post.types
         if type.equalsIgnoreCase 'MP4' or type.equalsIgnoreCase 'WEBM'
           source = $ document.createElement 'source'
           source.attr 'src', post.url + type.toLowerCase()
           source.attr 'type', 'video/' + type.toLowerCase()
           video.append source
-        else
+        else if type.equalsIgnoreCase 'GIF'
           img = $ document.createElement 'img'
           img.attr 'data-src', post.url + type.toLowerCase()
           video.append img
@@ -309,7 +306,7 @@ $(window).scroll (e) ->
     video = $ this
     if not video.is ':in-viewport'
       video[0].pause()
-      video.parents('div.gif:first').addClass 'paused'
+      video.parents('div.video:first').addClass 'paused'
     return
   return
 
@@ -322,8 +319,8 @@ $(window).scroll (e) ->
   $('div.col').each () ->
     col = $(this)
     panel = col.find('div.panel:last')
-    if (not panel?) or (not panel.offset()?) then return
-    if panel.offset().top - panel.height() < $(window).scrollTop()
+    if not panel? then return
+    if panel.is ':in-viewport'
       $('form.load-posts').submit()
     return
   return

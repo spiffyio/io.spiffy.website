@@ -10,7 +10,7 @@
     <c:set var="type" value="${ fn:toLowerCase(type) }" />
     <c:set var="video" value="${ video or (type eq 'mp4') or (type eq 'webm')}" />
   </c:forEach>
-  <div class="panel <c:if test="${ video }">gif paused</c:if>" data-post="<c:out value="${ post.postId }" />">
+  <div class="panel <c:if test="${ video }">video paused</c:if>" data-post="<c:out value="${ post.postId }" />">
     <c:if test="${ video }">
     <c:set var="type" value="${ post.types[0] }" />
     <c:set var="type" value="${ fn:toLowerCase(type) }" />

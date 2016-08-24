@@ -304,7 +304,7 @@ div.g-recaptcha {
   background-color: #f9f9f9;
 }
 
-div.gif.paused:before {
+div.video.paused:before {
   height: calc(90% - 0.5em);
   width: calc(90% - 0.5em);
   position: absolute;
@@ -315,7 +315,7 @@ div.gif.paused:before {
   pointer-events: none;
 }
 
-div.gif.paused:after {
+div.video.paused:after {
   height: 4em;
   width: 4em;
   position: absolute;
@@ -323,9 +323,9 @@ div.gif.paused:after {
   left: calc(50% - 2em);
   text-align: center;
   content: '';
-  background-image: url("/static/svg/gif.svg");
+  background-image: url("//cdn-beta.spiffy.io/static/svg/play.svg");
   opacity: 0.5;
-  cursor: pointer;
+  pointer-events: none;
 }
 
 div.disabled:before {

@@ -267,7 +267,7 @@ div.g-recaptcha
   display: block
   background-color: rgb(249, 249, 249)
 
-div.gif.paused:before
+div.video.paused:before
   +size(calc(90% - 0.5em), calc(90% - 0.5em))
   position: absolute
   top: 5%
@@ -276,16 +276,16 @@ div.gif.paused:before
   border: 0.25em dashed $w1
   pointer-events: none
 
-div.gif.paused:after
+div.video.paused:after
   +size(4em, 4em)
   position: absolute
   top: calc(50% - 2em)
   left: calc(50% - 2em)
   text-align: center
   content: ''
-  background-image: url('/static/svg/gif.svg')
+  background-image: url('//cdn-beta.spiffy.io/static/svg/play.svg')
   opacity: 0.5
-  cursor: pointer
+  pointer-events: none
 
 div.disabled:before
   +size(100%, 100%)

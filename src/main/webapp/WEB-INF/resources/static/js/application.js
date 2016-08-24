@@ -429,7 +429,7 @@ $(document).ready(function(e) {
   $('[data-uri]').click(function(e) {
     go($(this).data('uri'));
   });
-  $('[data-post]').click(function(e) {});
+  $(document).on('click', '[data-post]', function(e) {});
   if ($('input[name="fingerprint"]')) {
     hash = fingerprint();
     if (hash != null) {
@@ -498,11 +498,10 @@ $(document).ready(function(e) {
     video = $(this);
     if (video[0].paused) {
       video[0].play();
-      video.parents('div.gif:first').removeClass('paused');
+      video.parents('div.video:first').removeClass('paused');
     } else {
-      console.log('not paused?');
       video[0].pause();
-      video.parents('div.gif:first').addClass('paused');
+      video.parents('div.video:first').addClass('paused');
     }
   });
   adjustColumns();
@@ -559,9 +558,6 @@ fingerprint = function() {
 load = function(json) {
   var start;
   loadPosts(json.posts);
-  $('[data-post]').click(function(e) {
-    go('/stream/' + $(this).data('post'));
-  });
   start = $('form.load-posts').find('input[name="after"]').val();
   $('form.load-posts').find('input[name="after"]').val(json.next);
   adjustColumns();
@@ -582,12 +578,15 @@ loadPosts = function(posts) {
       video = video || type.equalsIgnoreCase('MP4') || type.equalsIgnoreCase('WEBM');
     }
     if (video) {
-      panel.addClass('gif');
+      panel.addClass('video');
       panel.addClass('paused');
       video = $(document.createElement('video'));
       video.attr('muted', true);
       video.attr('loop', true);
       video.attr('preload', 'none');
+      if (post.types[0].equalsIgnoreCase('PNG')) {
+        video.attr('poster', post.url + post.types[0].toLowerCase());
+      }
       ref2 = post.types;
       for (l = 0, len1 = ref2.length; l < len1; l++) {
         type = ref2[l];
@@ -596,7 +595,7 @@ loadPosts = function(posts) {
           source.attr('src', post.url + type.toLowerCase());
           source.attr('type', 'video/' + type.toLowerCase());
           video.append(source);
-        } else {
+        } else if (type.equalsIgnoreCase('GIF')) {
           img = $(document.createElement('img'));
           img.attr('data-src', post.url + type.toLowerCase());
           video.append(img);
@@ -708,7 +707,7 @@ $(window).scroll(function(e) {
     video = $(this);
     if (!video.is(':in-viewport')) {
       video[0].pause();
-      video.parents('div.gif:first').addClass('paused');
+      video.parents('div.video:first').addClass('paused');
     }
   });
 });
@@ -723,10 +722,10 @@ $(window).scroll(function(e) {
     var col, panel;
     col = $(this);
     panel = col.find('div.panel:last');
-    if ((panel == null) || (panel.offset() == null)) {
+    if (panel == null) {
       return;
     }
-    if (panel.offset().top - panel.height() < $(window).scrollTop()) {
+    if (panel.is(':in-viewport')) {
       $('form.load-posts').submit();
     }
   });
