@@ -592,6 +592,7 @@ div.disabled:before {
   width: 100%;
   margin: 0;
   display: initial;
+  border: none;
 }
 
 .grid .col .panel div.source {
@@ -601,6 +602,8 @@ div.disabled:before {
   font-weight: bold;
   line-height: 3em;
   text-align: center;
+  max-width: 100%;
+  overflow: hidden;
 }
 
 .panel img, .panel video, .panel ins {

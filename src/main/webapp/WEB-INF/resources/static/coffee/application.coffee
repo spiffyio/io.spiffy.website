@@ -67,10 +67,6 @@ $(document).ready (e) ->
     go $(this).data('uri')
     return
 
-  $(document).on 'click', '[data-post]', (e) ->
-    #go '/stream/' + $(this).data('post')
-    return
-
   if $('input[name="fingerprint"]')
     hash = fingerprint()
     if hash?
@@ -195,7 +191,6 @@ load = (json) ->
   loadPosts json.posts
 
   start = $('form.load-posts').find('input[name="after"]').val()
-
   $('form.load-posts').find('input[name="after"]').val json.next
   history.replaceState json, 'SPIFFY.io', '/stream?start=' + start
   return
@@ -210,8 +205,6 @@ loadPosts = (posts) ->
     for type in post.types
       video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
     if video
-      panel.addClass 'video'
-      panel.addClass 'paused'
       video = $ document.createElement 'video'
       video.attr 'muted', true
       video.attr 'loop', true
@@ -228,7 +221,11 @@ loadPosts = (posts) ->
           img = $ document.createElement 'img'
           img.attr 'data-src', post.url + type.toLowerCase()
           video.append img
-      panel.prepend video
+      div = $ document.createElement 'div'
+      div.addClass 'video'
+      div.addClass 'paused'
+      div.append video
+      panel.prepend div
     else
       img = $ document.createElement 'img'
       img.attr 'src', post.url + post.types[0].toLowerCase()

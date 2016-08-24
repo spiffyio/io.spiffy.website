@@ -429,7 +429,6 @@ $(document).ready(function(e) {
   $('[data-uri]').click(function(e) {
     go($(this).data('uri'));
   });
-  $(document).on('click', '[data-post]', function(e) {});
   if ($('input[name="fingerprint"]')) {
     hash = fingerprint();
     if (hash != null) {
@@ -577,7 +576,7 @@ load = function(json) {
 };
 
 loadPosts = function(posts) {
-  var col, cols, i, img, index, j, k, l, last, len, len1, link, panel, post, ref, ref1, ref2, source, type, video;
+  var col, cols, div, i, img, index, j, k, l, last, len, len1, link, panel, post, ref, ref1, ref2, source, type, video;
   for (i = j = 0, ref = posts.length; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
     post = posts[i];
     panel = $(document.createElement('div'));
@@ -589,8 +588,6 @@ loadPosts = function(posts) {
       video = video || type.equalsIgnoreCase('MP4') || type.equalsIgnoreCase('WEBM');
     }
     if (video) {
-      panel.addClass('video');
-      panel.addClass('paused');
       video = $(document.createElement('video'));
       video.attr('muted', true);
       video.attr('loop', true);
@@ -612,7 +609,11 @@ loadPosts = function(posts) {
           video.append(img);
         }
       }
-      panel.prepend(video);
+      div = $(document.createElement('div'));
+      div.addClass('video');
+      div.addClass('paused');
+      div.append(video);
+      panel.prepend(div);
     } else {
       img = $(document.createElement('img'));
       img.attr('src', post.url + post.types[0].toLowerCase());
