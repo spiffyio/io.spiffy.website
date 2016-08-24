@@ -5,32 +5,32 @@
 
 <div class="col ${ param.visibility }">
   <c:forEach var="post" items="${ posts }" begin="${ param.begin }" step="${ param.step }">
-  <div class="panel" data-post="<c:out value="${ post.postId }" />">
-    <c:set var="video" value="false" />
-    <c:forEach var="type" items="${ post.types }">
-      <c:set var="type" value="${ fn:toLowerCase(type) }" />
-      <c:set var="video" value="${ video or (type eq 'mp4') or (type eq 'webm')}" />
-    </c:forEach>
+  <c:set var="video" value="false" />
+  <c:forEach var="type" items="${ post.types }">
+    <c:set var="type" value="${ fn:toLowerCase(type) }" />
+    <c:set var="video" value="${ video or (type eq 'mp4') or (type eq 'webm')}" />
+  </c:forEach>
+  <div class="panel <c:if test="${ video }">gif paused</c:if>" data-post="<c:out value="${ post.postId }" />">
     <c:if test="${ video }">
     <c:set var="type" value="${ post.types[0] }" />
     <c:set var="type" value="${ fn:toLowerCase(type) }" />
-    <video loop muted <c:if test="${ type eq 'png' }">poster="<c:out value="${ post.url }" /><c:out value="${ type }" />"</c:if>>
+    <video loop muted preload="none" <c:if test="${ type eq 'png' }">poster="<c:out value="${ post.url }" /><c:out value="${ type }" />"</c:if>>
     <c:forEach var="type" items="${ post.types }">
       <c:set var="type" value="${ fn:toLowerCase(type) }" />
       <c:if test="${ (type eq 'mp4') or (type eq 'webm')}">
       <source src="<c:out value="${ post.url }" /><c:out value="${ type }" />" type="video/<c:out value="${ type }" />" />
       </c:if>
       <c:if test="${ type eq 'gif' }">
-      <img src="<c:out value="${ post.url }" /><c:out value="${ type }" />" />
+      <img data-src="<c:out value="${ post.url }" /><c:out value="${ type }" />" />
       </c:if>
     </c:forEach>
     </video>
     </c:if>
     <c:if test="${ not video }">
-      <c:set var="type" value="${ fn:toLowerCase(post.types[0]) }" />
+    <c:set var="type" value="${ fn:toLowerCase(post.types[0]) }" />
     <img src="<c:out value="${ post.url }" /><c:out value="${ type }" />" />
-    </c:if>
     <div class="footer"><c:out value="${ post.title }" /></div>
+    </c:if>
   </div>
   </c:forEach>
 </div>

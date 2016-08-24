@@ -493,14 +493,16 @@ $(document).ready(function(e) {
       closeModal();
     }
   });
-  $('video').click(function(e) {
+  $(document).on('click', 'video', function(e) {
     var video;
-    preventDefault(e);
     video = $(this);
     if (video[0].paused) {
       video[0].play();
+      video.parents('div.gif:first').removeClass('paused');
     } else {
+      console.log('not paused?');
       video[0].pause();
+      video.parents('div.gif:first').addClass('paused');
     }
   });
   adjustColumns();
@@ -580,9 +582,12 @@ loadPosts = function(posts) {
       video = video || type.equalsIgnoreCase('MP4') || type.equalsIgnoreCase('WEBM');
     }
     if (video) {
+      panel.addClass('gif');
+      panel.addClass('paused');
       video = $(document.createElement('video'));
       video.attr('muted', true);
       video.attr('loop', true);
+      video.attr('preload', 'none');
       ref2 = post.types;
       for (l = 0, len1 = ref2.length; l < len1; l++) {
         type = ref2[l];
@@ -593,7 +598,7 @@ loadPosts = function(posts) {
           video.append(source);
         } else {
           img = $(document.createElement('img'));
-          img.attr('src', post.url + type.toLowerCase());
+          img.attr('data-src', post.url + type.toLowerCase());
           video.append(img);
         }
       }
@@ -701,12 +706,9 @@ $(window).scroll(function(e) {
   $('video').each(function() {
     var video;
     video = $(this);
-    if (video.is(':in-viewport')) {
-      if (video[0].paused) {
-        video[0].play();
-      }
-    } else {
+    if (!video.is(':in-viewport')) {
       video[0].pause();
+      video.parents('div.gif:first').addClass('paused');
     }
   });
 });

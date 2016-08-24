@@ -267,6 +267,26 @@ div.g-recaptcha
   display: block
   background-color: rgb(249, 249, 249)
 
+div.gif.paused:before
+  +size(calc(90% - 0.5em), calc(90% - 0.5em))
+  position: absolute
+  top: 5%
+  left: 5%
+  content: ''
+  border: 0.25em dashed $w1
+  pointer-events: none
+
+div.gif.paused:after
+  +size(4em, 4em)
+  position: absolute
+  top: calc(50% - 2em)
+  left: calc(50% - 2em)
+  text-align: center
+  content: ''
+  background-image: url('/static/svg/gif.svg')
+  opacity: 0.5
+  cursor: pointer
+
 div.disabled:before
   +size(100%, 100%)
   padding: 0 1px
@@ -473,6 +493,7 @@ div.disabled:before
     background: linear-gradient(to bottom, rgba(44, 44, 44, 0), rgba(44, 44, 44, 1))
     color: $w1
     font-weight: bold
+    pointer-events: none
 
   .footer
     opacity: 0.5

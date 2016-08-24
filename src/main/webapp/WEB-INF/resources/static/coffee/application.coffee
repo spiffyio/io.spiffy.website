@@ -126,13 +126,15 @@ $(document).ready (e) ->
     if $(e.target).hasClass 'modal-overlay' then closeModal()
     return
 
-  $('video').click (e) ->
-    preventDefault e
+  $(document).on 'click', 'video', (e) ->
     video = $ this
     if video[0].paused
       video[0].play()
+      video.parents('div.gif:first').removeClass 'paused'
     else
+      console.log 'not paused?'
       video[0].pause()
+      video.parents('div.gif:first').addClass 'paused'
     return
 
   adjustColumns()
@@ -205,9 +207,12 @@ loadPosts = (posts) ->
     for type in post.types
       video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
     if video
+      panel.addClass 'gif'
+      panel.addClass 'paused'
       video = $ document.createElement 'video'
       video.attr 'muted', true
       video.attr 'loop', true
+      video.attr 'preload', 'none'
       for type in post.types
         if type.equalsIgnoreCase 'MP4' or type.equalsIgnoreCase 'WEBM'
           source = $ document.createElement 'source'
@@ -216,7 +221,7 @@ loadPosts = (posts) ->
           video.append source
         else
           img = $ document.createElement 'img'
-          img.attr 'src', post.url + type.toLowerCase()
+          img.attr 'data-src', post.url + type.toLowerCase()
           video.append img
       panel.prepend video
     else
@@ -302,11 +307,9 @@ $(window).resize (e) ->
 $(window).scroll (e) ->
   $('video').each () ->
     video = $ this
-    if video.is ':in-viewport'
-      if video[0].paused
-        video[0].play()
-    else
+    if not video.is ':in-viewport'
       video[0].pause()
+      video.parents('div.gif:first').addClass 'paused'
     return
   return
 

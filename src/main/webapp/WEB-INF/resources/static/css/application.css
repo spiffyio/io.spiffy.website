@@ -304,6 +304,30 @@ div.g-recaptcha {
   background-color: #f9f9f9;
 }
 
+div.gif.paused:before {
+  height: calc(90% - 0.5em);
+  width: calc(90% - 0.5em);
+  position: absolute;
+  top: 5%;
+  left: 5%;
+  content: '';
+  border: 0.25em dashed #F5F5F5;
+  pointer-events: none;
+}
+
+div.gif.paused:after {
+  height: 4em;
+  width: 4em;
+  position: absolute;
+  top: calc(50% - 2em);
+  left: calc(50% - 2em);
+  text-align: center;
+  content: '';
+  background-image: url("/static/svg/gif.svg");
+  opacity: 0.5;
+  cursor: pointer;
+}
+
 div.disabled:before {
   height: 100%;
   width: 100%;
@@ -577,6 +601,7 @@ div.disabled:before {
   background: linear-gradient(to bottom, rgba(44, 44, 44, 0), #2c2c2c);
   color: #F5F5F5;
   font-weight: bold;
+  pointer-events: none;
 }
 
 .grid .col .panel .footer {

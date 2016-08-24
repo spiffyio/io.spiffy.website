@@ -30,7 +30,7 @@ public class HomeController extends Controller {
 
     @RequestMapping({ "/", "/stream" })
     public ModelAndView home(final Context context, final @RequestParam(required = false) String start) {
-        final List<Post> posts = streamClient.getPosts(start == null ? null : ObfuscateUtil.unobfuscate(start), 24);
+        final List<Post> posts = streamClient.getPosts(start == null ? null : ObfuscateUtil.unobfuscate(start), 12);
         if (CollectionUtils.isEmpty(posts)) {
             return mav("home", context);
         }
@@ -53,7 +53,7 @@ public class HomeController extends Controller {
     @Csrf("posts")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
     public AjaxResponse posts(final Context context, final @RequestParam(required = false) String after,
-            final @RequestParam(defaultValue = "24") int quantity) {
+            final @RequestParam(defaultValue = "12") int quantity) {
         final List<Post> posts = streamClient.getPosts(after == null ? null : ObfuscateUtil.unobfuscate(after), quantity);
         if (CollectionUtils.isEmpty(posts)) {
             return new PostsResponse(null, null);
