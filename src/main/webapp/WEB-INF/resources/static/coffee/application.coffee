@@ -126,6 +126,17 @@ $(document).ready (e) ->
     if $(e.target).hasClass 'modal-overlay' then closeModal()
     return
 
+  $('video[data-autoplay="true"]').each () ->
+    video = $ this
+    if (not video.is ':in-viewport') or (not video.is ':in-viewport(' + (video[0].getBoundingClientRect().bottom - video[0].getBoundingClientRect().top) + ')')
+      if not video[0].paused
+        video[0].pause()
+        video.parents('div.video:first').addClass 'paused'
+    else if video[0].paused
+      video[0].play()
+      video.parents('div.video:first').removeClass 'paused'
+    return
+
   $(document).on 'click', 'video', (e) ->
     video = $ this
     if video[0].paused
@@ -186,8 +197,6 @@ load = (json) ->
   start = $('form.load-posts').find('input[name="after"]').val()
 
   $('form.load-posts').find('input[name="after"]').val json.next
-  adjustColumns()
-
   history.replaceState json, 'SPIFFY.io', '/stream?start=' + start
   return
 
@@ -196,7 +205,6 @@ loadPosts = (posts) ->
     post = posts[i]
     panel = $ document.createElement 'div'
     panel.addClass 'panel'
-    panel.attr 'data-post', post.postId
 
     video = false
     for type in post.types
@@ -226,12 +234,25 @@ loadPosts = (posts) ->
       img.attr 'src', post.url + post.types[0].toLowerCase()
       panel.prepend img
 
-    footer = $ document.createElement 'div'
-    footer.addClass 'footer'
-    footer.html post.title
-    panel.append footer
+    source = $ document.createElement 'div'
+    source.addClass 'source'
 
-    col = $('.col[data-index="' + (i % 3) + '"]')
+    link = $ document.createElement 'a'
+    link.attr 'href', '/stream/' + post.postId
+    link.html post.title
+    source.html link
+
+    panel.append source
+
+    cols = 3
+    if ($(window).width() < Width.xl) then cols = 2
+    if ($(window).width() < Width.md) then cols = 1
+
+    col = $('.col[data-index="' + (i % cols) + '"]')
+
+    last = col.find '.panel:last'
+    index = if last? and (last.is('.panel')) then last.data('index') + cols else col.data 'index'
+
     col.append panel
   return
 
@@ -304,9 +325,13 @@ $(window).resize (e) ->
 $(window).scroll (e) ->
   $('video').each () ->
     video = $ this
-    if not video.is ':in-viewport'
-      video[0].pause()
-      video.parents('div.video:first').addClass 'paused'
+    if (not video.is ':in-viewport') or (not video.is ':in-viewport(' + (video[0].getBoundingClientRect().bottom - video[0].getBoundingClientRect().top) + ')')
+      if not video[0].paused
+        video[0].pause()
+        video.parents('div.video:first').addClass 'paused'
+    else if video[0].paused
+      video[0].play()
+      video.parents('div.video:first').removeClass 'paused'
     return
   return
 

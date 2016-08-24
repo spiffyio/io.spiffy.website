@@ -19,7 +19,8 @@
   <c:if test="${ video }">
   <c:set var="type" value="${ post.types[0] }" />
   <c:set var="type" value="${ fn:toLowerCase(type) }" />
-  <video loop <c:if test="${ type eq 'png' }">poster="<c:out value="${ post.url }" /><c:out value="${ type }" />"</c:if>>
+  <div class="video paused">
+  <video data-autoplay="true" loop <c:if test="${ type eq 'png' }">poster="<c:out value="${ post.url }" /><c:out value="${ type }" />"</c:if>>
   <c:forEach var="type" items="${ post.types }">
     <c:set var="type" value="${ fn:toLowerCase(type) }" />
     <c:if test="${ (type eq 'mp4') or (type eq 'webm')}">
@@ -30,6 +31,7 @@
     </c:if>
   </c:forEach>
   </video>
+  </div>
   </c:if>
   <c:if test="${ not video }">
     <c:set var="type" value="${ fn:toLowerCase(post.types[0]) }" />
