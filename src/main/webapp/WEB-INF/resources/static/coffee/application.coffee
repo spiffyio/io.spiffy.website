@@ -90,6 +90,9 @@ $(document).ready (e) ->
   $('form[data-return-uri]').spiffy().options
     success: (form) -> go(form.data('return-uri'))
 
+  $('form.comment').spiffy().options
+    success: () -> refresh()
+
   $('form.submit').spiffy().options
     success: () -> go '/'
 

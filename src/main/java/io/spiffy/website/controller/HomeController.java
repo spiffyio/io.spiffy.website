@@ -11,21 +11,27 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import io.spiffy.common.Controller;
+import io.spiffy.common.api.discussion.client.DiscussionClient;
+import io.spiffy.common.api.discussion.dto.ThreadDTO.EntityType;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
+import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.PostsResponse;
+import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
+    private static final String COMMENTS_KEY = "comments";
     private static final String POST_KEY = "post";
     private static final String POSTS_KEY = "posts";
 
+    private final DiscussionClient discussionClient;
     private final StreamClient streamClient;
 
     @RequestMapping({ "/", "/stream" })
@@ -43,10 +49,26 @@ public class HomeController extends Controller {
 
     @RequestMapping("/stream/{postId}")
     public ModelAndView post(final Context context, final @PathVariable String postId) {
-        final Post post = streamClient.getPost(postId == null ? null : ObfuscateUtil.unobfuscate(postId));
-        context.addAttribute(POST_KEY, post);
+        final long post = ObfuscateUtil.unobfuscate(postId);
+
+        context.addAttribute(POST_KEY, streamClient.getPost(post));
+        context.addAttribute(COMMENTS_KEY, discussionClient.getComments(EntityType.POST, "" + post, null, 24));
 
         return mav("post", context);
+    }
+
+    @ResponseBody
+    @Csrf("comment")
+    @AccessControl(returnUri = "/stream")
+    @RequestMapping(value = "/stream/{postId}/comment", method = RequestMethod.POST)
+    public AjaxResponse comment(final Context context, final @PathVariable String postId, final @RequestParam String comment,
+            final @RequestParam String idempotentId) {
+        final long post = ObfuscateUtil.unobfuscate(postId);
+
+        final boolean success = discussionClient.postComment(EntityType.POST, "" + post, context.getAccountId(), idempotentId,
+                comment);
+
+        return new SuccessResponse(success);
     }
 
     @ResponseBody

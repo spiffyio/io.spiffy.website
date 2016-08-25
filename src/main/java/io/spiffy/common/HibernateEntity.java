@@ -41,7 +41,7 @@ public abstract class HibernateEntity extends Entity {
 
         copy.setArchivedAt(archivedAt);
 
-        return null;
+        return copy;
     }
 
     protected HibernateEntity copy(final HibernateEntity entity) {

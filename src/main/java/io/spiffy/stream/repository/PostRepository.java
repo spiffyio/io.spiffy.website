@@ -25,7 +25,7 @@ public class PostRepository extends HibernateRepository<PostEntity> {
         return (PostEntity) c.uniqueResult();
     }
 
-    public List<PostEntity> get(final Long first, final Integer maxResults) {
+    public List<PostEntity> get(final Long first, final int maxResults) {
         final Criteria c = createCriteria();
         c.addOrder(Order.desc("postedAt"));
 

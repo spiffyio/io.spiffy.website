@@ -457,6 +457,11 @@ $(document).ready(function(e) {
       return go(form.data('return-uri'));
     }
   });
+  $('form.comment').spiffy().options({
+    success: function() {
+      return refresh();
+    }
+  });
   $('form.submit').spiffy().options({
     success: function() {
       return go('/');

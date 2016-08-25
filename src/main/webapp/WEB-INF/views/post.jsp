@@ -43,6 +43,19 @@
   <c:out value="${ post.description }" />
 </p>
 
+<form class="comment full" action="/stream/<c:out value="${ post.postId }" />/comment" <s:csrf name="comment" />>
+  <div class="input"><input type="text" name="comment" placeholder="comment" required/></div>
+  <s:idempotent />
+  <div class="message"></div> 
+  <div class="input center"><input class="button primary" type="submit" value="comment" /></div>
+</form>
+
+<c:forEach var="comment" items="${ comments }">
+  <div class="comment">
+    <span><c:out value="${ comment.comment }" /></span>
+  </div>
+</c:forEach>
+
 </div>
 
 <jsp:include page="common/footer.jsp" />
