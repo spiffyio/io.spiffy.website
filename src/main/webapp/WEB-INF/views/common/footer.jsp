@@ -26,6 +26,7 @@
 <s:resource file="parsley" type="js" />
 <s:resource file="dropzone" type="js" />
 <s:resource file="jquery.isinviewport" type="js" />
+<s:resource file="handlebars" type="js" />
 <c:if test="${ include_fingerprint }">
 <s:resource file="fingerprint" type="js" />
 </c:if>
