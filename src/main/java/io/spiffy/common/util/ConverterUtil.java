@@ -29,8 +29,8 @@ public class ConverterUtil {
         }
     }
 
-    private static final String MP4_TEMPLATE = "ffmpeg -i \"%s\" -c:v h264 -c:a aac \"%s\"";
-    private static final String WEBM_TEMPLATE = "ffmpeg -i \"%s\" -c:v libvpx -crf 10 -b:v 1M -c:a libvorbis \"%s\"";
+    private static final String MP4_TEMPLATE = "ffmpeg -i \"%s\" -c:v h264 -profile:v baseline -c:a aac -movflags faststart -preset slow -crf 24 -pix_fmt yuv420p \"%s\"";
+    private static final String WEBM_TEMPLATE = "ffmpeg -i \"%s\" -c:v libvpx -c:a libvorbis -quality good -cpu-used 0 -crf 24 \"%s\"";
     private static final String PNG_TEMPLATE = "ffmpeg -i \"%s\" -ss 00:00:00.000 -vframes 1 \"%s\"";
 
     private static Boolean initialized = true;
@@ -143,6 +143,7 @@ public class ConverterUtil {
 
             String line;
             while ((line = reader.readLine()) != null) {
+                System.out.println(line);
                 output.add(line);
             }
 
