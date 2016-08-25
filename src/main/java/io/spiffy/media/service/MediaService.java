@@ -16,6 +16,7 @@ import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.media.input.GetMediaOutput;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.ConverterUtil;
+import io.spiffy.common.util.ExifUtil;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.media.entity.MediaEntity;
@@ -102,8 +103,16 @@ public class MediaService extends Service<MediaEntity, MediaRepository> {
     }
 
     @Transactional
-    private MediaEntity post(final String idempotentId, final MediaType type, final byte[] value, final String name) {
+    private MediaEntity post(final String idempotentId, final MediaType type, final byte[] presanitizedValue,
+            final String name) {
         validateIdempotentId(idempotentId);
+
+        final byte[] value;
+        if (MediaType.JPG.equals(type)) {
+            value = ExifUtil.removeExif(presanitizedValue);
+        } else {
+            value = presanitizedValue;
+        }
 
         final String md5 = Base64.getEncoder().encodeToString(DigestUtils.md5Digest(value));
 
