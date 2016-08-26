@@ -15,6 +15,7 @@ import io.spiffy.common.api.email.dto.EmailType;
 import io.spiffy.common.api.email.input.PostEmailAddressInput;
 import io.spiffy.common.api.email.input.SendEmailInput;
 import io.spiffy.common.api.email.output.GetEmailAddressOutput;
+import io.spiffy.common.exception.InvalidParameterException;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class EmailClient extends Client {
@@ -32,6 +33,11 @@ public class EmailClient extends Client {
     public long postEmailAddress(final String emailAddress) {
         final PostEmailAddressInput input = new PostEmailAddressInput(emailAddress);
         final PostOutput output = postEmailAddressCall.call(input);
+
+        if (output.getId() == null) {
+            throw new InvalidParameterException("email", "invalid");
+        }
+
         return output.getId();
     }
 

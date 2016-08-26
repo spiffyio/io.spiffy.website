@@ -11,6 +11,7 @@ import io.spiffy.common.api.email.dto.EmailProperties;
 import io.spiffy.common.api.email.dto.EmailType;
 import io.spiffy.common.api.security.client.SecurityClient;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
+import io.spiffy.common.api.user.output.RegisterAccountOutput;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.UIDUtil;
 import io.spiffy.common.util.ValidationUtil;
@@ -112,19 +113,33 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
-    public AccountEntity register(final String userName, final String emailAddress, final String password) {
-        // FIXME: make sure people don't just take over an account, and change password
+    public RegisterAccountOutput register(final String userName, final String email, final String password) {
+        final long emailAddressId = getEmailAddressId(email);
 
-        final AccountEntity account = post(userName, emailAddress);
+        AccountEntity account = getByUserName(userName);
+        if (account != null && account.getEmailAddressId() != emailAddressId) {
+            return new RegisterAccountOutput(RegisterAccountOutput.Error.EXISTING_USERNAME);
+        }
+
+        account = getByEmailAddressId(emailAddressId);
+        if (account != null && !StringUtils.equalsIgnoreCase(account.getUserName(), userName)) {
+            return new RegisterAccountOutput(RegisterAccountOutput.Error.EXISTING_EMAIL);
+        }
+
+        if (account != null && !credentialService.matches(account.getId(), password)) {
+            return new RegisterAccountOutput(RegisterAccountOutput.Error.EXISTING_USERNAME);
+        }
+
+        account = post(userName, email);
         credentialService.post(account.getId(), password);
 
         if (StringUtils.isEmpty(account.getEmailVerificationToken())) {
-            return account;
+            return new RegisterAccountOutput();
         }
 
         sendVerificationEmail(account, "register");
 
-        return account;
+        return new RegisterAccountOutput();
     }
 
     private void sendVerificationEmail(final AccountEntity account, final String idempotentId) {
@@ -141,11 +156,11 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
             final String fingerprint, final String userAgent, final String ipAddress) {
         final AccountEntity account = getByEmailAddress(email);
         if (account == null) {
-            return null;
+            return new AuthenticateAccountOutput(AuthenticateAccountOutput.Error.UNKNOWN_EMAIL);
         }
 
         if (!credentialService.matches(account.getId(), password)) {
-            return null;
+            return new AuthenticateAccountOutput(AuthenticateAccountOutput.Error.INVALID_PASSWORD);
         }
 
         final SessionEntity session = sessionService.validatedCreate(sessionId, account.getId(), fingerprint, userAgent,

@@ -9,9 +9,9 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticateAccountOutput {
+public class RegisterAccountOutput {
     public enum Error {
-        INVALID_PASSWORD, INVALID_EMAIL, UNKNOWN_EMAIL
+        INCORRECT_PASSWORD, INVALID_PASSWORD, INVALID_EMAIL, INVALID_USERNAME, EXISTING_EMAIL, EXISTING_USERNAME
     }
 
     private Long accountId;
@@ -19,12 +19,12 @@ public class AuthenticateAccountOutput {
 
     private Error error;
 
-    public AuthenticateAccountOutput(final long accountId, final String sessionToken) {
+    public RegisterAccountOutput(final long accountId, final String sessionToken) {
         this.accountId = accountId;
         this.sessionToken = sessionToken;
     }
 
-    public AuthenticateAccountOutput(final Error error) {
+    public RegisterAccountOutput(final Error error) {
         this.error = error;
     }
 }

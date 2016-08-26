@@ -284,7 +284,7 @@ jQuery.fn.spiffy = function() {
       return form.data('options');
     },
     submit: function(options) {
-      var csrf, data, disable, form, loading, type, url;
+      var csrf, data, disable, div, form, loading, type, url;
       form = $(elements[0]);
       if (!form.is('form')) {
         return;
@@ -305,6 +305,10 @@ jQuery.fn.spiffy = function() {
       }
       loading = Spiffy.firstDefined(options.loading, form.data('loading'), 'overlay');
       form.spiffy().loading(loading);
+      div = form.find('div.message');
+      if ((div != null) && div.is('div.message')) {
+        div.slideUp();
+      }
       data = form.spiffy().data();
       $.ajax({
         url: url,
@@ -321,7 +325,7 @@ jQuery.fn.spiffy = function() {
           }
         },
         error: function(jqXHR, textStatus, errorThrown) {
-          var div, input, response, span;
+          var input, recaptcha, response, span;
           response = jqXHR.responseJSON;
           if ((jqXHR.status === 401) && (response.uri != null)) {
             go(jqXHR.responseJSON.uri);
@@ -340,6 +344,16 @@ jQuery.fn.spiffy = function() {
               div.html(response.reason);
               div.slideDown();
             }
+          }
+          if (response.tip != null) {
+            div = form.find('div.message');
+            div.addClass('tip');
+            div.html(response.tip);
+            div.slideDown();
+          }
+          recaptcha = form.find('.g-recaptcha');
+          if ((recaptcha != null) && recaptcha.is('.g-recaptcha')) {
+            grecaptcha.reset();
           }
           form.spiffy().enable().loading(loading, false);
           if (options.error != null) {
@@ -509,6 +523,11 @@ $(document).ready(function(e) {
       video[0].play();
       video.parents('div.video:first').removeClass('paused');
     }
+  });
+  $(document).on('click', '[data-go]', function(e) {
+    var button;
+    button = $(this);
+    go(button.data('go') + location.search);
   });
   $(document).on('click', 'video', function(e) {
     var video;

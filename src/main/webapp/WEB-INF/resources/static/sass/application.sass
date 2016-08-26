@@ -458,6 +458,10 @@ div.disabled:before
   +size(auto, 100%)
   flex: 1
 
+.clickable
+  display: block
+  cursor: pointer
+
 +min-width($md)
   .grid .col
     +size(auto, 100% / 2)
@@ -523,14 +527,19 @@ form
     display: none
 
   div.message.error
-    border-color: $o4
+    border-color: $o5
     background-color: $o1
-    color: $o4
+    color: $o5
 
   div.message.success
-    border-color: $b4
+    border-color: $b5
     background-color: $b1
     color: $b4
+
+  div.message.tip
+    border-color: $g5
+    background-color: $g1
+    color: $g5
 
   div.message:empty
     display: none

@@ -29,6 +29,15 @@
     <div class="input"><input class="button danger" type="submit" value="register" /></div>
   </form>
   </c:if>
+  
+  <c:if test="${ form eq 'forgot' }">
+  <form class="forgot" <s:csrf name="forgot" /> data-return-uri="<c:out value="${ returnUri }" />" action="/forgot">
+    <div class="input"><input type="email" placeholder="email" name="email" required autofocus /></div>
+    <div class="input"><div class="g-recaptcha" data-sitekey="6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i"></div></div>
+    <div class="message"></div> 
+    <div class="input"><input class="button primary" type="submit" value="continue" /></div>
+  </form>
+  </c:if>
 
 </div>
 

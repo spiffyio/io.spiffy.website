@@ -14,10 +14,7 @@ import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.user.call.*;
 import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.input.*;
-import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
-import io.spiffy.common.api.user.output.AuthenticateSessionOutput;
-import io.spiffy.common.api.user.output.GetAccountOutput;
-import io.spiffy.common.api.user.output.GetSessionsOutput;
+import io.spiffy.common.api.user.output.*;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
@@ -90,10 +87,17 @@ public class UserClient extends Client {
         return output.getId();
     }
 
-    public long registerAccount(final String userName, final String emailAddress, final String password) {
+    public RegisterAccountOutput registerAccount(final String userName, final String emailAddress, final String password,
+            final Context context, final String fingerprint) {
         final RegisterAccountInput input = new RegisterAccountInput(userName, emailAddress, password);
-        final PostOutput output = registerAccountCall.call(input);
-        return output.getId();
+        final RegisterAccountOutput output = registerAccountCall.call(input);
+
+        if (output.getError() == null) {
+            final String token = authenticateAccount(emailAddress, password, context, fingerprint).getSessionToken();
+            output.setSessionToken(token);
+        }
+
+        return output;
     }
 
     public boolean sendVerifyEmail(final Context context, final String email, final String idempotentId) {

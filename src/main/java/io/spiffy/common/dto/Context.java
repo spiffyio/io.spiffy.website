@@ -12,6 +12,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.core.MediaType;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
@@ -42,6 +43,7 @@ public class Context {
     public static final String SESSION_ID_COOKIE = "session-id";
     public static final String SESSION_TOKEN_COOKIE = "session-token";
 
+    public static final String ACCEPT = "Accept";
     public static final String REFERRER = "Referer";
     public static final String USER_AGENT = "User-Agent";
     public static final String SPIFFY_FORWARDED_SESSION = "SPIFFY-Forwarded-Session";
@@ -75,6 +77,29 @@ public class Context {
 
     public Context(final Context context, final Account account) {
         this(context.getRequest(), context.getResponse(), context.getChain(), context.getModel(), account);
+    }
+
+    public boolean isJsonRequest() {
+        if (request == null) {
+            return false;
+        }
+
+        final String accept = request.getHeader(ACCEPT);
+        if (StringUtils.isEmpty(accept)) {
+            return false;
+        }
+
+        final int json = StringUtils.indexOfIgnoreCase(accept, MediaType.APPLICATION_JSON);
+        if (json < 0) {
+            return false;
+        }
+
+        final int html = StringUtils.indexOfIgnoreCase(accept, MediaType.TEXT_HTML);
+        if (html < 0) {
+            return true;
+        }
+
+        return json < html;
     }
 
     public boolean isSecure() {

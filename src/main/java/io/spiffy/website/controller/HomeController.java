@@ -23,7 +23,7 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private static final String ACCOUNT_ID_KEY = "accountId";
@@ -51,6 +51,7 @@ public class HomeController extends Controller {
         return mav("home", context);
     }
 
+    @AccessControl
     @RequestMapping({ "/mystream" })
     public ModelAndView mystream(final Context context, final @RequestParam(required = false) String start) {
         return home(context, "" + context.getAccountId(), start);

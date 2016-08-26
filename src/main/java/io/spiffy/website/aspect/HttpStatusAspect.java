@@ -6,36 +6,47 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import io.spiffy.common.Aspect;
 import io.spiffy.common.dto.ClassMap;
 import io.spiffy.common.dto.Context;
-import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
 
 @org.aspectj.lang.annotation.Aspect
-public class CsrfAspect extends Aspect {
+public class HttpStatusAspect extends Aspect {
 
-    @Around("@annotation(csrf)")
-    public Object around(final ProceedingJoinPoint pjp, final Csrf csrf) throws Throwable {
+    @Around("@annotation(responseBody)")
+    public Object around(final ProceedingJoinPoint pjp, final ResponseBody responseBody) throws Throwable {
         final MethodSignature signature = (MethodSignature) pjp.getSignature();
         final ClassMap args = new ClassMap(signature.getParameterTypes(), pjp.getArgs());
         final Context context = args.get(Context.class);
 
-        if (context.isCsrfTokenValid(csrf.value())) {
+        if (context == null) {
+            return pjp.proceed();
+        }
+
+        if (context.getResponse() == null) {
             return pjp.proceed();
         }
 
         final Method method = signature.getMethod();
         final Class<?> resultClass = method.getReturnType();
 
-        context.setResponseStatus(HttpStatus.UNAUTHORIZED);
-
-        if (AjaxResponse.class.equals(resultClass)) {
-            return new BadRequestResponse("token", "invalid");
+        if (!AjaxResponse.class.equals(resultClass)) {
+            return pjp.proceed();
         }
 
-        throw new Exception();
+        final AjaxResponse response = (AjaxResponse) pjp.proceed();
+        if (response == null) {
+            return response;
+        }
+
+        if (response instanceof BadRequestResponse) {
+            context.setResponseStatus(HttpStatus.BAD_REQUEST);
+        }
+
+        return response;
     }
 }

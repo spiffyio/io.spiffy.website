@@ -29,7 +29,7 @@
     <beans:property name="prefix" value="/WEB-INF/views/" />
     <beans:property name="suffix" value=".jsp" />
   </beans:bean>
-
+  
   <context:component-scan base-package="io.spiffy">
     <context:include-filter type="assignable" expression="io.spiffy.common.Controller" />
   </context:component-scan>

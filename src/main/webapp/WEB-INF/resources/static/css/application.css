@@ -554,6 +554,11 @@ div.disabled:before {
   flex: 1;
 }
 
+.clickable {
+  display: block;
+  cursor: pointer;
+}
+
 @media only screen and (min-width: 768px) {
   .grid .col {
     height: auto;
@@ -639,15 +644,21 @@ form div.message {
 }
 
 form div.message.error {
-  border-color: #FFC336;
+  border-color: #FFB60D;
   background-color: #FFECC0;
-  color: #FFC336;
+  color: #FFB60D;
 }
 
 form div.message.success {
-  border-color: #39C6EE;
+  border-color: #12B1DE;
   background-color: #C0EFFD;
   color: #39C6EE;
+}
+
+form div.message.tip {
+  border-color: #0CE84E;
+  background-color: #BFFDD2;
+  color: #0CE84E;
 }
 
 form div.message:empty {

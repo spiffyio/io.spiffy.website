@@ -136,6 +136,11 @@ $(document).ready (e) ->
       video.parents('div.video:first').removeClass 'paused'
     return
 
+  $(document).on 'click', '[data-go]', (e) ->
+    button = $ this
+    go button.data('go') + location.search
+    return
+
   $(document).on 'click', 'video', (e) ->
     video = $ this
     if video[0].paused

@@ -132,6 +132,9 @@ jQuery.fn.spiffy = () ->
       loading = Spiffy.firstDefined options.loading, form.data('loading'), 'overlay'
       form.spiffy().loading loading
 
+      div = form.find 'div.message'
+      if div? and div.is 'div.message' then div.slideUp()
+
       data = form.spiffy().data()
 
       $.ajax
@@ -163,6 +166,14 @@ jQuery.fn.spiffy = () ->
               div.addClass 'error'
               div.html response.reason
               div.slideDown()
+          if response.tip?
+            div = form.find 'div.message'
+            div.addClass 'tip'
+            div.html response.tip
+            div.slideDown()
+
+          recaptcha = form.find '.g-recaptcha'
+          if recaptcha? and recaptcha.is '.g-recaptcha' then grecaptcha.reset()
 
           form.spiffy().enable().loading(loading, false)
           #validate.resetForm()

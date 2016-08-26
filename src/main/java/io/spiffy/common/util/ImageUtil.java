@@ -39,8 +39,11 @@ public class ImageUtil {
 
     public static byte[] thumbnail(final byte[] bytes, final MediaType type, final int size) throws IOException {
         final BufferedImage image = asImage(bytes);
-        final BufferedImage thumbnail = Scalr.resize(image, size);
+        if (image.getWidth() <= size && image.getHeight() <= size) {
+            return null;
+        }
 
+        final BufferedImage thumbnail = Scalr.resize(image, size);
         return asBytes(thumbnail, type);
     }
 

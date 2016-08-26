@@ -6,14 +6,20 @@ import java.util.Set;
 
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.http.HttpStatus;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.view.json.MappingJackson2JsonView;
 
 import io.spiffy.common.Controller;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.exception.InvalidParameterException;
+import io.spiffy.common.exception.MissingParameterException;
+import io.spiffy.common.util.JsonUtil;
+import io.spiffy.website.response.BadRequestResponse;
 
 @ControllerAdvice
 public class ExceptonController extends Controller {
@@ -34,9 +40,36 @@ public class ExceptonController extends Controller {
         return mav(context, e, HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(MissingParameterException.class)
+    public ModelAndView missingParameterException(final Context context, final MissingParameterException e) {
+        return invalidParameter(context, e, e.getParameterName(), "required");
+    }
+
+    @ExceptionHandler(InvalidParameterException.class)
+    public ModelAndView invalidParameterException(final Context context, final InvalidParameterException e) {
+        return invalidParameter(context, e, e.getParameterName(), e.getReason());
+    }
+
     @ExceptionHandler(Exception.class)
     public ModelAndView exception(final Context context, final Exception e) {
         return mav(context, e, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    private ModelAndView invalidParameter(final Context context, final Exception e, final String parameterName,
+            final String reason) {
+        final HttpStatus status = HttpStatus.BAD_REQUEST;
+        if (context.isJsonRequest()) {
+            context.setResponseStatus(status);
+
+            final String name = parameterName;
+            final BadRequestResponse response = new BadRequestResponse(name, name + " " + reason);
+            final String json = JsonUtil.serialize(response);
+            final ModelMap model = JsonUtil.deserialize(ModelMap.class, json);
+
+            return new ModelAndView(new MappingJackson2JsonView(), model);
+        }
+
+        return mav(context, e, status);
     }
 
     private ModelAndView mav(final Context context, final Exception e, final HttpStatus status) {

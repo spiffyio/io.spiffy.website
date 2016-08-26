@@ -19,8 +19,12 @@ public class PostEmailAddressAPI extends API<PostEmailAddressInput, PostOutput, 
     }
 
     protected PostOutput api(final PostEmailAddressInput input) {
-        final EmailAddressEntity entity = service.post(input.getAddress());
-        final Long id = entity != null ? entity.getId() : null;
-        return new PostOutput(id);
+        try {
+            final EmailAddressEntity entity = service.post(input.getAddress());
+            final Long id = entity != null ? entity.getId() : null;
+            return new PostOutput(id);
+        } catch (final Exception e) {
+            return new PostOutput(null);
+        }
     }
 }

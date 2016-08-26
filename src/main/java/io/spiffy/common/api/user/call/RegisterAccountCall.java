@@ -4,13 +4,13 @@ import javax.inject.Inject;
 import javax.ws.rs.client.WebTarget;
 
 import io.spiffy.common.SpiffyCall;
-import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.user.input.RegisterAccountInput;
+import io.spiffy.common.api.user.output.RegisterAccountOutput;
 
-public class RegisterAccountCall extends SpiffyCall<RegisterAccountInput, PostOutput> {
+public class RegisterAccountCall extends SpiffyCall<RegisterAccountInput, RegisterAccountOutput> {
 
     @Inject
     public RegisterAccountCall(final WebTarget target) {
-        super(PostOutput.class, target.path("user/registeraccount"), null);
+        super(RegisterAccountOutput.class, target.path("user/registeraccount"), null);
     }
 }
