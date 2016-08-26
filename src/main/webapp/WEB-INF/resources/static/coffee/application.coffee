@@ -193,9 +193,11 @@ fingerprint = () ->
 load = (json) ->
   loadPosts json.posts
 
-  start = $('form.load-posts').find('input[name="after"]').val()
-  $('form.load-posts').find('input[name="after"]').val json.next
-  history.replaceState json, 'SPIFFY.io', '/stream?start=' + start
+  form = $ 'form.load-posts'
+  input = form.find 'input[name="after"]'
+  start = input.val()
+  input.val json.next
+  history.replaceState json, 'SPIFFY.io', location.pathname + '?start=' + start
   return
 
 loadPosts = (posts) ->

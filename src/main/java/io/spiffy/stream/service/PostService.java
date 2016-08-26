@@ -30,8 +30,8 @@ public class PostService extends Service<PostEntity, PostRepository> {
     }
 
     @Transactional
-    public List<PostEntity> get(final Long first, final Integer maxResults) {
-        return repository.get(first, maxResults);
+    public List<PostEntity> get(final Long accountId, final Long first, final Integer maxResults) {
+        return repository.get(accountId, first, maxResults);
     }
 
     @Transactional

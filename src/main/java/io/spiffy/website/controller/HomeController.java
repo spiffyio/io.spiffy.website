@@ -26,6 +26,7 @@ import io.spiffy.website.response.SuccessResponse;
 @RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
+    private static final String ACCOUNT_ID_KEY = "accountId";
     private static final String AFTER_KEY = "after";
     private static final String COMMENTS_KEY = "comments";
     private static final String POST_KEY = "post";
@@ -35,16 +36,24 @@ public class HomeController extends Controller {
     private final StreamClient streamClient;
 
     @RequestMapping({ "/", "/stream" })
-    public ModelAndView home(final Context context, final @RequestParam(required = false) String start) {
-        final List<Post> posts = streamClient.getPosts(start == null ? null : ObfuscateUtil.unobfuscate(start), 12);
+    public ModelAndView home(final Context context, final @RequestParam(required = false) String account,
+            final @RequestParam(required = false) String start) {
+        final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
+                start == null ? null : ObfuscateUtil.unobfuscate(start), 12);
         if (CollectionUtils.isEmpty(posts)) {
             return mav("home", context);
         }
 
+        context.addAttribute(ACCOUNT_ID_KEY, account == null ? null : Long.parseLong(account));
         context.addAttribute(AFTER_KEY, posts.get(posts.size() - 1).getPostId());
         context.addAttribute(POSTS_KEY, posts);
 
         return mav("home", context);
+    }
+
+    @RequestMapping({ "/mystream" })
+    public ModelAndView mystream(final Context context, final @RequestParam(required = false) String start) {
+        return home(context, "" + context.getAccountId(), start);
     }
 
     @RequestMapping("/stream/{postId}")
@@ -74,9 +83,10 @@ public class HomeController extends Controller {
     @ResponseBody
     @Csrf("posts")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
-    public AjaxResponse posts(final Context context, final @RequestParam(required = false) String after,
-            final @RequestParam(defaultValue = "12") int quantity) {
-        final List<Post> posts = streamClient.getPosts(after == null ? null : ObfuscateUtil.unobfuscate(after), quantity);
+    public AjaxResponse posts(final Context context, final @RequestParam(required = false) String account,
+            final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "12") int quantity) {
+        final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
+                after == null ? null : ObfuscateUtil.unobfuscate(after), quantity);
         if (CollectionUtils.isEmpty(posts)) {
             return new PostsResponse(null, null);
         }
@@ -85,8 +95,24 @@ public class HomeController extends Controller {
     }
 
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
-    public ModelAndView postsGet(final Context context, final @RequestParam(required = false) String after,
-            final @RequestParam(defaultValue = "24") int quantity) {
-        return redirect("/stream?start=" + after, context);
+    public ModelAndView postsGet(final Context context, final @RequestParam(required = false) String account,
+            final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "24") int quantity) {
+
+        final StringBuilder builder = new StringBuilder();
+        builder.append("/stream");
+
+        boolean first = true;
+        if (account != null) {
+            builder.append("?account=" + account == null ? null : Long.parseLong(account));
+            first = false;
+        }
+
+        if (after != null) {
+            builder.append(first ? "?" : "&");
+            builder.append("start=" + after);
+            first = false;
+        }
+
+        return redirect(builder.toString(), context);
     }
 }

@@ -18,15 +18,30 @@ import io.spiffy.common.api.stream.input.PostPostInput;
 import io.spiffy.common.api.stream.output.GetPostOutput;
 import io.spiffy.common.api.stream.output.GetPostsOutput;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class StreamClient extends Client {
 
     private final GetPostCall getPostCall;
     private final GetPostsCall getPostsCall;
     private final PostPostCall postCallCall;
 
+    public List<Post> getPosts(final int maxResults) {
+        return getPosts(new GetPostsInput(null, null, maxResults));
+    }
+
     public List<Post> getPosts(final Long first, final int maxResults) {
-        final GetPostsInput input = new GetPostsInput(first, maxResults);
+        return getPosts(new GetPostsInput(null, first, maxResults));
+    }
+
+    public List<Post> getPostsByAccount(final Long accountId, final int maxResults) {
+        return getPosts(new GetPostsInput(accountId, null, maxResults));
+    }
+
+    public List<Post> getPosts(final Long accountId, final Long first, final int maxResults) {
+        return getPosts(new GetPostsInput(accountId, first, maxResults));
+    }
+
+    private List<Post> getPosts(final GetPostsInput input) {
         final GetPostsOutput output = getPostsCall.call(input);
         return output.getPosts();
     }

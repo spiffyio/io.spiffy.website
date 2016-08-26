@@ -32,7 +32,7 @@ public class GetPostsAPI extends API<GetPostsInput, GetPostsOutput, PostService>
     }
 
     protected GetPostsOutput api(final GetPostsInput input) {
-        final List<PostEntity> entities = service.get(input.getFirst(), input.getMaxResults());
+        final List<PostEntity> entities = service.get(input.getAccountId(), input.getFirst(), input.getMaxResults());
 
         final List<Post> posts = new ArrayList<>();
         entities.forEach(e -> posts.add(transform(e)));
