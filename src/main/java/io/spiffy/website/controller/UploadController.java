@@ -26,7 +26,7 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.SuccessResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;

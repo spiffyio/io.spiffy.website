@@ -13,6 +13,10 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
+import org.imgscalr.Scalr;
+
+import io.spiffy.common.api.media.dto.MediaType;
+
 public class ImageUtil {
 
     private static final int MAX_FONT_SIZE = 48;
@@ -20,9 +24,29 @@ public class ImageUtil {
     private static final int TOP_MARGIN = 5;
     private static final int SIDE_MARGIN = 10;
 
-    public static byte[] macro(final byte[] bytes, final String top, final String bottom) throws IOException {
+    private static BufferedImage asImage(final byte[] bytes) throws IOException {
         final InputStream in = new ByteArrayInputStream(bytes);
-        final BufferedImage image = ImageIO.read(in);
+        return ImageIO.read(in);
+    }
+
+    private static byte[] asBytes(final BufferedImage image, final MediaType type) throws IOException {
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            ImageIO.write(image, type.getSubtype(), baos);
+            baos.flush();
+            return baos.toByteArray();
+        }
+    }
+
+    public static byte[] thumbnail(final byte[] bytes, final MediaType type, final int size) throws IOException {
+        final BufferedImage image = asImage(bytes);
+        final BufferedImage thumbnail = Scalr.resize(image, size);
+
+        return asBytes(thumbnail, type);
+    }
+
+    public static byte[] macro(final byte[] bytes, final MediaType type, final String top, final String bottom)
+            throws IOException {
+        final BufferedImage image = asImage(bytes);
 
         final Graphics2D graphics = (Graphics2D) image.getGraphics();
         final String captionTop = top.toUpperCase();
@@ -30,11 +54,7 @@ public class ImageUtil {
         write(graphics, captionTop, image, true);
         write(graphics, captionBottom, image, false);
 
-        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "png", baos);
-            baos.flush();
-            return baos.toByteArray();
-        }
+        return asBytes(image, type);
     }
 
     private static void write(final Graphics2D graphics, final String text, final BufferedImage image, final boolean top) {

@@ -31,7 +31,7 @@ public abstract class Call<Input, Output> extends Manager {
     }
 
     public Output call(final Input input) {
-        if (false && cache != null) {
+        if (cache != null) {
             try {
                 return cache.get(input, () -> doCall(input));
             } catch (final ExecutionException e) {

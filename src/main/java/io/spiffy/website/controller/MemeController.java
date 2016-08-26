@@ -21,7 +21,7 @@ import io.spiffy.common.util.ImageUtil;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class MemeController extends Controller {
 
     private final MediaClient mediaClient;
@@ -30,7 +30,8 @@ public class MemeController extends Controller {
     @RequestMapping(value = "/meme", method = RequestMethod.POST)
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
             final @RequestParam String idempotentId) throws IOException {
-        final byte[] macro = ImageUtil.macro(file.getBytes(), "", "make all the memes");
+        final byte[] macro = ImageUtil.macro(file.getBytes(), MediaType.getEnum(file.getContentType()), "",
+                "make all the memes");
         final long mediaId = mediaClient.postMedia(idempotentId, MediaType.getEnum(file.getContentType()), macro);
         final GetMediaOutput media = mediaClient.getMedia(mediaId);
         return new UploadResponse(media.getName(), media.getUrl(), media.getTypes());
