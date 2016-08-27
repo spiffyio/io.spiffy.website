@@ -367,6 +367,14 @@ div.disabled:before {
   background: #5FD4F5;
 }
 
+.button.success {
+  background: #0CE84E;
+}
+
+.button.success:hover {
+  background: #5BF88A;
+}
+
 .button.danger {
   color: #0D0D0D;
   background: #FFB60D;
@@ -374,6 +382,11 @@ div.disabled:before {
 
 .button.danger:hover {
   background: #FFCF5E;
+}
+
+.invisible {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .content, .panel {
@@ -630,6 +643,21 @@ div.disabled:before {
   width: 95%;
   margin-left: calc(2.5% - 0.5px);
   border: 1px solid #F5F5F5;
+}
+
+div.actions {
+  text-align: center;
+}
+
+div.actions button {
+  height: 2em;
+  width: 4em;
+  padding: 0 1em;
+}
+
+div.actions button img {
+  height: 60%;
+  margin-top: 20%;
 }
 
 form div.message {

@@ -26,7 +26,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private static final String ACCOUNT_ID_KEY = "accountId";
@@ -77,7 +77,14 @@ public class HomeController extends Controller {
     public AjaxResponse action(final Context context, final @PathVariable String postId,
             final @RequestParam("action") String actionName) {
         final long post = ObfuscateUtil.unobfuscate(postId);
-        final PostActionInput.Action action = PostActionInput.Action.valueOf(actionName.toUpperCase().replaceAll("\\s+", ""));
+
+        final PostActionInput.Action action;
+        try {
+            action = PostActionInput.Action.valueOf(actionName.toUpperCase());
+        } catch (final IllegalArgumentException e) {
+            return new BadRequestResponse("action", "invalid action");
+        }
+
         final PostActionOutput output = streamClient.postAction(post, context.getAccountId(), action);
 
         if (PostActionOutput.Error.INSUFFICIENT_PRIVILEGES.equals(output.getError())) {

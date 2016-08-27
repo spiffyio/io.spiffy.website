@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PostActionInput {
     public enum Action {
-        DELETE, REPORT
+        DELETE, REPORT, LIKE, DISLIKE, FAVORITE, SHARE, LINK, DOWNLOAD
     }
 
     private Long postId;

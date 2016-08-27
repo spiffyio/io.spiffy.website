@@ -40,15 +40,14 @@
 </div>
 
 <div class="actions">
-  <button class="button primary">+</button>
-  <button class="button primary">-</button>
-  <button class="button primary"><3</button>
-  <button class="button primary">share</button>
-  <button class="button primary">embed</button>
-  <button class="button primary">download</button>
-  <button class="button danger">
-    <c:if test="${ post.accountId eq account.id }">delete</c:if>
-    <c:if test="${ post.accountId ne account.id }">report</c:if>
+  <button class="button primary" data-action="like"><img src="<s:resource file="svg/linea/arrows_up_double.svg" />" /></button>
+  <button class="button primary" data-action="dislike"><img src="<s:resource file="svg/linea/arrows_down_double-34.svg" />" /></button>
+  <button class="button primary" data-action="favorite"><img src="<s:resource file="svg/linea/basic_heart.svg" />" /></button>
+  <button class="button primary" data-action="share"><img src="<s:resource file="svg/linea/basic_share.svg" />" /></button>
+  <button class="button primary" data-action="link"><img src="<s:resource file="svg/linea/basic_link.svg" />" /></button>
+  <button class="button primary" data-action="download"><img src="<s:resource file="svg/linea/basic_download.svg" />" /></button>
+  <button class="button success invisible"><img src="<s:resource file="svg/linea/arrows_check.svg" />" /></button>
+  <button class="button danger" data-action="<c:if test="${ post.accountId eq account.id }">delete"><img src="<s:resource file="svg/linea/basic_trashcan.svg" />" /></c:if><c:if test="${ post.accountId ne account.id }">report"><img src="<s:resource file="svg/linea/basic_flag1.svg" />" /></c:if>
   </button>
   
   <form class="action" <s:csrf name="action" /> action="/stream/<c:out value="${ post.postId }" />/action" data-loading="header">
@@ -56,8 +55,6 @@
     <div class="message"></div>
   </form>
 </div>
-
-
 
 <p style="width: 100%; text-align: center;">
   <c:out value="${ post.description }" />

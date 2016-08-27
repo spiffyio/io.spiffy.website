@@ -117,12 +117,27 @@ $(document).ready (e) ->
       button.parent().parent().slideUp()
       return
 
+  $('form.action').spiffy().options
+    success: (form) ->
+      div = form.parents 'div.actions:first'
+      button = div.find 'button.success'
+      if button? and button.is 'button.success'
+        button.animate { opacity: 1 }, 500, () ->
+          button.animate { opacity: 0 }, 1500
+      return
+
   $('div.actions').find('button').each (e) ->
     button = $ this
     form = button.parents('div.actions:first').find 'form'
     button.click (e) ->
       input = form.find 'input[name="action"]'
-      input.val button.html()
+      action = button.data 'action'
+      input.val action
+      if action.equalsIgnoreCase 'delete'
+        form.spiffy().options
+          success: () ->
+            go '/'
+            return
       form.submit()
       return
     return

@@ -318,12 +318,22 @@ div.disabled:before
 .button.primary:hover
   background: $b3
 
+.button.success
+  background: $g5
+
+.button.success:hover
+  background: $g3
+
 .button.danger
   color: $w5
   background: $o5
 
 .button.danger:hover
   background: $o3
+
+.invisible
+  opacity: 0
+  pointer-events: none
 
 .content, .panel
   overflow: auto
@@ -515,6 +525,17 @@ div.disabled:before
   +size(auto, 95%)
   margin-left: calc(2.5% - 0.5px)
   border: 1px solid $w1
+
+div.actions
+  text-align: center
+
+  button
+    +size(2em, 4em)
+    padding: 0 1em
+
+    img
+      height: 60%
+      margin-top: 20%
 
 form
   div.message

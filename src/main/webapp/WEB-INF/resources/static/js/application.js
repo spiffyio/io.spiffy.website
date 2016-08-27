@@ -509,14 +509,38 @@ $(document).ready(function(e) {
       button.parent().parent().slideUp();
     }
   });
+  $('form.action').spiffy().options({
+    success: function(form) {
+      var button, div;
+      div = form.parents('div.actions:first');
+      button = div.find('button.success');
+      if ((button != null) && button.is('button.success')) {
+        button.animate({
+          opacity: 1
+        }, 500, function() {
+          return button.animate({
+            opacity: 0
+          }, 1500);
+        });
+      }
+    }
+  });
   $('div.actions').find('button').each(function(e) {
     var button, form;
     button = $(this);
     form = button.parents('div.actions:first').find('form');
     button.click(function(e) {
-      var input;
+      var action, input;
       input = form.find('input[name="action"]');
-      input.val(button.html());
+      action = button.data('action');
+      input.val(action);
+      if (action.equalsIgnoreCase('delete')) {
+        form.spiffy().options({
+          success: function() {
+            go('/');
+          }
+        });
+      }
       form.submit();
     });
   });
