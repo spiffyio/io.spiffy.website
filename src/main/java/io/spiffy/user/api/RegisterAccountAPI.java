@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import io.spiffy.common.API;
 import io.spiffy.common.api.user.input.RegisterAccountInput;
 import io.spiffy.common.api.user.output.RegisterAccountOutput;
+import io.spiffy.common.exception.InvalidParameterException;
 import io.spiffy.common.exception.ValidationException;
 import io.spiffy.user.service.AccountService;
 
@@ -26,6 +27,8 @@ public class RegisterAccountAPI extends API<RegisterAccountInput, RegisterAccoun
                 return new RegisterAccountOutput(RegisterAccountOutput.Error.INVALID_PASSWORD);
             }
             return new RegisterAccountOutput(RegisterAccountOutput.Error.INVALID_USERNAME);
+        } catch (final InvalidParameterException e) {
+            return new RegisterAccountOutput(RegisterAccountOutput.Error.INVALID_EMAIL);
         }
     }
 }

@@ -16,7 +16,7 @@ public class ValidationUtil {
     public static final String NUMERIC = "0123456789";
     public static final String ALPHA_NUMERIC = ALPHA + ALPHA.toUpperCase() + NUMERIC;
 
-    private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(AppConfig.getEmailPattern());
+    private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(AppConfig.getEmailPattern(), Pattern.CASE_INSENSITIVE);
 
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(AppConfig.getPasswordPattern());
 
