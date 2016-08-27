@@ -43,6 +43,6 @@ public class GetPostsAPI extends API<GetPostsInput, GetPostsOutput, PostService>
     public Post transform(final PostEntity e) {
         final GetMediaOutput media = mediaClient.getMedia(e.getMediaId());
         return new Post(ObfuscateUtil.obfuscate(e.getId()), e.getAccountId(), e.getMediaId(), e.getTitle(), e.getDescription(),
-                e.getPostedAt(), userClient.getAccount(e.getAccountId()), media.getUrl(), media.getTypes());
+                e.getPostedAt(), userClient.getAccount(e.getAccountId()).getUsername(), media.getUrl(), media.getTypes());
     }
 }

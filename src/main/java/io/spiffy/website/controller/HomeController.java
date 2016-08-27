@@ -15,15 +15,18 @@ import io.spiffy.common.api.discussion.client.DiscussionClient;
 import io.spiffy.common.api.discussion.dto.ThreadDTO.EntityType;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.stream.dto.Post;
+import io.spiffy.common.api.stream.input.PostActionInput;
+import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
+import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String ACCOUNT_ID_KEY = "accountId";
@@ -65,6 +68,25 @@ public class HomeController extends Controller {
         context.addAttribute(COMMENTS_KEY, discussionClient.getComments(EntityType.POST, "" + post, null, 24));
 
         return mav("post", context);
+    }
+
+    @ResponseBody
+    @Csrf("action")
+    @AccessControl(returnUri = "/stream")
+    @RequestMapping(value = "/stream/{postId}/action", method = RequestMethod.POST)
+    public AjaxResponse action(final Context context, final @PathVariable String postId,
+            final @RequestParam("action") String actionName) {
+        final long post = ObfuscateUtil.unobfuscate(postId);
+        final PostActionInput.Action action = PostActionInput.Action.valueOf(actionName.toUpperCase().replaceAll("\\s+", ""));
+        final PostActionOutput output = streamClient.postAction(post, context.getAccountId(), action);
+
+        if (PostActionOutput.Error.INSUFFICIENT_PRIVILEGES.equals(output.getError())) {
+            return new BadRequestResponse("post", "insufficient privileges");
+        } else if (PostActionOutput.Error.INVALID_POST.equals(output.getError())) {
+            return new BadRequestResponse("post", "invalid post");
+        }
+
+        return new SuccessResponse(Boolean.TRUE.equals(output.getSuccess()));
     }
 
     @ResponseBody

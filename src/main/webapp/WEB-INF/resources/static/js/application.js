@@ -112,7 +112,7 @@ initModalSize = function() {
   return height;
 };
 
-var Spiffy, base, base1, base2, base3, base4;
+var Spiffy, base, base1, base2, base3, base4, base5;
 
 if ((base = Array.prototype).isArray == null) {
   base.isArray = function(a) {
@@ -138,8 +138,14 @@ if ((base3 = String.prototype).contains == null) {
   };
 }
 
-if ((base4 = String.prototype).equalsIgnoreCase == null) {
-  base4.equalsIgnoreCase = function(s) {
+if ((base4 = String.prototype).containsIgnoreCase == null) {
+  base4.containsIgnoreCase = function(s) {
+    return s === '' || this.toUpperCase().indexOf(s.toUpperCase()) > -1;
+  };
+}
+
+if ((base5 = String.prototype).equalsIgnoreCase == null) {
+  base5.equalsIgnoreCase = function(s) {
     return this.toUpperCase() === s.toUpperCase();
   };
 }
@@ -502,6 +508,17 @@ $(document).ready(function(e) {
       button = $('[data-session-id="' + session + '"]');
       button.parent().parent().slideUp();
     }
+  });
+  $('div.actions').find('button').each(function(e) {
+    var button, form;
+    button = $(this);
+    form = button.parents('div.actions:first').find('form');
+    button.click(function(e) {
+      var input;
+      input = form.find('input[name="action"]');
+      input.val(button.html());
+      form.submit();
+    });
   });
   $('.close').click(function(e) {
     closeModal();

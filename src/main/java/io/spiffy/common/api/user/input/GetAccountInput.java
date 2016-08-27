@@ -1,4 +1,4 @@
-package io.spiffy.common.api.user.output;
+package io.spiffy.common.api.user.input;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,6 +11,6 @@ import io.spiffy.common.dto.Account;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetAccountOutput {
+public class GetAccountInput {
     private Account account;
 }

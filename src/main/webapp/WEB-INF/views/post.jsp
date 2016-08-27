@@ -34,10 +34,30 @@
   </div>
   </c:if>
   <c:if test="${ not video }">
-    <c:set var="type" value="${ fn:toLowerCase(post.types[0]) }" />
+  <c:set var="type" value="${ fn:toLowerCase(post.types[0]) }" />
   <img src="<c:out value="${ post.url }" /><c:out value="${ type }" />" />
   </c:if>
 </div>
+
+<div class="actions">
+  <button class="button primary">+</button>
+  <button class="button primary">-</button>
+  <button class="button primary"><3</button>
+  <button class="button primary">share</button>
+  <button class="button primary">embed</button>
+  <button class="button primary">download</button>
+  <button class="button danger">
+    <c:if test="${ post.accountId eq account.id }">delete</c:if>
+    <c:if test="${ post.accountId ne account.id }">report</c:if>
+  </button>
+  
+  <form class="action" <s:csrf name="action" /> action="/stream/<c:out value="${ post.postId }" />/action" data-loading="header">
+    <input type="hidden" name="action" />
+    <div class="message"></div>
+  </form>
+</div>
+
+
 
 <p style="width: 100%; text-align: center;">
   <c:out value="${ post.description }" />

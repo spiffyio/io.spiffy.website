@@ -18,6 +18,7 @@ import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.exception.InvalidParameterException;
 import io.spiffy.common.exception.MissingParameterException;
+import io.spiffy.common.exception.UnknownUserException;
 import io.spiffy.common.util.JsonUtil;
 import io.spiffy.website.response.BadRequestResponse;
 
@@ -37,6 +38,11 @@ public class ExceptonController extends Controller {
 
     @ExceptionHandler(NoHandlerFoundException.class)
     public ModelAndView noHandlerFoundException(final Context context, final NoHandlerFoundException e) {
+        return mav(context, e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UnknownUserException.class)
+    public ModelAndView unknownUserException(final Context context, final UnknownUserException e) {
         return mav(context, e, HttpStatus.NOT_FOUND);
     }
 

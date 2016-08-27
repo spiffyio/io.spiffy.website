@@ -12,4 +12,12 @@ public class Account {
     private String username;
     private String email;
     private Boolean emailVerified;
+
+    public Account(final long id) {
+        this.id = id;
+    }
+
+    public Account(final String username) {
+        this.username = username;
+    }
 }

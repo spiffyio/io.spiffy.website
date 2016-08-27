@@ -7,6 +7,8 @@ import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
+import io.spiffy.common.api.stream.input.PostActionInput.Action;
+import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.util.DateUtil;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.stream.entity.PostEntity;
@@ -51,6 +53,24 @@ public class PostService extends Service<PostEntity, PostRepository> {
 
         return entity;
 
+    }
+
+    @Transactional
+    public PostActionOutput action(final long postId, final long accountId, final Action action) {
+        final PostEntity entity = get(postId);
+        if (entity == null) {
+            return new PostActionOutput(PostActionOutput.Error.INVALID_POST);
+        }
+
+        if (Action.DELETE.equals(action)) {
+            if (entity.getAccountId() != accountId) {
+                return new PostActionOutput(PostActionOutput.Error.INSUFFICIENT_PRIVILEGES);
+            }
+            entity.setArchivedAt(DateUtil.now());
+            repository.saveOrUpdate(entity);
+        }
+
+        return new PostActionOutput(true);
     }
 
     protected void validateIdempotentId(final String idempotentId) {

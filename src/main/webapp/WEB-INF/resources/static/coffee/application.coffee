@@ -117,6 +117,16 @@ $(document).ready (e) ->
       button.parent().parent().slideUp()
       return
 
+  $('div.actions').find('button').each (e) ->
+    button = $ this
+    form = button.parents('div.actions:first').find 'form'
+    button.click (e) ->
+      input = form.find 'input[name="action"]'
+      input.val button.html()
+      form.submit()
+      return
+    return
+
   $('.close').click (e) ->
     closeModal()
     return

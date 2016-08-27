@@ -9,7 +9,6 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import io.spiffy.common.Client;
-import io.spiffy.common.api.GetInput;
 import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.user.call.*;
 import io.spiffy.common.api.user.dto.Session;
@@ -18,7 +17,7 @@ import io.spiffy.common.api.user.output.*;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserClient extends Client {
 
     final AuthenticateAccountCall authenticateAccountCall;
@@ -56,10 +55,21 @@ public class UserClient extends Client {
         return output.getSessions();
     }
 
-    public String getAccount(final long accountId) {
-        final GetInput input = new GetInput(accountId);
+    public Account getAccount(final long accountId) {
+        return getAccount(new Account(accountId));
+    }
+
+    public Account getAccount(final String username) {
+        return getAccount(new Account(username));
+    }
+
+    public Account getAccount(final Account account) {
+        return getAccount(new GetAccountInput(account));
+    }
+
+    public Account getAccount(final GetAccountInput input) {
         final GetAccountOutput output = getAccountCall.call(input);
-        return output.getUsername();
+        return output.getAccount();
     }
 
     public boolean invalidateSession(final Context context) {

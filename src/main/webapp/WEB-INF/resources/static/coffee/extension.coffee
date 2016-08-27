@@ -3,6 +3,7 @@ Array::isArray     ?= (a) -> {}.toString.call(value) is '[object Array]'
 String::startsWith         ?= (s) -> @slice(0, s.length) == s
 String::endsWith           ?= (s) -> s == '' or @slice(-s.length) == s
 String::contains           ?= (s) -> s == '' or @indexOf(s) > -1
+String::containsIgnoreCase ?= (s) -> s == '' or @toUpperCase().indexOf(s.toUpperCase()) > -1
 String::equalsIgnoreCase   ?= (s) -> @toUpperCase() == s.toUpperCase()
 
 Spiffy =
