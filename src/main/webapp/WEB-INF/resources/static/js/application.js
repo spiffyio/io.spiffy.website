@@ -590,6 +590,7 @@ $(document).ready(function(e) {
   $(document).on('click', 'video', function(e) {
     var video;
     video = $(this);
+    video.attr('data-clicked', true);
     if (video[0].paused) {
       video[0].play();
       video.parents('div.video:first').removeClass('paused');
@@ -650,13 +651,11 @@ fingerprint = function() {
 };
 
 load = function(json) {
-  var form, input, start;
+  var form, input;
   loadPosts(json.posts);
   form = $('form.load-posts');
   input = form.find('input[name="after"]');
-  start = input.val();
   input.val(json.next);
-  history.replaceState(json, 'SPIFFY.io', location.pathname + '?start=' + start);
 };
 
 loadPosts = function(posts) {
@@ -665,6 +664,7 @@ loadPosts = function(posts) {
     post = posts[i];
     panel = $(document.createElement('div'));
     panel.addClass('panel');
+    panel.attr('data-post-id', post.postId);
     div = $(document.createElement('div'));
     content = post.content;
     if (content.type.equalsIgnoreCase('video')) {
@@ -693,7 +693,7 @@ loadPosts = function(posts) {
       img.attr('src', content.thumbnail);
       div.prepend(img);
     }
-    preview.prepend(div);
+    panel.prepend(div);
     source = $(document.createElement('div'));
     source.addClass('source');
     link = $(document.createElement('a'));
@@ -711,6 +711,7 @@ loadPosts = function(posts) {
     col = $('.col[data-index="' + (i % cols) + '"]');
     last = col.find('.panel:last');
     index = (last != null) && (last.is('.panel')) ? last.data('index') + cols : col.data('index');
+    panel.attr('data-index', index);
     col.append(panel);
   }
 };
@@ -749,7 +750,7 @@ emptyColumn = function(i) {
   sortColumn(1);
 };
 
-fillColumn = function(i) {
+fillColumn = function(i, cols) {
   var col, panels;
   col = $('.col[data-index="' + i + '"]');
   panels = col.find('.panel');
@@ -761,7 +762,7 @@ fillColumn = function(i) {
   panels.each(function() {
     var panel;
     panel = $(this);
-    if (panel.data('index') % 3 !== i) {
+    if (panel.data('index') % cols !== i) {
       return;
     }
     panel.detach().appendTo('.col[data-index="' + i + '"]');
@@ -784,7 +785,7 @@ $(window).resize(function(e) {
   width = $(window).width();
   if ((width > window.pWidth) && (width >= Width.md)) {
     $('.subheader').show();
-    fillColumn(1);
+    fillColumn(1, 2);
   }
   if ((width < window.pWidth) && (width < Width.md)) {
     $('.subheader').hide();
@@ -792,7 +793,9 @@ $(window).resize(function(e) {
     emptyColumn(1);
   }
   if ((width > window.pWidth) && (width >= Width.xl)) {
-    fillColumn(2);
+    emptyColumn(1);
+    fillColumn(1, 3);
+    fillColumn(2, 3);
   }
   if ((width < window.pWidth) && (width < Width.xl)) {
     emptyColumn(2);
@@ -804,6 +807,9 @@ $(window).scroll(function(e) {
   $('video').each(function() {
     var source, top, video;
     video = $(this);
+    if (video.data('clicked')) {
+      return;
+    }
     top = video[0].getBoundingClientRect().top;
     source = video.parents('.panel:first').find('.source');
     if ((top < 75) || (!video.is(':in-viewport')) || (!source.is(':in-viewport'))) {
@@ -818,6 +824,14 @@ $(window).scroll(function(e) {
       }
     }
   });
+});
+
+$(window).scroll(function(e) {
+  var col, form, panel;
+  form = $('form.load-posts');
+  col = $('.col[data-index="0"]');
+  panel = col.find('.panel:in-viewport:first');
+  history.replaceState({}, 'SPIFFY.io', location.pathname + '?start=' + panel.data('post-id'));
 });
 
 $(window).scroll(function(e) {

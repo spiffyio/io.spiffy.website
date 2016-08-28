@@ -192,6 +192,7 @@ $(document).ready (e) ->
 
   $(document).on 'click', 'video', (e) ->
     video = $ this
+    video.attr 'data-clicked', true
     if video[0].paused
       video[0].play()
       video.parents('div.video:first').removeClass 'paused'
@@ -249,9 +250,7 @@ load = (json) ->
 
   form = $ 'form.load-posts'
   input = form.find 'input[name="after"]'
-  start = input.val()
   input.val json.next
-  history.replaceState json, 'SPIFFY.io', location.pathname + '?start=' + start
   return
 
 loadPosts = (posts) ->
@@ -259,6 +258,7 @@ loadPosts = (posts) ->
     post = posts[i]
     panel = $ document.createElement 'div'
     panel.addClass 'panel'
+    panel.attr 'data-post-id', post.postId
 
     div = $ document.createElement 'div'
 
@@ -293,7 +293,7 @@ loadPosts = (posts) ->
       img.attr 'src', content.thumbnail
       div.prepend img
 
-    preview.prepend div
+    panel.prepend div
 
     source = $ document.createElement 'div'
     source.addClass 'source'
@@ -313,6 +313,7 @@ loadPosts = (posts) ->
 
     last = col.find '.panel:last'
     index = if last? and (last.is('.panel')) then last.data('index') + cols else col.data 'index'
+    panel.attr 'data-index', index
 
     col.append panel
   return
@@ -344,7 +345,7 @@ emptyColumn = (i) ->
   sortColumn 1
   return
 
-fillColumn = (i) ->
+fillColumn = (i, cols) ->
   col = $('.col[data-index="' + i + '"]')
   panels = col.find '.panel'
   if panels.length
@@ -353,7 +354,7 @@ fillColumn = (i) ->
   panels = col.find '.panel'
   panels.each () ->
     panel = $(this)
-    if panel.data('index') % 3 isnt i then return
+    if panel.data('index') % cols isnt i then return
     panel.detach().appendTo '.col[data-index="' + i + '"]'
     return
   sortColumn i
@@ -371,13 +372,15 @@ $(window).resize (e) ->
   width = $(window).width()
   if (width > window.pWidth) and (width >= Width.md)
     $('.subheader').show()
-    fillColumn 1
+    fillColumn 1, 2
   if (width < window.pWidth) and (width < Width.md)
     $('.subheader').hide()
     $('.hamburger').removeClass 'active'
     emptyColumn 1
   if (width > window.pWidth) and (width >= Width.xl)
-    fillColumn 2
+    emptyColumn 1
+    fillColumn 1, 3
+    fillColumn 2, 3
   if (width < window.pWidth) and (width < Width.xl)
     emptyColumn 2
   window.pWidth = width
@@ -386,6 +389,7 @@ $(window).resize (e) ->
 $(window).scroll (e) ->
   $('video').each () ->
     video = $ this
+    if video.data 'clicked' then return
     top = video[0].getBoundingClientRect().top
     source = video.parents('.panel:first').find '.source'
     if (top < 75) or (not video.is ':in-viewport') or (not source.is ':in-viewport')
@@ -396,6 +400,13 @@ $(window).scroll (e) ->
       video[0].play()
       if not video[0].paused then video.parents('div.video:first').removeClass 'paused'
     return
+  return
+
+$(window).scroll (e) ->
+  form = $ 'form.load-posts'
+  col = $ '.col[data-index="0"]'
+  panel = col.find '.panel:in-viewport:first'
+  history.replaceState {}, 'SPIFFY.io', location.pathname + '?start=' + panel.data('post-id')
   return
 
 $(window).scroll (e) ->

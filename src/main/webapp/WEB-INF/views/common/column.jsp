@@ -5,7 +5,7 @@
 
 <div class="col ${ param.visibility }">
   <c:forEach var="post" items="${ posts }" begin="${ param.begin }" step="${ param.step }">
-  <div class="panel">
+  <div class="panel" data-post-id="<c:out value="${ post.postId }" />">
     <c:if test="${ post.content.type eq 'VIDEO' }">
     <div class="video paused" style="position: relative">
     <video loop="true" muted="true" preload="none" poster="<c:out value="${ post.content.poster }" />">

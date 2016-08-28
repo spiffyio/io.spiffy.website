@@ -67,6 +67,10 @@ public class FileService extends Service<FileEntity, FileRepository> {
     }
 
     public static String getUrl(final FileEntity file) {
+        if (file == null) {
+            return null;
+        }
+
         return AppConfig.getCdnEndpoint() + "/" + getKey(file);
     }
 
