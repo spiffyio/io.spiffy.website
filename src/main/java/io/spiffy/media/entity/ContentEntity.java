@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+import org.hibernate.annotations.Type;
+
 import io.spiffy.common.HibernateEntity;
 import io.spiffy.common.api.media.dto.ContentType;
 
@@ -37,6 +39,11 @@ public class ContentEntity extends HibernateEntity {
     @Setter
     @Column(name = "name", length = MAX_NAME_LENGTH)
     private String name;
+
+    @Setter
+    @Type(type = "yes_no")
+    @Column(name = "processed")
+    private Boolean processed;
 
     public ContentEntity(final long account, final String idempotentId, final ContentType type) {
         this.account = account;

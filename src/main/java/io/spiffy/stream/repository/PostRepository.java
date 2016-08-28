@@ -28,6 +28,7 @@ public class PostRepository extends HibernateRepository<PostEntity> {
     public List<PostEntity> get(final Long accountId, final Long first, final int maxResults) {
         final Criteria c = createCriteria();
         c.addOrder(Order.desc("postedAt"));
+        c.add(Restrictions.eqOrIsNull("processed", Boolean.TRUE));
 
         if (accountId != null) {
             c.add(Restrictions.eq("accountId", accountId));

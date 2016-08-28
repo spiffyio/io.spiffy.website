@@ -9,6 +9,10 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 
 import com.amazonaws.auth.AWSCredentials;
+import com.amazonaws.regions.Region;
+import com.amazonaws.regions.Regions;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sqs.AmazonSQSClient;
 
 @Configuration
 public class BeanConfig {
@@ -24,6 +28,20 @@ public class BeanConfig {
                 return AppConfig.getAwsSecretKey();
             }
         };
+    }
+
+    @Bean(name = "amazonSNSClient")
+    public AmazonSNSClient getAmazonSNSClient(final AWSCredentials awsCredentials) {
+        final AmazonSNSClient client = new AmazonSNSClient(awsCredentials);
+        client.setRegion(Region.getRegion(Regions.US_WEST_2));
+        return client;
+    }
+
+    @Bean(name = "amazonSQSClient")
+    public AmazonSQSClient getAmazonSQSClient(final AWSCredentials awsCredentials) {
+        final AmazonSQSClient client = new AmazonSQSClient(awsCredentials);
+        client.setRegion(Region.getRegion(Regions.US_WEST_2));
+        return client;
     }
 
     @Bean

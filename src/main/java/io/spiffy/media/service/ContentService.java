@@ -15,6 +15,7 @@ import io.spiffy.media.entity.ContentEntity;
 import io.spiffy.media.entity.FileEntity;
 import io.spiffy.media.entity.ImageEntity;
 import io.spiffy.media.entity.VideoEntity;
+import io.spiffy.media.manager.SNSManager;
 import io.spiffy.media.repository.ContentRepository;
 
 public class ContentService extends Service<ContentEntity, ContentRepository> {
@@ -22,14 +23,16 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
     private static final int THUMBNAIL_SIZE = 640;
     private static final String THUMBNAIL_SUFFIX = "-" + BaseUtil.toBase64(THUMBNAIL_SIZE);
 
+    private final SNSManager snsManager;
     private final FileService fileService;
     private final ImageService imageService;
     private final VideoService videoService;
 
     @Inject
-    public ContentService(final ContentRepository repository, final FileService fileService, final ImageService imageService,
-            final VideoService videoService) {
+    public ContentService(final ContentRepository repository, final SNSManager snsManager, final FileService fileService,
+            final ImageService imageService, final VideoService videoService) {
         super(repository);
+        this.snsManager = snsManager;
         this.fileService = fileService;
         this.imageService = imageService;
         this.videoService = videoService;
@@ -109,7 +112,8 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         entity.setName(ObfuscateUtil.obfuscate(entity.getId()));
         repository.saveOrUpdate(entity);
 
-        process(entity, type, value);
+        final ContentEntity content = entity;
+        ThreadUtil.run(() -> process(content, type, value));
 
         return entity;
     }
@@ -124,6 +128,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             final FileEntity thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, type, thumbnailValue);
 
             imageService.post(content, file, thumbnail);
+            snsManager.publish(content.getId());
             return;
         }
 
@@ -145,6 +150,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         final FileEntity webm = fileService.post(content.getName(), MediaType.WEBM, webmValue);
 
         videoService.post(content, poster, mp4, webm, gif);
+        snsManager.publish(content.getId());
     }
 
     private static ContentType asType(final MediaType type) {

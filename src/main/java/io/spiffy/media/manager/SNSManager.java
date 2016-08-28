@@ -1,0 +1,24 @@
+package io.spiffy.media.manager;
+
+import lombok.RequiredArgsConstructor;
+
+import javax.inject.Inject;
+
+import com.amazonaws.services.sns.AmazonSNSClient;
+
+import io.spiffy.common.Manager;
+import io.spiffy.common.api.media.dto.ContentProcessed;
+import io.spiffy.common.config.AppConfig;
+import io.spiffy.common.util.JsonUtil;
+
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+public class SNSManager extends Manager {
+
+    private static final String TOPIC = "arn:aws:sns:us-west-2:509332127709:spiffyio-media" + AppConfig.getSuffix();
+
+    private final AmazonSNSClient client;
+
+    public void publish(final long id) {
+        client.publish(TOPIC, JsonUtil.serialize(new ContentProcessed(id)));
+    }
+}

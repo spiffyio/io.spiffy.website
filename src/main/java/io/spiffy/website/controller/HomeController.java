@@ -19,6 +19,7 @@ import io.spiffy.common.api.stream.input.PostActionInput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
+import io.spiffy.media.manager.SQSManager;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
@@ -26,7 +27,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String ACCOUNT_ID_KEY = "accountId";
@@ -37,10 +38,14 @@ public class HomeController extends Controller {
 
     private final DiscussionClient discussionClient;
     private final StreamClient streamClient;
+    private final SQSManager manager;
 
     @RequestMapping({ "/", "/stream" })
     public ModelAndView home(final Context context, final @RequestParam(required = false) String account,
             final @RequestParam(required = false) String start) {
+
+        manager.poll();
+
         final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
                 start == null ? null : ObfuscateUtil.unobfuscate(start), 12);
         if (CollectionUtils.isEmpty(posts)) {
