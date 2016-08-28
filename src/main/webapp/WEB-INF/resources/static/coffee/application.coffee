@@ -260,35 +260,40 @@ loadPosts = (posts) ->
     panel = $ document.createElement 'div'
     panel.addClass 'panel'
 
-    video = false
-    for type in post.types
-      video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
-    if video
+    div = $ document.createElement 'div'
+
+    content = post.content
+    if content.type.equalsIgnoreCase 'video'
+      div.addClass 'video'
+      div.addClass 'paused'
+
       video = $ document.createElement 'video'
       video.attr 'muted', true
       video.attr 'loop', true
-      video.attr 'preload', 'none'
-      if post.types[0].equalsIgnoreCase 'PNG'
-        video.attr 'poster', post.url + post.types[0].toLowerCase()
-      for type in post.types
-        if type.equalsIgnoreCase 'MP4' or type.equalsIgnoreCase 'WEBM'
-          source = $ document.createElement 'source'
-          source.attr 'src', post.url + type.toLowerCase()
-          source.attr 'type', 'video/' + type.toLowerCase()
-          video.append source
-        else if type.equalsIgnoreCase 'GIF'
-          img = $ document.createElement 'img'
-          img.attr 'data-src', post.url + type.toLowerCase()
-          video.append img
-      div = $ document.createElement 'div'
-      div.addClass 'video'
-      div.addClass 'paused'
-      div.append video
-      panel.prepend div
+      video.attr 'poster', content.poster
+
+      source = $ document.createElement 'source'
+      source.attr 'src', content.mp4
+      source.attr 'type', 'video/mp4'
+      video.append source
+
+      source = $ document.createElement 'source'
+      source.attr 'src', content.webm
+      source.attr 'type', 'video/webm'
+      video.append source
+
+      if content.gif?
+        img = $ document.createElement 'img'
+        img.attr 'src', content.gif
+        video.append img
+
+      div.prepend video
     else
       img = $ document.createElement 'img'
-      img.attr 'src', post.url + post.types[0].toLowerCase()
-      panel.prepend img
+      img.attr 'src', content.thumbnail
+      div.prepend img
+
+    preview.prepend div
 
     source = $ document.createElement 'div'
     source.addClass 'source'
