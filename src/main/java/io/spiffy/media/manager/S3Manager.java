@@ -20,7 +20,7 @@ import io.spiffy.common.Manager;
 import io.spiffy.common.config.AppConfig;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
-public class MediaManager extends Manager {
+public class S3Manager extends Manager {
 
     private static final String BUCKET = "spiffyio" + AppConfig.getSuffix();
 

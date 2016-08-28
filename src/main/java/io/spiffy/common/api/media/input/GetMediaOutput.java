@@ -5,16 +5,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
-import io.spiffy.common.api.media.dto.MediaType;
+import io.spiffy.common.api.media.dto.Content;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetMediaOutput {
-    private String url;
-    private String name;
-    private List<MediaType> types;
+    public enum Error {
+        UNKNOWN_CONTENT
+    }
+
+    private Content content;
+    private Error error;
+
+    public GetMediaOutput(final Content content) {
+        this.content = content;
+    }
+
+    public GetMediaOutput(final Error error) {
+        this.error = error;
+    }
 }

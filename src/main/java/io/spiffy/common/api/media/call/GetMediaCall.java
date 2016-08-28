@@ -11,6 +11,6 @@ public class GetMediaCall extends SpiffyCall<GetInput, GetMediaOutput> {
 
     @Inject
     public GetMediaCall(final WebTarget target) {
-        super(GetMediaOutput.class, target.path("media/gettmedia"));
+        super(GetMediaOutput.class, target.path("media/getmedia"));
     }
 }

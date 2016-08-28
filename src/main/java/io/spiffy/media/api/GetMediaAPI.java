@@ -2,22 +2,27 @@ package io.spiffy.media.api;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
 import io.spiffy.common.api.GetInput;
 import io.spiffy.common.api.media.input.GetMediaOutput;
-import io.spiffy.media.service.MediaService;
+import io.spiffy.media.service.ContentService;
 
-@RequestMapping("/api/media/gettmedia")
-public class GetMediaAPI extends API<GetInput, GetMediaOutput, MediaService> {
+@RequestMapping("/api/media/getmedia")
+public class GetMediaAPI extends API<GetInput, GetMediaOutput, ContentService> {
 
     @Inject
-    public GetMediaAPI(final MediaService service) {
+    public GetMediaAPI(final ContentService service) {
         super(GetInput.class, service);
     }
 
     protected GetMediaOutput api(final GetInput input) {
-        return service.getMedia(input.getId());
+        if (StringUtils.isNotEmpty(input.getName())) {
+            return service.getContent(input.getName());
+        }
+
+        return service.getContent(input.getId());
     }
 }

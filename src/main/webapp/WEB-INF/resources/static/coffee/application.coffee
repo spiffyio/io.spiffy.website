@@ -13,27 +13,27 @@ Dropzone.options.dzForm = {
     $('#dz-form').slideUp()
     form = $ 'form.submit'
     preview = form.find 'div.preview'
-    video = false
-    for type in response.types
-      video = video or type.equalsIgnoreCase('MP4') or type.equalsIgnoreCase('WEBM')
-    if video
+    content = response.content
+    if content.type.equalsIgnoreCase 'video'
       video = $ document.createElement 'video'
       video.attr 'muted', true
       video.attr 'loop', true
-      for type in response.types
-        if type.equalsIgnoreCase 'MP4' or type.equalsIgnoreCase 'WEBM'
-          source = $ document.createElement 'source'
-          source.attr 'src', response.url + type.toLowerCase()
-          source.attr 'type', 'video/' + type.toLowerCase()
-          video.append source
-        else
-          img = $ document.createElement 'img'
-          img.attr 'src', response.url + type.toLowerCase()
-          video.append img
+      video.attr 'poster', content.poster
+
+      source = $ document.createElement 'source'
+      source.attr 'src', content.mp4
+      source.attr 'type', 'video/mp4'
+      video.append source
+
+      source = $ document.createElement 'source'
+      source.attr 'src', content.webm
+      source.attr 'type', 'video/webm'
+      video.append source
+
       preview.prepend video
     else
       img = $ document.createElement 'img'
-      img.attr 'src', response.url + response.types[0].toLowerCase()
+      img.attr 'src', response.content.thumbnail
       preview.prepend img
     form.slideDown()
     media = form.find 'input[name="media"]'

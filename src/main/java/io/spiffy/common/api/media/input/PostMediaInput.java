@@ -12,8 +12,8 @@ import io.spiffy.common.api.media.dto.MediaType;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PostMediaInput {
+    private Long accountId;
     private String idempotentId;
     private MediaType type;
     private byte[] value;
-
 }

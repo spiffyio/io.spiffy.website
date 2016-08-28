@@ -37,7 +37,19 @@ public class ImageUtil {
         }
     }
 
-    public static byte[] thumbnail(final byte[] bytes, final MediaType type, final int size) throws IOException {
+    public static byte[] thumbnail(final byte[] value, final MediaType type, final int size, final byte[] defaultValue) {
+        byte[] result = null;
+        try {
+            result = thumbnail(value, type, size);
+        } catch (final IOException e) {
+        }
+
+        result = result != null ? result : defaultValue;
+
+        return result;
+    }
+
+    private static byte[] thumbnail(final byte[] bytes, final MediaType type, final int size) throws IOException {
         final BufferedImage image = asImage(bytes);
         if (image.getWidth() <= size && image.getHeight() <= size) {
             return null;

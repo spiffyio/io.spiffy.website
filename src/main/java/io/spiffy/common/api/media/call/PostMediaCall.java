@@ -4,13 +4,13 @@ import javax.inject.Inject;
 import javax.ws.rs.client.WebTarget;
 
 import io.spiffy.common.SpiffyCall;
-import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.media.input.PostMediaInput;
+import io.spiffy.common.api.media.output.PostMediaOutput;
 
-public class PostMediaCall extends SpiffyCall<PostMediaInput, PostOutput> {
+public class PostMediaCall extends SpiffyCall<PostMediaInput, PostMediaOutput> {
 
     @Inject
     public PostMediaCall(final WebTarget target) {
-        super(PostOutput.class, target.path("media/postmedia"));
+        super(PostMediaOutput.class, target.path("media/postmedia"));
     }
 }

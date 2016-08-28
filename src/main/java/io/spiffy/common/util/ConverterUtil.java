@@ -143,7 +143,6 @@ public class ConverterUtil {
 
             String line;
             while ((line = reader.readLine()) != null) {
-                System.out.println(line);
                 output.add(line);
             }
 

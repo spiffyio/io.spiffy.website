@@ -19,6 +19,7 @@ import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.media.input.GetMediaOutput;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.util.JsonUtil;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
@@ -43,9 +44,13 @@ public class UploadController extends Controller {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
             final @RequestParam String idempotentId) throws IOException {
-        final long mediaId = mediaClient.postMedia(idempotentId, MediaType.getEnum(file.getContentType()), file.getBytes());
-        final GetMediaOutput media = mediaClient.getMedia(mediaId);
-        return new UploadResponse(media.getName(), media.getUrl(), media.getTypes());
+        final String name = mediaClient.postMedia(context.getAccountId(), idempotentId,
+                MediaType.getEnum(file.getContentType()), file.getBytes());
+        final GetMediaOutput media = mediaClient.getMedia(ObfuscateUtil.unobfuscate(name));
+
+        System.out.println(JsonUtil.serialize(media));
+
+        return new UploadResponse(media.getContent());
     }
 
     @ResponseBody

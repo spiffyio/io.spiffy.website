@@ -382,38 +382,28 @@ Dropzone.options.dzForm = {
     done();
   },
   success: function(file, response) {
-    var form, img, j, k, len, len1, media, preview, ref, ref1, source, type, video;
+    var content, form, img, media, preview, source, video;
     $('#dz-form').slideUp();
     form = $('form.submit');
     preview = form.find('div.preview');
-    video = false;
-    ref = response.types;
-    for (j = 0, len = ref.length; j < len; j++) {
-      type = ref[j];
-      video = video || type.equalsIgnoreCase('MP4') || type.equalsIgnoreCase('WEBM');
-    }
-    if (video) {
+    content = response.content;
+    if (content.type.equalsIgnoreCase('video')) {
       video = $(document.createElement('video'));
       video.attr('muted', true);
       video.attr('loop', true);
-      ref1 = response.types;
-      for (k = 0, len1 = ref1.length; k < len1; k++) {
-        type = ref1[k];
-        if (type.equalsIgnoreCase('MP4' || type.equalsIgnoreCase('WEBM'))) {
-          source = $(document.createElement('source'));
-          source.attr('src', response.url + type.toLowerCase());
-          source.attr('type', 'video/' + type.toLowerCase());
-          video.append(source);
-        } else {
-          img = $(document.createElement('img'));
-          img.attr('src', response.url + type.toLowerCase());
-          video.append(img);
-        }
-      }
+      video.attr('poster', content.poster);
+      source = $(document.createElement('source'));
+      source.attr('src', content.mp4);
+      source.attr('type', 'video/mp4');
+      video.append(source);
+      source = $(document.createElement('source'));
+      source.attr('src', content.webm);
+      source.attr('type', 'video/webm');
+      video.append(source);
       preview.prepend(video);
     } else {
       img = $(document.createElement('img'));
-      img.attr('src', response.url + response.types[0].toLowerCase());
+      img.attr('src', response.content.thumbnail);
       preview.prepend(img);
     }
     form.slideDown();

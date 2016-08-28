@@ -5,22 +5,26 @@ import javax.inject.Inject;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
-import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.media.input.PostMediaInput;
-import io.spiffy.media.entity.MediaEntity;
-import io.spiffy.media.service.MediaService;
+import io.spiffy.common.api.media.output.PostMediaOutput;
+import io.spiffy.media.entity.ContentEntity;
+import io.spiffy.media.service.ContentService;
 
 @RequestMapping("/api/media/postmedia")
-public class PostMediaAPI extends API<PostMediaInput, PostOutput, MediaService> {
+public class PostMediaAPI extends API<PostMediaInput, PostMediaOutput, ContentService> {
 
     @Inject
-    public PostMediaAPI(final MediaService service) {
+    public PostMediaAPI(final ContentService service) {
         super(PostMediaInput.class, service);
     }
 
-    protected PostOutput api(final PostMediaInput input) {
-        final MediaEntity entity = service.post(input.getIdempotentId(), input.getType(), input.getValue());
-        final Long id = entity != null ? entity.getId() : null;
-        return new PostOutput(id);
+    protected PostMediaOutput api(final PostMediaInput input) {
+        final ContentEntity entity = service.post(input.getAccountId(), input.getIdempotentId(), input.getType(),
+                input.getValue());
+        if (entity == null) {
+            return new PostMediaOutput("error");
+        }
+
+        return new PostMediaOutput(entity.getName());
     }
 }
