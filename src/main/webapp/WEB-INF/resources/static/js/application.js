@@ -223,10 +223,13 @@ jQuery.fn.spiffy = function() {
       });
       return data;
     },
-    loading: function(loading, enable) {
+    loading: function(loading, enable, time) {
       var div, form, img, src;
       if (enable == null) {
         enable = true;
+      }
+      if (time == null) {
+        time = 2000;
       }
       form = $(elements[0]);
       if (!form.is('form')) {
@@ -260,7 +263,7 @@ jQuery.fn.spiffy = function() {
           if (enable) {
             div.animate({
               width: '80%'
-            }, 2000);
+            }, time);
           } else {
             div.finish().animate({
               width: '100%'
@@ -372,47 +375,71 @@ jQuery.fn.spiffy = function() {
   };
 };
 
-var adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
+var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
+
+addedfile = function(file) {
+  var div, form, func, img, preview, source, video;
+  if (file.accepted == null) {
+    func = function() {
+      addedfile(file);
+    };
+    setTimeout(func, 10);
+    return;
+  }
+  if (!file.accepted) {
+    return;
+  }
+  $('#dz-form').hide();
+  form = $('form.submit');
+  preview = form.find('div.preview');
+  div = $(document.createElement('div'));
+  if (file.type.containsIgnoreCase('video')) {
+    form.spiffy().loading('header', true, 30000);
+    div.addClass('video');
+    div.addClass('paused');
+    video = $(document.createElement('video'));
+    video.attr('muted', true);
+    video.attr('loop', true);
+    video.attr('autoplay', false);
+    source = $(document.createElement('source'));
+    source.attr('type', file.type);
+    source.attr('src', URL.createObjectURL(file));
+    video.append(source);
+    div.append(video);
+  } else {
+    form.spiffy().loading('header', true, 5000);
+    img = $(document.createElement('img'));
+    img.attr('src', URL.createObjectURL(file));
+    div.append(img);
+  }
+  preview.prepend(div);
+  form.slideDown();
+};
 
 Dropzone.options.dzForm = {
   paramName: 'file',
   maxFiles: 1,
   maxFilesize: 200,
+  uploadMultiple: false,
+  createImageThumbnails: false,
+  autoProcessQueue: true,
   accept: function(file, done) {
     done();
   },
+  init: function() {
+    this.on('addedfile', function(file) {
+      addedfile(file);
+    });
+    return this.on('uploadprogress', function(file) {
+      console.log(file.upload.progress);
+    });
+  },
   success: function(file, response) {
-    var content, form, img, media, preview, source, video;
-    $('#dz-form').slideUp();
+    var form, media;
     form = $('form.submit');
-    preview = form.find('div.preview');
-    content = response.content;
-    if (content.type.equalsIgnoreCase('video')) {
-      video = $(document.createElement('video'));
-      video.attr('muted', true);
-      video.attr('loop', true);
-      video.attr('poster', content.poster);
-      source = $(document.createElement('source'));
-      source.attr('src', content.mp4);
-      source.attr('type', 'video/mp4');
-      video.append(source);
-      source = $(document.createElement('source'));
-      source.attr('src', content.webm);
-      source.attr('type', 'video/webm');
-      video.append(source);
-      preview.prepend(video);
-    } else {
-      img = $(document.createElement('img'));
-      img.attr('src', response.content.thumbnail);
-      preview.prepend(img);
-    }
-    form.slideDown();
+    form.spiffy().enable().loading('header', false);
     media = form.find('input[name="media"]');
-    if (media.val().length) {
-      media.val(media.val() + ',' + response.id);
-    } else {
-      media.val(response.id);
-    }
+    media.val(response.name);
   }
 };
 

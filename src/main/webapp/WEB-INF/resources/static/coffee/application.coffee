@@ -2,45 +2,69 @@
 # @prepros-prepend functions.coffee
 # @prepros-prepend extension.coffee
 
+addedfile = (file) ->
+  if not file.accepted?
+    func = () ->
+      addedfile file
+      return
+    setTimeout func, 10
+    return
+
+  if not file.accepted then return
+
+  $('#dz-form').hide()
+  form = $ 'form.submit'
+
+  preview = form.find 'div.preview'
+  div = $ document.createElement 'div'
+
+  if file.type.containsIgnoreCase 'video'
+    form.spiffy().loading 'header', true, 30000
+    div.addClass 'video'
+    div.addClass 'paused'
+
+    video = $ document.createElement 'video'
+    video.attr 'muted', true
+    video.attr 'loop', true
+    video.attr 'autoplay', false
+
+    source = $ document.createElement 'source'
+    source.attr 'type', file.type
+    source.attr 'src', URL.createObjectURL(file)
+    video.append source
+
+    div.append video
+  else
+    form.spiffy().loading 'header', true, 5000
+    img = $ document.createElement 'img'
+    img.attr 'src', URL.createObjectURL(file)
+    div.append img
+  preview.prepend div
+  form.slideDown()
+  return
+
 Dropzone.options.dzForm = {
   paramName: 'file',
   maxFiles: 1,
   maxFilesize: 200,
+  uploadMultiple: false,
+  createImageThumbnails: false,
+  autoProcessQueue: true,
   accept: (file, done) ->
     done()
     return
+  init: () ->
+    this.on 'addedfile', (file) ->
+      addedfile file
+      return
+    this.on 'uploadprogress', (file) ->
+      console.log file.upload.progress
+      return
   success: (file, response) ->
-    $('#dz-form').slideUp()
     form = $ 'form.submit'
-    preview = form.find 'div.preview'
-    content = response.content
-    if content.type.equalsIgnoreCase 'video'
-      video = $ document.createElement 'video'
-      video.attr 'muted', true
-      video.attr 'loop', true
-      video.attr 'poster', content.poster
-
-      source = $ document.createElement 'source'
-      source.attr 'src', content.mp4
-      source.attr 'type', 'video/mp4'
-      video.append source
-
-      source = $ document.createElement 'source'
-      source.attr 'src', content.webm
-      source.attr 'type', 'video/webm'
-      video.append source
-
-      preview.prepend video
-    else
-      img = $ document.createElement 'img'
-      img.attr 'src', response.content.thumbnail
-      preview.prepend img
-    form.slideDown()
+    form.spiffy().enable().loading 'header', false
     media = form.find 'input[name="media"]'
-    if media.val().length
-      media.val media.val() + ',' + response.id
-    else
-      media.val response.id
+    media.val response.name
     return
 }
 

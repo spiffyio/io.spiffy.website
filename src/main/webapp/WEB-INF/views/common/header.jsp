@@ -22,7 +22,6 @@
   </c:when>
   <c:when test="${ param.style eq 'upload' }">
     <c:set var="include_centered" value="true" />
-    <c:set var="include_dropzone" value="true" />
     <c:set var="include_bar" value="true" />
   </c:when>
   <c:otherwise>
@@ -65,9 +64,6 @@
 <meta name="theme-color" content="#c0effd">
 
 <s:resource file="application" type="css" />
-<c:if test="${ include_dropzone }">
-<s:resource file="dropzone" type="css" />
-</c:if>
 <c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 </c:if>

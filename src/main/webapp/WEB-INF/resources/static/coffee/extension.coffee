@@ -70,7 +70,7 @@ jQuery.fn.spiffy = () ->
         .each () ->
           $(this).spiffy().push data
       return data
-    loading: (loading, enable = true) ->
+    loading: (loading, enable = true, time = 2000) ->
       form = $ elements[0]
       if not form.is 'form' then return
 
@@ -94,7 +94,7 @@ jQuery.fn.spiffy = () ->
         div = $ 'div.header-loading'
         if div? and div.is('div.header-loading')
           if enable
-            div.animate { width: '80%' }, 2000
+            div.animate { width: '80%' }, time
           else
             div.finish().animate { width: '100%' }, 250, 'swing', () ->
               div.animate { opacity: '0' }, 500, 'swing', () ->

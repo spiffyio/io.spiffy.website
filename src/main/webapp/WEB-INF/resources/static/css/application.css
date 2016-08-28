@@ -660,6 +660,22 @@ div.actions button img {
   margin-top: 20%;
 }
 
+div.dz-preview {
+  display: none;
+}
+
+form.dropzone {
+  height: 5em;
+  border: 5px #3D3D3D dashed;
+  text-align: center;
+  cursor: pointer;
+}
+
+form.dropzone img {
+  height: 3em;
+  padding-top: 1em;
+}
+
 form div.message {
   height: auto;
   width: calc(100% - 4px);
