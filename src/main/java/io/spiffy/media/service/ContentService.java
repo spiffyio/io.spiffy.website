@@ -139,8 +139,13 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             final byte[] compressValue = ImageUtil.compress(fileValue, type);
             final FileEntity file = fileService.post(content.getName(), type, compressValue);
 
-            final byte[] thumbnailValue = ImageUtil.thumbnail(fileValue, type, THUMBNAIL_SIZE, fileValue);
-            final FileEntity thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, type, thumbnailValue);
+            final byte[] thumbnailValue = ImageUtil.thumbnail(fileValue, type, THUMBNAIL_SIZE, null);
+            final FileEntity thumbnail;
+            if (thumbnailValue != null) {
+                thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, type, thumbnailValue);
+            } else {
+                thumbnail = file;
+            }
 
             imageService.post(content, file, thumbnail);
             snsManager.publish(content.getId());

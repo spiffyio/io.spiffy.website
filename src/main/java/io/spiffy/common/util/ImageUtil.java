@@ -45,6 +45,10 @@ public class ImageUtil {
     }
 
     public static byte[] compress(final byte[] value, final MediaType type) {
+        if (value == null) {
+            return value;
+        }
+
         if (MediaType.PNG.equals(type)) {
             return compressPNG(value);
         }
