@@ -6,14 +6,19 @@ import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
+import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
 
+import org.apache.commons.imaging.ImageReadException;
+import org.apache.commons.imaging.ImageWriteException;
+import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
+import org.apache.log4j.Logger;
 import org.imgscalr.Scalr;
+
+import com.googlecode.pngtastic.core.PngImage;
+import com.googlecode.pngtastic.core.PngOptimizer;
 
 import io.spiffy.common.api.media.dto.MediaType;
 
@@ -23,6 +28,8 @@ public class ImageUtil {
     private static final int BOTTOM_MARGIN = 10;
     private static final int TOP_MARGIN = 5;
     private static final int SIDE_MARGIN = 10;
+
+    private static final Logger logger = Logger.getLogger(ImageUtil.class);
 
     private static BufferedImage asImage(final byte[] bytes) throws IOException {
         final InputStream in = new ByteArrayInputStream(bytes);
@@ -37,16 +44,42 @@ public class ImageUtil {
         }
     }
 
+    public static byte[] compress(final byte[] value, final MediaType type) {
+        if (MediaType.PNG.equals(type)) {
+            return compressPNG(value);
+        }
+
+        return value;
+    }
+
+    public static byte[] compressPNG(final byte[] value) {
+        final PngOptimizer optimizer = new PngOptimizer();
+        optimizer.setCompressor("zopfli", 15);
+
+        final InputStream in = new ByteArrayInputStream(value);
+        final PngImage image = new PngImage(in);
+
+        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
+            final PngImage optimized = optimizer.optimize(image);
+            optimized.writeDataOutputStream(baos);
+            return baos.toByteArray();
+        } catch (final IOException e) {
+            logger.warn("unable to compress png");
+        }
+
+        return value;
+    }
+
     public static byte[] thumbnail(final byte[] value, final MediaType type, final int size, final byte[] defaultValue) {
         byte[] result = null;
         try {
             result = thumbnail(value, type, size);
         } catch (final IOException e) {
+            logger.warn("unable to thumbnail image");
         }
 
         result = result != null ? result : defaultValue;
-
-        return result;
+        return compress(result, type);
     }
 
     private static byte[] thumbnail(final byte[] bytes, final MediaType type, final int size) throws IOException {
@@ -55,8 +88,42 @@ public class ImageUtil {
             return null;
         }
 
-        final BufferedImage thumbnail = Scalr.resize(image, size);
-        return asBytes(thumbnail, type);
+        final BufferedImage scaledImage = Scalr.resize(image, size);
+        final byte[] scaledBytes = asBytes(scaledImage, type);
+        if (scaledBytes.length < bytes.length) {
+            return scaledBytes;
+        }
+
+        final int x = (image.getWidth() - scaledImage.getWidth()) / 2;
+        final int y = (image.getHeight() - scaledImage.getHeight()) / 2;
+
+        final BufferedImage croppedImage = image.getSubimage(x, y, scaledImage.getWidth(), scaledImage.getHeight());
+        return asBytes(croppedImage, type);
+    }
+
+    public static byte[] removeExif(final byte[] bytes) {
+        final String name = UIDUtil.generateIdempotentId();
+
+        File out = null;
+        OutputStream os = null;
+        try {
+            out = File.createTempFile(name, ".jpg");
+            if (out.exists()) {
+                out.delete();
+            }
+            os = new FileOutputStream(out);
+            os = new BufferedOutputStream(os);
+
+            new ExifRewriter().removeExifMetadata(bytes, os);
+            return Files.readAllBytes(out.toPath());
+        } catch (final IOException | ImageReadException | ImageWriteException e) {
+            logger.warn("unable to save out: " + name, e);
+            return null;
+        } finally {
+            if (out != null && out.exists()) {
+                out.delete();
+            }
+        }
     }
 
     public static byte[] macro(final byte[] bytes, final MediaType type, final String top, final String bottom)

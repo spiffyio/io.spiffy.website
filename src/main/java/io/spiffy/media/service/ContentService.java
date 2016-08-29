@@ -135,8 +135,9 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
     @Transactional
     public void process(final ContentEntity content, final MediaType type, final byte[] value) {
         if (MediaType.JPG.equals(type) || MediaType.PNG.equals(type)) {
-            final byte[] fileValue = MediaType.JPG.equals(type) ? ExifUtil.removeExif(value) : value;
-            final FileEntity file = fileService.post(content.getName(), type, fileValue);
+            final byte[] fileValue = MediaType.JPG.equals(type) ? ImageUtil.removeExif(value) : value;
+            final byte[] compressValue = ImageUtil.compress(fileValue, type);
+            final FileEntity file = fileService.post(content.getName(), type, compressValue);
 
             final byte[] thumbnailValue = ImageUtil.thumbnail(fileValue, type, THUMBNAIL_SIZE, fileValue);
             final FileEntity thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, type, thumbnailValue);
