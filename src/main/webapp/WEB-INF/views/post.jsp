@@ -12,6 +12,7 @@
 </h2>
 
 <div class="panel">
+  <c:if test="${ empty unprocessed }">
   <c:if test="${ post.content.type eq 'VIDEO' }">
   <div class="video" style="position: relative">
   <video autoplay="true" loop="true" preload="none" poster="<c:out value="${ post.content.poster }" />">
@@ -25,6 +26,11 @@
   </c:if>
   <c:if test="${ post.content.type eq 'IMAGE' }">
   <img src="<c:out value="${ post.content.thumbnail }" />" />
+  </c:if>
+  </c:if>
+  <c:if test="${ not empty unprocessed }">
+    <div data-unprocessed="<c:out value="${ unprocessed }" />">
+    </div>
   </c:if>
 </div>
 

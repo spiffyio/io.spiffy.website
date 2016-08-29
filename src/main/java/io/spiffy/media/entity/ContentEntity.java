@@ -49,5 +49,6 @@ public class ContentEntity extends HibernateEntity {
         this.account = account;
         this.idempotentId = idempotentId;
         this.type = type;
+        processed = false;
     }
 }

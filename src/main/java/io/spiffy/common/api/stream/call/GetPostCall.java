@@ -13,4 +13,9 @@ public class GetPostCall extends SpiffyCall<GetInput, GetPostOutput> {
     public GetPostCall(final WebTarget target) {
         super(GetPostOutput.class, target.path("stream/getpost"));
     }
+
+    @Override
+    public boolean cacheOutput(final GetPostOutput output) {
+        return !GetPostOutput.Error.UNPROCESSED_MEDIA.equals(output.getError());
+    }
 }

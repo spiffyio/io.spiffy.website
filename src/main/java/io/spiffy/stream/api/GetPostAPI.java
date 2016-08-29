@@ -30,8 +30,11 @@ public class GetPostAPI extends API<GetInput, GetPostOutput, PostService> {
 
     protected GetPostOutput api(final GetInput input) {
         final PostEntity e = service.get(input.getId());
-
         final Post post = transform(e);
+
+        if (Boolean.FALSE.equals(e.getProcessed())) {
+            return new GetPostOutput(post, GetPostOutput.Error.UNPROCESSED_MEDIA);
+        }
 
         return new GetPostOutput(post);
     }

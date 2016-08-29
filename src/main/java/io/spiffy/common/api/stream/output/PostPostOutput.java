@@ -5,26 +5,23 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import io.spiffy.common.api.stream.dto.Post;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetPostOutput {
+public class PostPostOutput {
     public enum Error {
-        UNPROCESSED_MEDIA
+        UNKNOWN_ERROR
     }
 
-    private Post post;
+    private String name;
     private Error error;
 
-    public GetPostOutput(final Post post) {
-        this.post = post;
+    public PostPostOutput(final String name) {
+        this.name = name;
     }
 
-    public GetPostOutput(final Error error) {
+    public PostPostOutput(final Error error) {
         this.error = error;
     }
-
 }

@@ -13,4 +13,9 @@ public class GetMediaCall extends SpiffyCall<GetInput, GetMediaOutput> {
     public GetMediaCall(final WebTarget target) {
         super(GetMediaOutput.class, target.path("media/getmedia"));
     }
+
+    @Override
+    public boolean cacheOutput(final GetMediaOutput output) {
+        return !GetMediaOutput.Error.UNPROCESSED_CONTENT.equals(output.getError());
+    }
 }

@@ -1,6 +1,5 @@
 package io.spiffy.common;
 
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 import javax.ws.rs.client.Entity;
@@ -31,14 +30,20 @@ public abstract class Call<Input, Output> extends Manager {
     }
 
     public Output call(final Input input) {
-        if (cache != null) {
-            try {
-                return cache.get(input, () -> doCall(input));
-            } catch (final ExecutionException e) {
-            }
+        if (cache == null) {
+            return doCall(input);
         }
 
-        return doCall(input);
+        final Output cached = cache.getIfPresent(input);
+        if (cached != null) {
+            return cached;
+        }
+
+        final Output output = doCall(input);
+        if (output != null && cacheOutput(output)) {
+            cache.put(input, output);
+        }
+        return output;
     }
 
     public Invocation.Builder getBuilder(final WebTarget target, final Input input) {
@@ -54,5 +59,9 @@ public abstract class Call<Input, Output> extends Manager {
         final String outjson = response.readEntity(String.class);
 
         return JsonUtil.deserialize(outputClass, outjson);
+    }
+
+    protected boolean cacheOutput(final Output output) {
+        return true;
     }
 }

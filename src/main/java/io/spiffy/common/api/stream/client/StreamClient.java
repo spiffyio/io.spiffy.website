@@ -8,7 +8,6 @@ import javax.inject.Inject;
 
 import io.spiffy.common.Client;
 import io.spiffy.common.api.GetInput;
-import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.stream.call.GetPostCall;
 import io.spiffy.common.api.stream.call.GetPostsCall;
 import io.spiffy.common.api.stream.call.PostActionCall;
@@ -20,8 +19,9 @@ import io.spiffy.common.api.stream.input.PostPostInput;
 import io.spiffy.common.api.stream.output.GetPostOutput;
 import io.spiffy.common.api.stream.output.GetPostsOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
+import io.spiffy.common.api.stream.output.PostPostOutput;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class StreamClient extends Client {
 
     private final GetPostCall getPostCall;
@@ -50,10 +50,10 @@ public class StreamClient extends Client {
         return output.getPosts();
     }
 
-    public Post getPost(final long id) {
+    public GetPostOutput getPost(final long id) {
         final GetInput input = new GetInput(id);
         final GetPostOutput output = getPostCall.call(input);
-        return output.getPost();
+        return output;
     }
 
     public PostActionOutput postAction(final long postId, final long accountId, final PostActionInput.Action action) {
@@ -62,10 +62,10 @@ public class StreamClient extends Client {
         return output;
     }
 
-    public long postPost(final String idempotentId, final long accountId, final long mediaId, final String title,
+    public PostPostOutput postPost(final String idempotentId, final long accountId, final long mediaId, final String title,
             final String description) {
         final PostPostInput input = new PostPostInput(idempotentId, accountId, mediaId, title, description);
-        final PostOutput output = postPostCall.call(input);
-        return output.getId();
+        final PostPostOutput output = postPostCall.call(input);
+        return output;
     }
 }

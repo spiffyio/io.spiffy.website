@@ -378,7 +378,7 @@ jQuery.fn.spiffy = function() {
 var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
 
 addedfile = function(file) {
-  var div, form, func, img, preview, source, video;
+  var div, form, func, img, preview, source, src, video;
   if (file.accepted == null) {
     func = function() {
       addedfile(file);
@@ -393,6 +393,9 @@ addedfile = function(file) {
   form = $('form.submit');
   preview = form.find('div.preview');
   div = $(document.createElement('div'));
+  src = URL.createObjectURL(file);
+  form.attr('data-media-src', src);
+  form.attr('data-media-type', file.type);
   if (file.type.containsIgnoreCase('video')) {
     form.spiffy().loading('header', true, 30000);
     div.addClass('video');
@@ -403,13 +406,13 @@ addedfile = function(file) {
     video.attr('autoplay', false);
     source = $(document.createElement('source'));
     source.attr('type', file.type);
-    source.attr('src', URL.createObjectURL(file));
+    source.attr('src', src);
     video.append(source);
     div.append(video);
   } else {
     form.spiffy().loading('header', true, 5000);
     img = $(document.createElement('img'));
-    img.attr('src', URL.createObjectURL(file));
+    img.attr('src', src);
     div.append(img);
   }
   preview.prepend(div);
@@ -474,6 +477,33 @@ $(document).ready(function(e) {
       });
     }
   }
+  $('[data-unprocessed]').each(function() {
+    var div, img, post, source, src, type, video;
+    div = $(this);
+    post = div.data('unprocessed');
+    src = sessionStorage.getItem('src:' + post);
+    type = sessionStorage.getItem('type:' + post);
+    if (!((src != null) && (type != null))) {
+      return;
+    }
+    if (type.containsIgnoreCase('video')) {
+      div.addClass('video');
+      div.addClass('paused');
+      video = $(document.createElement('video'));
+      video.attr('muted', true);
+      video.attr('loop', true);
+      video.attr('autoplay', false);
+      source = $(document.createElement('source'));
+      source.attr('type', type);
+      source.attr('src', src);
+      video.append(source);
+      div.html(video);
+    } else if (type.containsIgnoreCase('image')) {
+      img = $(document.createElement('img'));
+      img.attr('src', src);
+      div.html(img);
+    }
+  });
   $('form:not(#dz-form)').submit(function(e) {
     var form;
     preventDefault(e);
@@ -500,8 +530,10 @@ $(document).ready(function(e) {
     }
   });
   $('form.submit').spiffy().options({
-    success: function() {
-      return go('/');
+    success: function(form, data) {
+      sessionStorage.setItem('src:' + data.name, form.data('media-src'));
+      sessionStorage.setItem('type:' + data.name, form.data('media-type'));
+      return go('/stream/' + data.name);
     }
   });
   $('a[data-form]').click(function(e) {

@@ -69,11 +69,18 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             return new GetMediaOutput(GetMediaOutput.Error.UNKNOWN_CONTENT);
         }
 
+        final GetMediaOutput.Error error;
+        if (Boolean.FALSE.equals(entity.getProcessed())) {
+            error = GetMediaOutput.Error.UNPROCESSED_CONTENT;
+        } else {
+            error = GetMediaOutput.Error.UNKNOWN_CONTENT;
+        }
+
         final Content content;
         if (ContentType.IMAGE.equals(entity.getType())) {
             final ImageEntity image = imageService.get(entity);
             if (image == null) {
-                return new GetMediaOutput(GetMediaOutput.Error.UNKNOWN_CONTENT);
+                return new GetMediaOutput(error);
             }
 
             final String file = FileService.getUrl(image.getFile());
@@ -83,7 +90,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         } else if (ContentType.VIDEO.equals(entity.getType())) {
             final VideoEntity video = videoService.get(entity);
             if (video == null) {
-                return new GetMediaOutput(GetMediaOutput.Error.UNKNOWN_CONTENT);
+                return new GetMediaOutput(error);
             }
 
             final String poster = FileService.getUrl(video.getPoster());
@@ -116,6 +123,13 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         ThreadUtil.run(() -> process(content, type, value));
 
         return entity;
+    }
+
+    @Transactional
+    public void process(final long id) {
+        final ContentEntity content = get(id);
+        content.setProcessed(true);
+        repository.saveOrUpdate(content);
     }
 
     @Transactional

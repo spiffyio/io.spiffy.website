@@ -13,7 +13,7 @@ import io.spiffy.common.api.media.dto.Content;
 @AllArgsConstructor
 public class GetMediaOutput {
     public enum Error {
-        UNKNOWN_CONTENT
+        UNKNOWN_CONTENT, UNPROCESSED_CONTENT
     }
 
     private Content content;

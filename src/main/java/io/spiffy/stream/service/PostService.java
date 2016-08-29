@@ -10,6 +10,7 @@ import io.spiffy.common.Service;
 import io.spiffy.common.api.stream.input.PostActionInput.Action;
 import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.util.DateUtil;
+import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.stream.entity.PostEntity;
 import io.spiffy.stream.repository.PostRepository;
@@ -37,6 +38,11 @@ public class PostService extends Service<PostEntity, PostRepository> {
     }
 
     @Transactional
+    public List<PostEntity> getByMediaId(final long mediaId) {
+        return repository.getByMediaId(mediaId);
+    }
+
+    @Transactional
     public PostEntity post(final String idempotentId, final long accountId, final long mediaId, final String title,
             final String description) {
         validateIdempotentId(idempotentId);
@@ -51,8 +57,28 @@ public class PostService extends Service<PostEntity, PostRepository> {
 
         repository.saveOrUpdate(entity);
 
-        return entity;
+        if (entity.getName() == null) {
+            entity.setName(ObfuscateUtil.obfuscate(entity.getId()));
+            repository.saveOrUpdate(entity);
+        }
 
+        return entity;
+    }
+
+    @Transactional
+    public void process(final long id) {
+        final PostEntity post = get(id);
+        post.setProcessed(true);
+        repository.saveOrUpdate(post);
+    }
+
+    @Transactional
+    public void processByMediaId(final long id) {
+        final List<PostEntity> posts = getByMediaId(id);
+        for (final PostEntity post : posts) {
+            post.setProcessed(true);
+            repository.saveOrUpdate(post);
+        }
     }
 
     @Transactional

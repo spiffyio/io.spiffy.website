@@ -17,15 +17,16 @@ import io.spiffy.common.Controller;
 import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.stream.client.StreamClient;
+import io.spiffy.common.api.stream.output.PostPostOutput;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
-import io.spiffy.website.response.SuccessResponse;
+import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;
@@ -55,7 +56,13 @@ public class UploadController extends Controller {
             final @RequestParam(required = false) String description,
             final @RequestParam("idempotentId") String idempotentPrefix) throws IOException {
         final String idempotentId = idempotentPrefix + "-" + context.getAccountId();
-        streamClient.postPost(idempotentId, context.getAccountId(), ObfuscateUtil.unobfuscate(media[0]), title, description);
-        return new SuccessResponse(true);
+
+        final PostPostOutput output = streamClient.postPost(idempotentId, context.getAccountId(),
+                ObfuscateUtil.unobfuscate(media[0]), title, description);
+        if (output.getError() != null) {
+            return new BadRequestResponse("error", "something went wrong");
+        }
+
+        return new UploadResponse(output.getName());
     }
 }

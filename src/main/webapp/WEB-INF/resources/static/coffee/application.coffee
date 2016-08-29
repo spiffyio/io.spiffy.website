@@ -18,6 +18,10 @@ addedfile = (file) ->
   preview = form.find 'div.preview'
   div = $ document.createElement 'div'
 
+  src = URL.createObjectURL(file)
+  form.attr 'data-media-src', src
+  form.attr 'data-media-type', file.type
+
   if file.type.containsIgnoreCase 'video'
     form.spiffy().loading 'header', true, 30000
     div.addClass 'video'
@@ -30,14 +34,14 @@ addedfile = (file) ->
 
     source = $ document.createElement 'source'
     source.attr 'type', file.type
-    source.attr 'src', URL.createObjectURL(file)
+    source.attr 'src', src
     video.append source
 
     div.append video
   else
     form.spiffy().loading 'header', true, 5000
     img = $ document.createElement 'img'
-    img.attr 'src', URL.createObjectURL(file)
+    img.attr 'src', src
     div.append img
   preview.prepend div
   form.slideDown()
@@ -98,6 +102,35 @@ $(document).ready (e) ->
         $(this).val hash
         return
 
+  $('[data-unprocessed]').each () ->
+    div = $ this
+    post = div.data 'unprocessed'
+    src = sessionStorage.getItem 'src:' + post
+    type = sessionStorage.getItem 'type:' + post
+
+    if not (src? and type?) then return
+
+    if type.containsIgnoreCase 'video'
+      div.addClass 'video'
+      div.addClass 'paused'
+
+      video = $ document.createElement 'video'
+      video.attr 'muted', true
+      video.attr 'loop', true
+      video.attr 'autoplay', false
+
+      source = $ document.createElement 'source'
+      source.attr 'type', type
+      source.attr 'src', src
+      video.append source
+
+      div.html video
+    else if type.containsIgnoreCase 'image'
+      img = $ document.createElement 'img'
+      img.attr 'src', src
+      div.html img
+    return
+
   $('form:not(#dz-form)').submit (e) ->
     preventDefault e
     form = $ this
@@ -118,7 +151,10 @@ $(document).ready (e) ->
     success: () -> refresh()
 
   $('form.submit').spiffy().options
-    success: () -> go '/'
+    success: (form, data) ->
+      sessionStorage.setItem 'src:' + data.name, form.data('media-src')
+      sessionStorage.setItem 'type:' + data.name, form.data('media-type')
+      go '/stream/' + data.name
 
   $('a[data-form]').click (e) ->
     preventDefault e

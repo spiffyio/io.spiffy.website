@@ -41,4 +41,10 @@ public class PostRepository extends HibernateRepository<PostEntity> {
         c.setMaxResults(maxResults);
         return asList(c.list());
     }
+
+    public List<PostEntity> getByMediaId(final long mediaId) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("mediaId", mediaId));
+        return asList(c.list());
+    }
 }

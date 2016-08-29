@@ -16,10 +16,10 @@ import io.spiffy.common.api.discussion.dto.ThreadDTO.EntityType;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.api.stream.input.PostActionInput;
+import io.spiffy.common.api.stream.output.GetPostOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
-import io.spiffy.media.manager.SQSManager;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
@@ -27,7 +27,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private static final String ACCOUNT_ID_KEY = "accountId";
@@ -35,17 +35,14 @@ public class HomeController extends Controller {
     private static final String COMMENTS_KEY = "comments";
     private static final String POST_KEY = "post";
     private static final String POSTS_KEY = "posts";
+    private static final String UNPROCESSED_KEY = "unprocessed";
 
     private final DiscussionClient discussionClient;
     private final StreamClient streamClient;
-    private final SQSManager manager;
 
     @RequestMapping({ "/", "/stream" })
     public ModelAndView home(final Context context, final @RequestParam(required = false) String account,
             final @RequestParam(required = false) String start) {
-
-        manager.poll();
-
         final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
                 start == null ? null : ObfuscateUtil.unobfuscate(start), 12);
         if (CollectionUtils.isEmpty(posts)) {
@@ -69,7 +66,13 @@ public class HomeController extends Controller {
     public ModelAndView post(final Context context, final @PathVariable String postId) {
         final long post = ObfuscateUtil.unobfuscate(postId);
 
-        context.addAttribute(POST_KEY, streamClient.getPost(post));
+        final GetPostOutput output = streamClient.getPost(post);
+        context.addAttribute(POST_KEY, output.getPost());
+
+        if (GetPostOutput.Error.UNPROCESSED_MEDIA.equals(output.getError())) {
+            context.addAttribute(UNPROCESSED_KEY, postId);
+        }
+
         context.addAttribute(COMMENTS_KEY, discussionClient.getComments(EntityType.POST, "" + post, null, 24));
 
         return mav("post", context);
