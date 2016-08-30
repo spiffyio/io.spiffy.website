@@ -41,7 +41,7 @@
   <button class="button primary" data-action="share"><img src="<s:resource file="svg/linea/basic_share.svg" />" /></button>
   <button class="button primary" data-action="link"><img src="<s:resource file="svg/linea/basic_link.svg" />" /></button>
   <button class="button primary" data-action="download"><img src="<s:resource file="svg/linea/basic_download.svg" />" /></button>
-  <button class="button danger" data-action="<c:if test="${ post.accountId eq account.id }">delete"><img src="<s:resource file="svg/linea/basic_trashcan.svg" />" /></c:if><c:if test="${ post.accountId ne account.id }">report"><img src="<s:resource file="svg/linea/basic_flag1.svg" />" /></c:if>
+  <button class="button danger" data-action="<c:if test="${ post.account.id eq account.id }">delete"><img src="<s:resource file="svg/linea/basic_trashcan.svg" />" /></c:if><c:if test="${ post.account.id ne account.id }">report"><img src="<s:resource file="svg/linea/basic_flag1.svg" />" /></c:if>
   </button>
 
   <form class="action" <s:csrf name="action" /> action="/stream/<c:out value="${ post.postId }" />/action" data-loading="header">

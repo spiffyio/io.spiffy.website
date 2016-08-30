@@ -604,6 +604,7 @@ div.disabled:before {
   border: 1px solid #F5F5F5;
   box-shadow: 0px 0px 5px 0px #5F5F5F;
   position: relative;
+  overflow: hidden;
 }
 
 .grid .col .panel div.centeryo {
@@ -627,14 +628,44 @@ div.disabled:before {
 }
 
 .grid .col .panel div.source {
-  height: 3em;
-  width: 100%;
+  height: auto;
+  width: inherit;
+  margin: 0.5em;
   color: #0D0D0D;
   font-weight: bold;
   line-height: 3em;
-  text-align: center;
+  text-align: left;
   max-width: 100%;
-  overflow: hidden;
+}
+
+.grid .col .panel div.source div {
+  height: auto;
+  width: auto;
+}
+
+.grid .col .panel div.source div.account {
+  float: left;
+  line-height: 1.5em;
+}
+
+.grid .col .panel div.source div.account div {
+  margin-left: 0.5em;
+  float: left;
+}
+
+.grid .col .panel div.source div.account span.time {
+  font-size: 75%;
+  font-weight: bold;
+  color: #D3D3D3;
+}
+
+.grid .col .panel div.source div.post-information {
+  float: right;
+}
+
+.grid .col .panel div.source div.post-information div {
+  margin-right: 0.5em;
+  float: right;
 }
 
 .panel img, .panel video, .panel ins {

@@ -25,8 +25,24 @@
     </div>
     </div>
     <div class="source">
-      <a href="/<c:out value="${ post.account.username }" />"><c:out value="${ post.account.username }" /></a>
-      <a href="/stream/<c:out value="${ post.postId }" />"><c:out value="${ post.title }" /></a>
+      <div class="post-information">
+        <div class="discuss">
+          <a href="/stream/<c:out value="${ post.postId }" />"><img style="width: 2em; margin: 0.5em;" src="<s:resource file="svg/linea/basic_message_txt.svg" />" /></a>
+        </div>
+        <div class="title">
+          <a href="/stream/<c:out value="${ post.postId }" />"><c:out value="${ post.title }" /></a>
+        </div>
+      </div>
+      <div class="account">
+        <div class="thumbnail">
+          <a href="/<c:out value="${ post.account.username }" />"><img style="width: 3em;" src="//cdn-beta.spiffy.io/media/KMPxfQ.jpg" /></a>
+        </div>
+        <div class="username">
+          <a href="/<c:out value="${ post.account.username }" />"><c:out value="${ post.account.username }" /></a>
+          <br />
+          <span class="time"><s:duration date="${ post.postedAt }" /></span>
+        </div>
+      </div>
     </div>
   </div>
   </c:forEach>
