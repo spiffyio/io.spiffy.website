@@ -440,6 +440,7 @@ $(window).scroll (e) ->
 
 $(window).scroll (e) ->
   form = $ 'form.load-posts'
+  if not (form? and form.is 'form.load-posts') then return
   col = $ '.col[data-index="0"]'
   panel = col.find '.panel:in-viewport:first'
   history.replaceState {}, 'SPIFFY.io', location.pathname + '?start=' + panel.data('post-id')

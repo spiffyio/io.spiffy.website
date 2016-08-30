@@ -861,6 +861,9 @@ $(window).scroll(function(e) {
 $(window).scroll(function(e) {
   var col, form, panel;
   form = $('form.load-posts');
+  if (!((form != null) && form.is('form.load-posts'))) {
+    return;
+  }
   col = $('.col[data-index="0"]');
   panel = col.find('.panel:in-viewport:first');
   history.replaceState({}, 'SPIFFY.io', location.pathname + '?start=' + panel.data('post-id'));

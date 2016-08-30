@@ -207,7 +207,7 @@ input, textarea
     background-position: 50% 25%
 
 div.header-padding
-  +size($header_height + 0.5em, 100%)
+  +size($header_height, 100%)
 
 div.footer-padding
   +size($header_height, 100%)
@@ -466,6 +466,7 @@ div.disabled:before
 
 .grid .col
   +size(auto, 100%)
+  margin-top: 0.5em
   flex: 1
 
 .clickable
@@ -494,6 +495,15 @@ div.disabled:before
   border: 1px solid $w1
   box-shadow: 0px 0px 5px 0px $w3
   position: relative
+
+  div.centeryo
+    background: $w4
+
+  div.mediayo
+    +size(auto, auto)
+    max-height: 640px
+    max-width: 640px
+    display: inline-block
 
   img, video, ins
     +size(auto, 100%)
@@ -526,6 +536,42 @@ div.disabled:before
   margin-left: calc(2.5% - 0.5px)
   border: 1px solid $w1
 
+div.post
+  +size(auto, 100%)
+  background: $w4
+  color: $w1
+  text-align: center
+
+div.media
+  +size(auto, auto)
+  position: relative
+  display: inline-block
+  overflow: hidden
+
+  +max-width($md)
+    max-width: 100%
+
+  +min-width($md)
+    max-width: 80%
+
+  img, video
+    +size(auto, auto)
+    max-width: 100%
+
+div.information
+  display: inline-block
+
+  +min-width($md)
+    margin: 0 5em
+
+  div.description
+    display: inline-block
+    text-align: initial
+    margin-bottom: 0.5em
+
+  div.description:empty
+    margin-bottom: 0em
+
 div.actions
   text-align: center
 
@@ -536,6 +582,76 @@ div.actions
     img
       height: 60%
       margin-top: 20%
+
+div.centeryo
+  +size(auto, 100%)
+  text-align: center
+
+div.initialyo
+  +size(auto, 100%)
+  text-align: initial
+
+div.comments
+  +size(auto, 100%)
+  display: inline-block
+
+  +min-width($md)
+    +size(auto, 640px)
+
+  form.comment
+    +size(auto, 100%)
+
+    +max-width($sm)
+      margin-top: 0.5em
+
+    div.input
+      display: inline-block
+
+      +max-width($sm)
+        +buffer(0, 0)
+
+    input
+      padding: 0 0.5em
+
+      +max-width($sm)
+        +buffer(0, 0)
+
+    div.text
+      width: 75%
+
+      +max-width($sm)
+        width: 100%
+
+      +min-width($md)
+        width: 85%
+
+    div.submit
+      width: 20%
+
+      +max-width($sm)
+        width: 100%
+
+      +min-width($md)
+        width: 10%
+
+  div.comment
+    +size(auto, auto)
+    font-size: 150%
+    margin: 0.5em 0
+    padding: 0 0.5em
+    border: solid $w4 2px
+    color: $w4
+    text-align: initial
+    float: left
+    clear: left
+
+  div.comment:nth-child(even)
+    background: $b1
+    border-color: $b4
+
+  div.comment:nth-child(odd)
+    background: $o1
+    border-color: $o4
 
 div.dz-preview
   display: none

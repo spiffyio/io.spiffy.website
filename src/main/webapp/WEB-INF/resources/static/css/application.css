@@ -225,7 +225,7 @@ input, textarea {
 }
 
 div.header-padding {
-  height: 3.5em;
+  height: 3em;
   width: 100%;
 }
 
@@ -564,6 +564,7 @@ div.disabled:before {
 .grid .col {
   height: auto;
   width: 100%;
+  margin-top: 0.5em;
   flex: 1;
 }
 
@@ -603,6 +604,18 @@ div.disabled:before {
   border: 1px solid #F5F5F5;
   box-shadow: 0px 0px 5px 0px #5F5F5F;
   position: relative;
+}
+
+.grid .col .panel div.centeryo {
+  background: #3D3D3D;
+}
+
+.grid .col .panel div.mediayo {
+  height: auto;
+  width: auto;
+  max-height: 640px;
+  max-width: 640px;
+  display: inline-block;
 }
 
 .grid .col .panel img, .grid .col .panel video, .grid .col .panel ins {
@@ -645,6 +658,60 @@ div.disabled:before {
   border: 1px solid #F5F5F5;
 }
 
+div.post {
+  height: auto;
+  width: 100%;
+  background: #3D3D3D;
+  color: #F5F5F5;
+  text-align: center;
+}
+
+div.media {
+  height: auto;
+  width: auto;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 767px) {
+  div.media {
+    max-width: 100%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  div.media {
+    max-width: 80%;
+  }
+}
+
+div.media img, div.media video {
+  height: auto;
+  width: auto;
+  max-width: 100%;
+}
+
+div.information {
+  display: inline-block;
+}
+
+@media only screen and (min-width: 768px) {
+  div.information {
+    margin: 0 5em;
+  }
+}
+
+div.information div.description {
+  display: inline-block;
+  text-align: initial;
+  margin-bottom: 0.5em;
+}
+
+div.information div.description:empty {
+  margin-bottom: 0em;
+}
+
 div.actions {
   text-align: center;
 }
@@ -658,6 +725,119 @@ div.actions button {
 div.actions button img {
   height: 60%;
   margin-top: 20%;
+}
+
+div.centeryo {
+  height: auto;
+  width: 100%;
+  text-align: center;
+}
+
+div.initialyo {
+  height: auto;
+  width: 100%;
+  text-align: initial;
+}
+
+div.comments {
+  height: auto;
+  width: 100%;
+  display: inline-block;
+}
+
+@media only screen and (min-width: 768px) {
+  div.comments {
+    height: auto;
+    width: 640px;
+  }
+}
+
+div.comments form.comment {
+  height: auto;
+  width: 100%;
+}
+
+@media only screen and (max-width: 479px) {
+  div.comments form.comment {
+    margin-top: 0.5em;
+  }
+}
+
+div.comments form.comment div.input {
+  display: inline-block;
+}
+
+@media only screen and (max-width: 479px) {
+  div.comments form.comment div.input {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+div.comments form.comment input {
+  padding: 0 0.5em;
+}
+
+@media only screen and (max-width: 479px) {
+  div.comments form.comment input {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+div.comments form.comment div.text {
+  width: 75%;
+}
+
+@media only screen and (max-width: 479px) {
+  div.comments form.comment div.text {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  div.comments form.comment div.text {
+    width: 85%;
+  }
+}
+
+div.comments form.comment div.submit {
+  width: 20%;
+}
+
+@media only screen and (max-width: 479px) {
+  div.comments form.comment div.submit {
+    width: 100%;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  div.comments form.comment div.submit {
+    width: 10%;
+  }
+}
+
+div.comments div.comment {
+  height: auto;
+  width: auto;
+  font-size: 150%;
+  margin: 0.5em 0;
+  padding: 0 0.5em;
+  border: solid #3D3D3D 2px;
+  color: #3D3D3D;
+  text-align: initial;
+  float: left;
+  clear: left;
+}
+
+div.comments div.comment:nth-child(even) {
+  background: #C0EFFD;
+  border-color: #39C6EE;
+}
+
+div.comments div.comment:nth-child(odd) {
+  background: #FFECC0;
+  border-color: #FFC336;
 }
 
 div.dz-preview {
