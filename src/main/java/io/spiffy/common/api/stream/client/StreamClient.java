@@ -30,19 +30,19 @@ public class StreamClient extends Client {
     private final PostPostCall postPostCall;
 
     public List<Post> getPosts(final int maxResults) {
-        return getPosts(new GetPostsInput(null, null, maxResults));
+        return getPosts(new GetPostsInput(null, null, maxResults, true));
     }
 
-    public List<Post> getPosts(final Long first, final int maxResults) {
-        return getPosts(new GetPostsInput(null, first, maxResults));
+    public List<Post> getPosts(final Long first, final int maxResults, final boolean includeFirst) {
+        return getPosts(new GetPostsInput(null, first, maxResults, includeFirst));
     }
 
     public List<Post> getPostsByAccount(final Long accountId, final int maxResults) {
-        return getPosts(new GetPostsInput(accountId, null, maxResults));
+        return getPosts(new GetPostsInput(accountId, null, maxResults, true));
     }
 
-    public List<Post> getPosts(final Long accountId, final Long first, final int maxResults) {
-        return getPosts(new GetPostsInput(accountId, first, maxResults));
+    public List<Post> getPosts(final Long accountId, final Long first, final int maxResults, final boolean includeFirst) {
+        return getPosts(new GetPostsInput(accountId, first, maxResults, includeFirst));
     }
 
     private List<Post> getPosts(final GetPostsInput input) {

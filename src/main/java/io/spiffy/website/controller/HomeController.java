@@ -44,7 +44,7 @@ public class HomeController extends Controller {
     public ModelAndView home(final Context context, final @RequestParam(required = false) String account,
             final @RequestParam(required = false) String start) {
         final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
-                start == null ? null : ObfuscateUtil.unobfuscate(start), 12);
+                start == null ? null : ObfuscateUtil.unobfuscate(start), 6, true);
         if (CollectionUtils.isEmpty(posts)) {
             return mav("home", context);
         }
@@ -124,7 +124,7 @@ public class HomeController extends Controller {
     public AjaxResponse posts(final Context context, final @RequestParam(required = false) String account,
             final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "12") int quantity) {
         final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
-                after == null ? null : ObfuscateUtil.unobfuscate(after), quantity);
+                after == null ? null : ObfuscateUtil.unobfuscate(after), quantity, false);
         if (CollectionUtils.isEmpty(posts)) {
             return new PostsResponse(null, null);
         }

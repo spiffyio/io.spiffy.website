@@ -13,4 +13,5 @@ public class GetPostsInput {
     private Long accountId;
     private Long first;
     private Integer maxResults;
+    private Boolean includeFirst;
 }
