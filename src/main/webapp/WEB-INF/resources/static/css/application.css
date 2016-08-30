@@ -596,22 +596,25 @@ div.disabled:before {
 }
 
 .grid .col .panel {
+  background: #F5F5F5;
+  border: 1px solid #F5F5F5;
+  box-shadow: 0px 0px 5px 0px #5F5F5F;
+}
+
+.grid .col .panel, .post-comment {
   height: auto;
   width: 95%;
   margin-left: calc(2.5% - 0.5px);
   margin-bottom: 0.5em;
-  background: #F5F5F5;
-  border: 1px solid #F5F5F5;
-  box-shadow: 0px 0px 5px 0px #5F5F5F;
   position: relative;
   overflow: hidden;
 }
 
-.grid .col .panel div.centeryo {
+.grid .col .panel div.centeryo, .post-comment div.centeryo {
   background: #3D3D3D;
 }
 
-.grid .col .panel div.mediayo {
+.grid .col .panel div.mediayo, .post-comment div.mediayo {
   height: auto;
   width: auto;
   max-height: 640px;
@@ -619,7 +622,7 @@ div.disabled:before {
   display: inline-block;
 }
 
-.grid .col .panel img, .grid .col .panel video, .grid .col .panel ins {
+.grid .col .panel img, .grid .col .panel video, .grid .col .panel ins, .post-comment img, .post-comment video, .post-comment ins {
   height: auto;
   width: 100%;
   margin: 0;
@@ -627,7 +630,7 @@ div.disabled:before {
   border: none;
 }
 
-.grid .col .panel div.source {
+.grid .col .panel div.source, .post-comment div.source {
   height: auto;
   width: inherit;
   margin: 0.5em;
@@ -638,32 +641,32 @@ div.disabled:before {
   max-width: 100%;
 }
 
-.grid .col .panel div.source div {
+.grid .col .panel div.source div, .post-comment div.source div {
   height: auto;
   width: auto;
 }
 
-.grid .col .panel div.source div.account {
+.grid .col .panel div.source div.account, .post-comment div.source div.account {
   float: left;
   line-height: 1.5em;
 }
 
-.grid .col .panel div.source div.account div {
+.grid .col .panel div.source div.account div, .post-comment div.source div.account div {
   margin-left: 0.5em;
   float: left;
 }
 
-.grid .col .panel div.source div.account span.time {
+.grid .col .panel div.source div.account span.time, .post-comment div.source div.account span.time {
   font-size: 75%;
   font-weight: bold;
   color: #D3D3D3;
 }
 
-.grid .col .panel div.source div.post-information {
+.grid .col .panel div.source div.post-information, .post-comment div.source div.post-information {
   float: right;
 }
 
-.grid .col .panel div.source div.post-information div {
+.grid .col .panel div.source div.post-information div, .post-comment div.source div.post-information div {
   margin-right: 0.5em;
   float: right;
 }
@@ -851,24 +854,12 @@ div.comments form.comment div.submit {
 div.comments div.comment {
   height: auto;
   width: auto;
-  font-size: 150%;
+  line-height: 1.5em;
   margin: 0.5em 0;
   padding: 0 0.5em;
-  border: solid #3D3D3D 2px;
   color: #3D3D3D;
   text-align: initial;
   float: left;
-  clear: left;
-}
-
-div.comments div.comment:nth-child(even) {
-  background: #C0EFFD;
-  border-color: #39C6EE;
-}
-
-div.comments div.comment:nth-child(odd) {
-  background: #FFECC0;
-  border-color: #FFC336;
 }
 
 div.dz-preview {

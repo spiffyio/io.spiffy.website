@@ -314,4 +314,12 @@ public class Context {
 
         return account.getEmail();
     }
+
+    public String getUsername() {
+        if (account == null) {
+            return null;
+        }
+
+        return account.getUsername();
+    }
 }

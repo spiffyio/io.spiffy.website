@@ -24,7 +24,7 @@
 
 <form class="load-posts" action="/posts" <s:csrf name="posts" /> data-loading="header">
   <input type="hidden" name="after" value="<c:out value="${ after }" />"/>
-  <c:if test="${ not empty accountId }"><input type="hidden" name="account" value="<c:out value="${ accountId }" />"/></c:if>
+  <c:if test="${ not empty user }"><input type="hidden" name="user" value="<c:out value="${ user }" />"/></c:if>
   <input type="hidden" name="quantity" />
 </form>
 

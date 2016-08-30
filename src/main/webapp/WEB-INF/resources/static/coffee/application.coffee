@@ -331,15 +331,8 @@ loadPosts = (posts) ->
 
     panel.prepend div
 
-    source = $ document.createElement 'div'
-    source.addClass 'source'
-
-    link = $ document.createElement 'a'
-    link.attr 'href', '/stream/' + post.postId
-    link.html post.title
-    source.html link
-
-    panel.append source
+    template = Handlebars.compile($('[data-template="panel-source"]').html())
+    panel.append template({ post: post })
 
     cols = 3
     if ($(window).width() < Width.xl) then cols = 2
@@ -443,7 +436,11 @@ $(window).scroll (e) ->
   if not (form? and form.is 'form.load-posts') then return
   col = $ '.col[data-index="0"]'
   panel = col.find '.panel:in-viewport:first'
-  history.replaceState {}, 'SPIFFY.io', location.pathname + '?start=' + panel.data('post-id')
+  first = col.find '.panel:first'
+  uri = location.pathname
+  if not panel.is first
+    uri = uri + '?start=' + panel.data('post-id')
+  history.replaceState {}, 'SPIFFY.io', uri
   return
 
 $(window).scroll (e) ->

@@ -691,7 +691,7 @@ load = function(json) {
 };
 
 loadPosts = function(posts) {
-  var col, cols, content, div, i, img, index, j, last, link, panel, post, ref, source, video;
+  var col, cols, content, div, i, img, index, j, last, panel, post, ref, source, template, video;
   for (i = j = 0, ref = posts.length; 0 <= ref ? j < ref : j > ref; i = 0 <= ref ? ++j : --j) {
     post = posts[i];
     panel = $(document.createElement('div'));
@@ -726,13 +726,10 @@ loadPosts = function(posts) {
       div.prepend(img);
     }
     panel.prepend(div);
-    source = $(document.createElement('div'));
-    source.addClass('source');
-    link = $(document.createElement('a'));
-    link.attr('href', '/stream/' + post.postId);
-    link.html(post.title);
-    source.html(link);
-    panel.append(source);
+    template = Handlebars.compile($('[data-template="panel-source"]').html());
+    panel.append(template({
+      post: post
+    }));
     cols = 3;
     if ($(window).width() < Width.xl) {
       cols = 2;
@@ -859,14 +856,19 @@ $(window).scroll(function(e) {
 });
 
 $(window).scroll(function(e) {
-  var col, form, panel;
+  var col, first, form, panel, uri;
   form = $('form.load-posts');
   if (!((form != null) && form.is('form.load-posts'))) {
     return;
   }
   col = $('.col[data-index="0"]');
   panel = col.find('.panel:in-viewport:first');
-  history.replaceState({}, 'SPIFFY.io', location.pathname + '?start=' + panel.data('post-id'));
+  first = col.find('.panel:first');
+  uri = location.pathname;
+  if (!panel.is(first)) {
+    uri = uri + '?start=' + panel.data('post-id');
+  }
+  history.replaceState({}, 'SPIFFY.io', uri);
 });
 
 $(window).scroll(function(e) {

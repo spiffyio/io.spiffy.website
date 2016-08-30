@@ -18,6 +18,8 @@ import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.api.stream.input.PostActionInput;
 import io.spiffy.common.api.stream.output.GetPostOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
+import io.spiffy.common.api.user.client.UserClient;
+import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
@@ -27,39 +29,42 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
-    private static final String ACCOUNT_ID_KEY = "accountId";
     private static final String AFTER_KEY = "after";
     private static final String COMMENTS_KEY = "comments";
     private static final String POST_KEY = "post";
     private static final String POSTS_KEY = "posts";
     private static final String UNPROCESSED_KEY = "unprocessed";
+    private static final String USER_KEY = "user";
 
     private final DiscussionClient discussionClient;
     private final StreamClient streamClient;
+    private final UserClient userClient;
 
     @RequestMapping({ "/", "/stream" })
-    public ModelAndView home(final Context context, final @RequestParam(required = false) String account,
+    public ModelAndView home(final Context context, final @RequestParam(required = false) String user,
             final @RequestParam(required = false) String start) {
-        final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
+        final Account account = userClient.getAccount(new Account(user));
+        final List<Post> posts = streamClient.getPosts(account == null ? null : account.getId(),
                 start == null ? null : ObfuscateUtil.unobfuscate(start), 12, true);
         if (CollectionUtils.isEmpty(posts)) {
-            return mav("home", context);
+            return mav("stream", context);
         }
 
-        context.addAttribute(ACCOUNT_ID_KEY, account == null ? null : Long.parseLong(account));
+        context.addAttribute(USER_KEY, user);
         context.addAttribute(AFTER_KEY, posts.get(posts.size() - 1).getPostId());
         context.addAttribute(POSTS_KEY, posts);
 
-        return mav("home", context);
+        return mav("stream", context);
     }
 
-    @AccessControl
-    @RequestMapping({ "/mystream" })
-    public ModelAndView mystream(final Context context, final @RequestParam(required = false) String start) {
-        return home(context, "" + context.getAccountId(), start);
+    @RequestMapping("/{user}/stream")
+    public ModelAndView userStream(final Context context, final @PathVariable String user,
+            final @RequestParam(required = false) String start) {
+        final Account account = userClient.getAccount(new Account(user));
+        return home(context, account != null ? account.getUsername() : null, start);
     }
 
     @RequestMapping("/stream/{postId}")
@@ -121,9 +126,10 @@ public class HomeController extends Controller {
     @ResponseBody
     @Csrf("posts")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
-    public AjaxResponse posts(final Context context, final @RequestParam(required = false) String account,
+    public AjaxResponse posts(final Context context, final @RequestParam(required = false) String user,
             final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "12") int quantity) {
-        final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
+        final Account account = userClient.getAccount(new Account(user));
+        final List<Post> posts = streamClient.getPosts(account == null ? null : account.getId(),
                 after == null ? null : ObfuscateUtil.unobfuscate(after), quantity, false);
         if (CollectionUtils.isEmpty(posts)) {
             return new PostsResponse(null, null);
@@ -133,22 +139,17 @@ public class HomeController extends Controller {
     }
 
     @RequestMapping(value = "/posts", method = RequestMethod.GET)
-    public ModelAndView postsGet(final Context context, final @RequestParam(required = false) String account,
+    public ModelAndView postsGet(final Context context, final @RequestParam(required = false) String user,
             final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "24") int quantity) {
 
         final StringBuilder builder = new StringBuilder();
+        if (user != null) {
+            builder.append(user + "/");
+        }
         builder.append("/stream");
 
-        boolean first = true;
-        if (account != null) {
-            builder.append("?account=" + account == null ? null : Long.parseLong(account));
-            first = false;
-        }
-
         if (after != null) {
-            builder.append(first ? "?" : "&");
-            builder.append("start=" + after);
-            first = false;
+            builder.append("?start=" + after);
         }
 
         return redirect(builder.toString(), context);

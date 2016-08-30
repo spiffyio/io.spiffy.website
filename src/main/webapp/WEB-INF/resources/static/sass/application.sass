@@ -488,12 +488,14 @@ div.disabled:before
   color: $w2
 
 .grid .col .panel
-  +size(auto, 95%)
-  margin-left: calc(2.5% - 0.5px)
-  margin-bottom: 0.5em
   background: $w1
   border: 1px solid $w1
   box-shadow: 0px 0px 5px 0px $w3
+
+.grid .col .panel, .post-comment
+  +size(auto, 95%)
+  margin-left: calc(2.5% - 0.5px)
+  margin-bottom: 0.5em
   position: relative
   overflow: hidden
 
@@ -660,22 +662,12 @@ div.comments
 
   div.comment
     +size(auto, auto)
-    font-size: 150%
+    line-height: 1.5em
     margin: 0.5em 0
     padding: 0 0.5em
-    border: solid $w4 2px
     color: $w4
     text-align: initial
     float: left
-    clear: left
-
-  div.comment:nth-child(even)
-    background: $b1
-    border-color: $b4
-
-  div.comment:nth-child(odd)
-    background: $o1
-    border-color: $o4
 
 div.dz-preview
   display: none

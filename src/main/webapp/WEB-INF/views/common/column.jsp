@@ -35,12 +35,12 @@
       </div>
       <div class="account">
         <div class="thumbnail">
-          <a href="/<c:out value="${ post.account.username }" />"><img style="width: 3em;" src="//cdn-beta.spiffy.io/media/KMPxfQ.jpg" /></a>
+          <a href="/<c:out value="${ post.account.username }" />"><img style="width: 3em;" src="//cdn-beta.spiffy.io/media/MkTmMs.png" /></a>
         </div>
         <div class="username">
           <a href="/<c:out value="${ post.account.username }" />"><c:out value="${ post.account.username }" /></a>
           <br />
-          <span class="time"><s:duration date="${ post.postedAt }" /></span>
+          <span class="time"><c:out value="${ post.duration }" /></span>
         </div>
       </div>
     </div>

@@ -43,6 +43,12 @@ public class AuthenticationController extends Controller {
     @AccessControl
     @RequestMapping("/account")
     public ModelAndView account(final Context context) {
+        return redirect("/" + context.getUsername(), context);
+    }
+
+    @AccessControl
+    @RequestMapping("/sessions")
+    public ModelAndView sessions(final Context context) {
         final List<Session> sessions = userClient.getSessions(context.getAccountId());
         context.addAttribute(SESSIONS_KEY, sessions);
         return mav("account", context);

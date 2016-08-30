@@ -61,8 +61,22 @@
   
   <div class="initialyo">
   <c:forEach var="comment" items="${ comments }">
-    <div class="comment">
-      <span><c:out value="${ comment.comment }" /></span> - <c:out value="${ comment.account.username }" />
+    <div class="post-comment">
+    <div class="source">
+      <div class="account">
+        <div class="thumbnail">
+          <a href="/<c:out value="${ comment.account.username }" />"><img style="width: 3em;" src="//cdn-beta.spiffy.io/media/MkTmMs.png" /></a>
+        </div>
+        <div class="username">
+          <a href="/<c:out value="${ comment.account.username }" />"><c:out value="${ comment.account.username }" /></a>
+          <br />
+          <span class="time"><s:duration date="${ comment.postedAt }" /></span>
+        </div>
+        <div class="comment">
+          <span><c:out value="${ comment.comment }" /></span>
+        </div>
+      </div>
+    </div>
     </div>
   </c:forEach>
   </div>

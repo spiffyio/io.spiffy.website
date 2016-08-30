@@ -22,6 +22,30 @@
   <a href="/llc">SPIFFY.io, LLC</a> &copy; 2016 &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a>
 </div>
 
+
+<script data-template="panel-source" type="text/x-handlebars-template">
+<div class="source">
+<div class="post-information">
+  <div class="discuss">
+    <a href="/stream/{{post.postId}}"><img style="width: 2em; margin: 0.5em;" src="<s:resource file="svg/linea/basic_message_txt.svg" />" /></a>
+  </div>
+  <div class="title">
+    <a href="/stream/{{post.postId}}">{{post.title}}</a>
+  </div>
+</div>
+<div class="account">
+  <div class="thumbnail">
+    <a href="/{{post.account.username}}"><img style="width: 3em;" src="//cdn-beta.spiffy.io/media/MkTmMs.png" /></a>
+  </div>
+  <div class="username">
+    <a href="/{{post.account.username}}">{{post.account.username}}</a>
+    <br />
+    <span class="time">{{post.duration}}</span>
+  </div>
+</div>
+</div>
+</script>
+
 <s:resource file="jquery" type="js" />
 <s:resource file="parsley" type="js" />
 <s:resource file="dropzone" type="js" />

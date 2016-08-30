@@ -14,7 +14,7 @@ import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.exception.UnknownUserException;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private final UserClient userClient;
@@ -24,6 +24,12 @@ public class UserController extends Controller {
         final Account account = userClient.getAccount(user);
         if (account == null) {
             throw new UnknownUserException(user);
+        }
+
+        if (account.getId().equals(context.getAccountId())) {
+            context.addAttribute("myaccount", true);
+        } else {
+            return redirect("/" + user + "/stream", context);
         }
 
         return mav("user", context);
