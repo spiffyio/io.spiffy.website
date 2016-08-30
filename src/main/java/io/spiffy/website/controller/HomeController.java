@@ -27,7 +27,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String ACCOUNT_ID_KEY = "accountId";
@@ -44,7 +44,7 @@ public class HomeController extends Controller {
     public ModelAndView home(final Context context, final @RequestParam(required = false) String account,
             final @RequestParam(required = false) String start) {
         final List<Post> posts = streamClient.getPosts(account == null ? null : Long.parseLong(account),
-                start == null ? null : ObfuscateUtil.unobfuscate(start), 6, true);
+                start == null ? null : ObfuscateUtil.unobfuscate(start), 12, true);
         if (CollectionUtils.isEmpty(posts)) {
             return mav("home", context);
         }

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 import io.spiffy.common.api.media.dto.Content;
+import io.spiffy.common.dto.PublicAccount;
 
 @Data
 @Builder
@@ -15,10 +16,9 @@ import io.spiffy.common.api.media.dto.Content;
 @AllArgsConstructor
 public class Post {
     private String postId;
-    private Long accountId;
     private String title;
     private String description;
     private Date postedAt;
-    private String username;
+    private PublicAccount account;
     private Content content;
 }

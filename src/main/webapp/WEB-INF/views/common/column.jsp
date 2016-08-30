@@ -24,7 +24,10 @@
     </c:if>
     </div>
     </div>
-    <div class="source"><a href="/stream/<c:out value="${ post.postId }" />"><c:out value="${ post.title }" /></a></div>
+    <div class="source">
+      <a href="/<c:out value="${ post.account.username }" />"><c:out value="${ post.account.username }" /></a>
+      <a href="/stream/<c:out value="${ post.postId }" />"><c:out value="${ post.title }" /></a>
+    </div>
   </div>
   </c:forEach>
 </div>

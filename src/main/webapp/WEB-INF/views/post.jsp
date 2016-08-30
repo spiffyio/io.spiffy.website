@@ -62,7 +62,7 @@
   <div class="initialyo">
   <c:forEach var="comment" items="${ comments }">
     <div class="comment">
-      <span><c:out value="${ comment.comment }" /></span> - <c:out value="${ comment.accountId }" />
+      <span><c:out value="${ comment.comment }" /></span> - <c:out value="${ comment.account.username }" />
     </div>
   </c:forEach>
   </div>

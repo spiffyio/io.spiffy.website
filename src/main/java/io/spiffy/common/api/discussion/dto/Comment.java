@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 
+import io.spiffy.common.dto.PublicAccount;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,7 +16,7 @@ import java.util.Date;
 public class Comment {
     private ThreadDTO thread;
     private Long id;
-    private Long accountId;
+    private PublicAccount account;
     private Date postedAt;
     private String comment;
 }
