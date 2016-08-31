@@ -501,18 +501,30 @@ div.disabled:before
 
   div.centeryo
     background: $w4
+    line-height: 0
+    border-spacing: 0
 
   div.mediayo
     +size(auto, auto)
+    +center
     max-height: 640px
     max-width: 640px
-    display: inline-block
+    display: table
 
   img, video, ins
     +size(auto, 100%)
     margin: 0
     display: initial
     border: none
+
+  div.source.advertisement
+    +size(1em, 100%)
+    line-height: 1em
+    text-align: center
+
+    span
+      font-size: 75%
+      color: $w2
 
   div.source
     +size(auto, inherit)

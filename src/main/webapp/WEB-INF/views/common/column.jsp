@@ -27,11 +27,15 @@
      style="display:inline-block;width:300px;height:250px"
      data-ad-client="ca-pub-1276323787739973"
      data-ad-slot="4167354043"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
     </c:if>
     </div>
     </div>
+    <div class="source <c:if test="${ post.content.type eq 'AD' }">advertisement</c:if>">
+    <c:if test="${ post.content.type eq 'AD' }">
+      <span>advertisement</span>
+    </c:if>
     <c:if test="${ post.content.type ne 'AD' }">
-    <div class="source">
       <div class="post-information">
         <div class="discuss">
           <a href="/stream/<c:out value="${ post.postId }" />"><img style="width: 2em; margin: 0.5em;" src="<s:resource file="svg/linea/basic_message_txt.svg" />" /></a>
@@ -50,8 +54,8 @@
           <span class="time"><c:out value="${ post.duration }" /></span>
         </div>
       </div>
-    </div>
     </c:if>
+    </div>
   </div>
   </c:forEach>
 </div>

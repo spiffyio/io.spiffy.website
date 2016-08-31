@@ -436,6 +436,7 @@ $(window).scroll (e) ->
   if not (form? and form.is 'form.load-posts') then return
   col = $ '.col[data-index="0"]'
   panel = col.find '.panel:in-viewport:first'
+  if panel.data('post-id').equalsIgnoreCase 'ad' then return
   first = col.find '.panel:first'
   uri = location.pathname
   if not panel.is first

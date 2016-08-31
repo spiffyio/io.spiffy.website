@@ -612,14 +612,18 @@ div.disabled:before {
 
 .grid .col .panel div.centeryo, .post-comment div.centeryo {
   background: #3D3D3D;
+  line-height: 0;
+  border-spacing: 0;
 }
 
 .grid .col .panel div.mediayo, .post-comment div.mediayo {
   height: auto;
   width: auto;
+  margin-left: auto;
+  margin-right: auto;
   max-height: 640px;
   max-width: 640px;
-  display: inline-block;
+  display: table;
 }
 
 .grid .col .panel img, .grid .col .panel video, .grid .col .panel ins, .post-comment img, .post-comment video, .post-comment ins {
@@ -628,6 +632,18 @@ div.disabled:before {
   margin: 0;
   display: initial;
   border: none;
+}
+
+.grid .col .panel div.source.advertisement, .post-comment div.source.advertisement {
+  height: 1em;
+  width: 100%;
+  line-height: 1em;
+  text-align: center;
+}
+
+.grid .col .panel div.source.advertisement span, .post-comment div.source.advertisement span {
+  font-size: 75%;
+  color: #D3D3D3;
 }
 
 .grid .col .panel div.source, .post-comment div.source {

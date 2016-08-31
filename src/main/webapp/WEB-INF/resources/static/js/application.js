@@ -863,6 +863,9 @@ $(window).scroll(function(e) {
   }
   col = $('.col[data-index="0"]');
   panel = col.find('.panel:in-viewport:first');
+  if (panel.data('post-id').equalsIgnoreCase('ad')) {
+    return;
+  }
   first = col.find('.panel:first');
   uri = location.pathname;
   if (!panel.is(first)) {
