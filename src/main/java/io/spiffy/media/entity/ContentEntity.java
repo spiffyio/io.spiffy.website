@@ -15,7 +15,8 @@ import io.spiffy.common.api.media.dto.ContentType;
 @Getter
 @NoArgsConstructor
 @Table(name = "MEDIA_CONTENT", uniqueConstraints = { @UniqueConstraint(columnNames = { "name", "archived_at" }),
-        @UniqueConstraint(columnNames = { "account_id", "idempotent_id", "archived_at" }) })
+        @UniqueConstraint(columnNames = { "account_id", "idempotent_id", "archived_at" }),
+        @UniqueConstraint(columnNames = { "file", "archived_at" }) })
 public class ContentEntity extends HibernateEntity {
     public static final int MIN_IDEMPOTENT_ID_LENGTH = 1;
     public static final int MAX_IDEMPOTENT_ID_LENGTH = 256;
@@ -36,6 +37,10 @@ public class ContentEntity extends HibernateEntity {
     @Column(name = "type", length = MAX_TYPE_LENGTH, nullable = false)
     private ContentType type;
 
+    @OneToOne
+    @JoinColumn(name = "file")
+    private FileEntity file;
+
     @Setter
     @Column(name = "name", length = MAX_NAME_LENGTH)
     private String name;
@@ -45,10 +50,11 @@ public class ContentEntity extends HibernateEntity {
     @Column(name = "processed")
     private Boolean processed;
 
-    public ContentEntity(final long account, final String idempotentId, final ContentType type) {
+    public ContentEntity(final long account, final String idempotentId, final ContentType type, final FileEntity fie) {
         this.account = account;
         this.idempotentId = idempotentId;
         this.type = type;
+        file = file;
         processed = false;
     }
 }

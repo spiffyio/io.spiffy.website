@@ -113,7 +113,9 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             return entity;
         }
 
-        entity = new ContentEntity(account, idempotentId, asType(type));
+        final FileEntity file = fileService.post(account + "/" + idempotentId, type, value, FileEntity.Privacy.RAW);
+
+        entity = new ContentEntity(account, idempotentId, asType(type), file);
         repository.saveOrUpdate(entity);
 
         entity.setName(ObfuscateUtil.obfuscate(entity.getId()));
@@ -137,12 +139,13 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         if (MediaType.JPG.equals(type) || MediaType.PNG.equals(type)) {
             final byte[] fileValue = MediaType.JPG.equals(type) ? ImageUtil.removeExif(value) : value;
             final byte[] compressValue = ImageUtil.compress(fileValue, type);
-            final FileEntity file = fileService.post(content.getName(), type, compressValue);
+            final FileEntity file = fileService.post(content.getName(), type, compressValue, FileEntity.Privacy.PUBLIC);
 
             final byte[] thumbnailValue = ImageUtil.thumbnail(fileValue, type, THUMBNAIL_SIZE, null);
             final FileEntity thumbnail;
             if (thumbnailValue != null) {
-                thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, type, thumbnailValue);
+                thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, type, thumbnailValue,
+                        FileEntity.Privacy.PUBLIC);
             } else {
                 thumbnail = file;
             }
@@ -154,20 +157,20 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
 
         final FileEntity gif;
         if (MediaType.GIF.equals(type)) {
-            gif = fileService.post(content.getName(), MediaType.GIF, value);
+            gif = fileService.post(content.getName(), MediaType.GIF, value, FileEntity.Privacy.PUBLIC);
         } else {
             gif = null;
         }
 
         final byte[] posterFullValue = ConverterUtil.convertToPNG(value, content.getName());
         final byte[] posterValue = ImageUtil.thumbnail(posterFullValue, MediaType.PNG, THUMBNAIL_SIZE, posterFullValue);
-        final FileEntity poster = fileService.post(content.getName(), MediaType.PNG, posterValue);
+        final FileEntity poster = fileService.post(content.getName(), MediaType.PNG, posterValue, FileEntity.Privacy.PUBLIC);
 
         final byte[] mp4Value = ConverterUtil.convertToMP4(value, content.getName());
-        final FileEntity mp4 = fileService.post(content.getName(), MediaType.MP4, mp4Value);
+        final FileEntity mp4 = fileService.post(content.getName(), MediaType.MP4, mp4Value, FileEntity.Privacy.PUBLIC);
 
         final byte[] webmValue = ConverterUtil.convertToWebM(value, content.getName());
-        final FileEntity webm = fileService.post(content.getName(), MediaType.WEBM, webmValue);
+        final FileEntity webm = fileService.post(content.getName(), MediaType.WEBM, webmValue, FileEntity.Privacy.PUBLIC);
 
         videoService.post(content, poster, mp4, webm, gif);
         snsManager.publish(content.getId());
