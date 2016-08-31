@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.Date;
 
 import io.spiffy.common.api.media.dto.Content;
+import io.spiffy.common.api.media.dto.ContentType;
 import io.spiffy.common.dto.PublicAccount;
 import io.spiffy.common.util.DurationUtil;
 
@@ -28,5 +29,16 @@ public class Post {
     }
 
     public void setDuration(final String duration) {
+    }
+
+    public static Post ad() {
+        final Content content = new Content();
+        content.setType(ContentType.AD);
+
+        final Post post = new Post();
+        post.setPostId("ad");
+        post.setContent(content);
+
+        return post;
     }
 }

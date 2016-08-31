@@ -48,9 +48,16 @@ public class HomeController extends Controller {
             final @RequestParam(required = false) String start) {
         final Account account = userClient.getAccount(new Account(user));
         final List<Post> posts = streamClient.getPosts(account == null ? null : account.getId(),
-                start == null ? null : ObfuscateUtil.unobfuscate(start), 12, true);
+                start == null ? null : ObfuscateUtil.unobfuscate(start), 10, true);
         if (CollectionUtils.isEmpty(posts)) {
             return mav("stream", context);
+        }
+
+        if (posts.size() >= 5) {
+            posts.add(3, Post.ad());
+        }
+        if (posts.size() >= 10) {
+            posts.add(8, Post.ad());
         }
 
         context.addAttribute(USER_KEY, user);

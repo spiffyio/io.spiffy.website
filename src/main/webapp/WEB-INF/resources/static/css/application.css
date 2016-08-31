@@ -720,7 +720,7 @@ div.media {
   }
 }
 
-div.media img, div.media video {
+div.media img, div.media video, div.media ins {
   height: auto;
   width: auto;
   max-width: 100%;

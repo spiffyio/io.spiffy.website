@@ -22,8 +22,15 @@
     <c:if test="${ post.content.type eq 'IMAGE' }">
     <img src="<c:out value="${ post.content.thumbnail }" />" />
     </c:if>
+    <c:if test="${ post.content.type eq 'AD' }">
+    <ins class="adsbygoogle"
+     style="display:inline-block;width:300px;height:250px"
+     data-ad-client="ca-pub-1276323787739973"
+     data-ad-slot="4167354043"></ins>
+    </c:if>
     </div>
     </div>
+    <c:if test="${ post.content.type ne 'AD' }">
     <div class="source">
       <div class="post-information">
         <div class="discuss">
@@ -44,6 +51,7 @@
         </div>
       </div>
     </div>
+    </c:if>
   </div>
   </c:forEach>
 </div>

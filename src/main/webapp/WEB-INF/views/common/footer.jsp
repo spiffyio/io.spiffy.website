@@ -2,9 +2,11 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
+<c:set var="include_ads" value="true" />
 <c:choose>
   <c:when test="${ param.style eq 'authenticate' }">
     <c:set var="include_fingerprint" value="true" />
+    <c:set var="include_ads" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'embed' }">
   </c:when>
@@ -55,5 +57,14 @@
 <s:resource file="fingerprint" type="js" />
 </c:if>
 <s:resource file="application" type="js" />
+<c:if test="${ include_fingerprint }">
+<script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+<script>
+  (adsbygoogle = window.adsbygoogle || []).push({
+    google_ad_client: "ca-pub-1276323787739973",
+    enable_page_level_ads: true
+  });
+</script>
+</c:if>
 </body>
 </html>
