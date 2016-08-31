@@ -25,6 +25,9 @@ public class Post {
     private Content content;
 
     public String getDuration() {
+        if (postedAt == null) {
+            return null;
+        }
         return DurationUtil.pretty(postedAt);
     }
 

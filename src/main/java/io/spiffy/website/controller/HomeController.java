@@ -29,7 +29,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -134,12 +134,19 @@ public class HomeController extends Controller {
     @Csrf("posts")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
     public AjaxResponse posts(final Context context, final @RequestParam(required = false) String user,
-            final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "12") int quantity) {
+            final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "10") int quantity) {
         final Account account = userClient.getAccount(new Account(user));
         final List<Post> posts = streamClient.getPosts(account == null ? null : account.getId(),
                 after == null ? null : ObfuscateUtil.unobfuscate(after), quantity, false);
         if (CollectionUtils.isEmpty(posts)) {
             return new PostsResponse(null, null);
+        }
+
+        if (posts.size() >= 5) {
+            posts.add(3, Post.ad());
+        }
+        if (posts.size() >= 10) {
+            posts.add(8, Post.ad());
         }
 
         return new PostsResponse(posts, posts.get(posts.size() - 1).getPostId());

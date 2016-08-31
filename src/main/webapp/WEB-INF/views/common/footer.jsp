@@ -24,6 +24,18 @@
   <a href="/llc">SPIFFY.io, LLC</a> &copy; 2016 &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a>
 </div>
 
+<script data-template="panel-ad" type="text/x-handlebars-template">
+<ins class="adsbygoogle"
+  style="display:inline-block;width:300px;height:250px"
+  data-ad-client="ca-pub-1276323787739973"
+  data-ad-slot="4167354043"></ins>
+</script>
+
+<script data-template="panel-ad-source" type="text/x-handlebars-template">
+<div class="source advertisement">
+  <span>advertisement</span>
+</div>
+</script>
 
 <script data-template="panel-source" type="text/x-handlebars-template">
 <div class="source">
