@@ -16,7 +16,6 @@ import io.spiffy.common.api.stream.output.GetPostsOutput;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.PublicAccount;
-import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.stream.entity.PostEntity;
 import io.spiffy.stream.service.PostService;
 
@@ -46,7 +45,7 @@ public class GetPostsAPI extends API<GetPostsInput, GetPostsOutput, PostService>
     public Post transform(final PostEntity e) {
         final GetMediaOutput media = mediaClient.getMedia(e.getMediaId());
         final Account account = userClient.getAccount(new Account(e.getAccountId()));
-        return new Post(ObfuscateUtil.obfuscate(e.getId()), e.getTitle(), e.getDescription(), e.getPostedAt(),
+        return new Post(e.getName(), e.getTitle(), e.getDescription(), e.getPostedAt(),
                 new PublicAccount(account.getId(), account.getUsername()), media.getContent());
     }
 }
