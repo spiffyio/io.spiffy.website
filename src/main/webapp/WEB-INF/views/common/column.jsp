@@ -20,7 +20,7 @@
     </div>
     </c:if>
     <c:if test="${ post.content.type eq 'IMAGE' }">
-    <img src="<c:out value="${ post.content.thumbnail }" />" />
+    <img src="<c:out value="${ post.content.medium }" />" />
     </c:if>
     <c:if test="${ post.content.type eq 'AD' }">
     <ins class="adsbygoogle"

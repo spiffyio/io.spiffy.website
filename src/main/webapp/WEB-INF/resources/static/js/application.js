@@ -725,7 +725,7 @@ loadPosts = function(posts) {
       div.prepend(video);
     } else if (content.type.equalsIgnoreCase('image')) {
       img = $(document.createElement('img'));
-      img.attr('src', content.thumbnail);
+      img.attr('src', content.medium);
       div.prepend(img);
     } else {
       template = Handlebars.compile($('[data-template="panel-ad"]').html());

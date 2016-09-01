@@ -28,10 +28,11 @@ public class ImageService extends Service<ImageEntity, ImageRepository> {
     }
 
     @Transactional
-    public ImageEntity post(final ContentEntity content, final FileEntity file, final FileEntity thumbnail) {
+    public ImageEntity post(final ContentEntity content, final FileEntity file, final FileEntity medium,
+            final FileEntity thumbnail) {
         ImageEntity entity = get(content);
         if (entity == null) {
-            entity = new ImageEntity(content, file, thumbnail);
+            entity = new ImageEntity(content, file, medium, thumbnail);
         }
 
         repository.saveOrUpdate(entity);

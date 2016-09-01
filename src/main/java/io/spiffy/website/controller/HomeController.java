@@ -29,7 +29,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";

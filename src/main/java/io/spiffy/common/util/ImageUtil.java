@@ -16,6 +16,8 @@ import org.apache.commons.imaging.ImageWriteException;
 import org.apache.commons.imaging.formats.jpeg.exif.ExifRewriter;
 import org.apache.log4j.Logger;
 import org.imgscalr.Scalr;
+import org.imgscalr.Scalr.Method;
+import org.imgscalr.Scalr.Mode;
 
 import com.googlecode.pngtastic.core.PngImage;
 import com.googlecode.pngtastic.core.PngOptimizer;
@@ -74,19 +76,19 @@ public class ImageUtil {
         return value;
     }
 
-    public static byte[] thumbnail(final byte[] value, final MediaType type, final int size, final byte[] defaultValue) {
+    public static byte[] scale(final byte[] value, final MediaType type, final int size, final byte[] defaultValue) {
         byte[] result = null;
         try {
-            result = thumbnail(value, type, size);
+            result = scale(value, type, size);
         } catch (final IOException e) {
-            logger.warn("unable to thumbnail image");
+            logger.warn("unable to scale image");
         }
 
         result = result != null ? result : defaultValue;
         return compress(result, type);
     }
 
-    private static byte[] thumbnail(final byte[] bytes, final MediaType type, final int size) throws IOException {
+    private static byte[] scale(final byte[] bytes, final MediaType type, final int size) throws IOException {
         final BufferedImage image = asImage(bytes);
         if (image.getWidth() <= size && image.getHeight() <= size) {
             return null;
@@ -102,6 +104,41 @@ public class ImageUtil {
         final int y = (image.getHeight() - scaledImage.getHeight()) / 2;
 
         final BufferedImage croppedImage = image.getSubimage(x, y, scaledImage.getWidth(), scaledImage.getHeight());
+        return asBytes(croppedImage, type);
+    }
+
+    public static byte[] thumbnail(final byte[] value, final MediaType type, final int size, final byte[] defaultValue) {
+        byte[] result = null;
+        try {
+            result = thumbnail(value, type, size);
+        } catch (final IOException e) {
+            logger.warn("unable to scale image");
+        }
+
+        result = result != null ? result : defaultValue;
+        return compress(result, type);
+    }
+
+    private static byte[] thumbnail(final byte[] bytes, final MediaType type, final int size) throws IOException {
+        final BufferedImage image = asImage(bytes);
+        if (image.getWidth() == size && image.getHeight() == size) {
+            return null;
+        }
+
+        final BufferedImage fitHeight = Scalr.resize(image, Method.AUTOMATIC, Mode.FIT_TO_HEIGHT, size, size);
+        final BufferedImage fitWidth = Scalr.resize(image, Method.AUTOMATIC, Mode.FIT_TO_WIDTH, size, size);
+
+        final BufferedImage scaledImage;
+        if (fitHeight.getWidth() >= size) {
+            scaledImage = fitHeight;
+        } else {
+            scaledImage = fitWidth;
+        }
+
+        final int x = (scaledImage.getWidth() - size) / 2;
+        final int y = (scaledImage.getHeight() - size) / 2;
+
+        final BufferedImage croppedImage = scaledImage.getSubimage(x, y, size, size);
         return asBytes(croppedImage, type);
     }
 

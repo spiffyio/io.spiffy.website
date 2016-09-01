@@ -24,8 +24,11 @@ import io.spiffy.media.repository.ContentRepository;
 
 public class ContentService extends Service<ContentEntity, ContentRepository> {
 
-    private static final int THUMBNAIL_SIZE = 640;
+    private static final int THUMBNAIL_SIZE = 160;
     private static final String THUMBNAIL_SUFFIX = "-" + BaseUtil.toBase64(THUMBNAIL_SIZE);
+
+    private static final int MEDIUM_SIZE = 640;
+    private static final String MEDIUM_SUFFIX = "-" + BaseUtil.toBase64(MEDIUM_SIZE);
 
     private final SNSManager snsManager;
     private final FileService fileService;
@@ -104,9 +107,10 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             }
 
             final String file = FileService.getUrl(image.getFile());
+            final String medium = FileService.getUrl(image.getMedium());
             final String thumbnail = FileService.getUrl(image.getThumbnail());
 
-            content = new Content(file, thumbnail);
+            content = new Content(file, medium, thumbnail);
         } else if (ContentType.VIDEO.equals(entity.getType())) {
             final VideoEntity video = videoService.get(entity);
             if (video == null) {
@@ -117,8 +121,9 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             final String mp4 = FileService.getUrl(video.getMp4());
             final String webm = FileService.getUrl(video.getWebm());
             final String gif = FileService.getUrl(video.getGif());
+            final String thumbnail = FileService.getUrl(video.getThumbnail());
 
-            content = new Content(poster, mp4, webm, gif);
+            content = new Content(poster, mp4, webm, gif, thumbnail);
         } else {
             return new GetMediaOutput(GetMediaOutput.Error.UNKNOWN_CONTENT);
         }
@@ -161,6 +166,14 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             final byte[] compressValue = ImageUtil.compress(fileValue, type);
             final FileEntity file = fileService.post(content.getName(), type, compressValue, FileEntity.Privacy.PUBLIC);
 
+            final byte[] mediumValue = ImageUtil.scale(fileValue, type, MEDIUM_SIZE, null);
+            final FileEntity medium;
+            if (mediumValue != null) {
+                medium = fileService.post(content.getName() + MEDIUM_SUFFIX, type, mediumValue, FileEntity.Privacy.PUBLIC);
+            } else {
+                medium = file;
+            }
+
             final byte[] thumbnailValue = ImageUtil.thumbnail(fileValue, type, THUMBNAIL_SIZE, null);
             final FileEntity thumbnail;
             if (thumbnailValue != null) {
@@ -170,7 +183,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
                 thumbnail = file;
             }
 
-            imageService.post(content, file, thumbnail);
+            imageService.post(content, file, medium, thumbnail);
             snsManager.publish(content.getId());
             return;
         }
@@ -183,7 +196,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         }
 
         final byte[] posterFullValue = ConverterUtil.convertToPNG(value, content.getName());
-        final byte[] posterValue = ImageUtil.thumbnail(posterFullValue, MediaType.PNG, THUMBNAIL_SIZE, posterFullValue);
+        final byte[] posterValue = ImageUtil.scale(posterFullValue, MediaType.PNG, THUMBNAIL_SIZE, posterFullValue);
         final FileEntity poster = fileService.post(content.getName(), MediaType.PNG, posterValue, FileEntity.Privacy.PUBLIC);
 
         final byte[] mp4Value = ConverterUtil.convertToMP4(value, content.getName());
@@ -192,7 +205,16 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         final byte[] webmValue = ConverterUtil.convertToWebM(value, content.getName());
         final FileEntity webm = fileService.post(content.getName(), MediaType.WEBM, webmValue, FileEntity.Privacy.PUBLIC);
 
-        videoService.post(content, poster, mp4, webm, gif);
+        final byte[] thumbnailValue = ImageUtil.thumbnail(posterValue, MediaType.PNG, THUMBNAIL_SIZE, null);
+        final FileEntity thumbnail;
+        if (thumbnailValue != null) {
+            thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, MediaType.PNG, thumbnailValue,
+                    FileEntity.Privacy.PUBLIC);
+        } else {
+            thumbnail = poster;
+        }
+
+        videoService.post(content, poster, mp4, webm, gif, thumbnail);
         snsManager.publish(content.getId());
     }
 

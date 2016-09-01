@@ -29,10 +29,10 @@ public class VideoService extends Service<VideoEntity, VideoRepository> {
 
     @Transactional
     public VideoEntity post(final ContentEntity content, final FileEntity poster, final FileEntity mp4, final FileEntity webm,
-            final FileEntity gif) {
+            final FileEntity gif, final FileEntity thumbnail) {
         VideoEntity entity = get(content);
         if (entity == null) {
-            entity = new VideoEntity(content, poster, mp4, webm, gif);
+            entity = new VideoEntity(content, poster, mp4, webm, gif, thumbnail);
         }
 
         repository.saveOrUpdate(entity);
