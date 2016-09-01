@@ -57,6 +57,35 @@ div.header div.menu ul li {
   text-align: center;
 }
 
+div.header div.menu ul li ul {
+  width: 100%;
+  overflow: hidden;
+}
+
+div.header div.menu ul li ul li {
+  width: 100%;
+  clear: left;
+  background: #C0EFFD;
+}
+
+div.header div.menu ul li ul li a, div.header div.menu ul li ul li span {
+  color: #5FD4F5;
+  text-decoration: none;
+  font-weight: bold;
+  cursor: pointer;
+  display: block;
+}
+
+div.header div.menu ul li ul {
+  max-height: 0;
+  transition: all 0.5s ease;
+}
+
+div.header div.menu ul li ul.show {
+  max-height: 15em;
+  transition: all 0.5s ease;
+}
+
 div.header div.menu ul li a, div.header div.menu ul li span {
   color: #5FD4F5;
   text-decoration: none;

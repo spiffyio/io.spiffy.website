@@ -83,8 +83,15 @@ $(document).ready (e) ->
     func = () ->
       if (not header.is(':hover')) and ($(window).scrollTop() > 400)
         header.addClass 'hidden'
+        header.find('.sub-menu').removeClass 'show'
       return
     setTimeout(func, 500)
+    return
+
+  $('.menu-toggle').click () ->
+    toggle = $ this
+    menu = toggle.parent().find '.sub-menu'
+    menu.toggleClass 'show'
     return
 
   $('[data-modal]').click (e) ->
@@ -483,6 +490,7 @@ $(window).scroll (e) ->
 $(window).scroll (e) ->
   if $(window).scrollTop() > 400
     $('div.header').addClass 'hidden'
+    $('div.header').find('.sub-menu').removeClass 'show'
   else
     $('div.header').removeClass 'hidden'
 

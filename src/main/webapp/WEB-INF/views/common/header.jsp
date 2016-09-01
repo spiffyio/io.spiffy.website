@@ -82,10 +82,19 @@
       <li>&nbsp;</li>
       </c:if>
       <c:if test="${ not empty account }">
-      <li><a href="/">stream</a></li>
+      <li>&nbsp;</li>
       <li><a href="/upload">upload</a></li>
-      <li><a href="/account"><c:out value="${ account.username }" /></a></li>
-      <li><a href="/logout">logout</a></li>
+      <li>
+        <span class="menu-toggle"><c:out value="${ account.username }" /></span>
+        <ul class="sub-menu">
+          <li><a href="/<c:out value="${ account.username }" />/stream">stream</a></li>
+          <li><a href="/<c:out value="${ account.username }" />/images">images</a></li>
+          <li><a href="/<c:out value="${ account.username }" />/videos">videos</a></li>
+          <li><a href="/sessions">sessions</a></li>
+          <li><a href="/logout">logout</a></li>
+        </ul>
+      </li>
+      <li>&nbsp;</li>
       </c:if>
     </ul>
   </div>

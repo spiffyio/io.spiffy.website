@@ -457,9 +457,16 @@ $(document).ready(function(e) {
     func = function() {
       if ((!header.is(':hover')) && ($(window).scrollTop() > 400)) {
         header.addClass('hidden');
+        header.find('.sub-menu').removeClass('show');
       }
     };
     setTimeout(func, 500);
+  });
+  $('.menu-toggle').click(function() {
+    var menu, toggle;
+    toggle = $(this);
+    menu = toggle.parent().find('.sub-menu');
+    menu.toggleClass('show');
   });
   $('[data-modal]').click(function(e) {
     openModal($(this).data('modal'));
@@ -914,6 +921,7 @@ $(window).scroll(function(e) {
 $(window).scroll(function(e) {
   if ($(window).scrollTop() > 400) {
     $('div.header').addClass('hidden');
+    $('div.header').find('.sub-menu').removeClass('show');
   } else {
     $('div.header').removeClass('hidden');
   }

@@ -23,7 +23,7 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private final MediaClient mediaClient;
@@ -36,13 +36,7 @@ public class UserController extends Controller {
             throw new UnknownUserException(user);
         }
 
-        if (!account.getId().equals(context.getAccountId())) {
-            return redirect("/" + user + "/stream", context);
-        }
-
-        context.addAttribute("myaccount", true);
-
-        return mav("user", context);
+        return redirect("/" + user + "/stream", context);
     }
 
     @ResponseBody
