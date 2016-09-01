@@ -5,7 +5,7 @@ import javax.ws.rs.client.WebTarget;
 
 import io.spiffy.common.SpiffyCall;
 import io.spiffy.common.api.GetInput;
-import io.spiffy.common.api.media.input.GetMediaOutput;
+import io.spiffy.common.api.media.output.GetMediaOutput;
 
 public class GetMediaCall extends SpiffyCall<GetInput, GetMediaOutput> {
 

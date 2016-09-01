@@ -1,5 +1,8 @@
 package io.spiffy.media.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.inject.Inject;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -8,7 +11,8 @@ import io.spiffy.common.Service;
 import io.spiffy.common.api.media.dto.Content;
 import io.spiffy.common.api.media.dto.ContentType;
 import io.spiffy.common.api.media.dto.MediaType;
-import io.spiffy.common.api.media.input.GetMediaOutput;
+import io.spiffy.common.api.media.output.GetAccountMediaOutput;
+import io.spiffy.common.api.media.output.GetMediaOutput;
 import io.spiffy.common.exception.InvalidParameterException;
 import io.spiffy.common.util.*;
 import io.spiffy.media.entity.ContentEntity;
@@ -61,6 +65,22 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
     @Transactional
     public GetMediaOutput getContent(final String name) {
         return getContent(repository.get(name));
+    }
+
+    @Transactional
+    public GetAccountMediaOutput getContent(final long accountId, final ContentType type, final Long first,
+            final int maxResults, final boolean includeFirst) {
+        final List<ContentEntity> entities = repository.get(accountId, type, first, maxResults, includeFirst);
+
+        final List<Content> contents = new ArrayList<>();
+        for (final ContentEntity entity : entities) {
+            final GetMediaOutput output = getContent(entity);
+            if (output.getContent() != null) {
+                contents.add(output.getContent());
+            }
+        }
+
+        return new GetAccountMediaOutput(contents);
     }
 
     @Transactional

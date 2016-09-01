@@ -50,11 +50,11 @@ public class ContentEntity extends HibernateEntity {
     @Column(name = "processed")
     private Boolean processed;
 
-    public ContentEntity(final long account, final String idempotentId, final ContentType type, final FileEntity fie) {
+    public ContentEntity(final long account, final String idempotentId, final ContentType type, final FileEntity file) {
         this.account = account;
         this.idempotentId = idempotentId;
         this.type = type;
-        file = file;
+        this.file = file;
         processed = false;
     }
 }

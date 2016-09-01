@@ -6,7 +6,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
 import io.spiffy.common.api.media.client.MediaClient;
-import io.spiffy.common.api.media.input.GetMediaOutput;
+import io.spiffy.common.api.media.output.GetMediaOutput;
 import io.spiffy.common.api.stream.input.PostPostInput;
 import io.spiffy.common.api.stream.output.PostPostOutput;
 import io.spiffy.stream.entity.PostEntity;

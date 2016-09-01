@@ -1,4 +1,4 @@
-package io.spiffy.common.api.media.input;
+package io.spiffy.common.api.media.output;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
