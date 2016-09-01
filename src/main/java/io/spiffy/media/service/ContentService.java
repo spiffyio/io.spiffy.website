@@ -179,10 +179,6 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             return;
         }
 
-        if (entity.getArchivedAt() != null) {
-            return;
-        }
-
         if (ContentType.IMAGE.equals(entity.getType())) {
             final ImageEntity image = imageService.get(entity);
             imageService.delete(image);
@@ -199,6 +195,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             fileService.delete(video.getThumbnail());
         }
 
+        fileService.delete(entity.getFile());
     }
 
     @Transactional
