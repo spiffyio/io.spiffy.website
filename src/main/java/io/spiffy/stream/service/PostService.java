@@ -29,6 +29,11 @@ public class PostService extends Service<PostEntity, PostRepository> {
     }
 
     @Transactional
+    public PostEntity getByName(final String name) {
+        return repository.getByName(name);
+    }
+
+    @Transactional
     public PostEntity get(final String idempotentId) {
         return repository.get(idempotentId);
     }
@@ -109,6 +114,13 @@ public class PostService extends Service<PostEntity, PostRepository> {
             }
             entity.setArchivedAt(DateUtil.now());
             repository.saveOrUpdate(entity);
+        }
+
+        if (Action.REPORT.equals(action)) {
+            if (!PostEntity.Status.APPROVED.equals(entity.getStatus())) {
+                entity.setStatus(PostEntity.Status.REPORTED);
+                repository.saveOrUpdate(entity);
+            }
         }
 
         return new PostActionOutput(true);

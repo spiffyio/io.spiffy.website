@@ -26,10 +26,18 @@ public class PostRepository extends HibernateRepository<PostEntity> {
         return (PostEntity) c.uniqueResult();
     }
 
+    public PostEntity getByName(final String name) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("name", name));
+        c.add(Restrictions.or(Restrictions.isNull("status"), Restrictions.ne("status", PostEntity.Status.REPORTED)));
+        return (PostEntity) c.uniqueResult();
+    }
+
     public List<PostEntity> get(final Long accountId, final Long first, final int maxResults, final boolean includeFirst) {
         final Criteria c = createCriteria();
         c.addOrder(Order.desc("postedAt"));
         c.add(Restrictions.eqOrIsNull("processed", Boolean.TRUE));
+        c.add(Restrictions.or(Restrictions.isNull("status"), Restrictions.ne("status", PostEntity.Status.REPORTED)));
 
         if (accountId != null) {
             c.add(Restrictions.eq("accountId", accountId));

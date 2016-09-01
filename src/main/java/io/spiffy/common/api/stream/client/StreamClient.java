@@ -21,7 +21,7 @@ import io.spiffy.common.api.stream.output.GetPostsOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.api.stream.output.PostPostOutput;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class StreamClient extends Client {
 
     private final GetPostCall getPostCall;
@@ -50,8 +50,8 @@ public class StreamClient extends Client {
         return output.getPosts();
     }
 
-    public GetPostOutput getPost(final long id) {
-        final GetInput input = new GetInput(id);
+    public GetPostOutput getPost(final String name) {
+        final GetInput input = new GetInput(name);
         final GetPostOutput output = getPostCall.call(input);
         return output;
     }

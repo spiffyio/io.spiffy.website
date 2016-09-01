@@ -13,7 +13,7 @@ import io.spiffy.common.api.stream.dto.Post;
 @AllArgsConstructor
 public class GetPostOutput {
     public enum Error {
-        UNPROCESSED_MEDIA
+        UNKNOWN_POST, UNPROCESSED_MEDIA
     }
 
     private Post post;

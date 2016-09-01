@@ -21,6 +21,7 @@ import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.exception.UnknownPostException;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
@@ -29,7 +30,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -78,7 +79,11 @@ public class HomeController extends Controller {
     public ModelAndView post(final Context context, final @PathVariable String postId) {
         final long post = ObfuscateUtil.unobfuscate(postId);
 
-        final GetPostOutput output = streamClient.getPost(post);
+        final GetPostOutput output = streamClient.getPost(postId);
+        if (GetPostOutput.Error.UNKNOWN_POST.equals(output.getError())) {
+            throw new UnknownPostException();
+        }
+
         context.addAttribute(POST_KEY, output.getPost());
 
         if (GetPostOutput.Error.UNPROCESSED_MEDIA.equals(output.getError())) {

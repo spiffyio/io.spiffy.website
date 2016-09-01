@@ -19,11 +19,18 @@ import io.spiffy.common.HibernateEntity;
         @UniqueConstraint(columnNames = { "name", "archived_at" }) })
 public class PostEntity extends HibernateEntity {
 
+    public enum Status {
+        APPROVED, REPORTED
+    }
+
     public static final int MIN_IDEMPOTENT_ID_LENGTH = 1;
     public static final int MAX_IDEMPOTENT_ID_LENGTH = 256;
 
     public static final int MIN_TITLE_LENGTH = 1;
     public static final int MAX_TITLE_LENGTH = 80;
+
+    public static final int MIN_STATUS_LENGTH = 1;
+    public static final int MAX_STATUS_LENGTH = 16;
 
     @Column(name = "idempotent_id", length = MAX_IDEMPOTENT_ID_LENGTH, nullable = false)
     private String idempotentId;
@@ -54,6 +61,11 @@ public class PostEntity extends HibernateEntity {
     @Type(type = "yes_no")
     @Column(name = "processed")
     private Boolean processed;
+
+    @Setter
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status", length = MAX_STATUS_LENGTH)
+    private Status status;
 
     public PostEntity(final String idempotentId, final long accountId, final long mediaId, final Date postedAt) {
         this.idempotentId = idempotentId;
