@@ -18,7 +18,7 @@ import io.spiffy.common.dto.Context;
 import io.spiffy.common.exception.UnknownUserException;
 import io.spiffy.website.annotation.AccessControl;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private final MediaClient mediaClient;
@@ -62,9 +62,9 @@ public class UserController extends Controller {
             return redirect("/" + user + "/stream", context);
         }
 
-        final GetAccountMediaOutput output = mediaClient.getAccountMedia(context.getAccountId(), type, null, 24, true);
-        System.out.println(output);
+        final GetAccountMediaOutput output = mediaClient.getAccountMedia(context.getAccountId(), type, null, 1000, true);
+        context.addAttribute("media", output.getContents());
 
-        return mav("user", context);
+        return mav("media", context);
     }
 }
