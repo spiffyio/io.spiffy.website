@@ -31,7 +31,7 @@ public class GetPostAPI extends API<GetInput, GetPostOutput, PostService> {
     }
 
     protected GetPostOutput api(final GetInput input) {
-        final PostEntity e = service.get(input.getName());
+        final PostEntity e = service.getByName(input.getName());
         if (e == null) {
             return new GetPostOutput(GetPostOutput.Error.UNKNOWN_POST);
         }
