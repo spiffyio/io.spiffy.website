@@ -26,7 +26,9 @@ public class MediaSQSManager extends SQSManager<MediaEvent> {
         if (MediaProcessedEvent.SUB_TYPE.equalsIgnoreCase(content.getSubType())) {
             service.process(content.getMediaId());
         } else if (MediaDeletedEvent.SUB_TYPE.equalsIgnoreCase(content.getSubType())) {
-            service.delete(content.getMediaIds());
+            for (final long id : content.getMediaIds()) {
+                service.delete(id);
+            }
         }
     }
 }

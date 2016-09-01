@@ -172,15 +172,13 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         snsManager.publish(ids);
     }
 
-    public void delete(final Set<Long> ids) {
-        for (final long id : ids) {
-            delete(id);
-        }
-    }
-
     @Transactional
     public void delete(final long id) {
         final ContentEntity entity = get(id);
+        if (entity == null) {
+            return;
+        }
+
         if (entity.getArchivedAt() != null) {
             return;
         }
