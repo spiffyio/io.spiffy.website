@@ -1,6 +1,7 @@
 package io.spiffy.stream.repository;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -49,6 +50,12 @@ public class PostRepository extends HibernateRepository<PostEntity> {
     public List<PostEntity> getByMediaId(final long mediaId) {
         final Criteria c = createCriteria();
         c.add(Restrictions.eq("mediaId", mediaId));
+        return asList(c.list());
+    }
+
+    public List<PostEntity> getByMediaIds(final Set<Long> mediaIds) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.in("mediaId", mediaIds));
         return asList(c.list());
     }
 }

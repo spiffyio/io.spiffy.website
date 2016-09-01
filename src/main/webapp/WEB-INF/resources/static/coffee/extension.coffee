@@ -45,10 +45,8 @@ jQuery.fn.spiffy = () ->
       value = element.val()
       if not data[name]?
         data[name] = value
-      else if Array.isArray data[name]
-        data[name].push value
       else
-        data[name] = [data[name], value]
+        data[name] = data[name] + "," + value
       data
     data: () ->
       if elements.length > 1

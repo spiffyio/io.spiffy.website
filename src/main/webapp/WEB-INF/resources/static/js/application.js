@@ -192,10 +192,8 @@ jQuery.fn.spiffy = function() {
       value = element.val();
       if (data[name] == null) {
         data[name] = value;
-      } else if (Array.isArray(data[name])) {
-        data[name].push(value);
       } else {
-        data[name] = [data[name], value];
+        data[name] = data[name] + "," + value;
       }
       return data;
     },
@@ -612,6 +610,31 @@ $(document).ready(function(e) {
     } else if (video[0].paused) {
       video[0].play();
       video.parents('div.video:first').removeClass('paused');
+    }
+  });
+  $(document).on('click', '.thismedia', function(e) {
+    var form, img, input;
+    img = $(this);
+    img.toggleClass('clicked');
+    form = $('form.delete');
+    if ($('img.thismedia.clicked').length) {
+      form.spiffy().enable();
+    } else {
+      form.spiffy().disable();
+    }
+    if (img.hasClass('clicked')) {
+      input = $(document.createElement('input'));
+      input.attr('type', 'hidden');
+      input.attr('name', 'media');
+      input.val(img.data('media-name'));
+      form.append(input);
+    } else {
+      form.find('input[type="hidden"]').each(function() {
+        input = $(this);
+        if (input.val() === img.data('media-name')) {
+          input.remove();
+        }
+      });
     }
   });
   $(document).on('click', '[data-go]', function(e) {

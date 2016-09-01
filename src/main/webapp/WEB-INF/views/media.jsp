@@ -2,14 +2,23 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
-<jsp:include page="common/header.jsp">
-  <jsp:param name="style" value="centered" />
-</jsp:include>
+<jsp:include page="common/header.jsp" />
+
+
+<div class="allmedia">
+<form class="delete" <s:csrf name="delete" /> action="/<c:out value="${ account.username }" />/media/delete">
+  <div class="message"></div> 
+  <input type="submit" class="button danger disabled" style="width: 25em; max-width: 100%;" value="delete selected" />
+</form>
 
 <c:forEach var="content" items="${ media }">
-  <img style="width: 150px; height: 150px; display: inline-block; margin: 0.5em;" src="<c:out value="${ content.thumbnail }" />" />
+  <img class="thismedia" src="<c:out value="${ content.thumbnail }" />" data-media-name="<c:out value="${ content.name }" />"/>
 </c:forEach>
 
+<form class="delete" <s:csrf name="delete" /> action="/<c:out value="${ account.username }" />/media/delete">
+  <div class="message"></div> 
+  <input type="submit" class="button danger disabled" style="width: 25em; max-width: 100%;" value="delete selected" />
+</form>
 </div>
 
 <jsp:include page="common/footer.jsp" />

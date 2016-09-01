@@ -481,6 +481,21 @@ div.disabled:before
   .grid .col
     +size(auto, 100% / 3)
 
+.allmedia
+  margin: 0.5em 0
+  text-align: center
+
+  img
+    +size(160px, 160px)
+    margin: 0.5em
+    padding: 0.25em
+    display: inline-block
+    cursor: pointer
+
+  img.clicked
+    padding: 0
+    border: 0.25em solid $o3
+
 .grid .col .panel.ad
   +size(calc(1.5em + 250px), 300px)
   margin-left: calc(50% - 150px)

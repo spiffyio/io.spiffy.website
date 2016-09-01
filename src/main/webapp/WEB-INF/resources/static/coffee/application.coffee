@@ -221,6 +221,28 @@ $(document).ready (e) ->
       video.parents('div.video:first').removeClass 'paused'
     return
 
+  $(document).on 'click', '.thismedia', (e) ->
+    img = $ this
+    img.toggleClass 'clicked'
+    form = $ 'form.delete'
+    if $('img.thismedia.clicked').length
+      form.spiffy().enable()
+    else
+      form.spiffy().disable()
+
+    if img.hasClass 'clicked'
+      input = $ document.createElement 'input'
+      input.attr 'type', 'hidden'
+      input.attr 'name', 'media'
+      input.val img.data('media-name')
+      form.append input
+    else
+      form.find('input[type="hidden"]').each () ->
+        input = $ this
+        if input.val() is img.data('media-name') then input.remove()
+        return
+    return
+
   $(document).on 'click', '[data-go]', (e) ->
     button = $ this
     go button.data('go') + location.search

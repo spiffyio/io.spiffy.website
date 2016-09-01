@@ -33,6 +33,13 @@ public class ContentRepository extends HibernateRepository<ContentEntity> {
         return (ContentEntity) c.uniqueResult();
     }
 
+    public List<ContentEntity> get(final long account, final List<String> names) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("account", account));
+        c.add(Restrictions.in("name", names));
+        return asList(c.list());
+    }
+
     public List<ContentEntity> get(final long accountId, final ContentType type, final Long first, final int maxResults,
             final boolean includeFirst) {
         final Criteria c = createCriteria();

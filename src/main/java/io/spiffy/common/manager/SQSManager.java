@@ -42,9 +42,10 @@ public abstract class SQSManager<E extends Event> extends Manager {
         final List<Message> messages = result.getMessages();
         for (final Message message : messages) {
             final MessageBody body = JsonUtil.deserialize(MessageBody.class, message.getBody());
+            final String json = body.getMessage();
 
             try {
-                process(JsonUtil.deserialize(eventClass, body.getMessage()));
+                process(JsonUtil.deserialize(eventClass, json), json);
             } catch (final Exception e) {
                 client.sendMessage(dlqUrl, message.getBody());
             }
@@ -53,7 +54,7 @@ public abstract class SQSManager<E extends Event> extends Manager {
         }
     }
 
-    protected abstract void process(final E event);
+    protected abstract void process(final E event, final String json);
 
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)

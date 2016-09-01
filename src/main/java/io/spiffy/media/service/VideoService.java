@@ -5,6 +5,7 @@ import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
+import io.spiffy.common.util.DateUtil;
 import io.spiffy.media.entity.ContentEntity;
 import io.spiffy.media.entity.FileEntity;
 import io.spiffy.media.entity.VideoEntity;
@@ -38,5 +39,11 @@ public class VideoService extends Service<VideoEntity, VideoRepository> {
         repository.saveOrUpdate(entity);
 
         return entity;
+    }
+
+    @Transactional
+    public void delete(final VideoEntity entity) {
+        entity.setArchivedAt(DateUtil.now());
+        repository.saveOrUpdate(entity);
     }
 }

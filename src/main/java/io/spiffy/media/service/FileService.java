@@ -12,6 +12,7 @@ import org.springframework.util.DigestUtils;
 import io.spiffy.common.Service;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.config.AppConfig;
+import io.spiffy.common.util.DateUtil;
 import io.spiffy.media.entity.FileEntity;
 import io.spiffy.media.entity.FileEntity.Privacy;
 import io.spiffy.media.manager.S3Manager;
@@ -65,6 +66,17 @@ public class FileService extends Service<FileEntity, FileRepository> {
 
         return entity;
 
+    }
+
+    @Transactional
+    public void delete(final FileEntity entity) {
+        if (entity == null) {
+            return;
+        }
+
+        mediaManager.delete(getKey(entity));
+        entity.setArchivedAt(DateUtil.now());
+        repository.saveOrUpdate(entity);
     }
 
     public static String getUrl(final FileEntity file) {

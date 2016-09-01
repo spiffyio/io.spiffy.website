@@ -2,15 +2,19 @@ package io.spiffy.common.api.media.client;
 
 import lombok.RequiredArgsConstructor;
 
+import java.util.List;
+
 import javax.inject.Inject;
 
 import io.spiffy.common.Client;
 import io.spiffy.common.api.GetInput;
+import io.spiffy.common.api.media.call.DeleteMediaCall;
 import io.spiffy.common.api.media.call.GetAccountMediaCall;
 import io.spiffy.common.api.media.call.GetMediaCall;
 import io.spiffy.common.api.media.call.PostMediaCall;
 import io.spiffy.common.api.media.dto.ContentType;
 import io.spiffy.common.api.media.dto.MediaType;
+import io.spiffy.common.api.media.input.DeleteMediaInput;
 import io.spiffy.common.api.media.input.GetAccountMediaInput;
 import io.spiffy.common.api.media.input.PostMediaInput;
 import io.spiffy.common.api.media.output.GetAccountMediaOutput;
@@ -20,9 +24,15 @@ import io.spiffy.common.api.media.output.PostMediaOutput;
 @RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class MediaClient extends Client {
 
+    private final DeleteMediaCall deleteMediaCall;
     private final GetAccountMediaCall getAccountMediaCall;
     private final GetMediaCall getMediaCall;
     private final PostMediaCall postMediaCall;
+
+    public void deleteMedia(final long accountId, final List<String> names) {
+        final DeleteMediaInput input = new DeleteMediaInput(accountId, names);
+        deleteMediaCall.call(input);
+    }
 
     public GetAccountMediaOutput getAccountMedia(final long id, final ContentType type, final Long first, final int maxResults,
             final boolean includeFirst) {

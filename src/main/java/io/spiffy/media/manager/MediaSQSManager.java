@@ -4,11 +4,13 @@ import javax.inject.Inject;
 
 import com.amazonaws.services.sqs.AmazonSQSClient;
 
+import io.spiffy.common.event.MediaDeletedEvent;
+import io.spiffy.common.event.MediaEvent;
 import io.spiffy.common.event.MediaProcessedEvent;
 import io.spiffy.common.manager.SQSManager;
 import io.spiffy.media.service.ContentService;
 
-public class MediaSQSManager extends SQSManager<MediaProcessedEvent> {
+public class MediaSQSManager extends SQSManager<MediaEvent> {
 
     private static final String QUEUE_NAME = "spiffyio-media";
 
@@ -16,11 +18,15 @@ public class MediaSQSManager extends SQSManager<MediaProcessedEvent> {
 
     @Inject
     public MediaSQSManager(final AmazonSQSClient client, final ContentService service) {
-        super(client, MediaProcessedEvent.class, QUEUE_NAME);
+        super(client, MediaEvent.class, QUEUE_NAME);
         this.service = service;
     }
 
-    public void process(final MediaProcessedEvent content) {
-        service.process(content.getMediaId());
+    public void process(final MediaEvent content, final String json) {
+        if (MediaProcessedEvent.SUB_TYPE.equalsIgnoreCase(content.getSubType())) {
+            service.process(content.getMediaId());
+        } else if (MediaDeletedEvent.SUB_TYPE.equalsIgnoreCase(content.getSubType())) {
+            service.delete(content.getMediaIds());
+        }
     }
 }

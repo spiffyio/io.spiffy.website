@@ -1,7 +1,9 @@
 package io.spiffy.media.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -61,6 +63,11 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
     }
 
     @Transactional
+    public List<ContentEntity> get(final long account, final List<String> names) {
+        return repository.get(account, names);
+    }
+
+    @Transactional
     public GetMediaOutput getContent(final long id) {
         return getContent(repository.get(id));
     }
@@ -110,7 +117,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             final String medium = FileService.getUrl(image.getMedium());
             final String thumbnail = FileService.getUrl(image.getThumbnail());
 
-            content = new Content(file, medium, thumbnail);
+            content = new Content(entity.getName(), file, medium, thumbnail);
         } else if (ContentType.VIDEO.equals(entity.getType())) {
             final VideoEntity video = videoService.get(entity);
             if (video == null) {
@@ -123,7 +130,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             final String gif = FileService.getUrl(video.getGif());
             final String thumbnail = FileService.getUrl(video.getThumbnail());
 
-            content = new Content(poster, mp4, webm, gif, thumbnail);
+            content = new Content(entity.getName(), poster, mp4, webm, gif, thumbnail);
         } else {
             return new GetMediaOutput(GetMediaOutput.Error.UNKNOWN_CONTENT);
         }
@@ -150,6 +157,50 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         ThreadUtil.run(() -> process(content, type, value));
 
         return entity;
+    }
+
+    @Transactional
+    public void delete(final long accountId, final List<String> names) {
+        final Set<Long> ids = new HashSet<>();
+        final List<ContentEntity> entities = get(accountId, names);
+        for (final ContentEntity entity : entities) {
+            ids.add(entity.getId());
+            entity.setArchivedAt(DateUtil.now());
+            repository.saveOrUpdate(entity);
+        }
+
+        snsManager.publish(ids);
+    }
+
+    public void delete(final Set<Long> ids) {
+        for (final long id : ids) {
+            delete(id);
+        }
+    }
+
+    @Transactional
+    public void delete(final long id) {
+        final ContentEntity entity = get(id);
+        if (entity.getArchivedAt() != null) {
+            return;
+        }
+
+        if (ContentType.IMAGE.equals(entity.getType())) {
+            final ImageEntity image = imageService.get(entity);
+            imageService.delete(image);
+            fileService.delete(image.getFile());
+            fileService.delete(image.getMedium());
+            fileService.delete(image.getThumbnail());
+        } else if (ContentType.VIDEO.equals(entity.getType())) {
+            final VideoEntity video = videoService.get(entity);
+            videoService.delete(video);
+            fileService.delete(video.getPoster());
+            fileService.delete(video.getMp4());
+            fileService.delete(video.getWebm());
+            fileService.delete(video.getGif());
+            fileService.delete(video.getThumbnail());
+        }
+
     }
 
     @Transactional

@@ -1,6 +1,7 @@
 package io.spiffy.stream.service;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -43,6 +44,11 @@ public class PostService extends Service<PostEntity, PostRepository> {
     }
 
     @Transactional
+    public List<PostEntity> getByMediaIds(final Set<Long> mediaIds) {
+        return repository.getByMediaIds(mediaIds);
+    }
+
+    @Transactional
     public PostEntity post(final String idempotentId, final long accountId, final long mediaId, final String title,
             final String description) {
         validateIdempotentId(idempotentId);
@@ -77,6 +83,15 @@ public class PostService extends Service<PostEntity, PostRepository> {
         final List<PostEntity> posts = getByMediaId(id);
         for (final PostEntity post : posts) {
             post.setProcessed(true);
+            repository.saveOrUpdate(post);
+        }
+    }
+
+    @Transactional
+    public void deleteByMediaIds(final Set<Long> ids) {
+        final List<PostEntity> posts = getByMediaIds(ids);
+        for (final PostEntity post : posts) {
+            post.setArchivedAt(DateUtil.now());
             repository.saveOrUpdate(post);
         }
     }

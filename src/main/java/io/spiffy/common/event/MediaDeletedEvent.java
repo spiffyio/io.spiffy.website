@@ -8,10 +8,10 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 @Data
 @EqualsAndHashCode(callSuper = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class MediaProcessedEvent extends MediaEvent {
-    public static final String SUB_TYPE = "PROCESSED";
+public class MediaDeletedEvent extends MediaEvent {
+    public static final String SUB_TYPE = "DELETED";
 
-    public MediaProcessedEvent() {
+    public MediaDeletedEvent() {
         super.setSubType(SUB_TYPE);
     }
 }
