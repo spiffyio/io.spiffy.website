@@ -79,6 +79,7 @@ Dropzone.options.dzForm = {
     else if type.equalsIgnoreCase 'video/mov' then done()
     else if type.equalsIgnoreCase 'video/mp4' then done()
     else if type.equalsIgnoreCase 'video/mpeg4' then done()
+    else if type.equalsIgnoreCase 'video/quicktime' then done()
     else if type.equalsIgnoreCase 'video/webm' then done()
     else done 'unable to upload file: ' + file.name
     return

@@ -60,7 +60,7 @@ public class ImageUtil {
 
     public static byte[] compressPNG(final byte[] value) {
         final PngOptimizer optimizer = new PngOptimizer();
-        optimizer.setCompressor("zopfli", 15);
+        optimizer.setCompressor("zopfli", 25);
 
         final InputStream in = new ByteArrayInputStream(value);
         final PngImage image = new PngImage(in);
@@ -70,21 +70,30 @@ public class ImageUtil {
             optimized.writeDataOutputStream(baos);
             return baos.toByteArray();
         } catch (final IOException e) {
-            logger.warn("unable to compress png");
+            logger.warn("unable to compress png", e);
         }
 
         return value;
     }
 
     public static byte[] scale(final byte[] value, final MediaType type, final int size, final byte[] defaultValue) {
+        return scale(value, type, size, defaultValue, true);
+    }
+
+    public static byte[] scale(final byte[] value, final MediaType type, final int size, final byte[] defaultValue,
+            final boolean compress) {
         byte[] result = null;
         try {
             result = scale(value, type, size);
         } catch (final IOException e) {
-            logger.warn("unable to scale image");
+            logger.warn("unable to scale image", e);
         }
 
         result = result != null ? result : defaultValue;
+        if (!compress) {
+            return result;
+        }
+
         return compress(result, type);
     }
 
@@ -112,7 +121,7 @@ public class ImageUtil {
         try {
             result = thumbnail(value, type, size);
         } catch (final IOException e) {
-            logger.warn("unable to thumbnail image");
+            logger.warn("unable to thumbnail image", e);
         }
 
         result = result != null ? result : defaultValue;

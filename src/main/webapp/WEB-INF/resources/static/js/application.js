@@ -457,6 +457,8 @@ Dropzone.options.dzForm = {
       done();
     } else if (type.equalsIgnoreCase('video/mpeg4')) {
       done();
+    } else if (type.equalsIgnoreCase('video/quicktime')) {
+      done();
     } else if (type.equalsIgnoreCase('video/webm')) {
       done();
     } else {

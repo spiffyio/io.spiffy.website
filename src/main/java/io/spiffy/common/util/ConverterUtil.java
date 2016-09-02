@@ -49,9 +49,6 @@ public class ConverterUtil {
                 }
             }
 
-            run("wget \"https:" + AppConfig.getCdnEndpoint() + "/static/zip/ffmpeg.zip?v=3\" -O \"ffmpeg.zip\"");
-            run("unzip \"ffmpeg.zip\"");
-            run("rm -f \"ffmpeg.zip\"");
             initialized = true;
         }
     }

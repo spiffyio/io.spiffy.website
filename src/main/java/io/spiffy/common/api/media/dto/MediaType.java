@@ -40,6 +40,7 @@ public enum MediaType {
                 return PNG;
             case "mov":
             case "video/mov":
+            case "video/quicktime":
                 return MOV;
             case "mpeg":
             case "mpeg4":

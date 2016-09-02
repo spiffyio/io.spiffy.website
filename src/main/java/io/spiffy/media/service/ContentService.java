@@ -242,7 +242,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         }
 
         final byte[] posterFullValue = ConverterUtil.convertToPNG(value, content.getName());
-        final byte[] posterValue = ImageUtil.scale(posterFullValue, MediaType.PNG, MEDIUM_SIZE, posterFullValue);
+        final byte[] posterValue = ImageUtil.scale(posterFullValue, MediaType.PNG, MEDIUM_SIZE, posterFullValue, false);
         final FileEntity poster = fileService.post(content.getName(), MediaType.PNG, posterValue, FileEntity.Privacy.PUBLIC);
 
         final byte[] mp4Value = ConverterUtil.convertToMP4(value, content.getName());
