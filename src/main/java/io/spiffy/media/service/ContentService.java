@@ -101,14 +101,16 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             error = GetMediaOutput.Error.UNKNOWN_CONTENT;
         }
 
-        final Content content;
+        Content content = null;
         if (ContentType.IMAGE.equals(entity.getType())) {
             final ImageEntity image = imageService.get(entity);
             content = imageService.getContent(entity.getName(), image);
         } else if (ContentType.VIDEO.equals(entity.getType())) {
             final VideoEntity video = videoService.get(entity);
             content = videoService.getContent(entity.getName(), video);
-        } else {
+        }
+
+        if (content == null) {
             return new GetMediaOutput(error);
         }
 
