@@ -10,7 +10,14 @@ addedfile = (file) ->
     setTimeout func, 10
     return
 
-  if not file.accepted then return
+  if not file.accepted
+    console.log file
+    form = $ '#dz-form'
+    message = form.find '.message'
+    message.html 'unable to upload file: ' + file.name
+    message.slideDown()
+    form.animate {height: '8em'}, 500
+    return
 
   $('#dz-form').hide()
   form = $ 'form.submit'
@@ -64,7 +71,15 @@ Dropzone.options.dzForm = {
   createImageThumbnails: false,
   autoProcessQueue: true,
   accept: (file, done) ->
-    done()
+    type = file.type
+    if type.equalsIgnoreCase 'image/gif' then done()
+    else if type.equalsIgnoreCase 'image/jpg' then done()
+    else if type.equalsIgnoreCase 'image/jpeg' then done()
+    else if type.equalsIgnoreCase 'image/png' then done()
+    else if type.equalsIgnoreCase 'video/mp4' then done()
+    else if type.equalsIgnoreCase 'video/mpeg4' then done()
+    else if type.equalsIgnoreCase 'video/webm' then done()
+    else done 'unable to upload file: ' + file.name
     return
   init: () ->
     this.on 'addedfile', (file) ->
@@ -193,12 +208,8 @@ $(document).ready (e) ->
       return
 
   $('form.action').spiffy().options
-    success: (form) ->
-      div = form.parents 'div.actions:first'
-      button = div.find 'button.success'
-      if button? and button.is 'button.success'
-        button.animate { opacity: 1 }, 500, () ->
-          button.animate { opacity: 0 }, 1500
+    success: () ->
+      go '/'
       return
 
   $('div.actions').find('button').each (e) ->
@@ -208,11 +219,6 @@ $(document).ready (e) ->
       input = form.find 'input[name="action"]'
       action = button.data 'action'
       input.val action
-      if action.equalsIgnoreCase 'delete'
-        form.spiffy().options
-          success: () ->
-            go '/'
-            return
       form.submit()
       return
     return

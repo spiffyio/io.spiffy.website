@@ -33,14 +33,6 @@
 </div>
 </div>
 <div class="actions">
-  <button class="button primary" data-action="like"><img src="<s:resource file="svg/linea/arrows_up_double.svg" />" /></button>
-  <button class="button primary" data-action="dislike"><img src="<s:resource file="svg/linea/arrows_down_double-34.svg" />" /></button>
-  <button class="button primary" data-action="favorite"><img src="<s:resource file="svg/linea/basic_heart.svg" />" /></button>
-  <button class="button success invisible"><img src="<s:resource file="svg/linea/arrows_check.svg" />" /></button>
-  <div class="sm-hidden" style="height: 0.25em;"></div>
-  <button class="button primary" data-action="share"><img src="<s:resource file="svg/linea/basic_share.svg" />" /></button>
-  <button class="button primary" data-action="link"><img src="<s:resource file="svg/linea/basic_link.svg" />" /></button>
-  <button class="button primary" data-action="download"><img src="<s:resource file="svg/linea/basic_download.svg" />" /></button>
   <button class="button danger" data-action="<c:if test="${ post.account.id eq account.id }">delete"><img src="<s:resource file="svg/linea/basic_trashcan.svg" />" /></c:if><c:if test="${ post.account.id ne account.id }">report"><img src="<s:resource file="svg/linea/basic_flag1.svg" />" /></c:if>
   </button>
 
@@ -65,7 +57,6 @@
     <div class="source">
       <div class="account">
         <div class="thumbnail">
-          <a href="/<c:out value="${ comment.account.username }" />"><img style="width: 3em;" src="//cdn-beta.spiffy.io/media/MkTmMs.png" /></a>
         </div>
         <div class="username">
           <a href="/<c:out value="${ comment.account.username }" />"><c:out value="${ comment.account.username }" /></a>

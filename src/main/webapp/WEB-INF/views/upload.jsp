@@ -9,6 +9,7 @@
 <form id="dz-form" class="dropzone full" action="/upload" enctype="multipart/form-data" <s:csrf name="upload" />>
   <div class="dz-message"></div>
   <img src="<s:resource file="svg/linea/basic_upload.svg" />" />
+  <div class="message error">ahhhh</div> 
   <s:idempotent />
 </form>
 

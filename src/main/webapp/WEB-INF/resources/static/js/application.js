@@ -376,7 +376,7 @@ jQuery.fn.spiffy = function() {
 var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
 
 addedfile = function(file) {
-  var div, form, func, img, preview, processing, source, src, video;
+  var div, form, func, img, message, preview, processing, source, src, video;
   if (file.accepted == null) {
     func = function() {
       addedfile(file);
@@ -385,6 +385,14 @@ addedfile = function(file) {
     return;
   }
   if (!file.accepted) {
+    console.log(file);
+    form = $('#dz-form');
+    message = form.find('.message');
+    message.html('unable to upload file: ' + file.name);
+    message.slideDown();
+    form.animate({
+      height: '8em'
+    }, 500);
     return;
   }
   $('#dz-form').hide();
@@ -433,7 +441,25 @@ Dropzone.options.dzForm = {
   createImageThumbnails: false,
   autoProcessQueue: true,
   accept: function(file, done) {
-    done();
+    var type;
+    type = file.type;
+    if (type.equalsIgnoreCase('image/gif')) {
+      done();
+    } else if (type.equalsIgnoreCase('image/jpg')) {
+      done();
+    } else if (type.equalsIgnoreCase('image/jpeg')) {
+      done();
+    } else if (type.equalsIgnoreCase('image/png')) {
+      done();
+    } else if (type.equalsIgnoreCase('video/mp4')) {
+      done();
+    } else if (type.equalsIgnoreCase('video/mpeg4')) {
+      done();
+    } else if (type.equalsIgnoreCase('video/webm')) {
+      done();
+    } else {
+      done('unable to upload file: ' + file.name);
+    }
   },
   init: function() {
     this.on('addedfile', function(file) {
@@ -570,19 +596,8 @@ $(document).ready(function(e) {
     }
   });
   $('form.action').spiffy().options({
-    success: function(form) {
-      var button, div;
-      div = form.parents('div.actions:first');
-      button = div.find('button.success');
-      if ((button != null) && button.is('button.success')) {
-        button.animate({
-          opacity: 1
-        }, 500, function() {
-          return button.animate({
-            opacity: 0
-          }, 1500);
-        });
-      }
+    success: function() {
+      go('/');
     }
   });
   $('div.actions').find('button').each(function(e) {
@@ -594,13 +609,6 @@ $(document).ready(function(e) {
       input = form.find('input[name="action"]');
       action = button.data('action');
       input.val(action);
-      if (action.equalsIgnoreCase('delete')) {
-        form.spiffy().options({
-          success: function() {
-            go('/');
-          }
-        });
-      }
       form.submit();
     });
   });

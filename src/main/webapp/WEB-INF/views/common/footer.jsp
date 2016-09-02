@@ -49,7 +49,6 @@
 </div>
 <div class="account">
   <div class="thumbnail">
-    <a href="/{{post.account.username}}"><img style="width: 3em;" src="//cdn-beta.spiffy.io/media/MkTmMs.png" /></a>
   </div>
   <div class="username">
     <a href="/{{post.account.username}}">{{post.account.username}}</a>
