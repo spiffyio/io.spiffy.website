@@ -18,7 +18,6 @@ import io.spiffy.common.api.media.output.GetMediaOutput;
 import io.spiffy.common.exception.InvalidParameterException;
 import io.spiffy.common.util.DateUtil;
 import io.spiffy.common.util.ObfuscateUtil;
-import io.spiffy.common.util.ThreadUtil;
 import io.spiffy.media.entity.ContentEntity;
 import io.spiffy.media.entity.FileEntity;
 import io.spiffy.media.entity.ImageEntity;
@@ -80,7 +79,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
 
         final List<Content> contents = new ArrayList<>();
         for (final ContentEntity entity : entities) {
-            final Content content = foo(entity);
+            final Content content = getContent(entity).getContent();
             if (content != null) {
                 contents.add(content);
             }
@@ -102,24 +101,18 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             error = GetMediaOutput.Error.UNKNOWN_CONTENT;
         }
 
-        final Content content = foo(entity);
-        if (content == null) {
+        final Content content;
+        if (ContentType.IMAGE.equals(entity.getType())) {
+            final ImageEntity image = imageService.get(entity);
+            content = imageService.getContent(entity.getName(), image);
+        } else if (ContentType.VIDEO.equals(entity.getType())) {
+            final VideoEntity video = videoService.get(entity);
+            content = videoService.getContent(entity.getName(), video);
+        } else {
             return new GetMediaOutput(error);
         }
 
         return new GetMediaOutput(content);
-    }
-
-    private Content foo(final ContentEntity entity) {
-        if (ContentType.IMAGE.equals(entity.getType())) {
-            final ImageEntity image = imageService.get(entity);
-            return imageService.getContent(entity.getName(), image);
-        } else if (ContentType.VIDEO.equals(entity.getType())) {
-            final VideoEntity video = videoService.get(entity);
-            return videoService.getContent(entity.getName(), video);
-        }
-
-        return null;
     }
 
     @Transactional
@@ -138,7 +131,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         repository.saveOrUpdate(entity);
 
         final ContentEntity content = entity;
-        ThreadUtil.run(() -> process(content, type, value));
+        snsManager.publishPosted(content.getId());
 
         return entity;
     }
@@ -175,12 +168,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
     @Transactional
     public void process(final long id) {
         final ContentEntity content = get(id);
-        content.setProcessed(true);
-        repository.saveOrUpdate(content);
-    }
 
-    @Transactional
-    public void process(final ContentEntity content, final MediaType type, final byte[] value) {
         if (ContentType.IMAGE.equals(content.getType())) {
             imageService.process(content);
         } else if (ContentType.VIDEO.equals(content.getType())) {
@@ -188,6 +176,9 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         } else {
             return;
         }
+
+        content.setProcessed(true);
+        repository.saveOrUpdate(content);
 
         snsManager.publish(content.getId());
     }

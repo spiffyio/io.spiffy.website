@@ -25,7 +25,7 @@ public class AccessFilter extends Filter {
             return Result.Continue;
         }
 
-        if (true) {
+        if (context.getRequestUri().toLowerCase().startsWith("/static")) {
             return Result.Continue;
         }
 

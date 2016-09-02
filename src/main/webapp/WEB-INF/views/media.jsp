@@ -12,7 +12,9 @@
 </form>
 
 <c:forEach var="content" items="${ media }">
-  <img class="thismedia" src="<c:out value="${ content.thumbnail }" />" data-media-name="<c:out value="${ content.name }" />"/>
+  <c:if test="${ content.type eq 'VIDEO' }"><c:set var="src" value="${ content.poster.thumbnail }" /></c:if>
+  <c:if test="${ content.type eq 'IMAGE' }"><c:set var="src" value="${ content.thumbnail }" /></c:if>
+  <img class="thismedia" src="<c:out value="${ src }" />" data-media-name="<c:out value="${ content.name }" />"/>
 </c:forEach>
 
 <form class="delete" <s:csrf name="delete" /> action="/<c:out value="${ account.username }" />/media/delete">

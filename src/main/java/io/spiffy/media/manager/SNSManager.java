@@ -12,10 +12,11 @@ import io.spiffy.common.Manager;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.event.Event;
 import io.spiffy.common.event.MediaDeletedEvent;
+import io.spiffy.common.event.MediaPostedEvent;
 import io.spiffy.common.event.MediaProcessedEvent;
 import io.spiffy.common.util.JsonUtil;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class SNSManager extends Manager {
 
     private static final String TOPIC = "arn:aws:sns:us-west-2:509332127709:spiffyio-media" + AppConfig.getSuffix();
@@ -24,6 +25,12 @@ public class SNSManager extends Manager {
 
     public void publish(final long id) {
         final MediaProcessedEvent event = new MediaProcessedEvent();
+        event.setMediaId(id);
+        publish(event);
+    }
+
+    public void publishPosted(final long id) {
+        final MediaPostedEvent event = new MediaPostedEvent();
         event.setMediaId(id);
         publish(event);
     }
