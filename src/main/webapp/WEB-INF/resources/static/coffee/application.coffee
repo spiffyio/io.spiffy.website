@@ -37,11 +37,20 @@ addedfile = (file) ->
     source.attr 'src', src
     video.append source
 
+    processing = $ document.createElement 'img'
+    processing.attr 'src', '/static/png/processing.png'
+    video.append processing
+
     div.append video
-  else
+  else if file.type.containsIgnoreCase 'image'
     form.spiffy().loading 'header', true, 5000
     img = $ document.createElement 'img'
     img.attr 'src', src
+    div.append img
+  else
+    form.spiffy().loading 'header', true, 5000
+    img = $ document.createElement 'img'
+    img.attr 'src', '/static/png/processing.png'
     div.append img
   preview.prepend div
   form.slideDown()
@@ -62,7 +71,6 @@ Dropzone.options.dzForm = {
       addedfile file
       return
     this.on 'uploadprogress', (file) ->
-      console.log file.upload.progress
       return
   success: (file, response) ->
     form = $ 'form.submit'

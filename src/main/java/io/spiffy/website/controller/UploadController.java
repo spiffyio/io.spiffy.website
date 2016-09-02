@@ -26,7 +26,7 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;
@@ -43,8 +43,8 @@ public class UploadController extends Controller {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
             final @RequestParam String idempotentId) throws IOException {
-        final String name = mediaClient.postMedia(context.getAccountId(), idempotentId,
-                MediaType.getEnum(file.getContentType()), file.getBytes());
+        final MediaType type = MediaType.getEnum(file.getContentType());
+        final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type, file.getBytes());
         return new UploadResponse(name);
     }
 

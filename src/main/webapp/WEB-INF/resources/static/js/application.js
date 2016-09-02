@@ -376,7 +376,7 @@ jQuery.fn.spiffy = function() {
 var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
 
 addedfile = function(file) {
-  var div, form, func, img, preview, source, src, video;
+  var div, form, func, img, preview, processing, source, src, video;
   if (file.accepted == null) {
     func = function() {
       addedfile(file);
@@ -406,11 +406,19 @@ addedfile = function(file) {
     source.attr('type', file.type);
     source.attr('src', src);
     video.append(source);
+    processing = $(document.createElement('img'));
+    processing.attr('src', '/static/png/processing.png');
+    video.append(processing);
     div.append(video);
-  } else {
+  } else if (file.type.containsIgnoreCase('image')) {
     form.spiffy().loading('header', true, 5000);
     img = $(document.createElement('img'));
     img.attr('src', src);
+    div.append(img);
+  } else {
+    form.spiffy().loading('header', true, 5000);
+    img = $(document.createElement('img'));
+    img.attr('src', '/static/png/processing.png');
     div.append(img);
   }
   preview.prepend(div);
@@ -431,9 +439,7 @@ Dropzone.options.dzForm = {
     this.on('addedfile', function(file) {
       addedfile(file);
     });
-    return this.on('uploadprogress', function(file) {
-      console.log(file.upload.progress);
-    });
+    return this.on('uploadprogress', function(file) {});
   },
   success: function(file, response) {
     var form, media;

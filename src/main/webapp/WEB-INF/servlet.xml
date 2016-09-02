@@ -22,6 +22,7 @@
   <resources mapping="/static/css/**" location="/WEB-INF/resources/static/css/" />
   <resources mapping="/static/favicon/**" location="/WEB-INF/resources/static/favicon/" />
   <resources mapping="/static/js/**" location="/WEB-INF/resources/static/js/" />
+  <resources mapping="/static/png/**" location="/WEB-INF/resources/static/png/" />
   <resources mapping="/static/svg/**" location="/WEB-INF/resources/static/svg/" />
   <resources mapping="/static/zip/**" location="/WEB-INF/resources/static/zip/" />
 

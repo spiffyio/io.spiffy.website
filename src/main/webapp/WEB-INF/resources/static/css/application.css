@@ -169,7 +169,7 @@ div.body div.centered div.letter li {
 
 div.body div.centered .logo {
   cursor: default;
-  padding-top: 17.5vh;
+  margin-top: 17.5vh;
 }
 
 div.body div.centered textarea {
