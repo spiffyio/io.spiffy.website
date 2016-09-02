@@ -19,9 +19,6 @@ import org.imgscalr.Scalr;
 import org.imgscalr.Scalr.Method;
 import org.imgscalr.Scalr.Mode;
 
-import com.googlecode.pngtastic.core.PngImage;
-import com.googlecode.pngtastic.core.PngOptimizer;
-
 import io.spiffy.common.api.media.dto.MediaType;
 
 public class ImageUtil {
@@ -33,7 +30,7 @@ public class ImageUtil {
 
     private static final Logger logger = Logger.getLogger(ImageUtil.class);
 
-    private static BufferedImage asImage(final byte[] bytes) throws IOException {
+    private static BufferedImage asImage(final byte[] bytes, final MediaType type) throws IOException {
         final InputStream in = new ByteArrayInputStream(bytes);
         return ImageIO.read(in);
     }
@@ -59,20 +56,6 @@ public class ImageUtil {
     }
 
     public static byte[] compressPNG(final byte[] value) {
-        final PngOptimizer optimizer = new PngOptimizer();
-        optimizer.setCompressor("zopfli", 25);
-
-        final InputStream in = new ByteArrayInputStream(value);
-        final PngImage image = new PngImage(in);
-
-        try (final ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            final PngImage optimized = optimizer.optimize(image);
-            optimized.writeDataOutputStream(baos);
-            return baos.toByteArray();
-        } catch (final IOException e) {
-            logger.warn("unable to compress png", e);
-        }
-
         return value;
     }
 
@@ -98,7 +81,7 @@ public class ImageUtil {
     }
 
     private static byte[] scale(final byte[] bytes, final MediaType type, final int size) throws IOException {
-        final BufferedImage image = asImage(bytes);
+        final BufferedImage image = asImage(bytes, type);
         if (image.getWidth() <= size && image.getHeight() <= size) {
             return null;
         }
@@ -129,7 +112,7 @@ public class ImageUtil {
     }
 
     private static byte[] thumbnail(final byte[] bytes, final MediaType type, final int size) throws IOException {
-        final BufferedImage image = asImage(bytes);
+        final BufferedImage image = asImage(bytes, type);
         if (image.getWidth() == size && image.getHeight() == size) {
             return null;
         }
@@ -178,7 +161,7 @@ public class ImageUtil {
 
     public static byte[] macro(final byte[] bytes, final MediaType type, final String top, final String bottom)
             throws IOException {
-        final BufferedImage image = asImage(bytes);
+        final BufferedImage image = asImage(bytes, type);
 
         final Graphics2D graphics = (Graphics2D) image.getGraphics();
         final String captionTop = top.toUpperCase();

@@ -29,6 +29,14 @@ public class AccessFilter extends Filter {
             return Result.Continue;
         }
 
+        if (context.getRequestUri().equalsIgnoreCase("/favicon.ico")) {
+            return Result.Continue;
+        }
+
+        if (context.getRequestUri().equalsIgnoreCase("/browserconfig.xml")) {
+            return Result.Continue;
+        }
+
         if ("24.16.208.98".equalsIgnoreCase(context.getIPAddress())) {
             return Result.Continue;
         }
