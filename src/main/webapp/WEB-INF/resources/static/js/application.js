@@ -756,7 +756,7 @@ loadPosts = function(posts) {
       video = $(document.createElement('video'));
       video.attr('muted', true);
       video.attr('loop', true);
-      video.attr('poster', content.poster);
+      video.attr('poster', content.poster.file);
       source = $(document.createElement('source'));
       source.attr('src', content.mp4);
       source.attr('type', 'video/mp4');

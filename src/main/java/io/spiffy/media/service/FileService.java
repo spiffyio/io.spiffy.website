@@ -42,7 +42,7 @@ public class FileService extends Service<FileEntity, FileRepository> {
     public FileEntity getByValue(final byte[] value) {
         final String md5 = getMd5(value);
         final List<FileEntity> entities = repository.getByMD5(md5);
-        entities.parallelStream().forEach(e -> e.setValue(mediaManager.get(getKey(e))));
+        entities.parallelStream().forEach(e -> loadValue(e));
 
         for (final FileEntity entity : entities) {
             if (Arrays.equals(entity.getValue(), value)) {
@@ -66,6 +66,18 @@ public class FileService extends Service<FileEntity, FileRepository> {
 
         return entity;
 
+    }
+
+    public void loadValue(final FileEntity entity) {
+        if (entity == null) {
+            return;
+        }
+
+        if (entity.getValue() != null) {
+            return;
+        }
+
+        entity.setValue(mediaManager.get(getKey(entity)));
     }
 
     @Transactional

@@ -16,7 +16,9 @@ import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.media.output.GetAccountMediaOutput;
 import io.spiffy.common.api.media.output.GetMediaOutput;
 import io.spiffy.common.exception.InvalidParameterException;
-import io.spiffy.common.util.*;
+import io.spiffy.common.util.DateUtil;
+import io.spiffy.common.util.ObfuscateUtil;
+import io.spiffy.common.util.ThreadUtil;
 import io.spiffy.media.entity.ContentEntity;
 import io.spiffy.media.entity.FileEntity;
 import io.spiffy.media.entity.ImageEntity;
@@ -25,12 +27,6 @@ import io.spiffy.media.manager.SNSManager;
 import io.spiffy.media.repository.ContentRepository;
 
 public class ContentService extends Service<ContentEntity, ContentRepository> {
-
-    private static final int THUMBNAIL_SIZE = 160;
-    private static final String THUMBNAIL_SUFFIX = "-" + BaseUtil.toBase64(THUMBNAIL_SIZE);
-
-    private static final int MEDIUM_SIZE = 640;
-    private static final String MEDIUM_SUFFIX = "-" + BaseUtil.toBase64(MEDIUM_SIZE);
 
     private final SNSManager snsManager;
     private final FileService fileService;
@@ -84,9 +80,9 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
 
         final List<Content> contents = new ArrayList<>();
         for (final ContentEntity entity : entities) {
-            final GetMediaOutput output = getContent(entity);
-            if (output.getContent() != null) {
-                contents.add(output.getContent());
+            final Content content = foo(entity);
+            if (content != null) {
+                contents.add(content);
             }
         }
 
@@ -106,36 +102,24 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             error = GetMediaOutput.Error.UNKNOWN_CONTENT;
         }
 
-        final Content content;
-        if (ContentType.IMAGE.equals(entity.getType())) {
-            final ImageEntity image = imageService.get(entity);
-            if (image == null) {
-                return new GetMediaOutput(error);
-            }
-
-            final String file = FileService.getUrl(image.getFile());
-            final String medium = FileService.getUrl(image.getMedium());
-            final String thumbnail = FileService.getUrl(image.getThumbnail());
-
-            content = new Content(entity.getName(), file, medium, thumbnail);
-        } else if (ContentType.VIDEO.equals(entity.getType())) {
-            final VideoEntity video = videoService.get(entity);
-            if (video == null) {
-                return new GetMediaOutput(error);
-            }
-
-            final String poster = FileService.getUrl(video.getPoster());
-            final String mp4 = FileService.getUrl(video.getMp4());
-            final String webm = FileService.getUrl(video.getWebm());
-            final String gif = FileService.getUrl(video.getGif());
-            final String thumbnail = FileService.getUrl(video.getThumbnail());
-
-            content = new Content(entity.getName(), poster, mp4, webm, gif, thumbnail);
-        } else {
-            return new GetMediaOutput(GetMediaOutput.Error.UNKNOWN_CONTENT);
+        final Content content = foo(entity);
+        if (content == null) {
+            return new GetMediaOutput(error);
         }
 
         return new GetMediaOutput(content);
+    }
+
+    private Content foo(final ContentEntity entity) {
+        if (ContentType.IMAGE.equals(entity.getType())) {
+            final ImageEntity image = imageService.get(entity);
+            return imageService.getContent(entity.getName(), image);
+        } else if (ContentType.VIDEO.equals(entity.getType())) {
+            final VideoEntity video = videoService.get(entity);
+            return videoService.getContent(entity.getName(), video);
+        }
+
+        return null;
     }
 
     @Transactional
@@ -180,19 +164,9 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         }
 
         if (ContentType.IMAGE.equals(entity.getType())) {
-            final ImageEntity image = imageService.get(entity);
-            imageService.delete(image);
-            fileService.delete(image.getFile());
-            fileService.delete(image.getMedium());
-            fileService.delete(image.getThumbnail());
+            imageService.delete(entity);
         } else if (ContentType.VIDEO.equals(entity.getType())) {
-            final VideoEntity video = videoService.get(entity);
-            videoService.delete(video);
-            fileService.delete(video.getPoster());
-            fileService.delete(video.getMp4());
-            fileService.delete(video.getWebm());
-            fileService.delete(video.getGif());
-            fileService.delete(video.getThumbnail());
+            videoService.delete(entity);
         }
 
         fileService.delete(entity.getFile());
@@ -207,60 +181,14 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
 
     @Transactional
     public void process(final ContentEntity content, final MediaType type, final byte[] value) {
-        if (MediaType.JPG.equals(type) || MediaType.PNG.equals(type)) {
-            final byte[] fileValue = MediaType.JPG.equals(type) ? ImageUtil.removeExif(value) : value;
-            final byte[] compressValue = ImageUtil.compress(fileValue, type);
-            final FileEntity file = fileService.post(content.getName(), type, compressValue, FileEntity.Privacy.PUBLIC);
-
-            final byte[] mediumValue = ImageUtil.scale(fileValue, type, MEDIUM_SIZE, null);
-            final FileEntity medium;
-            if (mediumValue != null) {
-                medium = fileService.post(content.getName() + MEDIUM_SUFFIX, type, mediumValue, FileEntity.Privacy.PUBLIC);
-            } else {
-                medium = file;
-            }
-
-            final byte[] thumbnailValue = ImageUtil.thumbnail(fileValue, type, THUMBNAIL_SIZE, null);
-            final FileEntity thumbnail;
-            if (thumbnailValue != null) {
-                thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, type, thumbnailValue,
-                        FileEntity.Privacy.PUBLIC);
-            } else {
-                thumbnail = file;
-            }
-
-            imageService.post(content, file, medium, thumbnail);
-            snsManager.publish(content.getId());
+        if (ContentType.IMAGE.equals(content.getType())) {
+            imageService.process(content);
+        } else if (ContentType.VIDEO.equals(content.getType())) {
+            videoService.process(content);
+        } else {
             return;
         }
 
-        final FileEntity gif;
-        if (MediaType.GIF.equals(type)) {
-            gif = fileService.post(content.getName(), MediaType.GIF, value, FileEntity.Privacy.PUBLIC);
-        } else {
-            gif = null;
-        }
-
-        final byte[] posterFullValue = ConverterUtil.convertToPNG(value, content.getName());
-        final byte[] posterValue = ImageUtil.scale(posterFullValue, MediaType.PNG, MEDIUM_SIZE, posterFullValue, false);
-        final FileEntity poster = fileService.post(content.getName(), MediaType.PNG, posterValue, FileEntity.Privacy.PUBLIC);
-
-        final byte[] mp4Value = ConverterUtil.convertToMP4(value, content.getName());
-        final FileEntity mp4 = fileService.post(content.getName(), MediaType.MP4, mp4Value, FileEntity.Privacy.PUBLIC);
-
-        final byte[] webmValue = ConverterUtil.convertToWebM(value, content.getName());
-        final FileEntity webm = fileService.post(content.getName(), MediaType.WEBM, webmValue, FileEntity.Privacy.PUBLIC);
-
-        final byte[] thumbnailValue = ImageUtil.thumbnail(posterFullValue, MediaType.PNG, THUMBNAIL_SIZE, null);
-        final FileEntity thumbnail;
-        if (thumbnailValue != null) {
-            thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, MediaType.PNG, thumbnailValue,
-                    FileEntity.Privacy.PUBLIC);
-        } else {
-            thumbnail = poster;
-        }
-
-        videoService.post(content, poster, mp4, webm, gif, thumbnail);
         snsManager.publish(content.getId());
     }
 

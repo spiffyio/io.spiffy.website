@@ -10,7 +10,7 @@
     <div class="mediayo">
     <c:if test="${ post.content.type eq 'VIDEO' }">
     <div class="video paused" style="position: relative">
-    <video loop="true" muted="true" preload="none" poster="<c:out value="${ post.content.poster }" />">
+    <video loop="true" muted="true" preload="none" poster="<c:out value="${ post.content.poster.medium }" />">
       <source src="<c:out value="${ post.content.mp4 }" />" type="video/mp4" />
       <source src="<c:out value="${ post.content.webm }" />" type="video/webm" />
       <c:if test="${ not empty post.content.gif }">

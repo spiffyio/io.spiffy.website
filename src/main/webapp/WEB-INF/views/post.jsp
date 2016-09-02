@@ -9,7 +9,7 @@
 <div class="media <c:if test="${ empty unprocessed and (post.content.type eq 'VIDEO') }">video</c:if>">
 <c:if test="${ empty unprocessed }">
 <c:if test="${ post.content.type eq 'VIDEO' }">
-<video autoplay="true" loop="true" preload="none" poster="<c:out value="${ post.content.poster }" />">
+<video autoplay="true" loop="true" preload="none" poster="<c:out value="${ post.content.poster.file }" />">
   <source src="<c:out value="${ post.content.mp4 }" />" type="video/mp4" />
   <source src="<c:out value="${ post.content.webm }" />" type="video/webm" />
   <c:if test="${ not empty post.content.gif }">
