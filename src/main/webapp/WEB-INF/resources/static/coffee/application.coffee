@@ -76,6 +76,7 @@ Dropzone.options.dzForm = {
     else if type.equalsIgnoreCase 'image/jpg' then done()
     else if type.equalsIgnoreCase 'image/jpeg' then done()
     else if type.equalsIgnoreCase 'image/png' then done()
+    else if type.equalsIgnoreCase 'video/mov' then done()
     else if type.equalsIgnoreCase 'video/mp4' then done()
     else if type.equalsIgnoreCase 'video/mpeg4' then done()
     else if type.equalsIgnoreCase 'video/webm' then done()

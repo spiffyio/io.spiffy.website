@@ -7,6 +7,7 @@ public enum MediaType {
     GIF("image", "gif"), //
     JPG("image", "jpg"), //
     PNG("image", "png"), //
+    MOV("video", "mov"), //
     MP4("video", "mp4"), //
     WEBM("video", "webm");
 
@@ -37,6 +38,9 @@ public enum MediaType {
             case "png":
             case "image/png":
                 return PNG;
+            case "mov":
+            case "video/mov":
+                return MOV;
             case "mpeg":
             case "mpeg4":
             case "mp4":

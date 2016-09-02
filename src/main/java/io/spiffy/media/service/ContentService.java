@@ -269,7 +269,8 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             return ContentType.IMAGE;
         }
 
-        if (MediaType.GIF.equals(type) || MediaType.MP4.equals(type) || MediaType.WEBM.equals(type)) {
+        if (MediaType.GIF.equals(type) || MediaType.MOV.equals(type) || MediaType.MP4.equals(type)
+                || MediaType.WEBM.equals(type)) {
             return ContentType.VIDEO;
         }
 
