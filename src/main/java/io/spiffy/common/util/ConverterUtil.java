@@ -105,7 +105,7 @@ public class ConverterUtil {
             run(String.format(type.getTemplate(), in.getAbsolutePath(), out.getAbsolutePath()));
             return Files.readAllBytes(out.toPath());
         } catch (final IOException e) {
-            logger.warn("unable to save out: " + name);
+            logger.warn("unable to save out: " + name, e);
             return null;
         } finally {
             if (in != null && in.exists()) {

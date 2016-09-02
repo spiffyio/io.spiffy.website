@@ -112,7 +112,7 @@ public class ImageUtil {
         try {
             result = thumbnail(value, type, size);
         } catch (final IOException e) {
-            logger.warn("unable to scale image");
+            logger.warn("unable to thumbnail image");
         }
 
         result = result != null ? result : defaultValue;

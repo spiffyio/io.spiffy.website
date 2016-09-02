@@ -251,7 +251,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         final byte[] webmValue = ConverterUtil.convertToWebM(value, content.getName());
         final FileEntity webm = fileService.post(content.getName(), MediaType.WEBM, webmValue, FileEntity.Privacy.PUBLIC);
 
-        final byte[] thumbnailValue = ImageUtil.thumbnail(posterValue, MediaType.PNG, THUMBNAIL_SIZE, null);
+        final byte[] thumbnailValue = ImageUtil.thumbnail(posterFullValue, MediaType.PNG, THUMBNAIL_SIZE, null);
         final FileEntity thumbnail;
         if (thumbnailValue != null) {
             thumbnail = fileService.post(content.getName() + THUMBNAIL_SUFFIX, MediaType.PNG, thumbnailValue,
