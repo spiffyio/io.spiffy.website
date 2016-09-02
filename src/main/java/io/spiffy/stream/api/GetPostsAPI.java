@@ -45,7 +45,7 @@ public class GetPostsAPI extends API<GetPostsInput, GetPostsOutput, PostService>
     public Post transform(final PostEntity e) {
         final GetMediaOutput media = mediaClient.getMedia(e.getMediaId());
         final Account account = userClient.getAccount(new Account(e.getAccountId()));
-        return new Post(e.getName(), e.getTitle(), e.getDescription(), e.getPostedAt(),
+        return new Post(e.getName(), e.getDescription(), e.getPostedAt(),
                 new PublicAccount(account.getId(), account.getUsername()), media.getContent());
     }
 }

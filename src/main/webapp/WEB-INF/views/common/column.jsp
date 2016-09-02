@@ -40,9 +40,6 @@
         <div class="discuss">
           <a href="/stream/<c:out value="${ post.postId }" />"><img style="width: 2em; margin: 0.5em;" src="<s:resource file="svg/linea/basic_message_txt.svg" />" /></a>
         </div>
-        <div class="title">
-          <a href="/stream/<c:out value="${ post.postId }" />"><c:out value="${ post.title }" /></a>
-        </div>
       </div>
       <div class="account">
         <div class="thumbnail">

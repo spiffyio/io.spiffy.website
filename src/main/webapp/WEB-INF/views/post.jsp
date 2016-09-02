@@ -28,7 +28,6 @@
 </div>
 <div style="height: 0.25em;"></div>
 <div class="information">
-  <h2><c:out value="${ post.title }" /></h2>
   <div class="description"><c:out value="${ post.description }" /></div>
 </div>
 </div>

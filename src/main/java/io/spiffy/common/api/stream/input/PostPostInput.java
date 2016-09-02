@@ -13,6 +13,5 @@ public class PostPostInput {
     private String idempotentId;
     private Long accountId;
     private Long mediaId;
-    private String title;
     private String description;
 }

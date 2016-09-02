@@ -11,7 +11,9 @@
 
 <c:if test="${ letter eq 'llc' }">
 <h2>SPIFFY.io, LLC</h2>
-<p>hello</p>
+<p>Company information coming soon!</p>
+
+<p><a href="mailto:contact@spiffy.io">contact@spiffy.io</a><p>
 </c:if>
 
 <c:if test="${ letter eq 'privacy' }">

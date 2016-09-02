@@ -385,13 +385,12 @@ addedfile = function(file) {
     return;
   }
   if (!file.accepted) {
-    console.log(file);
     form = $('#dz-form');
     message = form.find('.message');
     message.html('unable to upload file: ' + file.name);
     message.slideDown();
     form.animate({
-      height: '8em'
+      height: '10em'
     }, 500);
     return;
   }
@@ -407,9 +406,11 @@ addedfile = function(file) {
     div.addClass('video');
     div.addClass('paused');
     video = $(document.createElement('video'));
+    video.attr('autoplay', true);
     video.attr('muted', true);
     video.attr('loop', true);
-    video.attr('autoplay', false);
+    video.attr('preload', 'auto');
+    video.attr('poster', '/static/png/processing.png');
     source = $(document.createElement('source'));
     source.attr('type', file.type);
     source.attr('src', src);
@@ -519,7 +520,7 @@ $(document).ready(function(e) {
     }
   }
   $('[data-unprocessed]').each(function() {
-    var div, img, post, source, src, type, video;
+    var div, img, post, processing, source, src, type, video;
     div = $(this);
     post = div.data('unprocessed');
     src = sessionStorage.getItem('src:' + post);
@@ -531,13 +532,18 @@ $(document).ready(function(e) {
       div.addClass('video');
       div.addClass('paused');
       video = $(document.createElement('video'));
+      video.attr('autoplay', true);
       video.attr('muted', true);
       video.attr('loop', true);
-      video.attr('autoplay', false);
+      video.attr('preload', 'auto');
+      video.attr('poster', '/static/png/processing.png');
       source = $(document.createElement('source'));
       source.attr('type', type);
       source.attr('src', src);
       video.append(source);
+      processing = $(document.createElement('img'));
+      processing.attr('src', '/static/png/processing.png');
+      video.append(processing);
       div.html(video);
     } else if (type.containsIgnoreCase('image')) {
       img = $(document.createElement('img'));

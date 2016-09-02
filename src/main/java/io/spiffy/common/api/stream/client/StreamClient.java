@@ -62,9 +62,9 @@ public class StreamClient extends Client {
         return output;
     }
 
-    public PostPostOutput postPost(final String idempotentId, final long accountId, final long mediaId, final String title,
+    public PostPostOutput postPost(final String idempotentId, final long accountId, final long mediaId,
             final String description) {
-        final PostPostInput input = new PostPostInput(idempotentId, accountId, mediaId, title, description);
+        final PostPostInput input = new PostPostInput(idempotentId, accountId, mediaId, description);
         final PostPostOutput output = postPostCall.call(input);
         return output;
     }

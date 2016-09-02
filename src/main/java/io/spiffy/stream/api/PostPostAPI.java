@@ -25,7 +25,7 @@ public class PostPostAPI extends API<PostPostInput, PostPostOutput, PostService>
 
     protected PostPostOutput api(final PostPostInput input) {
         final PostEntity entity = service.post(input.getIdempotentId(), input.getAccountId(), input.getMediaId(),
-                input.getTitle(), input.getDescription());
+                input.getDescription());
         if (entity == null) {
             return new PostPostOutput(PostPostOutput.Error.UNKNOWN_ERROR);
         }

@@ -26,9 +26,6 @@ public class PostEntity extends HibernateEntity {
     public static final int MIN_IDEMPOTENT_ID_LENGTH = 1;
     public static final int MAX_IDEMPOTENT_ID_LENGTH = 256;
 
-    public static final int MIN_TITLE_LENGTH = 1;
-    public static final int MAX_TITLE_LENGTH = 80;
-
     public static final int MIN_STATUS_LENGTH = 1;
     public static final int MAX_STATUS_LENGTH = 16;
 
@@ -44,10 +41,6 @@ public class PostEntity extends HibernateEntity {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "posted_at", columnDefinition = "DATETIME")
     private Date postedAt;
-
-    @Setter
-    @Column(name = "title", length = MAX_TITLE_LENGTH, nullable = false)
-    private String title;
 
     @Setter
     @Column(name = "description")

@@ -54,8 +54,7 @@ public class PostService extends Service<PostEntity, PostRepository> {
     }
 
     @Transactional
-    public PostEntity post(final String idempotentId, final long accountId, final long mediaId, final String title,
-            final String description) {
+    public PostEntity post(final String idempotentId, final long accountId, final long mediaId, final String description) {
         validateIdempotentId(idempotentId);
 
         PostEntity entity = get(idempotentId);
@@ -63,7 +62,6 @@ public class PostService extends Service<PostEntity, PostRepository> {
             entity = new PostEntity(idempotentId, accountId, mediaId, DateUtil.now());
         }
 
-        entity.setTitle(title);
         entity.setDescription(description);
 
         repository.saveOrUpdate(entity);

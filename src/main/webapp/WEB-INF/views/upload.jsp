@@ -13,8 +13,7 @@
   <s:idempotent />
 </form>
 
-<form class="submit full" action="/submit" data-name="submit" <s:csrf name="submit" /> hidden>
-  <div class="input center"><input type="text" name="title" placeholder="title" required/></div>
+<form class="submit full" action="/submit" data-name="submit" <s:csrf name="submit" /> data-disabled="true" hidden>
   <div class="preview">
     <div class="input"><input type="text" name="description" placeholder="description"/></div>
   </div>

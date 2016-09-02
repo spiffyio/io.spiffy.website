@@ -52,13 +52,13 @@ public class UploadController extends Controller {
     @Csrf("submit")
     @AccessControl(returnUri = "/upload")
     @RequestMapping(value = "/submit", method = RequestMethod.POST)
-    public AjaxResponse submit(final Context context, final @RequestParam String[] media, final @RequestParam String title,
+    public AjaxResponse submit(final Context context, final @RequestParam String[] media,
             final @RequestParam(required = false) String description,
             final @RequestParam("idempotentId") String idempotentPrefix) throws IOException {
         final String idempotentId = idempotentPrefix + "-" + context.getAccountId();
 
         final PostPostOutput output = streamClient.postPost(idempotentId, context.getAccountId(),
-                ObfuscateUtil.unobfuscate(media[0]), title, description);
+                ObfuscateUtil.unobfuscate(media[0]), description);
         if (output.getError() != null) {
             return new BadRequestResponse("error", "something went wrong");
         }
