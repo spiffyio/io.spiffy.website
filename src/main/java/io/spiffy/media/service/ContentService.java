@@ -17,6 +17,7 @@ import io.spiffy.common.api.media.output.GetAccountMediaOutput;
 import io.spiffy.common.api.media.output.GetMediaOutput;
 import io.spiffy.common.exception.InvalidParameterException;
 import io.spiffy.common.util.DateUtil;
+import io.spiffy.common.util.ImageUtil;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.media.entity.ContentEntity;
 import io.spiffy.media.entity.FileEntity;
@@ -126,7 +127,7 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
 
         final FileEntity file = fileService.post(account + "/" + idempotentId, type, value, FileEntity.Privacy.RAW);
 
-        entity = new ContentEntity(account, idempotentId, asType(type), file);
+        entity = new ContentEntity(account, idempotentId, asType(type, value), file);
         repository.saveOrUpdate(entity);
 
         entity.setName(ObfuscateUtil.obfuscate(entity.getId()));
@@ -185,14 +186,18 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
         snsManager.publish(content.getId());
     }
 
-    private static ContentType asType(final MediaType type) {
+    private static ContentType asType(final MediaType type, final byte[] value) {
         if (MediaType.JPG.equals(type) || MediaType.PNG.equals(type)) {
             return ContentType.IMAGE;
         }
 
-        if (MediaType.GIF.equals(type) || MediaType.MOV.equals(type) || MediaType.MP4.equals(type)
-                || MediaType.WEBM.equals(type)) {
+        if (MediaType.MOV.equals(type) || MediaType.MP4.equals(type) || MediaType.WEBM.equals(type)) {
             return ContentType.VIDEO;
+        }
+
+        if (MediaType.GIF.equals(type)) {
+            final int frames = ImageUtil.getFrameCount(value);
+            return frames == 1 ? ContentType.IMAGE : ContentType.VIDEO;
         }
 
         throw new InvalidParameterException("type", "unknown type: " + type);

@@ -216,6 +216,11 @@ $(document).ready (e) ->
       button.parent().parent().slideUp()
       return
 
+  $('form.delete').spiffy().options
+    success: () ->
+      refresh()
+      return
+
   $('form.action').spiffy().options
     success: () ->
       go '/'

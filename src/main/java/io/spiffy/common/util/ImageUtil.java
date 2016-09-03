@@ -10,6 +10,8 @@ import java.io.*;
 import java.nio.file.Files;
 
 import javax.imageio.ImageIO;
+import javax.imageio.ImageReader;
+import javax.imageio.stream.ImageInputStream;
 
 import org.apache.commons.imaging.ImageReadException;
 import org.apache.commons.imaging.ImageWriteException;
@@ -245,6 +247,18 @@ public class ImageUtil {
             graphics.setColor(Color.WHITE);
             graphics.drawString(line, (image.getWidth() - (int) stringBounds.getWidth()) / 2, y);
             y += graphics.getFontMetrics().getHeight();
+        }
+    }
+
+    public static int getFrameCount(final byte[] value) {
+        try {
+            final ImageReader reader = ImageIO.getImageReadersBySuffix("GIF").next();
+            final InputStream in = new ByteArrayInputStream(value);
+            final ImageInputStream iis = ImageIO.createImageInputStream(in);
+            reader.setInput(iis);
+            return reader.getNumImages(true);
+        } catch (final IOException e) {
+            return -1;
         }
     }
 }

@@ -605,6 +605,11 @@ $(document).ready(function(e) {
       button.parent().parent().slideUp();
     }
   });
+  $('form.delete').spiffy().options({
+    success: function() {
+      refresh();
+    }
+  });
   $('form.action').spiffy().options({
     success: function() {
       go('/');
