@@ -17,7 +17,7 @@ import io.spiffy.common.api.user.output.*;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserClient extends Client {
 
     final AuthenticateAccountCall authenticateAccountCall;
@@ -26,6 +26,7 @@ public class UserClient extends Client {
     final GetSessionsCall getSessionsCall;
     final InvalidateSessionCall invalidateSessionCall;
     final PostAccountCall postAccountCall;
+    final RecoverAccountCall recoverAccountCall;
     final RegisterAccountCall registerAccountCall;
     final SendRecoveryEmailCall sendRecoveryEmailCall;
     final SendVerifyEmailCall sendVerifyEmailCall;
@@ -96,6 +97,13 @@ public class UserClient extends Client {
         final PostAccountInput input = new PostAccountInput(userName, emailAddress);
         final PostOutput output = postAccountCall.call(input);
         return output.getId();
+    }
+
+    public RecoverAccountOutput recoverAccount(final String email, final String token, final String password,
+            final Context context, final String fingerprint) {
+        final RecoverAccountInput input = new RecoverAccountInput(email, token, password, context.getSessionId(), fingerprint,
+                context.getUserAgent(), context.getIPAddress());
+        return recoverAccountCall.call(input);
     }
 
     public RegisterAccountOutput registerAccount(final String userName, final String emailAddress, final String password,

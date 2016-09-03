@@ -55,4 +55,15 @@ public class TemporaryCredentialService extends Service<TemporaryCredentialEntit
 
         return securityClient.matchesHashedString(entity.getPasswordId(), password);
     }
+
+    @Transactional
+    public void invalidate(final long accountId, final String token) {
+        final TemporaryCredentialEntity entity = getByAccountId(accountId);
+        if (entity == null) {
+            return;
+        }
+
+        entity.setArchivedAt(DateUtil.now());
+        repository.saveOrUpdate(entity);
+    }
 }

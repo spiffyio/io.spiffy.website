@@ -11,6 +11,7 @@ import io.spiffy.common.api.email.dto.EmailProperties;
 import io.spiffy.common.api.email.dto.EmailType;
 import io.spiffy.common.api.security.client.SecurityClient;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
+import io.spiffy.common.api.user.output.RecoverAccountOutput;
 import io.spiffy.common.api.user.output.RegisterAccountOutput;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.UIDUtil;
@@ -149,7 +150,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     private void sendRecoverEmail(final AccountEntity account, final String token, final long idempotentId) {
         final EmailProperties properties = new EmailProperties();
         properties.setName(account.getUserName());
-        properties.setUrl(AppConfig.getEndpoint() + "/recovery?email=" + account.getEmailAddress() + "&token=" + token);
+        properties.setUrl(AppConfig.getEndpoint() + "/recover?email=" + account.getEmailAddress() + "&token=" + token);
 
         emailClient.sendEmailCall(EmailType.RECOVER, account.getEmailAddress(), account.getId() + ":recover:" + idempotentId,
                 account.getId(), properties);
@@ -196,6 +197,31 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         }
 
         return get(session.getAccountId());
+    }
+
+    @Transactional
+    public RecoverAccountOutput recover(final String email, final String token, final String password, final String sessionId,
+            final String fingerprint, final String userAgent, final String ipAddress) {
+        final AccountEntity account = getByEmailAddress(email);
+        if (account == null) {
+            return new RecoverAccountOutput(RecoverAccountOutput.Error.UNKNOWN_EMAIL);
+        }
+
+        if (!temporaryCredentialService.matches(account.getId(), token)) {
+            return new RecoverAccountOutput(RecoverAccountOutput.Error.INVALID_TOKEN);
+        }
+
+        credentialService.post(account.getId(), password);
+        temporaryCredentialService.invalidate(account.getId(), token);
+
+        final SessionEntity session = sessionService.validatedCreate(sessionId, account.getId(), fingerprint, userAgent,
+                ipAddress);
+
+        final RecoverAccountOutput output = new RecoverAccountOutput();
+        output.setAccountId(account.getId());
+        output.setSessionToken(session.getToken());
+
+        return output;
     }
 
     @Transactional

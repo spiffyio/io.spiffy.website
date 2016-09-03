@@ -4,7 +4,7 @@ import lombok.Getter;
 
 @Getter
 public enum EmailType {
-    RECOVER("recovery", "Recover Account"), //
+    RECOVER("recover", "Recover Account"), //
     VERIFICATION("verify", "Verify Email Address");
 
     private String template;

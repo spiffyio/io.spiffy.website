@@ -20,7 +20,7 @@
           </td></tr>
           <tr style="height: 1em;"><td></td></tr>
           <tr style="text-align: center;"><td>
-            <a href="$property.url" style="text-decoration: none; display: inline-block; padding: 1em 2em; font-style: bold; background: #39C6EE; color: #F5F5F5;">verify</a>
+            <a href="$property.url" style="text-decoration: none; display: inline-block; padding: 1em 2em; font-style: bold; background: #39C6EE; color: #F5F5F5;">recover</a>
           </td></tr>
           <tr style="height: 1em;"><td></td></tr>
           <tr style="text-align: center;"><td>

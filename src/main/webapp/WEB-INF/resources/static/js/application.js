@@ -566,6 +566,16 @@ $(document).ready(function(e) {
       }
     }
   });
+  $('form.forgot').spiffy().options({
+    success: function(form) {
+      var div;
+      form.spiffy().disable();
+      div = form.find('div.message');
+      div.addClass('success');
+      div.html('recovery email sent');
+      div.slideDown();
+    }
+  });
   $('form[data-return-uri]').spiffy().options({
     success: function(form) {
       return go(form.data('return-uri'));

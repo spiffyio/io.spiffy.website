@@ -41,7 +41,7 @@
   </c:if>
   
   <c:if test="${ form eq 'forgot' }">
-  <form class="forgot" <s:csrf name="forgot" /> data-return-uri="<c:out value="${ returnUri }" />" action="/forgot">
+  <form class="forgot" <s:csrf name="forgot" /> action="/forgot">
     <div class="input"><input type="email" placeholder="email" name="email" required autofocus /></div>
     <div class="input"><div class="g-recaptcha" data-sitekey="6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i"></div></div>
     <div class="message"></div> 
@@ -50,6 +50,24 @@
     <h3 style="text-align: center;">
       <a class="button primary" href="/login?returnUri=<c:out value="${ returnUri }" />">login</a>
       <a class="button danger" href="/register?returnUri=<c:out value="${ returnUri }" />">register</a>
+    </h3>
+  </form>
+  </c:if>
+  
+  <c:if test="${ form eq 'recover' }">
+  <form class="recover" <s:csrf name="recover" /> data-return-uri="/" action="/recover">
+    <div class="input"><input type="email" placeholder="email" name="email" value="<c:out value="${ email }" />" required disabled /></div>
+    <div class="input"><input type="password" placeholder="new password" name="password" required autofocus /></div>
+    <div class="input"><input type="password" placeholder="retype password" name="confirm_password" data-parsley-equalto="[name='password']" required /></div>
+    <div class="input"><div class="g-recaptcha" data-sitekey="6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i"></div></div>
+    <div class="input"><input type="hidden" name="token" value="<c:out value="${ token }" />"/></div>
+    <input type="hidden" name="fingerprint" />
+    <div class="message"></div> 
+    <div class="input"><input class="button primary" type="submit" value="continue" /></div>
+    <br />
+    <h3 style="text-align: center;">
+      <a class="button primary" href="/login">login</a>
+      <a class="button danger" href="/register">register</a>
     </h3>
   </form>
   </c:if>

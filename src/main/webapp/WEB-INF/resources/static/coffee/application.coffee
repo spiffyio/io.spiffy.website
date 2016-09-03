@@ -183,6 +183,15 @@ $(document).ready (e) ->
       else
         load(json)
 
+  $('form.forgot').spiffy().options
+    success: (form) ->
+      form.spiffy().disable()
+      div = form.find 'div.message'
+      div.addClass 'success'
+      div.html 'recovery email sent'
+      div.slideDown()
+      return
+
   $('form[data-return-uri]').spiffy().options
     success: (form) -> go(form.data('return-uri'))
 
