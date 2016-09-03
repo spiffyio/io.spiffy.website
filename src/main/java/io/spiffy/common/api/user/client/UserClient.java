@@ -27,6 +27,7 @@ public class UserClient extends Client {
     final InvalidateSessionCall invalidateSessionCall;
     final PostAccountCall postAccountCall;
     final RegisterAccountCall registerAccountCall;
+    final SendRecoveryEmailCall sendRecoveryEmailCall;
     final SendVerifyEmailCall sendVerifyEmailCall;
     final VerifyEmailCall verifyEmailCall;
 
@@ -108,6 +109,12 @@ public class UserClient extends Client {
         }
 
         return output;
+    }
+
+    public boolean sendRecoveryEmail(final String email) {
+        final SendRecoveryEmailInput input = new SendRecoveryEmailInput(email);
+        final PostOutput output = sendRecoveryEmailCall.call(input);
+        return output.getId() != null;
     }
 
     public boolean sendVerifyEmail(final Context context, final String email, final String idempotentId) {

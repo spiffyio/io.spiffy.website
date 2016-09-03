@@ -20,6 +20,14 @@
   @media only screen and (max-width: $width - 1)
     @content
 
+=min-height($height)
+  @media only screen and (min-height: $height)
+    @content
+
+=max-height($height)
+  @media only screen and (max-height: $height - 1)
+    @content
+
 =center
   margin-left: auto
   margin-right: auto
@@ -167,7 +175,10 @@ div.body
 
     .logo
       cursor: default
-      margin-top: 17.5vh
+      margin-top: 10vh
+
+      +max-height(640px)
+        margin-top: 0
 
     textarea
       +size(5em, 100%)

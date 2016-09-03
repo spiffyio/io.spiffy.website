@@ -61,7 +61,7 @@ public class EmailService extends Service<EmailEntity, EmailRepository> {
         }
 
         final Date sentAt = DateUtil.now();
-        emailManager.send("verify", "Verify Email Address", entity.getEmailAddress().getAddress(), sentAt,
+        emailManager.send(type.getTemplate(), type.getSubject(), entity.getEmailAddress().getAddress(), sentAt,
                 entity.getProperties());
 
         entity.setSentAt(sentAt);

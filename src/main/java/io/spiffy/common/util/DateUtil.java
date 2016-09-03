@@ -19,30 +19,9 @@ public class DateUtil {
         return convert(nowUTC());
     }
 
-    // public static Date now(final long millis) {
-    // return nowUTC().plus(millis).toDate();
-    // }
-    //
-    // public static Date today() {
-    // return nowUTC().withTime(0, 0, 0, 0).toDate();
-    // }
-    //
-    // public static Date floor(final Date date, final long millis) {
-    // return floor(new DateTime(date), millis);
-    // }
-    //
-    // public static Date floor(final DateTime date, final long millis) {
-    // final long duration = Math.floorMod(date.getMillis(), millis);
-    // return date.minus(duration).toDate();
-    // }
-    //
-    // public static Date nowish() {
-    // return nowish(minutes(5));
-    // }
-    //
-    // public static Date nowish(final long millis) {
-    // return floor(nowUTC(), millis);
-    // }
+    public static Date now(final long minutes) {
+        return convert(nowUTC().plusMinutes(minutes));
+    }
 
     public static boolean past(final Date date) {
         if (date == null) {

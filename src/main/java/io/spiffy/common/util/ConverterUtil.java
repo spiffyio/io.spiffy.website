@@ -86,18 +86,14 @@ public class ConverterUtil {
             fos = new FileOutputStream(in);
             fos.write(bytes);
         } catch (final IOException e) {
-            logger.warn("unable to save in: " + name);
+            logger.warn("unable to save in: " + name, e);
             return null;
         } finally {
-            if (fos != null) {
-                try {
-                    fos.close();
-                } catch (final IOException e) {
-                }
-            }
+            close(fos);
         }
 
         if (in.getAbsolutePath() == null) {
+            logger.warn("unable to read in: " + name);
             return null;
         }
 
@@ -150,21 +146,25 @@ public class ConverterUtil {
             while ((line = reader.readLine()) != null) {
                 output.add(line);
             }
-
         } catch (final IOException e) {
+            logger.warn("unable to run command: " + command, e);
         } finally {
+            close(reader);
             if (process != null) {
                 process.destroy();
-            }
-
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (final IOException e) {
-                }
             }
         }
 
         return output;
+    }
+
+    private static void close(final Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (final IOException e) {
+                logger.warn("unable to close closeable", e);
+            }
+        }
     }
 }

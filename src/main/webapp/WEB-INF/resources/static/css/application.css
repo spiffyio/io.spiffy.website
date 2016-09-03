@@ -169,7 +169,13 @@ div.body div.centered div.letter li {
 
 div.body div.centered .logo {
   cursor: default;
-  margin-top: 17.5vh;
+  margin-top: 10vh;
+}
+
+@media only screen and (max-height: 639px) {
+  div.body div.centered .logo {
+    margin-top: 0;
+  }
 }
 
 div.body div.centered textarea {

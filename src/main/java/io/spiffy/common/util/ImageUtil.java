@@ -33,8 +33,9 @@ public class ImageUtil {
     private static final Logger logger = Logger.getLogger(ImageUtil.class);
 
     private static BufferedImage asImage(final byte[] bytes, final MediaType type) throws IOException {
-        final InputStream in = new ByteArrayInputStream(bytes);
-        return ImageIO.read(in);
+        try (final InputStream is = new ByteArrayInputStream(bytes)) {
+            return ImageIO.read(is);
+        }
     }
 
     private static byte[] asBytes(final BufferedImage image, final MediaType type) throws IOException {
@@ -155,6 +156,8 @@ public class ImageUtil {
             logger.warn("unable to save out: " + name, e);
             return null;
         } finally {
+            close(os);
+
             if (out != null && out.exists()) {
                 out.delete();
             }
@@ -251,14 +254,30 @@ public class ImageUtil {
     }
 
     public static int getFrameCount(final byte[] value) {
+        InputStream is = null;
+        ImageInputStream iis = null;
         try {
             final ImageReader reader = ImageIO.getImageReadersBySuffix("GIF").next();
-            final InputStream in = new ByteArrayInputStream(value);
-            final ImageInputStream iis = ImageIO.createImageInputStream(in);
+            is = new ByteArrayInputStream(value);
+            iis = ImageIO.createImageInputStream(is);
             reader.setInput(iis);
             return reader.getNumImages(true);
         } catch (final IOException e) {
+            logger.warn("unable to get frame count", e);
             return -1;
+        } finally {
+            close(is);
+            close(iis);
+        }
+    }
+
+    private static void close(final Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (final IOException e) {
+                logger.warn("unable to close closeable", e);
+            }
         }
     }
 }

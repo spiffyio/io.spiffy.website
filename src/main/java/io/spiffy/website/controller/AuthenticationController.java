@@ -2,8 +2,6 @@ package io.spiffy.website.controller;
 
 import lombok.RequiredArgsConstructor;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -26,7 +24,7 @@ import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.*;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class AuthenticationController extends Controller {
 
     private static final String FORM_KEY = "form";
@@ -54,8 +52,16 @@ public class AuthenticationController extends Controller {
         return mav("account", context);
     }
 
+    @RequestMapping("/recovery")
+    public ModelAndView recovery(final Context context, final @RequestParam("email") String email,
+            final @RequestParam("token") String token) {
+        userClient.verifyEmail(token);
+        return mav("account", context);
+    }
+
     @RequestMapping("/verify")
-    public ModelAndView verify(final Context context, final @RequestParam("email") String token) {
+    public ModelAndView verify(final Context context, final @RequestParam("email") String email,
+            final @RequestParam("token") String token) {
         userClient.verifyEmail(token);
         return mav("account", context);
     }
@@ -73,11 +79,7 @@ public class AuthenticationController extends Controller {
     public ModelAndView forgot(final Context context,
             final @RequestParam(required = false, defaultValue = "/") String returnUri) {
         context.addAttribute(FORM_KEY, FORM_FORGOT);
-        try {
-            context.addAttribute(RETURN_URI_KEY, "/login?returnUri=" + URLEncoder.encode(returnUri, "UTF-8"));
-        } catch (final UnsupportedEncodingException e) {
-            context.addAttribute(RETURN_URI_KEY, "/login");
-        }
+        context.addAttribute(RETURN_URI_KEY, returnUri);
 
         return mav("authenticate", context);
     }
@@ -90,6 +92,8 @@ public class AuthenticationController extends Controller {
         if (!googleClient.recaptcha(context, recaptcha)) {
             return new BadRequestResponse("recaptcha", "invalid recaptcha");
         }
+
+        userClient.sendRecoveryEmail(email);
 
         return new SuccessResponse(true);
     }

@@ -6,17 +6,17 @@
 <body style="margin: 0; padding: 0; height: 100%; width: 100%; color: #3D3D3D;">
   <table style="margin: 2em auto; width: 80%; max-width: 800px; border: 0.25em solid #3D3D3D;">
     <tr style="font-size: 75%; font-weight: bold; height: 5em; background: #C0EFFD; color: #3D3D3D; text-align: center;">
-      <td><span style="font-size: 300%;">Verify Email Address</span></td>
+      <td><span style="font-size: 300%;">Recover Account</span></td>
     </tr>
     <tr style="background: #FFECC0; color: #3D3D3D; text-align: center;">
       <td>
         <table style="padding: 2em 2em 0 2em; text-align: justify;">
           <tr><td>
-          	Howdy $property.name! You have received this email because this email address was used to register an account on SPIFFY.io. In an ideal world this is something that sounds familiar.  
+          	Howdy $property.name! You have received this email because this email address was used to recover an account on SPIFFY.io. In an ideal world this is something that sounds familiar.  
       	  </td></tr>
           <tr style="height: 0.5em;"><td></td></tr>
           <tr><td>
-			Certain site features will be unavailable without verification. This list of features is subject to change.
+            The following link will be valid for roughly thirty minutes, and will allow you to set a new account password.
           </td></tr>
           <tr style="height: 1em;"><td></td></tr>
           <tr style="text-align: center;"><td>

@@ -17,21 +17,25 @@ import io.spiffy.common.util.UIDUtil;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.user.entity.AccountEntity;
 import io.spiffy.user.entity.SessionEntity;
+import io.spiffy.user.entity.TemporaryCredentialEntity;
 import io.spiffy.user.repository.AccountRepository;
 
 public class AccountService extends Service<AccountEntity, AccountRepository> {
 
     private final CredentialService credentialService;
     private final SessionService sessionService;
+    private final TemporaryCredentialService temporaryCredentialService;
     private final EmailClient emailClient;
     private final SecurityClient securityClient;
 
     @Inject
     public AccountService(final AccountRepository repository, final CredentialService credentialService,
-            final SessionService sessionService, final EmailClient emailClient, final SecurityClient securityClient) {
+            final TemporaryCredentialService temporaryCredentialService, final SessionService sessionService,
+            final EmailClient emailClient, final SecurityClient securityClient) {
         super(repository);
         this.credentialService = credentialService;
         this.sessionService = sessionService;
+        this.temporaryCredentialService = temporaryCredentialService;
         this.emailClient = emailClient;
         this.securityClient = securityClient;
     }
@@ -78,10 +82,10 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
-    public AccountEntity post(final String userName, final String emailAddress) {
-        validateUserName(userName);
+    public AccountEntity post(final String username, final String emailAddress) {
+        validateUsername(username);
 
-        final AccountEntity entityByUserName = getByUserName(userName);
+        final AccountEntity entityByUserName = getByUserName(username);
 
         final long emailAddressId = getEmailAddressId(emailAddress);
         final AccountEntity entityByEmailAddressId = getByEmailAddressId(emailAddressId);
@@ -95,7 +99,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
             // TODO: archiving
         }
 
-        entity.setUserName(userName);
+        entity.setUserName(username);
 
         if (entity.getEmailAddressId() == null || emailAddressId != entity.getEmailAddressId()) {
             final String token = UIDUtil.generateIdempotentId();
@@ -142,12 +146,22 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         return new RegisterAccountOutput();
     }
 
+    private void sendRecoverEmail(final AccountEntity account, final String token, final long idempotentId) {
+        final EmailProperties properties = new EmailProperties();
+        properties.setName(account.getUserName());
+        properties.setUrl(AppConfig.getEndpoint() + "/recovery?email=" + account.getEmailAddress() + "&token=" + token);
+
+        emailClient.sendEmailCall(EmailType.RECOVER, account.getEmailAddress(), account.getId() + ":recover:" + idempotentId,
+                account.getId(), properties);
+    }
+
     private void sendVerificationEmail(final AccountEntity account, final String idempotentId) {
         final EmailProperties properties = new EmailProperties();
         properties.setName(account.getUserName());
-        properties.setUrl(AppConfig.getEndpoint() + "/verify?email=" + account.getEmailVerificationToken());
+        properties.setUrl(AppConfig.getEndpoint() + "/verify?email=" + account.getEmailAddress() + "&token="
+                + account.getEmailVerificationToken());
 
-        emailClient.sendEmailCall(EmailType.Verify, account.getEmailAddress(),
+        emailClient.sendEmailCall(EmailType.VERIFICATION, account.getEmailAddress(),
                 account.getId() + ":verification:" + idempotentId, account.getId(), properties);
     }
 
@@ -200,6 +214,23 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
+    public AccountEntity sendRecoveryEmail(final String emailAddress) {
+        final AccountEntity account = getByEmailAddress(emailAddress);
+        if (account == null) {
+            return null;
+        }
+
+        account.setEmailAddress(emailAddress);
+
+        final String token = UIDUtil.generateIdempotentId();
+        final TemporaryCredentialEntity entity = temporaryCredentialService.post(account.getId(), token);
+
+        sendRecoverEmail(account, token, entity.getId());
+
+        return account;
+    }
+
+    @Transactional
     public AccountEntity sendVerificationEmail(final long accountId, final String email, final String idempotentId) {
         final AccountEntity account = get(accountId);
         if (account == null) {
@@ -222,8 +253,9 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
         return account;
     }
 
-    protected void validateUserName(final String userName) {
-        ValidationUtil.validateLength("UserAccountEntity.userName", userName, AccountEntity.MIN_USER_NAME_LENGTH,
+    protected void validateUsername(final String username) {
+        ValidationUtil.validateUsername("UserAccountEntity.username", username);
+        ValidationUtil.validateLength("UserAccountEntity.username", username, AccountEntity.MIN_USER_NAME_LENGTH,
                 AccountEntity.MAX_USER_NAME_LENGTH);
     }
 

@@ -14,6 +14,11 @@
     <div class="input"><div class="g-recaptcha" data-sitekey="6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i"></div></div>
     <div class="message"></div> 
     <div class="input"><input class="button primary" type="submit" value="login" /></div>
+    <br />
+    <h3 style="text-align: center;">
+      <a class="button primary" href="/forgot?returnUri=<c:out value="${ returnUri }" />">recover</a>
+      <a class="button danger" href="/register?returnUri=<c:out value="${ returnUri }" />">register</a>
+    </h3>
   </form>
   </c:if>
   
@@ -27,6 +32,11 @@
     <div class="input"><div class="g-recaptcha" data-sitekey="6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i"></div></div>
     <div class="message"></div> 
     <div class="input"><input class="button danger" type="submit" value="register" /></div>
+    <br />
+    <h3 style="text-align: center;">
+      <a class="button primary" href="/login?returnUri=<c:out value="${ returnUri }" />">login</a>
+      <a class="button danger" href="/forgot?returnUri=<c:out value="${ returnUri }" />">recover</a>
+    </h3>
   </form>
   </c:if>
   
@@ -36,6 +46,11 @@
     <div class="input"><div class="g-recaptcha" data-sitekey="6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i"></div></div>
     <div class="message"></div> 
     <div class="input"><input class="button primary" type="submit" value="continue" /></div>
+    <br />
+    <h3 style="text-align: center;">
+      <a class="button primary" href="/login?returnUri=<c:out value="${ returnUri }" />">login</a>
+      <a class="button danger" href="/register?returnUri=<c:out value="${ returnUri }" />">register</a>
+    </h3>
   </form>
   </c:if>
 

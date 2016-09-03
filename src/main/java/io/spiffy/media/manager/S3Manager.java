@@ -19,7 +19,7 @@ import com.amazonaws.util.IOUtils;
 import io.spiffy.common.Manager;
 import io.spiffy.common.config.AppConfig;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class S3Manager extends Manager {
 
     private static final String BUCKET = "spiffyio" + AppConfig.getSuffix();
@@ -43,9 +43,7 @@ public class S3Manager extends Manager {
             return;
         }
 
-        InputStream is = null;
-        try {
-            is = new ByteArrayInputStream(value);
+        try (final InputStream is = new ByteArrayInputStream(value)) {
             final ObjectMetadata metadata = new ObjectMetadata();
             metadata.setCacheControl("public, max-age=604800");
             metadata.setContentLength(value.length);
@@ -55,16 +53,8 @@ public class S3Manager extends Manager {
             final PutObjectRequest request = new PutObjectRequest(BUCKET, key, is, metadata);
             client.putObject(request);
         } catch (final AmazonServiceException e) {
-            e.printStackTrace();
         } catch (final AmazonClientException e) {
-            e.printStackTrace();
-        } finally {
-            if (is != null) {
-                try {
-                    is.close();
-                } catch (final IOException e) {
-                }
-            }
+        } catch (final IOException e) {
         }
     }
 

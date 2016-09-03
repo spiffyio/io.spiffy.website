@@ -16,9 +16,28 @@ public class ValidationUtil {
     public static final String NUMERIC = "0123456789";
     public static final String ALPHA_NUMERIC = ALPHA + ALPHA.toUpperCase() + NUMERIC;
 
+    private static final Pattern USERNAME_PATTERN = Pattern.compile("^[a-z][a-z0-9]*$", Pattern.CASE_INSENSITIVE);
+
     private static final Pattern EMAIL_ADDRESS_PATTERN = Pattern.compile(AppConfig.getEmailPattern(), Pattern.CASE_INSENSITIVE);
 
     private static final Pattern PASSWORD_PATTERN = Pattern.compile(AppConfig.getPasswordPattern());
+
+    private static final Set<String> INVALID_USERNAMES;
+
+    static {
+        final Set<String> invalidUsernames = new HashSet<>();
+        invalidUsernames.add("api");
+        invalidUsernames.add("react");
+        invalidUsernames.add("llc");
+        invalidUsernames.add("terms");
+        invalidUsernames.add("privacy");
+        invalidUsernames.add("stream");
+        invalidUsernames.add("sessions");
+        invalidUsernames.add("error");
+        invalidUsernames.add("index");
+
+        INVALID_USERNAMES = Collections.unmodifiableSet(invalidUsernames);
+    }
 
     public static final Set<Character> ALPHA_NUMERIC_SET;
 
@@ -77,6 +96,16 @@ public class ValidationUtil {
 
     public static void validateAlphaNumeric(final String message, final char c) {
         if (!ALPHA_NUMERIC_SET.contains(c)) {
+            throw new ValidationException(message);
+        }
+    }
+
+    public static void validateUsername(final String message, final String username) {
+        if (!USERNAME_PATTERN.matcher(username).matches()) {
+            throw new ValidationException(message);
+        }
+
+        if (INVALID_USERNAMES.contains(username.toLowerCase())) {
             throw new ValidationException(message);
         }
     }
