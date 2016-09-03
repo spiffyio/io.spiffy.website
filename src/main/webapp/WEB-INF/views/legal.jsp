@@ -13,7 +13,19 @@
 <h2>SPIFFY.io, LLC</h2>
 <p>Company information coming soon!</p>
 
-<p><a href="mailto:contact@spiffy.io">contact@spiffy.io</a><p>
+<br />
+<br />
+<br />
+
+<p style="width: 100%; text-align: center;">
+  <a href="https://facebook.com/SPIFFYio"><img src="<s:resource file="svg/social-facebook.svg" />" /></a>
+  <a href="https://twitter.com/SPIFFYio"><img src="<s:resource file="svg/social-twitter.svg" />" /></a>
+  <a href="https://plus.google.com/+SPIFFYio"><img src="<s:resource file="svg/social-google.svg" />" /></a>
+  <a href="https://linkedin.com/company/SPIFFY.io-LLC"><img src="<s:resource file="svg/social-linkedin.svg" />" /></a>
+</p>
+<p style="width: 100%; text-align: center;">
+  <a href="mailto:contact@spiffy.io">contact@spiffy.io</a>
+</p>
 </c:if>
 
 <c:if test="${ letter eq 'privacy' }">

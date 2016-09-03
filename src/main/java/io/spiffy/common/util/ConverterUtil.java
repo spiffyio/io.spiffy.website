@@ -29,11 +29,14 @@ public class ConverterUtil {
         }
     }
 
-    private static final String MP4_TEMPLATE = "ffmpeg -i \"%s\" -c:v h264 -profile:v baseline -c:a aac -movflags faststart -preset slow -crf 24 -pix_fmt yuv420p \"%s\"";
-    private static final String WEBM_TEMPLATE = "ffmpeg -i \"%s\" -c:v libvpx -c:a libvorbis -quality good -cpu-used 0 -crf 24 \"%s\"";
-    private static final String PNG_TEMPLATE = "ffmpeg -i \"%s\" -ss 00:00:00.000 -vframes 1 \"%s\"";
+    private static final String MP4_TEMPLATE = AppConfig.getFfmpegPrefix()
+            + "ffmpeg -i \"%s\" -c:v h264 -profile:v baseline -c:a aac -movflags faststart -preset slow -crf 24 -pix_fmt yuv420p \"%s\"";
+    private static final String WEBM_TEMPLATE = AppConfig.getFfmpegPrefix()
+            + "ffmpeg -i \"%s\" -c:v libvpx -c:a libvorbis -quality good -cpu-used 0 -crf 24 \"%s\"";
+    private static final String PNG_TEMPLATE = AppConfig.getFfmpegPrefix()
+            + "ffmpeg -i \"%s\" -ss 00:00:00.000 -vframes 1 \"%s\"";
 
-    private static Boolean initialized = true;
+    private static Boolean initialized = AppConfig.isFfmpegInitialized();
 
     private static void initialize() {
         if (initialized) {
@@ -49,6 +52,11 @@ public class ConverterUtil {
                 }
             }
 
+            run("wget \"https://cdn-beta.spiffy.io/static/ffmpeg/linux.zip\" -O \"ffmpeg.zip\"");
+            run("unzip ffmpeg.zip");
+            run("rm -f ffmpeg.zip");
+            run("chmod u+x ffprobe");
+            run("chmod u+x ffmpeg");
             initialized = true;
         }
     }
@@ -123,7 +131,7 @@ public class ConverterUtil {
             return new ProcessBuilder("/bin/bash", "-c", "/usr/local/bin/" + command);
         }
 
-        return new ProcessBuilder("/bin/bash", "-c", "./" + command); // AMAZON LINUX
+        return new ProcessBuilder("/bin/bash", "-c", command); // AMAZON LINUX
     }
 
     public static List<String> run(final String command) {
