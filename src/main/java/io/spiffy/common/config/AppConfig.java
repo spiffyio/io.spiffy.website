@@ -106,7 +106,7 @@ public class AppConfig {
             ffmpegInitialized = false;
             ffmpegPrefix = "./";
             forwardToProd = true;
-            passwordPattern = "^password|testpass$";
+            passwordPattern = "^[!@#$%^&+=a-zA-Z0-9]{8,}$";
             requireRecaptcha = true;
             secure = true;
             showStacktrace = true;
@@ -120,7 +120,7 @@ public class AppConfig {
             ffmpegInitialized = false;
             ffmpegPrefix = "./";
             forwardToProd = false;
-            passwordPattern = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&+=])(?=\\S+$).{8,}$";
+            passwordPattern = "^[!@#$%^&+=a-zA-Z0-9]{8,}$";
             requireRecaptcha = true;
             secure = true;
             showStacktrace = false;

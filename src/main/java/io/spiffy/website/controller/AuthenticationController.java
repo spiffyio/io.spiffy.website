@@ -25,7 +25,7 @@ import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.*;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class AuthenticationController extends Controller {
 
     private static final String EMAIL_KEY = "email";
@@ -83,7 +83,7 @@ public class AuthenticationController extends Controller {
                     "<span class=\"clickable\" data-go=\"/forgot\">recovery token invalid. click here to resend.</span>");
         } else if (RecoverAccountOutput.Error.INVALID_PASSWORD.equals(output.getError())) {
             return new BadRequestResponse("password", "invalid password",
-                    "password requirements: <br />min 8 characters<br />min 1 upper case<br />min 1 lowercase case<br />min 1 number<br />min 1 special character !@#$%^&+=");
+                    "password requirements: <br />min 8 characters<br />letters, numbers or !@#$%^&+=");
         } else if (RecoverAccountOutput.Error.INVALID_EMAIL.equals(output.getError())) {
             return new BadRequestResponse("email", "invalid email", "email appears to be incorrect");
         } else if (AuthenticateAccountOutput.Error.UNKNOWN_EMAIL.equals(output.getError())) {
@@ -188,7 +188,7 @@ public class AuthenticationController extends Controller {
         final RegisterAccountOutput output = userClient.registerAccount(username, email, password, context, fingerprint);
         if (RegisterAccountOutput.Error.INVALID_PASSWORD.equals(output.getError())) {
             return new BadRequestResponse("password", "invalid password",
-                    "password requirements: <br />min 8 characters<br />min 1 upper case<br />min 1 lowercase case<br />min 1 number<br />min 1 special character !@#$%^&+=");
+                    "password requirements: <br />min 8 characters<br />letters, numbers or !@#$%^&+=");
         } else if (RegisterAccountOutput.Error.INVALID_USERNAME.equals(output.getError())) {
             return new BadRequestResponse("username", "invalid username", "min length: 3, max length: 25");
         } else if (RegisterAccountOutput.Error.INVALID_EMAIL.equals(output.getError())) {
