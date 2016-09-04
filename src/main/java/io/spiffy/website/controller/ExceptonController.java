@@ -105,12 +105,12 @@ public class ExceptonController extends Controller {
             }
             context.addAttribute(MESSAGE_KEY, "this is not the page you were looking for.");
         } else {
+            logger.error("unhandled error", e);
             context.addAttribute(MESSAGE_KEY, "something borked.");
         }
 
         if (AppConfig.isShowStacktrace()) {
             context.addAttribute(STACKTRACE_KEY, ExceptionUtils.getStackTrace(e));
-            e.printStackTrace();
         }
 
         return mav("exception", context);

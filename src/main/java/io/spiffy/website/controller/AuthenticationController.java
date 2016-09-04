@@ -82,9 +82,10 @@ public class AuthenticationController extends Controller {
             return new BadRequestResponse("error", "invalid token",
                     "<span class=\"clickable\" data-go=\"/forgot\">recovery token invalid. click here to resend.</span>");
         } else if (RecoverAccountOutput.Error.INVALID_PASSWORD.equals(output.getError())) {
-            return new BadRequestResponse("password", "invalid password", "must be 'password' or 'testpass'");
+            return new BadRequestResponse("password", "invalid password",
+                    "password requirements: <br />min 8 characters<br />min 1 upper case<br />min 1 lowercase case<br />min 1 number<br />min 1 special character !@#$%^&+=");
         } else if (RecoverAccountOutput.Error.INVALID_EMAIL.equals(output.getError())) {
-            return new BadRequestResponse("email", "invalid email", "email must be @spiffy.io"); // FIXME
+            return new BadRequestResponse("email", "invalid email", "email appears to be incorrect");
         } else if (AuthenticateAccountOutput.Error.UNKNOWN_EMAIL.equals(output.getError())) {
             return new BadRequestResponse("email", "unknown email",
                     "<span class=\"clickable\" data-go=\"/register\">new user? click here to register.</span>");
@@ -156,7 +157,7 @@ public class AuthenticationController extends Controller {
             return new BadRequestResponse("password", "invalid password",
                     "<span class=\"clickable\" data-go=\"/forgot\">forgot password? click here to resend.</span>");
         } else if (AuthenticateAccountOutput.Error.INVALID_EMAIL.equals(output.getError())) {
-            return new BadRequestResponse("email", "invalid email", "email must be @spiffy.io"); // FIXME
+            return new BadRequestResponse("email", "invalid email", "email appears to be incorrect");
         } else if (AuthenticateAccountOutput.Error.UNKNOWN_EMAIL.equals(output.getError())) {
             return new BadRequestResponse("email", "unknown email",
                     "<span class=\"clickable\" data-go=\"/register\">new user? click here to register.</span>");
@@ -186,11 +187,12 @@ public class AuthenticationController extends Controller {
 
         final RegisterAccountOutput output = userClient.registerAccount(username, email, password, context, fingerprint);
         if (RegisterAccountOutput.Error.INVALID_PASSWORD.equals(output.getError())) {
-            return new BadRequestResponse("password", "invalid password", "must be 'password' or 'testpass'");
+            return new BadRequestResponse("password", "invalid password",
+                    "password requirements: <br />min 8 characters<br />min 1 upper case<br />min 1 lowercase case<br />min 1 number<br />min 1 special character !@#$%^&+=");
         } else if (RegisterAccountOutput.Error.INVALID_USERNAME.equals(output.getError())) {
             return new BadRequestResponse("username", "invalid username", "min length: 3, max length: 25");
         } else if (RegisterAccountOutput.Error.INVALID_EMAIL.equals(output.getError())) {
-            return new BadRequestResponse("email", "invalid email", "email must be @spiffy.io"); // FIXME
+            return new BadRequestResponse("email", "invalid email", "email appears to be incorrect");
         } else if (RegisterAccountOutput.Error.EXISTING_USERNAME.equals(output.getError())) {
             return new BadRequestResponse("username", "existing username",
                     "<span class=\"clickable\" data-go=\"/login\">existing user? click here to login.</span>");
