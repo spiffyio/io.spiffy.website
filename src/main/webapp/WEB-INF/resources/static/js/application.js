@@ -385,7 +385,7 @@ jQuery.fn.spiffy = function() {
   };
 };
 
-var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
+var addedfile, adjustColumns, closeModal, emptyColumn, evenOut, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn, totalHeight;
 
 addedfile = function(file) {
   var div, form, func, img, message, preview, processing, source, src, video;
@@ -766,6 +766,7 @@ load = function(json) {
   form = $('form.load-posts');
   input = form.find('input[name="after"]');
   input.val(json.next);
+  setTimeout(evenOut, 250);
 };
 
 loadPosts = function(posts) {
@@ -837,6 +838,54 @@ loadPosts = function(posts) {
   }
 };
 
+totalHeight = function(elements) {
+  var height;
+  height = 0;
+  elements.each(function() {
+    height += $(this).height();
+  });
+  return height;
+};
+
+evenOut = function() {
+  var col, cols, count, diff, group, height, j, k, l, len, len1, margin, marginBottom, maxHeight, panels, ref, ref1, start, step;
+  cols = [$('.col[data-index="0"]'), $('.col[data-index="1"]'), $('.col[data-index="2"]')];
+  panels = [cols[0].find('.panel'), cols[1].find('.panel'), cols[2].find('.panel')];
+  if (!panels[2].length) {
+    panels = [panels[0], panels[1]];
+  }
+  if (!panels[1].length) {
+    panels = [panels[0]];
+  }
+  step = panels.length === 2 ? 6 : 4;
+  for (start = j = 0, ref = panels[0].length - 1, ref1 = step; ref1 > 0 ? j <= ref : j >= ref; start = j += ref1) {
+    maxHeight = 0;
+    group = panels[0].slice(start, start + step);
+    group.filter('.panel:not(:first)').attr('data-page', false);
+    group.filter('.panel:first').attr('data-page', true);
+    for (k = 0, len = panels.length; k < len; k++) {
+      col = panels[k];
+      group = col.slice(start, start + step);
+      maxHeight = Math.max(maxHeight, totalHeight(group));
+    }
+    for (l = 0, len1 = panels.length; l < len1; l++) {
+      col = panels[l];
+      group = col.slice(start, start + step);
+      height = totalHeight(group);
+      diff = maxHeight - height;
+      count = step - 1;
+      margin = diff / count;
+      marginBottom = (margin + 10) + 'px';
+      group.filter('.panel:not(:last)').animate({
+        'margin-bottom': marginBottom
+      }, 250);
+      group.filter('.panel:last').animate({
+        'margin-bottom': '10px'
+      }, 250);
+    }
+  }
+};
+
 adjustColumns = function() {
   var col, form, input, panel;
   $('.col').each(function(i) {
@@ -849,7 +898,7 @@ adjustColumns = function() {
   });
   form = $('form.load-posts');
   if ((form != null) && form.is('form.load-posts')) {
-    col = $('.col[data-index="2"]');
+    col = $('.col[data-index="1"]');
     panel = col.find('.panel:last');
     input = form.find('input[name="after"]');
     input.val(panel.data('post-id'));
@@ -860,6 +909,7 @@ adjustColumns = function() {
   if ($(window).width() < Width.md) {
     emptyColumn(1);
   }
+  setTimeout(evenOut, 250);
 };
 
 emptyColumn = function(i) {
@@ -930,6 +980,7 @@ $(window).resize(function(e) {
     emptyColumn(2);
   }
   window.pWidth = width;
+  setTimeout(evenOut, 250);
 });
 
 $(window).scroll(function(e) {
@@ -964,6 +1015,9 @@ $(window).scroll(function(e) {
   col = $('.col[data-index="0"]');
   panel = col.find('.panel:in-viewport:first');
   if (panel.data('post-id').equalsIgnoreCase('ad')) {
+    return;
+  }
+  if (!panel.data('page')) {
     return;
   }
   first = col.find('.panel:first');

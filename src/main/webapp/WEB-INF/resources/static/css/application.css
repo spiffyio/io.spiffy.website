@@ -654,7 +654,7 @@ div.disabled:before {
   height: auto;
   width: 95%;
   margin-left: calc(2.5% - 0.5px);
-  margin-bottom: 0.5em;
+  margin-bottom: 10px;
   position: relative;
   overflow: hidden;
 }

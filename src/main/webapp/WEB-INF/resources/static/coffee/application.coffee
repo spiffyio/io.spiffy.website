@@ -111,7 +111,7 @@ $(document).ready (e) ->
         header.addClass 'hidden'
         header.find('.sub-menu').removeClass 'show'
       return
-    setTimeout(func, 500)
+    setTimeout func, 500
     return
 
   $('.menu-toggle').click () ->
@@ -351,6 +351,8 @@ load = (json) ->
   form = $ 'form.load-posts'
   input = form.find 'input[name="after"]'
   input.val json.next
+
+  setTimeout evenOut, 250
   return
 
 loadPosts = (posts) ->
@@ -425,6 +427,39 @@ loadPosts = (posts) ->
     if content.type.equalsIgnoreCase 'ad' then `(adsbygoogle = window.adsbygoogle || []).push({});`
   return
 
+totalHeight = (elements) ->
+  height = 0
+  elements.each () ->
+    height += $(this).height()
+    return
+  return height
+
+evenOut = () ->
+  cols = [$('.col[data-index="0"]'), $('.col[data-index="1"]'), $('.col[data-index="2"]')]
+  panels = [cols[0].find('.panel'), cols[1].find('.panel'), cols[2].find('.panel')]
+
+  if not panels[2].length then panels = [panels[0], panels[1]]
+  if not panels[1].length then panels = [panels[0]]
+  step = if panels.length is 2 then 6 else 4
+  for start in [0..panels[0].length-1] by step
+    maxHeight = 0
+    group = panels[0].slice start, start + step
+    group.filter('.panel:not(:first)').attr 'data-page', false
+    group.filter('.panel:first').attr 'data-page', true
+    for col in panels
+      group = col.slice start, start + step
+      maxHeight = Math.max maxHeight, totalHeight(group)
+    for col in panels
+      group = col.slice start, start + step
+      height = totalHeight group
+      diff = maxHeight - height
+      count = step - 1
+      margin = diff / count
+      marginBottom = (margin + 10) + 'px'
+      group.filter('.panel:not(:last)').animate { 'margin-bottom': marginBottom }, 250
+      group.filter('.panel:last').animate { 'margin-bottom': '10px' }, 250
+  return
+
 adjustColumns = () ->
   $('.col').each (i) ->
     $(this).attr 'data-index', i
@@ -436,13 +471,15 @@ adjustColumns = () ->
 
   form = $ 'form.load-posts'
   if form? and form.is 'form.load-posts'
-    col = $ '.col[data-index="2"]'
+    col = $ '.col[data-index="1"]'
     panel = col.find '.panel:last'
     input = form.find 'input[name="after"]'
     input.val panel.data('post-id')
 
   if ($(window).width() < Width.xl) then emptyColumn 2
   if ($(window).width() < Width.md) then emptyColumn 1
+
+  setTimeout evenOut, 250
   return
 
 emptyColumn = (i) ->
@@ -498,6 +535,7 @@ $(window).resize (e) ->
   if (width < window.pWidth) and (width < Width.xl)
     emptyColumn 2
   window.pWidth = width
+  setTimeout evenOut, 250
   return
 
 $(window).scroll (e) ->
@@ -522,6 +560,7 @@ $(window).scroll (e) ->
   col = $ '.col[data-index="0"]'
   panel = col.find '.panel:in-viewport:first'
   if panel.data('post-id').equalsIgnoreCase 'ad' then return
+  if not panel.data('page') then return
   first = col.find '.panel:first'
   uri = location.pathname
   if not panel.is first
