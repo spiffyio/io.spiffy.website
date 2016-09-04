@@ -47,7 +47,7 @@ public class ResourceTag extends SimpleTagSupport {
 
     private String file;
     private Type type = Type.plain;
-    private String version = "53";
+    private String version = null;
 
     @Override
     public void doTag() throws JspException, IOException {

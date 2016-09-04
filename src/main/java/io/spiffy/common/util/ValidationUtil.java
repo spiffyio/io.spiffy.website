@@ -35,6 +35,14 @@ public class ValidationUtil {
         invalidUsernames.add("sessions");
         invalidUsernames.add("error");
         invalidUsernames.add("index");
+        invalidUsernames.add("login");
+        invalidUsernames.add("logout");
+        invalidUsernames.add("register");
+        invalidUsernames.add("signup");
+        invalidUsernames.add("signin");
+        invalidUsernames.add("official");
+        invalidUsernames.add("spiffy");
+        invalidUsernames.add("spiffyio");
 
         INVALID_USERNAMES = Collections.unmodifiableSet(invalidUsernames);
     }
@@ -111,22 +119,6 @@ public class ValidationUtil {
     }
 
     public static void validateEmailAddress(final String message, final String emailAddress) {
-        if ("berich123@gmail.com".equalsIgnoreCase(emailAddress)) {
-            return;
-        }
-
-        if ("cjsmile2106@gmail.com".equalsIgnoreCase(emailAddress)) {
-            return;
-        }
-
-        if ("dadtv1234@gmail.com".equalsIgnoreCase(emailAddress)) {
-            return;
-        }
-
-        if ("johnrichj2@gmail.com".equalsIgnoreCase(emailAddress)) {
-            return;
-        }
-
         if (!EMAIL_ADDRESS_PATTERN.matcher(emailAddress).matches()) {
             throw new ValidationException(message);
         }
@@ -136,7 +128,6 @@ public class ValidationUtil {
         if (!PASSWORD_PATTERN.matcher(password).matches()) {
             throw new ValidationException(message);
         }
-
     }
 
     public static void validateSameOrNull(final String message, final HibernateEntity a, final HibernateEntity b) {

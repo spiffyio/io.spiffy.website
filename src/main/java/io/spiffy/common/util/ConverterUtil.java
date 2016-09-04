@@ -52,7 +52,7 @@ public class ConverterUtil {
                 }
             }
 
-            run("wget \"https://cdn-beta.spiffy.io/static/ffmpeg/linux.zip\" -O \"ffmpeg.zip\"");
+            run("wget \"https://cdn.spiffy.io/static/ffmpeg/linux.zip\" -O \"ffmpeg.zip\"");
             run("unzip ffmpeg.zip");
             run("rm -f ffmpeg.zip");
             run("chmod u+x ffprobe");

@@ -32,7 +32,7 @@
 </div>
 </div>
 <div class="actions">
-  <button class="button danger" data-action="<c:if test="${ post.account.id eq account.id }">delete"><img src="<s:resource file="svg/linea/basic_trashcan.svg" />" /></c:if><c:if test="${ post.account.id ne account.id }">report"><img src="<s:resource file="svg/linea/basic_flag1.svg" />" /></c:if>
+  <button class="button danger" data-action="<c:if test="${ post.account.id eq account.id }">delete"><img src="<s:resource file="svg/trashcan.svg" />" /></c:if><c:if test="${ post.account.id ne account.id }">report"><img src="<s:resource file="svg/flag.svg" />" /></c:if>
   </button>
 
   <form class="action" <s:csrf name="action" /> action="/stream/<c:out value="${ post.postId }" />/action" data-loading="header">

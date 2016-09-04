@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<g stroke="#3D3D3D" stroke-width="2">
+  <line x1="4" y1="2" x2="4" y2="30"/>
+  <line x1="3.9" y1="2.5" x2="27.9" y2="2.5"/>
+  <line x1="4" y1="16" x2="28" y2="16"/>
+  <line x1="28" y1="16" x2="20.8" y2="8.8"/>
+  <line x1="27.9" y1="2.5" x2="21.4" y2="9.1"/>
+</g>
+</svg>
