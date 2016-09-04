@@ -98,7 +98,7 @@ public class AuthenticationController extends Controller {
     public ModelAndView verify(final Context context, final @RequestParam("email") String email,
             final @RequestParam("token") String token) {
         userClient.verifyEmail(token);
-        return mav("account", context);
+        return redirect("/", context);
     }
 
     @ResponseBody

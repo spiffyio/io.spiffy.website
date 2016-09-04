@@ -21,6 +21,7 @@ jQuery.fn.spiffy = () ->
       elements
         .find 'form, input, textarea, select, button, div.g-recaptcha'
           .addBack()
+          .not('[data-disabled="permanent"]')
           .prop 'disabled', true
           .attr 'data-disabled', true
           .addClass 'disabled'
@@ -30,6 +31,7 @@ jQuery.fn.spiffy = () ->
       elements
         .find 'form, input, textarea, select, button, div.g-recaptcha'
           .addBack()
+          .not('[data-disabled="permanent"]')
           .removeAttr 'disabled'
           .removeAttr 'data-disabled'
           .removeClass 'disabled'

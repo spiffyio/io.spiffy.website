@@ -436,6 +436,13 @@ adjustColumns = () ->
       return
     return
 
+  form = $ 'form.load-posts'
+  if form? and form.is 'form.load-posts'
+    col = $ '.col[data-index="2"]'
+    panel = col.find '.panel:last'
+    input = form.find 'input[name="after"]'
+    input.val panel.data('post-id')
+
   if ($(window).width() < Width.xl) then emptyColumn 2
   if ($(window).width() < Width.md) then emptyColumn 1
   return

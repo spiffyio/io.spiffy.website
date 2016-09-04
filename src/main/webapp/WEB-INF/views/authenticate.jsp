@@ -56,7 +56,7 @@
   
   <c:if test="${ form eq 'recover' }">
   <form class="recover" <s:csrf name="recover" /> data-return-uri="/" action="/recover">
-    <div class="input"><input type="email" placeholder="email" name="email" value="<c:out value="${ email }" />" required disabled /></div>
+    <div class="input"><input class="disabled" type="email" placeholder="email" name="email" value="<c:out value="${ email }" />" required data-disabled="permanent" disabled /></div>
     <div class="input"><input type="password" placeholder="new password" name="password" required autofocus /></div>
     <div class="input"><input type="password" placeholder="retype password" name="confirm_password" data-parsley-equalto="[name='password']" required /></div>
     <div class="input"><div class="g-recaptcha" data-sitekey="6LeSviITAAAAAFC9aCd6CAmWFqLoIpzw174jMc-i"></div></div>
