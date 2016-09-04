@@ -283,7 +283,7 @@ div.footer {
   width: 100%;
   display: none;
   position: fixed;
-  z-index: 1;
+  z-index: 1000000;
   left: 0;
   top: 0;
   overflow: auto;
@@ -292,9 +292,8 @@ div.footer {
 }
 
 .modal-overlay .modal {
-  height: 80%;
-  width: 80%;
-  display: none;
+  height: auto;
+  width: 20em;
   background-color: #F5F5F5;
   box-shadow: 0 0 100px #3D3D3D;
   margin: 30px auto;
@@ -317,20 +316,16 @@ div.footer {
   margin-top: -2.75em;
 }
 
-.modal-body form {
+.modal-body {
   text-align: center;
 }
 
-.modal-body form input {
+.modal-body .button {
   height: 3em;
-  width: 100%;
+  width: 90%;
   font-size: 100%;
   line-height: 3em;
   text-align: center;
-}
-
-.modal-body form div.g-recaptcha {
-  display: inline-block;
 }
 
 div.g-recaptcha {

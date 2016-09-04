@@ -291,7 +291,7 @@ jQuery.fn.spiffy = function() {
       return form.data('options');
     },
     submit: function(options) {
-      var csrf, data, disable, div, form, loading, type, url;
+      var button, csrf, data, disable, div, form, loading, type, url;
       form = $(elements[0]);
       if (!form.is('form')) {
         return;
@@ -305,6 +305,18 @@ jQuery.fn.spiffy = function() {
       csrf = form.data('csrf-token');
       if ((csrf == null) && (type.equalsIgnoreCase('POST'))) {
         alert('csrf required');
+      }
+      if ((options.confirm != null) && !form.data('confirmed')) {
+        button = $('#confirm-action');
+        button.html(options.confirm);
+        button.click(function() {
+          closeModal();
+          form.attr('data-confirmed', true);
+          form.submit();
+          form.attr('data-confirmed', false);
+        });
+        openModal();
+        return;
       }
       disable = Spiffy.firstDefined(options.disable, true);
       if (disable) {
@@ -615,10 +627,13 @@ $(document).ready(function(e) {
       button.parent().parent().slideUp();
     }
   });
-  $('form.delete').spiffy().options({
-    success: function() {
-      refresh();
-    }
+  $('form.delete').each(function() {
+    $(this).spiffy().options({
+      success: function() {
+        refresh();
+      },
+      confirm: 'confirm deletion'
+    });
   });
   $('form.action').spiffy().options({
     success: function() {
@@ -634,6 +649,9 @@ $(document).ready(function(e) {
       input = form.find('input[name="action"]');
       action = button.data('action');
       input.val(action);
+      form.spiffy().options({
+        confirm: 'confirm ' + action
+      });
       form.submit();
     });
   });
@@ -715,21 +733,12 @@ $(document).ready(function(e) {
   });
 });
 
-openModal = function(modal) {
-  if (!$('[data-modal-id="' + modal + '"]').length) {
-    return;
-  }
-  $('[data-modal-id]').not('[data-modal-id="' + modal + '"]').hide(0);
-  $('[data-modal-id="' + modal + '"]').show(0);
-  $('.modal-overlay').show(0);
-  $('.modal').slideDown(500);
+openModal = function() {
+  $('.modal-overlay').slideDown(500);
 };
 
 closeModal = function() {
-  $('.modal').slideUp(250, function() {
-    $('[data-modal-id]').hide(0);
-    return $('.modal-overlay').hide(0);
-  });
+  $('.modal-overlay').slideUp(250);
 };
 
 fingerprint = function() {

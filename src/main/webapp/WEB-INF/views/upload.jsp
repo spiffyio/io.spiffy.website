@@ -25,4 +25,6 @@
 
 </div>
   
-<jsp:include page="common/footer.jsp" />
+<jsp:include page="common/footer.jsp">
+  <jsp:param name="style" value="upload" />
+</jsp:include>

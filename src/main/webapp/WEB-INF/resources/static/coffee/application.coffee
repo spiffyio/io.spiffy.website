@@ -225,10 +225,13 @@ $(document).ready (e) ->
       button.parent().parent().slideUp()
       return
 
-  $('form.delete').spiffy().options
-    success: () ->
-      refresh()
-      return
+  $('form.delete').each () ->
+    $(this).spiffy().options
+      success: () ->
+        refresh()
+        return
+      confirm: 'confirm deletion'
+    return
 
   $('form.action').spiffy().options
     success: () ->
@@ -242,6 +245,8 @@ $(document).ready (e) ->
       input = form.find 'input[name="action"]'
       action = button.data 'action'
       input.val action
+      form.spiffy().options
+        confirm: 'confirm ' + action
       form.submit()
       return
     return
@@ -319,19 +324,12 @@ $(document).ready (e) ->
 
   return
 
-openModal = (modal) ->
-  if not $('[data-modal-id="' + modal + '"]').length
-    return
-  $('[data-modal-id]').not('[data-modal-id="' + modal + '"]').hide 0
-  $('[data-modal-id="' + modal + '"]').show 0
-  $('.modal-overlay').show 0
-  $('.modal').slideDown 500
+openModal = () ->
+  $('.modal-overlay').slideDown 500
   return
 
 closeModal = () ->
-  $('.modal').slideUp 250, () ->
-    $('[data-modal-id]').hide 0
-    $('.modal-overlay').hide 0
+  $('.modal-overlay').slideUp 250
   return
 
 fingerprint = () ->

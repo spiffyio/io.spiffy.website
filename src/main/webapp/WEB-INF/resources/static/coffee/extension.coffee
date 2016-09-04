@@ -127,6 +127,18 @@ jQuery.fn.spiffy = () ->
       csrf = form.data 'csrf-token'
       if (not csrf?) and (type.equalsIgnoreCase 'POST') then alert 'csrf required'
 
+      if options.confirm? and not form.data('confirmed')
+        button = $ '#confirm-action'
+        button.html options.confirm
+        button.click () ->
+          closeModal()
+          form.attr 'data-confirmed', true
+          form.submit()
+          form.attr 'data-confirmed', false
+          return
+        openModal()
+        return
+
       disable = Spiffy.firstDefined options.disable, true
       if disable then form.spiffy().disable()
 
