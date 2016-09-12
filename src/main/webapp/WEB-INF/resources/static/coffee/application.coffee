@@ -255,6 +255,12 @@ $(document).ready (e) ->
       video.parents('div.video:first').removeClass 'paused'
     return
 
+  $(document).on 'click', 'a.menu', (e) ->
+    preventDefault e
+    menu = $ this
+    menu.toggleClass 'expanded'
+    return
+
   $(document).on 'click', '.thismedia', (e) ->
     img = $ this
     img.toggleClass 'clicked'

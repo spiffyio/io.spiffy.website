@@ -12,6 +12,82 @@ body {
   overflow-y: scroll;
 }
 
+.notifications:after {
+  content: '\00a0';
+}
+
+.notifications {
+  position: relative;
+  overflow: hidden;
+}
+
+.notifications img {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.notifications .bell {
+  opacity: 1;
+}
+
+.notifications .bello {
+  opacity: 0;
+}
+
+.notifications.notify .bello {
+  animation: notify 5s ease infinite;
+}
+
+@keyframes notify {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+a.menu:after {
+  content: '\00a0';
+}
+
+a.menu {
+  position: relative;
+  overflow: hidden;
+}
+
+a.menu img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+
+a.menu .hamburger {
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
+a.menu .close {
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+a.menu.expanded .hamburger {
+  opacity: 0;
+  transition: all 0.5s ease;
+}
+
+a.menu.expanded .close {
+  opacity: 1;
+  transition: all 0.5s ease;
+}
+
 div.header {
   height: 3em;
   width: 100%;
@@ -37,11 +113,18 @@ div.header div.logo img {
 }
 
 div.header div.menu {
-  width: 600px;
+  width: 768px;
   height: 100%;
   position: absolute;
-  left: calc(50% - 300px);
+  left: calc(50% - 384px);
   z-index: 1;
+}
+
+@media only screen and (max-width: 767px) {
+  div.header div.menu {
+    width: 100%;
+    left: 0;
+  }
 }
 
 div.header div.menu ul {
@@ -50,11 +133,21 @@ div.header div.menu ul {
   line-height: 3em;
 }
 
-div.header div.menu ul li {
+div.header div.menu ul li.logo {
   float: left;
   width: 25%;
+}
+
+div.header div.menu ul li {
+  float: right;
+  width: 3em;
   display: block;
   text-align: center;
+}
+
+div.header div.menu ul li a img {
+  height: 2em;
+  padding: 0.5em;
 }
 
 div.header div.menu ul li ul {

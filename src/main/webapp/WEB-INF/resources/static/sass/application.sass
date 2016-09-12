@@ -49,6 +49,64 @@ html, body
 body
   overflow-y: scroll
 
+.notifications:after
+  content: '\00a0'
+
+.notifications
+  position: relative
+  overflow: hidden
+
+  img
+    position: absolute
+    top: 0
+    left: 0
+
+  .bell
+    opacity: 1
+  .bello
+    opacity: 0
+
+.notifications.notify
+  .bello
+    animation: notify 5s ease infinite
+
+@keyframes notify
+  0%
+    opacity: 0
+  50%
+    opacity: 1
+  100%
+    opacity: 0
+
+a.menu:after
+  content: '\00a0'
+
+a.menu
+  position: relative
+  overflow: hidden
+
+  img
+    position: absolute
+    top: 0
+    left: 0
+    bottom: 0
+    right: 0
+
+  .hamburger
+    opacity: 1
+    transition: all 0.5s ease
+  .close
+    opacity: 0
+    transition: all 0.5s ease
+
+a.menu.expanded
+  .hamburger
+    opacity: 0
+    transition: all 0.5s ease
+  .close
+    opacity: 1
+    transition: all 0.5s ease
+
 div.header
   height: 3em
   width: 100%
@@ -71,22 +129,35 @@ div.header
       height: 80%
 
   div.menu
-    width: 600px
+    width: $md
     height: 100%
     position: absolute
-    left: calc(50% - 300px)
+    left: calc(50% - 384px)
     z-index: 1
+
+    +max-width($md)
+      width: 100%
+      left: 0
 
     ul
       list-style-type: none
       height: 100%
       line-height: 3em
 
-      li
+      li.logo
         float: left
         width: 25%
+
+      li
+        float: right
+        width: 3em
         display: block
         text-align: center
+
+        a
+          img
+            height: 2em
+            padding: 0.5em
 
         ul
           width: 100%

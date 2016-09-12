@@ -72,30 +72,22 @@
 
 <c:if test="${ include_bar }">
 <div class="header">
-  <div class="logo"><a href="/"><img class="header-logo" src="<s:resource file="svg/icon.svg" />" /></a></div>
   <div class="menu">
     <ul>
-      <c:if test="${ empty account }">
-      <li>&nbsp;</li>
-      <li><a href="/login">login</a></li>
-      <li><a href="/register">register</a></li>
-      <li>&nbsp;</li>
-      </c:if>
-      <c:if test="${ not empty account }">
-      <li>&nbsp;</li>
-      <li><a href="/upload">upload</a></li>
+      <li class="logo"><a href="/"><img src="<s:resource file="svg/logo.svg" />" /></a></li>
       <li>
-        <span class="menu-toggle"><c:out value="${ account.username }" /></span>
-        <ul class="sub-menu">
-          <li><a href="/<c:out value="${ account.username }" />/stream">stream</a></li>
-          <li><a href="/<c:out value="${ account.username }" />/images">images</a></li>
-          <li><a href="/<c:out value="${ account.username }" />/videos">videos</a></li>
-          <li><a href="/sessions">sessions</a></li>
-          <li><a href="/logout">logout</a></li>
-        </ul>
+        <a href="/menu" class="menu">
+          <img class="hamburger" src="<s:resource file="svg/hamburger.svg" />" />
+          <img class="close" src="<s:resource file="svg/close.svg" />" />
+        </a>
       </li>
-      <li>&nbsp;</li>
-      </c:if>
+      <li>
+        <a href="/notifications" class="notifications notify">
+          <img class="bell" src="<s:resource file="svg/bell.svg" />" />
+          <img class="bello" src="<s:resource file="svg/bello.svg" />" />
+        </a>
+      </li>
+      <li><a href="/upload"><img src="<s:resource file="svg/upload.svg" />" /></a></li>
     </ul>
   </div>
   <div class="header-loading"></div>

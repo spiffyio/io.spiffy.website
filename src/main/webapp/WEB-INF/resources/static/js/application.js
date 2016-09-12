@@ -660,6 +660,12 @@ $(document).ready(function(e) {
       video.parents('div.video:first').removeClass('paused');
     }
   });
+  $(document).on('click', 'a.menu', function(e) {
+    var menu;
+    preventDefault(e);
+    menu = $(this);
+    menu.toggleClass('expanded');
+  });
   $(document).on('click', '.thismedia', function(e) {
     var form, img, input;
     img = $(this);
