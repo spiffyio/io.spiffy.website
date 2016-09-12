@@ -76,10 +76,17 @@
     <ul>
       <li class="logo"><a href="/"><img src="<s:resource file="svg/logo.svg" />" /></a></li>
       <li>
-        <a href="/menu" class="menu">
+        <a href="#menu" class="menu">
           <img class="hamburger" src="<s:resource file="svg/hamburger.svg" />" />
           <img class="close" src="<s:resource file="svg/close.svg" />" />
         </a>
+        <ul class="sub-menu">
+          <li><a href="/<c:out value="${ account.username }" />/stream">stream</a></li>
+          <li><a href="/<c:out value="${ account.username }" />/images">images</a></li>
+          <li><a href="/<c:out value="${ account.username }" />/videos">videos</a></li>
+          <li><a href="/sessions">sessions</a></li>
+          <li><a href="/logout">logout</a></li>
+        </ul>
       </li>
       <li>
         <a href="/notifications" class="notifications notify">

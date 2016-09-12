@@ -495,12 +495,6 @@ Dropzone.options.dzForm = {
 
 $(document).ready(function(e) {
   var hash;
-  $('.menu-toggle').click(function() {
-    var menu, toggle;
-    toggle = $(this);
-    menu = toggle.parent().find('.sub-menu');
-    menu.toggleClass('show');
-  });
   $('[data-modal]').click(function(e) {
     openModal($(this).data('modal'));
   });
@@ -661,10 +655,12 @@ $(document).ready(function(e) {
     }
   });
   $(document).on('click', 'a.menu', function(e) {
-    var menu;
+    var menu, toggle;
     preventDefault(e);
-    menu = $(this);
-    menu.toggleClass('expanded');
+    toggle = $(this);
+    toggle.toggleClass('expanded');
+    menu = toggle.parent().find('.sub-menu');
+    menu.toggleClass('show');
   });
   $(document).on('click', '.thismedia', function(e) {
     var form, img, input;

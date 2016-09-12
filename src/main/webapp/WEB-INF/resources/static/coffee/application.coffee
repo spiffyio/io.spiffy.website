@@ -99,12 +99,6 @@ Dropzone.options.dzForm = {
 }
 
 $(document).ready (e) ->
-  $('.menu-toggle').click () ->
-    toggle = $ this
-    menu = toggle.parent().find '.sub-menu'
-    menu.toggleClass 'show'
-    return
-
   $('[data-modal]').click (e) ->
     openModal $(this).data('modal')
     return
@@ -257,8 +251,10 @@ $(document).ready (e) ->
 
   $(document).on 'click', 'a.menu', (e) ->
     preventDefault e
-    menu = $ this
-    menu.toggleClass 'expanded'
+    toggle = $ this
+    toggle.toggleClass 'expanded'
+    menu = toggle.parent().find '.sub-menu'
+    menu.toggleClass 'show'
     return
 
   $(document).on 'click', '.thismedia', (e) ->

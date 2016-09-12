@@ -155,12 +155,20 @@ div.header
         text-align: center
 
         a
+          height: $header_height
           img
-            height: 2em
-            padding: 0.5em
+            height: 1.5em
+            padding: 0.75em
+
+        a:hover
+          background: rgba(255, 255, 255, 0.3)
+
+        a:active
+          background: rgba(0, 0, 0, 0.3)
 
         ul
-          width: 100%
+          width: 300%
+          margin-left: -200%
           overflow: hidden
 
           li
