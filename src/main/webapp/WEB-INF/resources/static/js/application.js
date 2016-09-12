@@ -250,8 +250,8 @@ jQuery.fn.spiffy = function() {
           img.slideUp();
         }
       } else if ('header'.equalsIgnoreCase(loading)) {
-        img = $('img.header-logo');
-        if ((img != null) && img.is('img.header-logo')) {
+        img = $('img.header-icon');
+        if ((img != null) && img.is('img.header-icon')) {
           src = img.attr('src');
           src = enable ? src.replace('icon', 'loading') : src.replace('loading', 'icon');
           img.attr('src', src);

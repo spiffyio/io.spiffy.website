@@ -12,10 +12,10 @@ import io.spiffy.common.api.discussion.call.GetCommentsCall;
 import io.spiffy.common.api.discussion.call.PostCommentCall;
 import io.spiffy.common.api.discussion.dto.Comment;
 import io.spiffy.common.api.discussion.dto.ThreadDTO;
-import io.spiffy.common.api.discussion.dto.ThreadDTO.EntityType;
 import io.spiffy.common.api.discussion.input.GetCommentsInput;
 import io.spiffy.common.api.discussion.input.PostCommentInput;
 import io.spiffy.common.api.discussion.output.GetCommentsOutput;
+import io.spiffy.common.dto.EntityType;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class DiscussionClient extends Client {

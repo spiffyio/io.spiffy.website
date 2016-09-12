@@ -74,7 +74,12 @@
 <div class="header">
   <div class="menu">
     <ul>
-      <li class="logo"><a href="/"><img src="<s:resource file="svg/logo.svg" />" /></a></li>
+      <li class="logo"><a href="/"><img class="header-icon" src="<s:resource file="svg/icon.svg" />" /><img class="header-logo" src="<s:resource file="svg/logo.svg" />" /></a></li>
+      <c:if test="${ empty account }">
+      <li class="text"><a href="/register">register</a></li>
+      <li class="text"><a href="/login">login</a></li>
+      </c:if>
+      <c:if test="${ not empty account }">
       <li>
         <a href="#menu" class="menu">
           <img class="hamburger" src="<s:resource file="svg/hamburger.svg" />" />
@@ -89,12 +94,13 @@
         </ul>
       </li>
       <li>
-        <a href="/notifications" class="notifications notify">
+        <a href="/notifications" class="notifications">
           <img class="bell" src="<s:resource file="svg/bell.svg" />" />
           <img class="bello" src="<s:resource file="svg/bello.svg" />" />
         </a>
       </li>
       <li><a href="/upload"><img src="<s:resource file="svg/upload.svg" />" /></a></li>
+      </c:if>
     </ul>
   </div>
   <div class="header-loading"></div>

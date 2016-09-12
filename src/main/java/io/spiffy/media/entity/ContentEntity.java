@@ -27,10 +27,10 @@ public class ContentEntity extends HibernateEntity {
     public static final int MIN_NAME_LENGTH = 5;
     public static final int MAX_NAME_LENGTH = 64;
 
-    @Column(name = "account_id", length = MAX_TYPE_LENGTH, nullable = false)
+    @Column(name = "account_id", nullable = false)
     private Long account;
 
-    @Column(name = "idempotent_id", length = MAX_NAME_LENGTH)
+    @Column(name = "idempotent_id", length = MAX_IDEMPOTENT_ID_LENGTH)
     private String idempotentId;
 
     @Enumerated(EnumType.STRING)

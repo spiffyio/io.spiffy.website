@@ -5,15 +5,13 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import io.spiffy.common.dto.EntityType;
+
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ThreadDTO {
-    public enum EntityType {
-        POST
-    }
-
     private Long id;
     private EntityType entityType;
     private String entityId;

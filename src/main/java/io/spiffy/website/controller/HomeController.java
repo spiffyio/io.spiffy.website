@@ -12,7 +12,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 import io.spiffy.common.Controller;
 import io.spiffy.common.api.discussion.client.DiscussionClient;
-import io.spiffy.common.api.discussion.dto.ThreadDTO.EntityType;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.api.stream.input.PostActionInput;
@@ -21,6 +20,7 @@ import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.dto.EntityType;
 import io.spiffy.common.exception.UnknownPostException;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;

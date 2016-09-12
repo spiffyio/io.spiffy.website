@@ -7,7 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import io.spiffy.common.HibernateRepository;
-import io.spiffy.common.api.discussion.dto.ThreadDTO.EntityType;
+import io.spiffy.common.dto.EntityType;
 import io.spiffy.discussion.entity.ThreadEntity;
 
 public class ThreadRepository extends HibernateRepository<ThreadEntity> {

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 import io.spiffy.common.HibernateEntity;
-import io.spiffy.common.api.discussion.dto.ThreadDTO.EntityType;
+import io.spiffy.common.dto.EntityType;
 
 @Entity
 @Getter

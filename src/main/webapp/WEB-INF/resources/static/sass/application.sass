@@ -148,6 +148,13 @@ div.header
         float: left
         width: 25%
 
+      li.text
+        width: auto
+        margin-left: 2em
+
+        a
+          padding: 0 1em
+
       li
         float: right
         width: 3em
@@ -159,6 +166,20 @@ div.header
           img
             height: 1.5em
             padding: 0.75em
+
+          img.header-icon, img.header-logo
+            height: 2em
+            padding: 0.5em
+
+          img.header-icon
+            padding-right: 0
+
+          img.header-logo
+            padding-left: 0
+
+          +max-width($md)
+            img.header-logo
+              display: none
 
         a:hover
           background: rgba(255, 255, 255, 0.3)
@@ -350,7 +371,7 @@ div.footer
     box-shadow: 0 0 100px $w4
     margin: 30px auto
     padding: 1em
-    overflow: scroll
+    overflow: hidden
 
 .modal-header
   .content

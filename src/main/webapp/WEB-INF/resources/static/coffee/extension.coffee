@@ -86,8 +86,8 @@ jQuery.fn.spiffy = () ->
         if enable and img? and img.is('img.loading') then img.slideDown()
         if not enable and img? and img.is('img.loading') then img.slideUp()
       else if 'header'.equalsIgnoreCase loading
-        img = $ 'img.header-logo'
-        if img? and img.is('img.header-logo')
+        img = $ 'img.header-icon'
+        if img? and img.is('img.header-icon')
           src = img.attr 'src'
           src = if enable then src.replace 'icon', 'loading' else src.replace 'loading', 'icon'
           img.attr 'src', src

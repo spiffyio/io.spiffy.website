@@ -8,6 +8,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
 import io.spiffy.common.api.discussion.dto.ThreadDTO;
+import io.spiffy.common.dto.EntityType;
 import io.spiffy.common.util.DateUtil;
 import io.spiffy.discussion.entity.CommentEntity;
 import io.spiffy.discussion.entity.ThreadEntity;
@@ -29,7 +30,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
     }
 
     @Transactional
-    public ThreadEntity get(final ThreadDTO.EntityType entityType, final String entityId) {
+    public ThreadEntity get(final EntityType entityType, final String entityId) {
         return repository.get(entityType, entityId);
     }
 
@@ -43,7 +44,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
     }
 
     @Transactional
-    public ThreadEntity post(final ThreadDTO.EntityType entityType, final String entityId) {
+    public ThreadEntity post(final EntityType entityType, final String entityId) {
         ThreadEntity entity = get(entityType, entityId);
         if (entity == null) {
             entity = new ThreadEntity(entityType, entityId);
