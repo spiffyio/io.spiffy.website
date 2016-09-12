@@ -99,21 +99,6 @@ Dropzone.options.dzForm = {
 }
 
 $(document).ready (e) ->
-  $('div.header').mouseenter () ->
-    if $(this).is ':hover'
-      $(this).removeClass 'hidden'
-    return
-
-  $('div.header').mouseleave () ->
-    header = $(this)
-    func = () ->
-      if (not header.is(':hover')) and ($(window).scrollTop() > 400)
-        header.addClass 'hidden'
-        header.find('.sub-menu').removeClass 'show'
-      return
-    setTimeout func, 500
-    return
-
   $('.menu-toggle').click () ->
     toggle = $ this
     menu = toggle.parent().find '.sub-menu'
@@ -555,26 +540,6 @@ $(window).scroll (e) ->
   return
 
 $(window).scroll (e) ->
-  form = $ 'form.load-posts'
-  if not (form? and form.is 'form.load-posts') then return
-  col = $ '.col[data-index="0"]'
-  panel = col.find '.panel:in-viewport:first'
-  if panel.data('post-id').equalsIgnoreCase 'ad' then return
-  if not panel.data('page') then return
-  first = col.find '.panel:first'
-  uri = location.pathname
-  if not panel.is first
-    uri = uri + '?start=' + panel.data('post-id')
-  history.replaceState {}, 'SPIFFY.io', uri
-  return
-
-$(window).scroll (e) ->
-  if $(window).scrollTop() > 400
-    $('div.header').addClass 'hidden'
-    $('div.header').find('.sub-menu').removeClass 'show'
-  else
-    $('div.header').removeClass 'hidden'
-
   $('div.col').each () ->
     col = $(this)
     panel = col.find('div.panel:last')
@@ -582,11 +547,6 @@ $(window).scroll (e) ->
     if panel.is ':in-viewport'
       $('form.load-posts').submit()
     return
-  return
-
-$(window).on 'beforeunload', () ->
-  if location.search.contains 'start'
-    $(window).scrollTop 0
   return
 
 (($) ->

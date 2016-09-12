@@ -107,7 +107,7 @@ public class AppConfig {
             ffmpegPrefix = "./";
             forwardToProd = true;
             passwordPattern = "^[!@#$%^&+=a-zA-Z0-9]{8,}$";
-            requireRecaptcha = true;
+            requireRecaptcha = false;
             secure = true;
             showStacktrace = true;
             suffix = "-beta";
