@@ -47,6 +47,7 @@ public abstract class SQSManager<E extends Event> extends Manager {
             try {
                 process(JsonUtil.deserialize(eventClass, json), json);
             } catch (final Exception e) {
+                logger.error("unable to process event", e);
                 client.sendMessage(dlqUrl, message.getBody());
             }
 

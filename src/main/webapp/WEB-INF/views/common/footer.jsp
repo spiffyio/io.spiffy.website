@@ -81,7 +81,7 @@
 <c:if test="${ include_fingerprint }">
 <s:resource file="fingerprint" type="js" />
 </c:if>
-<s:resource file="application" type="js" version="2" />
+<s:resource file="application" type="js" version="3" />
 <c:if test="${ include_ads }">
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>

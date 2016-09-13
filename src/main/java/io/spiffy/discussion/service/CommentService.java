@@ -2,6 +2,7 @@ package io.spiffy.discussion.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -20,6 +21,11 @@ public class CommentService extends Service<CommentEntity, CommentRepository> {
     }
 
     @Transactional
+    public CommentEntity get(final long id) {
+        return repository.get(id);
+    }
+
+    @Transactional
     public CommentEntity get(final ThreadEntity thread, final String idempotentId, final long accountId) {
         return repository.get(thread, idempotentId, accountId);
     }
@@ -27,6 +33,11 @@ public class CommentService extends Service<CommentEntity, CommentRepository> {
     @Transactional
     public List<CommentEntity> get(final ThreadEntity thread, final Long first, final int maxResults) {
         return repository.get(thread, first, maxResults);
+    }
+
+    @Transactional
+    public Set<Long> getCommenters(final ThreadEntity thread) {
+        return repository.getCommenters(thread);
     }
 
     @Transactional

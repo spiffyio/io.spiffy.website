@@ -6,8 +6,9 @@ import com.amazonaws.services.sqs.AmazonSQSClient;
 
 import io.spiffy.common.dto.EntityType;
 import io.spiffy.common.event.CommentEvent;
-import io.spiffy.common.event.CommentPostedEvent;
+import io.spiffy.common.event.CommentNotificationEvent;
 import io.spiffy.common.manager.SQSManager;
+import io.spiffy.common.util.JsonUtil;
 import io.spiffy.notification.service.AlertService;
 
 public class NotificationSQSManager extends SQSManager<CommentEvent> {
@@ -22,10 +23,11 @@ public class NotificationSQSManager extends SQSManager<CommentEvent> {
         this.service = service;
     }
 
-    public void process(final CommentEvent comment, final String json) {
-        if (CommentPostedEvent.SUB_TYPE.equalsIgnoreCase(comment.getSubType())) {
-            for (final long account : comment.getSubscriberIds()) {
-                service.post(account, "comment:" + comment.getCommentId(), EntityType.POST, "" + comment.getPostId());
+    public void process(final CommentEvent event, final String json) {
+        if (CommentNotificationEvent.SUB_TYPE.equalsIgnoreCase(event.getSubType())) {
+            final CommentNotificationEvent notification = JsonUtil.deserialize(CommentNotificationEvent.class, json);
+            for (final long account : notification.getSubscriberIds()) {
+                service.post(account, "comment:" + notification.getCommentId(), EntityType.POST, "" + notification.getPostId());
             }
         }
     }

@@ -1,12 +1,15 @@
 package io.spiffy.discussion.repository;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
 import io.spiffy.common.HibernateRepository;
@@ -39,5 +42,19 @@ public class CommentRepository extends HibernateRepository<CommentEntity> {
 
         c.setMaxResults(maxResults);
         return asList(c.list());
+    }
+
+    public Set<Long> getCommenters(final ThreadEntity thread) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("thread", thread));
+
+        c.setProjection(Projections.distinct(Projections.property("accountId")));
+
+        final List<Object> result = asSingleProjectionList(c.list());
+        final Set<Long> set = new HashSet<>();
+
+        result.forEach(o -> set.add((Long) o));
+
+        return set;
     }
 }

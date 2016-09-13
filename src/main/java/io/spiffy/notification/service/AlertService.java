@@ -55,7 +55,7 @@ public class AlertService extends Service<AlertEntity, AlertRepository> {
             return null;
         }
 
-        final String actionUrl = "/stream/" + alert.getEntityId();
+        final String actionUrl = "/stream/" + post.getPostId();
         final String iconUrl = post.getContent().getThumbnail();
         final String message = "new comment!";
 

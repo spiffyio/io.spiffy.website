@@ -1,7 +1,7 @@
 package io.spiffy.discussion.service;
 
-import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
 import io.spiffy.common.api.discussion.dto.ThreadDTO;
+import io.spiffy.common.api.stream.client.StreamClient;
+import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.dto.EntityType;
 import io.spiffy.common.util.DateUtil;
 import io.spiffy.discussion.entity.CommentEntity;
@@ -20,13 +22,15 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
 
     private final CommentService commentService;
     private final DiscussionSNSManager snsManager;
+    private final StreamClient streamClient;
 
     @Inject
     public ThreadService(final ThreadRepository repository, final CommentService commentService,
-            final DiscussionSNSManager snsManager) {
+            final DiscussionSNSManager snsManager, final StreamClient streamClient) {
         super(repository);
         this.commentService = commentService;
         this.snsManager = snsManager;
+        this.streamClient = streamClient;
     }
 
     @Transactional
@@ -73,8 +77,22 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         }
 
         final CommentEntity commentEntity = commentService.post(entity, idempotentId, accountId, DateUtil.now(), comment);
-        snsManager.publish(commentEntity.getId(), Long.parseLong(thread.getEntityId()), new HashSet<Long>());
+        snsManager.publish(commentEntity.getId());
 
         return commentEntity;
+    }
+
+    @Transactional
+    public void sendNotifications(final long commentId) {
+        final CommentEntity comment = commentService.get(commentId);
+
+        final Set<Long> subscribers = commentService.getCommenters(comment.getThread());
+        final Post post = streamClient.getPost(Long.parseLong(comment.getThread().getEntityId())).getPost();
+        if (post != null) {
+            subscribers.add(post.getAccount().getId());
+        }
+        subscribers.remove(comment.getAccountId());
+
+        snsManager.publish(comment.getId(), Long.parseLong(comment.getThread().getEntityId()), subscribers);
     }
 }

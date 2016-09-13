@@ -71,4 +71,8 @@ public abstract class HibernateRepository<E> extends Repository<E> {
         return generic;
     }
 
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+    protected List<Object> asSingleProjectionList(final List generic) {
+        return generic;
+    }
 }

@@ -6,6 +6,7 @@ import javax.inject.Inject;
 
 import com.amazonaws.services.sns.AmazonSNSClient;
 
+import io.spiffy.common.event.CommentNotificationEvent;
 import io.spiffy.common.event.CommentPostedEvent;
 import io.spiffy.common.manager.SNSManager;
 
@@ -16,8 +17,14 @@ public class DiscussionSNSManager extends SNSManager {
         super(client, "spiffyio-discussion");
     }
 
-    public void publish(final long commentId, final long postId, final Set<Long> subscriberIds) {
+    public void publish(final long commentId) {
         final CommentPostedEvent event = new CommentPostedEvent();
+        event.setCommentId(commentId);
+        publish(event);
+    }
+
+    public void publish(final long commentId, final long postId, final Set<Long> subscriberIds) {
+        final CommentNotificationEvent event = new CommentNotificationEvent();
         event.setCommentId(commentId);
         event.setPostId(postId);
         event.setSubscriberIds(subscriberIds);
