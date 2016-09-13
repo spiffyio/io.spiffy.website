@@ -15,6 +15,7 @@ import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
 
 import io.spiffy.common.Manager;
+import io.spiffy.common.api.notification.client.NotificationClient;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
@@ -22,6 +23,7 @@ import io.spiffy.common.dto.Context;
 @RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class ContextResolver extends Manager implements HandlerMethodArgumentResolver {
 
+    private final NotificationClient notificationClient;
     private final UserClient userClient;
 
     public boolean supportsParameter(final MethodParameter parameter) {
@@ -41,7 +43,13 @@ public class ContextResolver extends Manager implements HandlerMethodArgumentRes
             context.newSession();
         }
 
+        if (account != null) {
+            final long notificationCount = notificationClient.getUnreadCountCall(account.getId());
+            context.setNotificationCount(notificationCount);
+        }
+
         context.addAttribute("account", account);
+        context.addAttribute("context", context);
         return new Context(context, account);
     }
 }

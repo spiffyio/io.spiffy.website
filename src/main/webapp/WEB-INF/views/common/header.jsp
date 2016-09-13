@@ -94,7 +94,7 @@
         </ul>
       </li>
       <li>
-        <a href="/notifications" class="notifications">
+        <a href="/notifications" class="notifications <c:if test="${ context.notificationCount ne 0 }">notify</c:if>">
           <img class="bell" src="<s:resource file="svg/bell.svg" />" />
           <img class="bello" src="<s:resource file="svg/bello.svg" />" />
         </a>

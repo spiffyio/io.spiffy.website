@@ -23,6 +23,11 @@ public class AlertService extends Service<AlertEntity, AlertRepository> {
     }
 
     @Transactional
+    public long getUnreadCount(final long account) {
+        return repository.getUnreadCount(account);
+    }
+
+    @Transactional
     public AlertEntity post(final long account, final String idempotentId, final EntityType entityType, final String entityId) {
         AlertEntity entity = get(account, idempotentId);
         if (entity == null) {

@@ -12,7 +12,7 @@ import io.spiffy.common.Controller;
 import io.spiffy.common.dto.Context;
 import io.spiffy.media.service.ContentService;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class DebugController extends Controller {
 
     private final ContentService contentService;

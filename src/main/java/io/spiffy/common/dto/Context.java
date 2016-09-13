@@ -62,6 +62,7 @@ public class Context {
     private final Account account;
 
     private String sessionId;
+    private long notificationCount;
 
     public Context(final HttpServletRequest request, final HttpServletResponse response) {
         this(request, response, null, null, null);
