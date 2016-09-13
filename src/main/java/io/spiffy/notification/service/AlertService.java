@@ -56,7 +56,8 @@ public class AlertService extends Service<AlertEntity, AlertRepository> {
         }
 
         final String actionUrl = "/stream/" + post.getPostId();
-        final String iconUrl = post.getContent().getThumbnail();
+        final String iconUrl = post.getContent().getPoster() != null ? post.getContent().getPoster().getThumbnail()
+                : post.getContent().getThumbnail();
         final String message = "new comment!";
 
         alert.setReadAt(DateUtil.now());
