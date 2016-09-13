@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<style type="text/css">
+	.st0{fill:#12B1DE;}
+</style>
+<g>
+	<path class="st0" d="M28.1,22H3.9c-1,0-1.9-0.9-1.9-1.9V5.9C2,4.9,2.9,4,3.9,4h24.2c1,0,1.9,0.9,1.9,1.9v14.2
+		C30,21.1,29.1,22,28.1,22z"/>
+	<polyline class="st0" points="23,28 18.3,22 23,16 	"/>
+</g>
+</svg>

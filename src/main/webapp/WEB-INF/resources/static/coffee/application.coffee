@@ -177,6 +177,23 @@ $(document).ready (e) ->
   $('form.comment').spiffy().options
     success: () -> refresh()
 
+  $('form.notifications').spiffy().options
+    success: (form, data) ->
+      span = $ 'span.notification-count'
+      if data.count is 0
+        document.title = 'SPIFFY.io'
+        span.html ''
+      else
+        document.title = '(' + data.count + ') SPIFFY.io'
+        span.html data.count
+      func = () -> form.submit()
+      setTimeout func, 30000
+      return
+
+  setTimeout () ->
+    $('form.notifications').submit()
+  , 15000
+
   $('form.submit').spiffy().options
     success: (form, data) ->
       sessionStorage.setItem 'src:' + data.name, form.data('media-src')

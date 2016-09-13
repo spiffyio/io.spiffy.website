@@ -61,22 +61,15 @@ body
     top: 0
     left: 0
 
-  .bell
-    opacity: 1
-  .bello
-    opacity: 0
-
-.notifications.notify
-  .bello
-    animation: notify 5s ease infinite
-
-@keyframes notify
-  0%
-    opacity: 0
-  50%
-    opacity: 1
-  100%
-    opacity: 0
+  span:not(:empty)
+    +size(1em, 1em)
+    position: absolute
+    top: 0.5em
+    right: 0.25em
+    background: $o2
+    color: $o5 !important
+    line-height: 1em !important
+    border-radius: 0.25em
 
 a.menu:after
   content: '\00a0'

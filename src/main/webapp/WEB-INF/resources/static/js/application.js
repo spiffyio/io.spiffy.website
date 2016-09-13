@@ -576,6 +576,26 @@ $(document).ready(function(e) {
       return refresh();
     }
   });
+  $('form.notifications').spiffy().options({
+    success: function(form, data) {
+      var func, span;
+      span = $('span.notification-count');
+      if (data.count === 0) {
+        document.title = 'SPIFFY.io';
+        span.html('');
+      } else {
+        document.title = '(' + data.count + ') SPIFFY.io';
+        span.html(data.count);
+      }
+      func = function() {
+        return form.submit();
+      };
+      setTimeout(func, 30000);
+    }
+  });
+  setTimeout(function() {
+    return $('form.notifications').submit();
+  }, 15000);
   $('form.submit').spiffy().options({
     success: function(form, data) {
       sessionStorage.setItem('src:' + data.name, form.data('media-src'));

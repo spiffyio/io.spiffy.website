@@ -22,6 +22,7 @@ import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
+import io.spiffy.website.response.NotificationsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject) )
@@ -46,6 +47,15 @@ public class UserController extends Controller {
     public ModelAndView notifications(final Context context) {
         context.addAttribute("notifications", notificationClient.getNoficiations(context.getAccountId()));
         return mav("notifications", context);
+    }
+
+    @ResponseBody
+    @AccessControl
+    @Csrf("notifications")
+    @RequestMapping(value = "/notifications", method = RequestMethod.POST)
+    public AjaxResponse getNotificationCount(final Context context) {
+        final long notificationCount = notificationClient.getUnreadCount(context.getAccountId());
+        return new NotificationsResponse(notificationCount);
     }
 
     @ResponseBody

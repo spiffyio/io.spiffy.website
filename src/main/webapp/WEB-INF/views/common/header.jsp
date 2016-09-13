@@ -40,7 +40,7 @@
 <meta name="description" content="share content, and stuff.">
 <meta name="author" content="SPIFFY.io, LLC">
 
-<title>SPIFFY.io</title>
+<title><c:if test="${ context.notificationCount ne 0 }">(<c:out value="${ context.notificationCount }" />) </c:if>SPIFFY.io</title>
 
 <link rel="apple-touch-icon" sizes="57x57" href="<s:resource file="favicon/apple-touch-icon-57x57.png" />">
 <link rel="apple-touch-icon" sizes="60x60" href="<s:resource file="favicon/apple-touch-icon-60x60.png" />">
@@ -94,10 +94,11 @@
         </ul>
       </li>
       <li>
-        <a href="/notifications" class="notifications <c:if test="${ context.notificationCount ne 0 }">notify</c:if>">
+        <a href="/notifications" class="notifications">
           <img class="bell" src="<s:resource file="svg/bell.svg" />" />
-          <img class="bello" src="<s:resource file="svg/bello.svg" />" />
+          <span class="notification-count"><c:if test="${ context.notificationCount ne 0 }"><c:out value="${ context.notificationCount }" /></c:if></span>
         </a>
+        <form class="notifications" action="/notifications" <s:csrf name="notifications" /> data-loading="none"></form>
       </li>
       <li><a href="/upload"><img src="<s:resource file="svg/upload.svg" />" /></a></li>
       </c:if>
