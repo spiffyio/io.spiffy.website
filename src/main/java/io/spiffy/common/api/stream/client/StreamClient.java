@@ -50,8 +50,15 @@ public class StreamClient extends Client {
         return output.getPosts();
     }
 
+    public GetPostOutput getPost(final long id) {
+        return getPost(new GetInput(id));
+    }
+
     public GetPostOutput getPost(final String name) {
-        final GetInput input = new GetInput(name);
+        return getPost(new GetInput(name));
+    }
+
+    protected GetPostOutput getPost(final GetInput input) {
         final GetPostOutput output = getPostCall.call(input);
         return output;
     }

@@ -13,6 +13,7 @@ import io.spiffy.common.Controller;
 import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.dto.ContentType;
 import io.spiffy.common.api.media.output.GetAccountMediaOutput;
+import io.spiffy.common.api.notification.client.NotificationClient;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
@@ -23,10 +24,11 @@ import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private final MediaClient mediaClient;
+    private final NotificationClient notificationClient;
     private final UserClient userClient;
 
     @RequestMapping("/{user}")
@@ -37,6 +39,13 @@ public class UserController extends Controller {
         }
 
         return redirect("/" + user + "/stream", context);
+    }
+
+    @AccessControl
+    @RequestMapping("/notifications")
+    public ModelAndView notifications(final Context context) {
+        context.addAttribute("notifications", notificationClient.getNoficiations(context.getAccountId()));
+        return mav("notifications", context);
     }
 
     @ResponseBody

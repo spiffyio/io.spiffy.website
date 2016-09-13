@@ -1,5 +1,6 @@
 package io.spiffy.discussion.service;
 
+import java.util.HashSet;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -12,16 +13,20 @@ import io.spiffy.common.dto.EntityType;
 import io.spiffy.common.util.DateUtil;
 import io.spiffy.discussion.entity.CommentEntity;
 import io.spiffy.discussion.entity.ThreadEntity;
+import io.spiffy.discussion.manager.DiscussionSNSManager;
 import io.spiffy.discussion.repository.ThreadRepository;
 
 public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
 
     private final CommentService commentService;
+    private final DiscussionSNSManager snsManager;
 
     @Inject
-    public ThreadService(final ThreadRepository repository, final CommentService commentService) {
+    public ThreadService(final ThreadRepository repository, final CommentService commentService,
+            final DiscussionSNSManager snsManager) {
         super(repository);
         this.commentService = commentService;
+        this.snsManager = snsManager;
     }
 
     @Transactional
@@ -67,6 +72,9 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
             return null;
         }
 
-        return commentService.post(entity, idempotentId, accountId, DateUtil.now(), comment);
+        final CommentEntity commentEntity = commentService.post(entity, idempotentId, accountId, DateUtil.now(), comment);
+        snsManager.publish(commentEntity.getId(), Long.parseLong(thread.getEntityId()), new HashSet<Long>());
+
+        return commentEntity;
     }
 }

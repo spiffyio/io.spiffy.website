@@ -23,18 +23,18 @@ import io.spiffy.media.entity.ContentEntity;
 import io.spiffy.media.entity.FileEntity;
 import io.spiffy.media.entity.ImageEntity;
 import io.spiffy.media.entity.VideoEntity;
-import io.spiffy.media.manager.SNSManager;
+import io.spiffy.media.manager.MediaSNSManager;
 import io.spiffy.media.repository.ContentRepository;
 
 public class ContentService extends Service<ContentEntity, ContentRepository> {
 
-    private final SNSManager snsManager;
+    private final MediaSNSManager snsManager;
     private final FileService fileService;
     private final ImageService imageService;
     private final VideoService videoService;
 
     @Inject
-    public ContentService(final ContentRepository repository, final SNSManager snsManager, final FileService fileService,
+    public ContentService(final ContentRepository repository, final MediaSNSManager snsManager, final FileService fileService,
             final ImageService imageService, final VideoService videoService) {
         super(repository);
         this.snsManager = snsManager;

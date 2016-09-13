@@ -44,7 +44,7 @@ public class ContextResolver extends Manager implements HandlerMethodArgumentRes
         }
 
         if (account != null) {
-            final long notificationCount = notificationClient.getUnreadCountCall(account.getId());
+            final long notificationCount = notificationClient.getUnreadCount(account.getId());
             context.setNotificationCount(notificationCount);
         }
 
