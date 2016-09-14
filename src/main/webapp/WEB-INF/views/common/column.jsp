@@ -38,7 +38,7 @@
     <c:if test="${ post.content.type ne 'AD' }">
       <div class="post-information">
         <div class="discuss">
-          <a href="/stream/<c:out value="${ post.postId }" />"><img style="width: 2em; margin: 0.5em;" src="<s:resource file="svg/discuss.svg" />" /></a>
+          <a href="/stream/<c:out value="${ post.postId }" />"><img style="width: 2em; margin: 0.5em;" src="<s:resource file="svg/message.svg" />" /></a>
         </div>
       </div>
       <div class="account">

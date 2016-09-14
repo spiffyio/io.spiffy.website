@@ -904,8 +904,12 @@ adjustColumns = function() {
   });
   form = $('form.load-posts');
   if ((form != null) && form.is('form.load-posts')) {
-    col = $('.col[data-index="1"]');
+    col = $('.col[data-index="2"]');
     panel = col.find('.panel:last');
+    if (panel.data('post-id').equalsIgnoreCase('ad')) {
+      col = $('.col[data-index="1"]');
+      panel = col.find('.panel:last');
+    }
     input = form.find('input[name="after"]');
     input.val(panel.data('post-id'));
   }

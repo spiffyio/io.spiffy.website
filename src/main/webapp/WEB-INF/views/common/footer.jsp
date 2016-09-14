@@ -58,7 +58,7 @@
 <div class="source">
 <div class="post-information">
   <div class="discuss">
-    <a href="/stream/{{post.postId}}"><img style="width: 2em; margin: 0.5em;" src="<s:resource file="svg/discuss.svg" />" /></a>
+    <a href="/stream/{{post.postId}}"><img style="width: 2em; margin: 0.5em;" src="<s:resource file="svg/message.svg" />" /></a>
   </div>
 </div>
 <div class="account">
@@ -81,7 +81,7 @@
 <c:if test="${ include_fingerprint }">
 <s:resource file="fingerprint" type="js" />
 </c:if>
-<s:resource file="application" type="js" version="3" />
+<s:resource file="application" type="js" version="5" />
 <c:if test="${ include_ads }">
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>
