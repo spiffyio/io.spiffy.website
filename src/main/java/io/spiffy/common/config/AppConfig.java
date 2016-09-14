@@ -93,7 +93,7 @@ public class AppConfig {
             ffmpegPrefix = "";
             forwardToProd = false;
             passwordPattern = "^password|testpass$";
-            requireRecaptcha = false;
+            requireRecaptcha = true;
             secure = false;
             showStacktrace = true;
             suffix = "-beta";
