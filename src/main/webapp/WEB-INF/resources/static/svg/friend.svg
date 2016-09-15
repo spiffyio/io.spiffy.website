@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<style type="text/css">
+	.st0{fill:#12B1DE;}
+</style>
+<circle class="st0" cx="16" cy="10" r="8"/>
+<path class="st0" d="M24,29.5H8c-3.3,0-6-2.7-6-6v-1c0-3.3,2.7-6,6-6h16c3.3,0,6,2.7,6,6v1C30,26.8,27.3,29.5,24,29.5z"/>
+<rect x="2" y="23" class="st0" width="28" height="7"/>
+</svg>

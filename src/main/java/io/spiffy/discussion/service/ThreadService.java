@@ -21,14 +21,17 @@ import io.spiffy.discussion.repository.ThreadRepository;
 public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
 
     private final CommentService commentService;
+    private final ParticipantService participantService;
     private final DiscussionSNSManager snsManager;
     private final StreamClient streamClient;
 
     @Inject
     public ThreadService(final ThreadRepository repository, final CommentService commentService,
-            final DiscussionSNSManager snsManager, final StreamClient streamClient) {
+            final ParticipantService participantService, final DiscussionSNSManager snsManager,
+            final StreamClient streamClient) {
         super(repository);
         this.commentService = commentService;
+        this.participantService = participantService;
         this.snsManager = snsManager;
         this.streamClient = streamClient;
     }
@@ -77,6 +80,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         }
 
         final CommentEntity commentEntity = commentService.post(entity, idempotentId, accountId, DateUtil.now(), comment);
+        participantService.post(entity, accountId);
         snsManager.publish(commentEntity.getId());
 
         return commentEntity;

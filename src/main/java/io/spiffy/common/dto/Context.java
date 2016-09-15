@@ -62,6 +62,7 @@ public class Context {
     private final Account account;
 
     private String sessionId;
+    private long friendCount;
     private long messageCount;
     private long notificationCount;
 
