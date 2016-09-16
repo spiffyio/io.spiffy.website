@@ -1,42 +1,6 @@
 @import constants.sass
-
-=buffer($margin, $padding)
-  margin: $margin
-  padding: $padding
-
-=size($height, $width)
-  height: $height
-  width: $width
-
-=width($min, $max)
-  @media only screen and (min-width: $min) and (max-width: $max - 1)
-    @content
-
-=min-width($width)
-  @media only screen and (min-width: $width)
-    @content
-
-=max-width($width)
-  @media only screen and (max-width: $width - 1)
-    @content
-
-=min-height($height)
-  @media only screen and (min-height: $height)
-    @content
-
-=max-height($height)
-  @media only screen and (max-height: $height - 1)
-    @content
-
-=center
-  margin-left: auto
-  margin-right: auto
-
-=hidden
-  display: none
-
-=visible
-  visibility: visible
+@import functions.sass
+@import messenger.sass
 
 *
   padding: 0

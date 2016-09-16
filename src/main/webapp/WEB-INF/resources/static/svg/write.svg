@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<style type="text/css">
+	.st0{fill:#12B1DE;}
+	.st1{fill:none;stroke:#12B1DE;stroke-miterlimit:10;}
+</style>
+<polyline class="st0" points="10,30 2,30 2,22 "/>
+<rect x="3.2" y="12.1" transform="matrix(0.7071 -0.7071 0.7071 0.7071 -7.8 15.5143)" class="st1" width="23.3" height="10.1"/>
+<line class="st1" x1="20" y1="9" x2="8" y2="21"/>
+<rect x="23.2" y="1.8" transform="matrix(0.7071 -0.7071 0.7071 0.7071 2.3726 19.7279)" class="st0" width="3.7" height="10.4"/>
+<line class="st1" x1="23" y1="12" x2="11" y2="24"/>
+</svg>
+

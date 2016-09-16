@@ -1,0 +1,131 @@
+@import constants.sass
+@import functions.sass
+
+
+
+.chats
+  +size(calc(100vh - 6em), 300px)
+  float: left
+  background: $w0
+  overflow-y: auto
+
+.chats-header
+  +size(3em, 100%)
+  border-bottom: 1px $w2 solid
+  color: $w4
+  line-height: 3em
+  text-align: center
+  font-weight: bold
+
+  img
+    +size(1em, 1em)
+    padding: 1em
+    float: right
+
+.chats-body
+  +size(3em, calc(100% - 1em))
+  padding: 0.5em
+
+  .chat-thread:not(:first-child)
+    padding-top: 1em
+
+.chat-thread
+  clear: both
+
+  .icon
+    +size(3em, 3em)
+    float: left
+
+  .chat-thread-information
+    +size(3em, calc(100% - 5em))
+    margin-left: 1em
+    float: left
+    border-bottom: 1px $w2 solid
+
+    .name
+      float: left
+      color: $w3
+
+    .time
+      float: right
+      color: $w2
+
+    .preview
+      clear: both
+      color: $w25
+      overflow: hidden
+      white-space: nowrap
+      text-overflow: ellipsis
+
+.chat
+  +size(calc(100vh - 6em), calc(100% - 301px))
+  float: right
+  background: $w0
+  border-left: 1px $w3 solid
+
+.chat-header
+  +size(3em, 100%)
+  border-bottom: 1px $w2 solid
+  color: $w4
+  line-height: 3em
+  text-align: center
+  font-weight: bold
+
+.chat-body
+  +size(calc(100% - 6.5em), 100%)
+  margin-bottom: 0.5em
+  overflow-y: auto
+  display: flex
+  flex-direction: column-reverse
+
+.message-group
+  padding: 0.5em
+  clear: both
+
+  .icon
+    +size(2em, 2em)
+    border-radius: 0.5em
+
+  .message
+    max-width: calc(100% - 8em)
+    padding: 0.5em
+    position: relative
+    border-radius: 1em
+
+  .message:before
+    +size(0, 0)
+    content: ' '
+    position: absolute
+    top: 0
+    border: 1em solid
+
+.event
+  +center()
+  padding: 0.5em 1em
+  background: $w1
+  color: $w3
+  border-radius: 1em
+
+.message-group.left
+  div
+    float: left
+
+  .message
+    margin-left: 1em
+    background: $o1
+
+  .message:before
+    left: -1em
+    border-color: $o1 transparent transparent transparent
+
+.message-group.right
+  div
+    float: right
+
+  .message
+    margin-right: 1em
+    background: $b1
+
+  .message:before
+    right: -1em
+    border-color: $b1 transparent transparent transparent

@@ -1,3 +1,165 @@
+.chats {
+  height: calc(100vh - 6em);
+  width: 300px;
+  float: left;
+  background: #FFFFFF;
+  overflow-y: auto;
+}
+
+.chats-header {
+  height: 3em;
+  width: 100%;
+  border-bottom: 1px #D3D3D3 solid;
+  color: #3D3D3D;
+  line-height: 3em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.chats-header img {
+  height: 1em;
+  width: 1em;
+  padding: 1em;
+  float: right;
+}
+
+.chats-body {
+  height: 3em;
+  width: calc(100% - 1em);
+  padding: 0.5em;
+}
+
+.chats-body .chat-thread:not(:first-child) {
+  padding-top: 1em;
+}
+
+.chat-thread {
+  clear: both;
+}
+
+.chat-thread .icon {
+  height: 3em;
+  width: 3em;
+  float: left;
+}
+
+.chat-thread .chat-thread-information {
+  height: 3em;
+  width: calc(100% - 5em);
+  margin-left: 1em;
+  float: left;
+  border-bottom: 1px #D3D3D3 solid;
+}
+
+.chat-thread .chat-thread-information .name {
+  float: left;
+  color: #5F5F5F;
+}
+
+.chat-thread .chat-thread-information .time {
+  float: right;
+  color: #D3D3D3;
+}
+
+.chat-thread .chat-thread-information .preview {
+  clear: both;
+  color: #A1A1A1;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.chat {
+  height: calc(100vh - 6em);
+  width: calc(100% - 301px);
+  float: right;
+  background: #FFFFFF;
+  border-left: 1px #5F5F5F solid;
+}
+
+.chat-header {
+  height: 3em;
+  width: 100%;
+  border-bottom: 1px #D3D3D3 solid;
+  color: #3D3D3D;
+  line-height: 3em;
+  text-align: center;
+  font-weight: bold;
+}
+
+.chat-body {
+  height: calc(100% - 6.5em);
+  width: 100%;
+  margin-bottom: 0.5em;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column-reverse;
+}
+
+.message-group {
+  padding: 0.5em;
+  clear: both;
+}
+
+.message-group .icon {
+  height: 2em;
+  width: 2em;
+  border-radius: 0.5em;
+}
+
+.message-group .message {
+  max-width: calc(100% - 8em);
+  padding: 0.5em;
+  position: relative;
+  border-radius: 1em;
+}
+
+.message-group .message:before {
+  height: 0;
+  width: 0;
+  content: ' ';
+  position: absolute;
+  top: 0;
+  border: 1em solid;
+}
+
+.event {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0.5em 1em;
+  background: #F5F5F5;
+  color: #5F5F5F;
+  border-radius: 1em;
+}
+
+.message-group.left div {
+  float: left;
+}
+
+.message-group.left .message {
+  margin-left: 1em;
+  background: #FFECC0;
+}
+
+.message-group.left .message:before {
+  left: -1em;
+  border-color: #FFECC0 transparent transparent transparent;
+}
+
+.message-group.right div {
+  float: right;
+}
+
+.message-group.right .message {
+  margin-right: 1em;
+  background: #C0EFFD;
+}
+
+.message-group.right .message:before {
+  right: -1em;
+  border-color: #C0EFFD transparent transparent transparent;
+}
+
 * {
   padding: 0;
   margin: 0;
