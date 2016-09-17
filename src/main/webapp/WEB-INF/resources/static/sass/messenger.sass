@@ -1,8 +1,6 @@
 @import constants.sass
 @import functions.sass
 
-
-
 .chats
   +size(calc(100vh - 6em), 300px)
   float: left
@@ -23,14 +21,19 @@
     float: right
 
 .chats-body
-  +size(3em, calc(100% - 1em))
-  padding: 0.5em
+  +size(3em, 100%)
+  margin: 0.5em
 
   .chat-thread:not(:first-child)
-    padding-top: 1em
+    padding-top: 0.5em
+
+.chat-thread.active
+  background: $w1
 
 .chat-thread
+  +size(3.5em, 100%)
   clear: both
+  cursor: pointer
 
   .icon
     +size(3em, 3em)
@@ -102,9 +105,7 @@
 .event
   +center()
   padding: 0.5em 1em
-  background: $w1
   color: $w3
-  border-radius: 1em
 
 .message-group.left
   div

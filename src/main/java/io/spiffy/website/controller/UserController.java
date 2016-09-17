@@ -25,7 +25,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.NotificationsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private final MediaClient mediaClient;
@@ -47,12 +47,6 @@ public class UserController extends Controller {
     public ModelAndView notifications(final Context context) {
         context.addAttribute("notifications", notificationClient.getNoficiations(context.getAccountId()));
         return mav("notifications", context);
-    }
-
-    @AccessControl
-    @RequestMapping("/messages")
-    public ModelAndView messages(final Context context) {
-        return mav("messages", context);
     }
 
     @AccessControl

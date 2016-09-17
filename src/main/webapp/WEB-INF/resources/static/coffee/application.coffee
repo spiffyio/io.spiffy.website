@@ -1,6 +1,7 @@
 # @prepros-prepend constants.coffee
 # @prepros-prepend functions.coffee
 # @prepros-prepend extension.coffee
+# @prepros-prepend messenger.coffee
 
 addedfile = (file) ->
   if not file.accepted?
@@ -267,7 +268,6 @@ $(document).ready (e) ->
     return
 
   $(document).on 'click', 'a.menu', (e) ->
-    preventDefault e
     toggle = $ this
     toggle.toggleClass 'expanded'
     menu = toggle.parent().find '.sub-menu'

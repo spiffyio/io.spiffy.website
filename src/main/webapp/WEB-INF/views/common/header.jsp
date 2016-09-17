@@ -81,7 +81,7 @@
       </c:if>
       <c:if test="${ not empty account }">
       <li>
-        <a href="#menu" class="menu">
+        <a href="#" class="menu">
           <img class="hamburger" src="<s:resource file="svg/hamburger.svg" />" />
           <img class="close" src="<s:resource file="svg/close.svg" />" />
         </a>

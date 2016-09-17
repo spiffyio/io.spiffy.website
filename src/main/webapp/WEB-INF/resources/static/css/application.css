@@ -25,16 +25,23 @@
 
 .chats-body {
   height: 3em;
-  width: calc(100% - 1em);
-  padding: 0.5em;
+  width: 100%;
+  margin: 0.5em;
 }
 
 .chats-body .chat-thread:not(:first-child) {
-  padding-top: 1em;
+  padding-top: 0.5em;
+}
+
+.chat-thread.active {
+  background: #F5F5F5;
 }
 
 .chat-thread {
+  height: 3.5em;
+  width: 100%;
   clear: both;
+  cursor: pointer;
 }
 
 .chat-thread .icon {
@@ -127,9 +134,7 @@
   margin-left: auto;
   margin-right: auto;
   padding: 0.5em 1em;
-  background: #F5F5F5;
   color: #5F5F5F;
-  border-radius: 1em;
 }
 
 .message-group.left div {

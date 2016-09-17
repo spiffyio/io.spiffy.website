@@ -385,6 +385,83 @@ jQuery.fn.spiffy = function() {
   };
 };
 
+var Messenger;
+
+$(document).on('click', 'a[href="#"]', function(e) {
+  e.preventDefault();
+});
+
+Handlebars.html = function(name, data) {
+  var template;
+  template = Handlebars.compile($('[data-template="' + name + '"]').html());
+  return template(data);
+};
+
+$(document).on('click', '.chat-thread, a', function(e) {
+  Messenger.open($(this));
+});
+
+$(document).ready(function(e) {
+  Messenger.loadThreads();
+});
+
+Messenger = {
+  foo: function() {
+    var data;
+    data = {
+      id: 'cjsmile',
+      icon: '//cdn-beta.spiffy.io/media/DlXRpf-Cg.jpg',
+      time: 'Yesterday',
+      preview: 'wassup my brother from another, yo lol',
+      display: 'none'
+    };
+    Messenger.addThread(data);
+  },
+  bar: function() {
+    var data;
+    data = {
+      id: 'foobar',
+      side: 'left',
+      icon: '//cdn-beta.spiffy.io/media/DlXRpf-Cg.jpg',
+      message: 'hello dood',
+      display: 'none'
+    };
+    Messenger.addMessage(data);
+  },
+  add: function(container, element, template, data) {
+    container = $(container);
+    container.prepend(Handlebars.html(template, data));
+    if (data.display == null) {
+      return;
+    }
+    element = $(element);
+    element.slideDown();
+  },
+  addThread: function(data) {
+    Messenger.add('.chats-body', '[data-thread-id="' + data.id + '"]', 'chat-thread', data);
+  },
+  addMessage: function(data) {
+    Messenger.add('.chat-body', '[data-message-id="' + data.id + '"]', 'message-group', data);
+  },
+  open: function(thread) {
+    var body, chat, header, id;
+    if (thread.hasClass('active')) {
+      return;
+    }
+    $('.chat-thread.active').removeClass('active');
+    thread.addClass('active');
+    id = thread.data('thread-id');
+    history.pushState({
+      id: id
+    }, id, '/messages/' + id);
+    chat = $('.chat');
+    header = chat.find('.chat-header');
+    header.html(id);
+    body = chat.find('.chat-body');
+    body.html('');
+  }
+};
+
 var addedfile, adjustColumns, closeModal, emptyColumn, evenOut, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn, totalHeight;
 
 addedfile = function(file) {
@@ -676,7 +753,6 @@ $(document).ready(function(e) {
   });
   $(document).on('click', 'a.menu', function(e) {
     var menu, toggle;
-    preventDefault(e);
     toggle = $(this);
     toggle.toggleClass('expanded');
     menu = toggle.parent().find('.sub-menu');
