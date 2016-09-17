@@ -397,45 +397,39 @@ Handlebars.html = function(name, data) {
   return template(data);
 };
 
-$(document).on('click', '.chat-thread, a', function(e) {
+$(document).on('click', '.chat-thread', function(e) {
   Messenger.open($(this));
 });
 
-$(document).ready(function(e) {
-  Messenger.loadThreads();
+$(document).on('click', '.new-message', function(e) {
+  Messenger["new"]();
 });
 
+window.addEventListener('popstate', function(event) {
+  var parts, uri;
+  uri = window.location.pathname;
+  console.log(uri);
+  parts = uri.split('/');
+  if (!parts.length === 3) {
+    return;
+  }
+  if (!parts[1].equalsIgnoreCase('messages')) {
+    return;
+  }
+  Messenger.open($('[data-thread-id="' + parts[2] + '"]'), false);
+});
+
+$(document).ready(function(e) {});
+
 Messenger = {
-  foo: function() {
-    var data;
-    data = {
-      id: 'cjsmile',
-      icon: '//cdn-beta.spiffy.io/media/DlXRpf-Cg.jpg',
-      time: 'Yesterday',
-      preview: 'wassup my brother from another, yo lol',
-      display: 'none'
-    };
-    Messenger.addThread(data);
-  },
-  bar: function() {
-    var data;
-    data = {
-      id: 'foobar',
-      side: 'left',
-      icon: '//cdn-beta.spiffy.io/media/DlXRpf-Cg.jpg',
-      message: 'hello dood',
-      display: 'none'
-    };
-    Messenger.addMessage(data);
-  },
   add: function(container, element, template, data) {
     container = $(container);
     container.prepend(Handlebars.html(template, data));
-    if (data.display == null) {
-      return;
-    }
     element = $(element);
     element.slideDown();
+    element.animate({
+      opacity: 1
+    }, 500);
   },
   addThread: function(data) {
     Messenger.add('.chats-body', '[data-thread-id="' + data.id + '"]', 'chat-thread', data);
@@ -443,20 +437,71 @@ Messenger = {
   addMessage: function(data) {
     Messenger.add('.chat-body', '[data-message-id="' + data.id + '"]', 'message-group', data);
   },
-  open: function(thread) {
-    var body, chat, header, id;
+  "new": function() {
+    var form, title;
+    form = $('form.new');
+    title = form.parent().find('.title');
+    if (form.is(':visible')) {
+      Messenger.open($('[data-thread-id="' + title.html() + '"]'));
+    } else {
+      Messenger.open($('[data-thread-id="new"]'));
+    }
+  },
+  loadMessages: function(data) {
+    var i, len, message, messages;
+    if (data == null) {
+      return;
+    }
+    messages = data.messages;
+    if (messages == null) {
+      return;
+    }
+    for (i = 0, len = messages.length; i < len; i++) {
+      message = messages[i];
+      message.opacity = '0.0';
+      Messenger.addMessage(message);
+    }
+  },
+  open: function(thread, pushState) {
+    var body, chat, form, header, id, input, title, url;
+    if (pushState == null) {
+      pushState = true;
+    }
     if (thread.hasClass('active')) {
       return;
     }
     $('.chat-thread.active').removeClass('active');
     thread.addClass('active');
     id = thread.data('thread-id');
-    history.pushState({
-      id: id
-    }, id, '/messages/' + id);
+    url = '/messages/' + id;
+    if (pushState) {
+      history.pushState({
+        id: id
+      }, id, url);
+    }
+    if (!id.equalsIgnoreCase('new')) {
+      $.get({
+        url: url,
+        dataType: 'json',
+        success: function(data) {
+          return Messenger.loadMessages(data);
+        }
+      });
+    }
     chat = $('.chat');
     header = chat.find('.chat-header');
-    header.html(id);
+    form = header.find('form');
+    title = header.find('.title');
+    if (id.equalsIgnoreCase('new')) {
+      title.hide();
+      form.show();
+      input = form.find('input');
+    } else {
+      title.html(id).show();
+      form.hide();
+      input = $('form.message').find('[name="message"]');
+    }
+    input.focus();
     body = chat.find('.chat-body');
     body.html('');
   }

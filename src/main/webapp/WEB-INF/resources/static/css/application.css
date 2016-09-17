@@ -4,28 +4,40 @@
   float: left;
   background: #FFFFFF;
   overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .chats-header {
   height: 3em;
   width: 100%;
   border-bottom: 1px #D3D3D3 solid;
-  color: #3D3D3D;
-  line-height: 3em;
-  text-align: center;
-  font-weight: bold;
 }
 
-.chats-header img {
+.chats-header .title {
+  height: 3em;
+  width: calc(100% - 3em);
+  float: left;
+  color: #3D3D3D;
+  text-align: center;
+  font-weight: bold;
+  line-height: 3em;
+}
+
+.chats-header .icon {
+  height: 3em;
+  width: 3em;
+  float: right;
+}
+
+.chats-header .icon img {
   height: 1em;
   width: 1em;
   padding: 1em;
-  float: right;
 }
 
 .chats-body {
   height: 3em;
-  width: 100%;
+  width: calc(100% - 0.5em);
   margin: 0.5em;
 }
 
@@ -89,9 +101,31 @@
   width: 100%;
   border-bottom: 1px #D3D3D3 solid;
   color: #3D3D3D;
-  line-height: 3em;
   text-align: center;
   font-weight: bold;
+}
+
+.chat-header .title {
+  line-height: 3em;
+}
+
+.chat-header form .input, .chat-header form input, .chat-header form label {
+  max-height: 100% !important;
+  margin: 0 !important;
+}
+
+.chat-header form input {
+  padding-left: 0.5em;
+  font-size: 100% !important;
+}
+
+.chat-header form input {
+  height: 48px !important;
+  line-height: 48px;
+}
+
+.chat-header form input[type]:focus {
+  background: #D3D3D3;
 }
 
 .chat-body {
@@ -890,6 +924,14 @@ div.disabled:before {
 .clickable {
   display: block;
   cursor: pointer;
+}
+
+.clickable:hover {
+  background: rgba(211, 211, 211, 0.4);
+}
+
+.clickable:active {
+  background: rgba(44, 44, 44, 0.4);
 }
 
 @media only screen and (min-width: 768px) {

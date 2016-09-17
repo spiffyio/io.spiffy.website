@@ -6,22 +6,30 @@
   float: left
   background: $w0
   overflow-y: auto
+  overflow-x: hidden
 
 .chats-header
   +size(3em, 100%)
   border-bottom: 1px $w2 solid
-  color: $w4
-  line-height: 3em
-  text-align: center
-  font-weight: bold
 
-  img
-    +size(1em, 1em)
-    padding: 1em
+  .title
+    +size(3em, calc(100% - 3em))
+    float: left
+    color: $w4
+    text-align: center
+    font-weight: bold
+    line-height: 3em
+
+  .icon
+    +size(3em, 3em)
     float: right
 
+    img
+      +size(1em, 1em)
+      padding: 1em
+
 .chats-body
-  +size(3em, 100%)
+  +size(3em, calc(100% - 0.5em))
   margin: 0.5em
 
   .chat-thread:not(:first-child)
@@ -70,9 +78,27 @@
   +size(3em, 100%)
   border-bottom: 1px $w2 solid
   color: $w4
-  line-height: 3em
   text-align: center
   font-weight: bold
+
+  .title
+    line-height: 3em
+
+  form
+    .input, input, label
+      max-height: 100% !important
+      margin: 0 !important
+
+    input
+      padding-left: 0.5em
+      font-size: 100% !important
+
+    input
+      height: 48px !important
+      line-height: 48px
+
+    input[type]:focus
+      background: $w2
 
 .chat-body
   +size(calc(100% - 6.5em), 100%)
