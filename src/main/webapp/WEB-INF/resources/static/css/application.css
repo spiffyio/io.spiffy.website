@@ -137,6 +137,29 @@
   flex-direction: column-reverse;
 }
 
+.chat-footer {
+  height: 3em;
+  width: 100%;
+  border-top: 1px #D3D3D3 solid;
+  color: #3D3D3D;
+}
+
+.chat-footer form .input, .chat-footer form input, .chat-footer form label {
+  max-height: 100% !important;
+  margin: 0 !important;
+}
+
+.chat-footer form input {
+  padding-left: 0.5em;
+  line-height: 3em;
+  font-size: 100% !important;
+}
+
+.chat-footer form input {
+  height: 48px !important;
+  line-height: 48px;
+}
+
 .message-group {
   padding: 0.5em;
   clear: both;

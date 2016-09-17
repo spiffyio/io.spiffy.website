@@ -122,6 +122,7 @@ jQuery.fn.spiffy = () ->
       #if validate.numberOfInvalids() then return
 
       url = Spiffy.firstDefined options.url, form.data('url'), form.attr('action')
+      url = if url.startsWith '+' then window.location.pathname + url.substr(1) else url
       type = Spiffy.firstDefined options.type, form.data('type'), form.attr('method'), 'POST'
 
       csrf = form.data 'csrf-token'

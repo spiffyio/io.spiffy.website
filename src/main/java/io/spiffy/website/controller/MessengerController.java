@@ -1,7 +1,6 @@
 package io.spiffy.website.controller;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 import javax.ws.rs.core.MediaType;
 
@@ -20,6 +19,20 @@ import io.spiffy.website.response.ThreadsResponse;
 
 @RequestMapping("/messages")
 public class MessengerController extends Controller {
+
+    private static final Map<String, String> ICONS;
+    private static final String DEFAULT_ICON = "//cdn.spiffy.io/media/DxrwtJ-Cg.jpg";
+
+    static {
+        final Map<String, String> icons = new HashMap<>();
+        icons.put("john", "//cdn.spiffy.io/media/MPMBQx-Cg.jpg");
+        icons.put("johnrich", "//cdn.spiffy.io/media/CVQrJj-Cg.jpg");
+        icons.put("maj", "//cdn.spiffy.io/media/MTdfxC-Cg.jpg");
+        icons.put("cjsmile", "//cdn.spiffy.io/media/CnPfCX-Cg.jpg");
+        icons.put("dadtv1234", "//cdn.spiffy.io/media/GQfhNV-Cg.jpg");
+
+        ICONS = Collections.unmodifiableMap(icons);
+    }
 
     @AccessControl
     @RequestMapping
@@ -53,6 +66,16 @@ public class MessengerController extends Controller {
         return thread(context, thread);
     }
 
+    @Csrf("message")
+    @ResponseBody
+    @AccessControl
+    @RequestMapping(value = "/{thread}/message", method = RequestMethod.POST)
+    public AjaxResponse newMessage(final Context context, final @PathVariable String thread,
+            final @RequestParam String message) {
+        System.out.println(thread + ": " + message);
+        return new SuccessResponse(true);
+    }
+
     private ModelAndView thread(final Context context, final String thread) {
         context.addAttribute("activeThread", thread);
         if (!"new".equalsIgnoreCase(thread)) {
@@ -77,9 +100,10 @@ public class MessengerController extends Controller {
 
     private final List<ThreadsResponse.Thread> getThreads(final Context context) {
         final List<ThreadsResponse.Thread> threads = new ArrayList<>();
-        threads.add(new ThreadsResponse.Thread("maj", "//cdn-beta.spiffy.io/media/DgHpJP-Cg.jpg", "5 days ago",
+        threads.add(new ThreadsResponse.Thread("maj", ICONS.getOrDefault("maj", DEFAULT_ICON), "5 days ago",
                 "hello how are you today :)"));
-        threads.add(new ThreadsResponse.Thread("cjsmile", "//cdn-beta.spiffy.io/media/DlXRpf-Cg.jpg", "Yesterday", "yo bro!"));
+        threads.add(new ThreadsResponse.Thread("cjsmile", ICONS.getOrDefault("cjsmile", DEFAULT_ICON), "Yesterday", "yo bro!"));
+        threads.add(new ThreadsResponse.Thread("pewp", ICONS.getOrDefault("pewp", DEFAULT_ICON), "Today", "pewp"));
         return threads;
     }
 
@@ -87,18 +111,18 @@ public class MessengerController extends Controller {
         final List<MessagesResponse.Message> messages = new ArrayList<>();
         if ("cjsmile".equalsIgnoreCase(thread)) {
             messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "left",
-                    "//cdn-beta.spiffy.io/media/DlXRpf-Cg.jpg", "yo bro!"));
+                    ICONS.getOrDefault("cjsmile", DEFAULT_ICON), "yo bro!"));
             messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "right",
-                    "//cdn-beta.spiffy.io/media/FXmVHZ-Cg.jpg", "yo bro!"));
+                    ICONS.getOrDefault("john", DEFAULT_ICON), "yo bro!"));
             messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "left",
-                    "//cdn-beta.spiffy.io/media/DlXRpf-Cg.jpg", "yo bro!"));
+                    ICONS.getOrDefault("cjsmile", DEFAULT_ICON), "yo bro!"));
         } else if ("maj".equalsIgnoreCase(thread)) {
             messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "left",
-                    "//cdn-beta.spiffy.io/media/DgHpJP-Cg.jpg", "yo yo yo!"));
+                    ICONS.getOrDefault("maj", DEFAULT_ICON), "yo yo yo!"));
             messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "right",
-                    "//cdn-beta.spiffy.io/media/FXmVHZ-Cg.jpg", "yo yo yo!"));
+                    ICONS.getOrDefault("john", DEFAULT_ICON), "yo yo yo!"));
             messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "left",
-                    "//cdn-beta.spiffy.io/media/DgHpJP-Cg.jpg", "yo yo yo!"));
+                    ICONS.getOrDefault("maj", DEFAULT_ICON), "yo yo yo!"));
         }
         return messages;
     }

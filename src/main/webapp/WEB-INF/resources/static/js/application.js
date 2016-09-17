@@ -301,6 +301,7 @@ jQuery.fn.spiffy = function() {
       }
       options = Spiffy.firstDefined(options, $(form).spiffy().options(), {});
       url = Spiffy.firstDefined(options.url, form.data('url'), form.attr('action'));
+      url = url.startsWith('+') ? window.location.pathname + url.substr(1) : url;
       type = Spiffy.firstDefined(options.type, form.data('type'), form.attr('method'), 'POST');
       csrf = form.data('csrf-token');
       if ((csrf == null) && (type.equalsIgnoreCase('POST'))) {
@@ -466,6 +467,9 @@ Messenger = {
     var body, chat, form, header, id, input, title, url;
     if (pushState == null) {
       pushState = true;
+    }
+    if (!thread.length) {
+      return;
     }
     if (thread.hasClass('active')) {
       return;

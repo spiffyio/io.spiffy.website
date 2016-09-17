@@ -8,20 +8,30 @@ import javax.inject.Inject;
 
 import io.spiffy.common.Client;
 import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.discussion.call.CreateThreadCall;
 import io.spiffy.common.api.discussion.call.GetCommentsCall;
 import io.spiffy.common.api.discussion.call.PostCommentCall;
 import io.spiffy.common.api.discussion.dto.Comment;
 import io.spiffy.common.api.discussion.dto.ThreadDTO;
+import io.spiffy.common.api.discussion.input.CreateThreadInput;
 import io.spiffy.common.api.discussion.input.GetCommentsInput;
 import io.spiffy.common.api.discussion.input.PostCommentInput;
+import io.spiffy.common.api.discussion.output.CreateThreadOutput;
 import io.spiffy.common.api.discussion.output.GetCommentsOutput;
 import io.spiffy.common.dto.EntityType;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class DiscussionClient extends Client {
 
+    private final CreateThreadCall createThreadCall;
     private final GetCommentsCall getCommentsCall;
     private final PostCommentCall postCommentCall;
+
+    public boolean createThread(final String ... participants) {
+        final CreateThreadInput input = null;
+        final CreateThreadOutput output = createThreadCall.call(input);
+        return output.getSuccess();
+    }
 
     public List<Comment> getComments(final long id, final Long first, final int maxResults) {
         return getComments(new ThreadDTO(id), first, maxResults);

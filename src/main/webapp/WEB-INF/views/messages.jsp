@@ -47,7 +47,7 @@
 <div class="chat">
   <div class="chat-header">
     <form class="new" action="/messages/new" <s:csrf name="new" /> <c:if test="${ 'new' ne activeThread }">style="display: none;"</c:if>>
-      <div class="input text"><input type="text" name="participants" placeholder="To: name(s)" required/></div>
+      <div class="input text"><input type="text" name="participants" placeholder="To: name(s)" required autofocus/></div>
     </form>
     <div class="title" <c:if test="${ 'new' eq activeThread }">style="display: none;"</c:if>><c:out value="${ activeThread }" /></div>
   </div>
@@ -61,9 +61,9 @@
     </div>
     </c:forEach>
   </div>
-  <div style="height: 3em; width: 100%; border-top: 1px #D3D3D3 solid; color: #3D3D3D; line-height: 3em;">
-    <form class="message">
-      <input style="width: calc(100% - 5em); float: left;" type="text" name="message" placeholder="Type a message..." />
+  <div class="chat-footer">
+    <form class="message" action="+/message" <s:csrf name="message" />>
+      <input style="width: calc(100% - 5em);" type="text" name="message" placeholder="Type a message..." required autofocus/>
       <input style="width: 5em; float: right;" class="button primary" type="submit" value="send" />
     </form>
   </div>

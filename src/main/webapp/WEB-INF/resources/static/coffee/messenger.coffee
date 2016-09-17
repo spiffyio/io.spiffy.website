@@ -66,6 +66,7 @@ Messenger =
     return
 
   open: (thread, pushState = true) ->
+    if not thread.length then return
     if thread.hasClass 'active' then return
     $('.chat-thread.active').removeClass 'active'
     thread.addClass 'active'
