@@ -5,16 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.Set;
-
-import io.spiffy.common.api.discussion.dto.ThreadDTO;
-
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateThreadInput {
-    private ThreadDTO thread;
-    private Long accountId;
-    private Set<String> participants;
+public class GetThreadsInput {
+    private long accountId;
 }

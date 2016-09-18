@@ -13,8 +13,9 @@ import io.spiffy.common.api.discussion.dto.ThreadDTO;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateThreadInput {
+public class GetMessagesInput {
     private ThreadDTO thread;
     private Long accountId;
     private Set<String> participants;
+    private String after;
 }

@@ -5,25 +5,27 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 import io.spiffy.common.api.discussion.dto.MessengerThread;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateThreadOutput {
+public class GetThreadsOutput {
     public enum Error {
-        UNKNOWN_NAME, TOO_MANY_NAMES, TOO_FEW_NAMES
+
     }
 
-    private MessengerThread thread;
+    private List<MessengerThread> threads;
     private Error error;
 
-    public CreateThreadOutput(final MessengerThread thread) {
-        this.thread = thread;
+    public GetThreadsOutput(final List<MessengerThread> threads) {
+        this.threads = threads;
     }
 
-    public CreateThreadOutput(final Error error) {
+    public GetThreadsOutput(final Error error) {
         this.error = error;
     }
 }

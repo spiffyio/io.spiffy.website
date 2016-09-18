@@ -420,13 +420,32 @@ window.addEventListener('popstate', function(event) {
   Messenger.open($('[data-thread-id="' + parts[2] + '"]'), false);
 });
 
-$(document).ready(function(e) {});
+$(document).ready(function(e) {
+  $('form.new').spiffy().options({
+    success: function(form, json) {
+      json.thread.display = 'none';
+      Messenger.addThread(json.thread);
+      Messenger.open($('[data-thread-id="' + json.thread.id + '"]'));
+    }
+  });
+  $('form.message').spiffy().options({
+    success: function(form, json) {
+      json.message.display = 'none';
+      Messenger.addMessage(json.message);
+    }
+  });
+});
 
 Messenger = {
-  add: function(container, element, template, data) {
+  add: function(container, selector, template, data) {
+    var element;
+    element = $(selector);
+    if (element.is(selector)) {
+      return;
+    }
     container = $(container);
     container.prepend(Handlebars.html(template, data));
-    element = $(element);
+    element = $(selector);
     element.slideDown();
     element.animate({
       opacity: 1
@@ -464,7 +483,7 @@ Messenger = {
     }
   },
   open: function(thread, pushState) {
-    var body, chat, form, header, id, input, title, url;
+    var body, chat, first, form, func, header, id, input, title, url;
     if (pushState == null) {
       pushState = true;
     }
@@ -484,13 +503,32 @@ Messenger = {
       }, id, url);
     }
     if (!id.equalsIgnoreCase('new')) {
-      $.get({
-        url: url,
-        dataType: 'json',
-        success: function(data) {
-          return Messenger.loadMessages(data);
+      first = true;
+      func = function() {
+        var data, message;
+        if (!thread.hasClass('active')) {
+          return;
         }
-      });
+        data = {};
+        if (!first) {
+          message = $('[data-message-id]:first');
+          if (message.is('[data-message-id]:first')) {
+            data.after = message.data('message-id');
+          }
+        } else {
+          first = false;
+        }
+        return $.get({
+          url: url,
+          dataType: 'json',
+          data: data,
+          success: function(data) {
+            Messenger.loadMessages(data);
+            return setTimeout(func, 10000);
+          }
+        });
+      };
+      func();
     }
     chat = $('.chat');
     header = chat.find('.chat-header');

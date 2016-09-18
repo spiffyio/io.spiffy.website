@@ -1,43 +1,43 @@
 package io.spiffy.website.controller;
 
-import java.util.*;
+import lombok.RequiredArgsConstructor;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import javax.inject.Inject;
 import javax.ws.rs.core.MediaType;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.common.collect.Lists;
+
 import io.spiffy.common.Controller;
+import io.spiffy.common.api.discussion.client.DiscussionClient;
+import io.spiffy.common.api.discussion.dto.MessengerMessage;
+import io.spiffy.common.api.discussion.dto.MessengerThread;
+import io.spiffy.common.api.discussion.output.CreateThreadOutput;
+import io.spiffy.common.api.discussion.output.GetMessagesOutput;
+import io.spiffy.common.api.discussion.output.GetThreadsOutput;
+import io.spiffy.common.api.discussion.output.PostMessageOutput;
 import io.spiffy.common.dto.Context;
-import io.spiffy.common.util.UIDUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
-import io.spiffy.website.response.AjaxResponse;
-import io.spiffy.website.response.MessagesResponse;
-import io.spiffy.website.response.SuccessResponse;
-import io.spiffy.website.response.ThreadsResponse;
+import io.spiffy.website.response.*;
 
 @RequestMapping("/messages")
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class MessengerController extends Controller {
 
-    private static final Map<String, String> ICONS;
-    private static final String DEFAULT_ICON = "//cdn.spiffy.io/media/DxrwtJ-Cg.jpg";
-
-    static {
-        final Map<String, String> icons = new HashMap<>();
-        icons.put("john", "//cdn.spiffy.io/media/MPMBQx-Cg.jpg");
-        icons.put("johnrich", "//cdn.spiffy.io/media/CVQrJj-Cg.jpg");
-        icons.put("maj", "//cdn.spiffy.io/media/MTdfxC-Cg.jpg");
-        icons.put("cjsmile", "//cdn.spiffy.io/media/CnPfCX-Cg.jpg");
-        icons.put("dadtv1234", "//cdn.spiffy.io/media/GQfhNV-Cg.jpg");
-
-        ICONS = Collections.unmodifiableMap(icons);
-    }
+    private final DiscussionClient discussionClient;
 
     @AccessControl
     @RequestMapping
     public ModelAndView messenger(final Context context) {
-        final List<ThreadsResponse.Thread> threads = getThreads(context);
+        final List<MessengerThread> threads = getThreads(context);
         context.addAttribute("threads", threads);
         final String thread = threads.isEmpty() ? "new" : threads.get(0).getId();
         return thread(context, thread);
@@ -55,8 +55,24 @@ public class MessengerController extends Controller {
     @AccessControl
     @RequestMapping(value = "/new", method = RequestMethod.POST)
     public AjaxResponse newThread(final Context context, final @RequestParam String participants) {
-        System.out.println(participants);
-        return new SuccessResponse(true);
+        final Set<String> set = new HashSet<>();
+        for (final String participant : participants.split("[,; ]")) {
+            if (StringUtils.isBlank(participant)) {
+                continue;
+            }
+            set.add(participant);
+        }
+
+        final CreateThreadOutput output = discussionClient.createThread(context.getAccountId(), set);
+        if (CreateThreadOutput.Error.TOO_FEW_NAMES.equals(output.getError())) {
+            return new BadRequestResponse("participants", "one other name required", null);
+        } else if (CreateThreadOutput.Error.TOO_MANY_NAMES.equals(output.getError())) {
+            return new BadRequestResponse("participants", "nine names max", null);
+        } else if (CreateThreadOutput.Error.UNKNOWN_NAME.equals(output.getError())) {
+            return new BadRequestResponse("participants", "unknown name", null);
+        }
+
+        return new ThreadResponse(output.getThread());
     }
 
     @AccessControl
@@ -71,15 +87,23 @@ public class MessengerController extends Controller {
     @AccessControl
     @RequestMapping(value = "/{thread}/message", method = RequestMethod.POST)
     public AjaxResponse newMessage(final Context context, final @PathVariable String thread,
-            final @RequestParam String message) {
-        System.out.println(thread + ": " + message);
-        return new SuccessResponse(true);
+            final @RequestParam String idempotentId, final @RequestParam String message) {
+        final Set<String> set = new HashSet<>();
+        for (final String participant : thread.split("[,; ]")) {
+            if (StringUtils.isBlank(participant)) {
+                continue;
+            }
+            set.add(participant);
+        }
+
+        final PostMessageOutput output = discussionClient.postMessage(context.getAccountId(), set, idempotentId, message);
+        return new MessageResponse(output.getMessage());
     }
 
     private ModelAndView thread(final Context context, final String thread) {
         context.addAttribute("activeThread", thread);
         if (!"new".equalsIgnoreCase(thread)) {
-            context.addAttribute("messages", getMessages(context, thread));
+            context.addAttribute("messages", Lists.reverse(getMessages(context, thread, null)));
         }
         return mav("messages", context);
     }
@@ -87,8 +111,9 @@ public class MessengerController extends Controller {
     @ResponseBody
     @AccessControl
     @RequestMapping(value = "/{thread}", produces = MediaType.APPLICATION_JSON)
-    public AjaxResponse messages(final Context context, final @PathVariable String thread) {
-        return new MessagesResponse(getMessages(context, thread));
+    public AjaxResponse messages(final Context context, final @PathVariable String thread,
+            final @RequestParam(required = false) String after) {
+        return new MessagesResponse(getMessages(context, thread, after));
     }
 
     @ResponseBody
@@ -98,32 +123,21 @@ public class MessengerController extends Controller {
         return new ThreadsResponse(getThreads(context));
     }
 
-    private final List<ThreadsResponse.Thread> getThreads(final Context context) {
-        final List<ThreadsResponse.Thread> threads = new ArrayList<>();
-        threads.add(new ThreadsResponse.Thread("maj", ICONS.getOrDefault("maj", DEFAULT_ICON), "5 days ago",
-                "hello how are you today :)"));
-        threads.add(new ThreadsResponse.Thread("cjsmile", ICONS.getOrDefault("cjsmile", DEFAULT_ICON), "Yesterday", "yo bro!"));
-        threads.add(new ThreadsResponse.Thread("pewp", ICONS.getOrDefault("pewp", DEFAULT_ICON), "Today", "pewp"));
-        return threads;
+    private final List<MessengerThread> getThreads(final Context context) {
+        final GetThreadsOutput output = discussionClient.getThreads(context.getAccountId());
+        return output.getThreads();
     }
 
-    private final List<MessagesResponse.Message> getMessages(final Context context, final String thread) {
-        final List<MessagesResponse.Message> messages = new ArrayList<>();
-        if ("cjsmile".equalsIgnoreCase(thread)) {
-            messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "left",
-                    ICONS.getOrDefault("cjsmile", DEFAULT_ICON), "yo bro!"));
-            messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "right",
-                    ICONS.getOrDefault("john", DEFAULT_ICON), "yo bro!"));
-            messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "left",
-                    ICONS.getOrDefault("cjsmile", DEFAULT_ICON), "yo bro!"));
-        } else if ("maj".equalsIgnoreCase(thread)) {
-            messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "left",
-                    ICONS.getOrDefault("maj", DEFAULT_ICON), "yo yo yo!"));
-            messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "right",
-                    ICONS.getOrDefault("john", DEFAULT_ICON), "yo yo yo!"));
-            messages.add(new MessagesResponse.Message(UIDUtil.generateIdempotentId(), "left",
-                    ICONS.getOrDefault("maj", DEFAULT_ICON), "yo yo yo!"));
+    private final List<MessengerMessage> getMessages(final Context context, final String thread, final String after) {
+        final Set<String> set = new HashSet<>();
+        for (final String participant : thread.split("[,; ]")) {
+            if (StringUtils.isBlank(participant)) {
+                continue;
+            }
+            set.add(participant);
         }
-        return messages;
+
+        final GetMessagesOutput output = discussionClient.getMessages(context.getAccountId(), set, after);
+        return output.getMessages();
     }
 }

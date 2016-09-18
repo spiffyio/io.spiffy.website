@@ -65,6 +65,7 @@
     <form class="message" action="+/message" <s:csrf name="message" />>
       <input style="width: calc(100% - 5em);" type="text" name="message" placeholder="Type a message..." required autofocus/>
       <input style="width: 5em; float: right;" class="button primary" type="submit" value="send" />
+      <s:idempotent />
     </form>
   </div>
 </div>

@@ -6,13 +6,17 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 
+import com.google.common.collect.Lists;
+
 import io.spiffy.common.HibernateRepository;
+import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.discussion.entity.CommentEntity;
 import io.spiffy.discussion.entity.ThreadEntity;
 
@@ -56,5 +60,25 @@ public class CommentRepository extends HibernateRepository<CommentEntity> {
         result.forEach(o -> set.add((Long) o));
 
         return set;
+    }
+
+    public CommentEntity getMostRecent(final ThreadEntity thread) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("thread", thread));
+        c.addOrder(Order.desc("postedAt"));
+        c.setMaxResults(1);
+        return (CommentEntity) c.uniqueResult();
+    }
+
+    public List<CommentEntity> getMessages(final ThreadEntity thread, final String after) {
+        final Criteria c = createCriteria();
+        c.add(Restrictions.eq("thread", thread));
+        c.addOrder(Order.desc("postedAt"));
+
+        if (StringUtils.isNoneBlank(after)) {
+            c.add(Restrictions.gt("id", ObfuscateUtil.unobfuscate(after)));
+        }
+
+        return Lists.reverse(asList(c.list()));
     }
 }

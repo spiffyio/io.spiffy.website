@@ -36,6 +36,16 @@ public class CommentService extends Service<CommentEntity, CommentRepository> {
     }
 
     @Transactional
+    public List<CommentEntity> getMessages(final ThreadEntity thread, final String after) {
+        return repository.getMessages(thread, after);
+    }
+
+    @Transactional
+    public CommentEntity getMostRecent(final ThreadEntity thread) {
+        return repository.getMostRecent(thread);
+    }
+
+    @Transactional
     public Set<Long> getCommenters(final ThreadEntity thread) {
         return repository.getCommenters(thread);
     }
@@ -56,5 +66,4 @@ public class CommentService extends Service<CommentEntity, CommentRepository> {
 
         return entity;
     }
-
 }

@@ -24,15 +24,29 @@ window.addEventListener 'popstate', (event) ->
   return
 
 $(document).ready (e) ->
+  $('form.new').spiffy().options
+    success: (form, json) ->
+      json.thread.display = 'none'
+      Messenger.addThread json.thread
+      Messenger.open $('[data-thread-id="' + json.thread.id + '"]')
+      return
 
+  $('form.message').spiffy().options
+    success: (form, json) ->
+      json.message.display = 'none'
+      Messenger.addMessage json.message
+      return
   return
 
 Messenger =
-  add: (container, element, template, data) ->
+  add: (container, selector, template, data) ->
+    element = $ selector
+    if element.is selector then return
+
     container = $ container
     container.prepend Handlebars.html(template, data)
 
-    element = $ element
+    element = $ selector
     element.slideDown()
     element.animate { opacity: 1 }, 500
     return
@@ -76,7 +90,19 @@ Messenger =
     if pushState then history.pushState { id: id }, id, url
 
     if not id.equalsIgnoreCase 'new'
-      $.get { url: url, dataType: 'json', success: (data) -> Messenger.loadMessages data }
+      first = true
+      func = () ->
+        if not thread.hasClass 'active' then return
+        data = { }
+        if not first
+          message = $ '[data-message-id]:first'
+          if message.is '[data-message-id]:first' then data.after = message.data 'message-id'
+        else  first = false
+        $.get { url: url, dataType: 'json', data: data, success: (data) ->
+          Messenger.loadMessages data
+          setTimeout func, 10000
+        }
+      func()
 
     chat = $ '.chat'
 
