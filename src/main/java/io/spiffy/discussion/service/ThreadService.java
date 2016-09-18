@@ -143,8 +143,8 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         final Account account = userClient.getAccount(comment.getAccountId());
 
         return new MessengerMessage(ObfuscateUtil.obfuscate(comment.getId()),
-                comment.getAccountId() == accountId ? "right" : "left", ICONS.getOrDefault(account.getUsername(), DEFAULT_ICON),
-                comment.getComment());
+                comment.getAccountId() == accountId ? "right" : "left",
+                ICONS.getOrDefault(account.getUsername().toLowerCase(), DEFAULT_ICON), comment.getComment());
     }
 
     @Transactional
@@ -233,7 +233,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
             date = comment.getPostedAt();
         }
 
-        return new MessengerThread(id, ICONS.getOrDefault(id, DEFAULT_ICON), time, preview, date);
+        return new MessengerThread(id, ICONS.getOrDefault(id.toLowerCase(), DEFAULT_ICON), time, preview, date);
     }
 
     @Transactional
