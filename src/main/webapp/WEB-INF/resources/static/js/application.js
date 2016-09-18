@@ -409,7 +409,6 @@ $(document).on('click', '.new-message', function(e) {
 window.addEventListener('popstate', function(event) {
   var parts, uri;
   uri = window.location.pathname;
-  console.log(uri);
   parts = uri.split('/');
   if (!parts.length === 3) {
     return;
@@ -421,7 +420,17 @@ window.addEventListener('popstate', function(event) {
 });
 
 $(document).ready(function(e) {
-  var func, id, thread, url;
+  var func, id, parts, thread, uri, url;
+  thread = $('.chat-thread.active');
+  id = thread.data('thread-id');
+  url = '/messages/' + id;
+  uri = window.location.pathname;
+  parts = uri.split('/');
+  if (parts.length === 2 && parts[1].equalsIgnoreCase('messages')) {
+    history.replaceState({
+      id: id
+    }, id, url);
+  }
   $('form.new').spiffy().options({
     success: function(form, json) {
       form.find('input[type="text"]').val('');
@@ -456,6 +465,7 @@ $(document).ready(function(e) {
       url: url,
       dataType: 'json',
       data: data,
+      cache: false,
       success: function(data) {
         Messenger.loadMessages(data);
         return setTimeout(func, 10000);
@@ -551,6 +561,7 @@ Messenger = {
           url: url,
           dataType: 'json',
           data: data,
+          cache: false,
           success: function(data) {
             Messenger.loadMessages(data);
             return setTimeout(func, 10000);

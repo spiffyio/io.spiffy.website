@@ -16,7 +16,6 @@ $(document).on 'click', '.new-message', (e) ->
 
 window.addEventListener 'popstate', (event) ->
   uri = window.location.pathname
-  console.log uri
   parts = uri.split('/')
   if not parts.length is 3 then return
   if not parts[1].equalsIgnoreCase 'messages' then return
@@ -24,6 +23,15 @@ window.addEventListener 'popstate', (event) ->
   return
 
 $(document).ready (e) ->
+  thread = $ '.chat-thread.active'
+  id = thread.data 'thread-id'
+  url = '/messages/' + id
+
+  uri = window.location.pathname
+  parts = uri.split('/')
+  if parts.length is 2 and parts[1].equalsIgnoreCase 'messages'
+    history.replaceState { id: id }, id, url
+
   $('form.new').spiffy().options
     success: (form, json) ->
       form.find('input[type="text"]').val ''
@@ -49,7 +57,7 @@ $(document).ready (e) ->
     data = { }
     message = $ '[data-message-id]:first'
     if message.is '[data-message-id]:first' then data.after = message.data 'message-id'
-    $.get { url: url, dataType: 'json', data: data, success: (data) ->
+    $.get { url: url, dataType: 'json', data: data, cache: false, success: (data) ->
       Messenger.loadMessages data
       setTimeout func, 10000
     }
@@ -116,7 +124,7 @@ Messenger =
           message = $ '[data-message-id]:first'
           if message.is '[data-message-id]:first' then data.after = message.data 'message-id'
         else  first = false
-        $.get { url: url, dataType: 'json', data: data, success: (data) ->
+        $.get { url: url, dataType: 'json', data: data, cache: false, success: (data) ->
           Messenger.loadMessages data
           setTimeout func, 10000
         }
