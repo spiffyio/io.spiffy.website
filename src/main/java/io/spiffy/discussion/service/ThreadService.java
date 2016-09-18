@@ -122,11 +122,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         final List<MessengerMessage> messages = new ArrayList<>();
 
         for (final CommentEntity e : entities) {
-            final Account account = userClient.getAccount(e.getAccountId());
-
-            messages.add(
-                    new MessengerMessage(ObfuscateUtil.obfuscate(e.getId()), e.getAccountId() == accountId ? "right" : "left",
-                            ICONS.getOrDefault(account.getUsername(), DEFAULT_ICON), e.getComment()));
+            messages.add(getMessage(e, accountId));
         }
 
         return new GetMessagesOutput(messages);
@@ -140,8 +136,15 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
 
         final CommentEntity e = commentService.post(entity, idempotentId, accountId, DateUtil.now(), comment);
 
-        return new PostMessageOutput(new MessengerMessage(ObfuscateUtil.obfuscate(e.getId()),
-                e.getAccountId() == accountId ? "right" : "left", DEFAULT_ICON, e.getComment()));
+        return new PostMessageOutput(getMessage(e, accountId));
+    }
+
+    private MessengerMessage getMessage(final CommentEntity comment, final long accountId) {
+        final Account account = userClient.getAccount(comment.getAccountId());
+
+        return new MessengerMessage(ObfuscateUtil.obfuscate(comment.getId()),
+                comment.getAccountId() == accountId ? "right" : "left", ICONS.getOrDefault(account.getUsername(), DEFAULT_ICON),
+                comment.getComment());
     }
 
     @Transactional
