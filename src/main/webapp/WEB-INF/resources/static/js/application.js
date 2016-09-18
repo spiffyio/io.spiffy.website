@@ -421,8 +421,10 @@ window.addEventListener('popstate', function(event) {
 });
 
 $(document).ready(function(e) {
+  var func, id, thread, url;
   $('form.new').spiffy().options({
     success: function(form, json) {
+      form.find('input[type="text"]').val('');
       json.thread.display = 'none';
       Messenger.addThread(json.thread);
       Messenger.open($('[data-thread-id="' + json.thread.id + '"]'));
@@ -430,10 +432,37 @@ $(document).ready(function(e) {
   });
   $('form.message').spiffy().options({
     success: function(form, json) {
+      form.find('input[type="text"]').val('');
+      form.find('input[name="idempotentId"]').val(json.idempotentId);
       json.message.display = 'none';
       Messenger.addMessage(json.message);
+      form.find('input[type="text"]').focus();
     }
   });
+  thread = $('.chat-thread.active');
+  id = thread.data('thread-id');
+  url = '/messages/' + id;
+  func = function() {
+    var data, message;
+    if (!thread.hasClass('active')) {
+      return;
+    }
+    data = {};
+    message = $('[data-message-id]:first');
+    if (message.is('[data-message-id]:first')) {
+      data.after = message.data('message-id');
+    }
+    return $.get({
+      url: url,
+      dataType: 'json',
+      data: data,
+      success: function(data) {
+        Messenger.loadMessages(data);
+        return setTimeout(func, 10000);
+      }
+    });
+  };
+  func();
 });
 
 Messenger = {

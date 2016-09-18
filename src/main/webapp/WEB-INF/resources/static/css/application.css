@@ -7,6 +7,28 @@
   overflow-x: hidden;
 }
 
+@media only screen and (max-width: 767px) {
+  .chats {
+    width: 3em;
+  }
+  .chats-header .title {
+    display: none;
+  }
+  .chats-header .icon {
+    padding: 0;
+  }
+  .chats-body {
+    width: 100%;
+    margin: 0.5em 0 !important;
+  }
+  .chat-thread .chat-thread-information {
+    display: none;
+  }
+  .chat {
+    width: calc(100% - 3em - 1px) !important;
+  }
+}
+
 .chats-header {
   height: 3em;
   width: 100%;

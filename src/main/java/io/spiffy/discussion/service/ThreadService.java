@@ -122,8 +122,11 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         final List<MessengerMessage> messages = new ArrayList<>();
 
         for (final CommentEntity e : entities) {
-            messages.add(new MessengerMessage(ObfuscateUtil.obfuscate(e.getId()),
-                    e.getAccountId() == accountId ? "right" : "left", DEFAULT_ICON, e.getComment()));
+            final Account account = userClient.getAccount(e.getAccountId());
+
+            messages.add(
+                    new MessengerMessage(ObfuscateUtil.obfuscate(e.getId()), e.getAccountId() == accountId ? "right" : "left",
+                            ICONS.getOrDefault(account.getUsername(), DEFAULT_ICON), e.getComment()));
         }
 
         return new GetMessagesOutput(messages);
@@ -188,6 +191,9 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         final List<ParticipantEntity> entities = participantService.getByAccount(EntityType.MESSAGE, accountId);
         final List<MessengerThread> threads = new ArrayList<>();
         entities.forEach(e -> threads.add(getThread(e.getThread(), accountId)));
+
+        threads.sort((a, b) -> b.getDate().compareTo(a.getDate()));
+
         return new GetThreadsOutput(threads);
     }
 
@@ -213,15 +219,18 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         final CommentEntity comment = commentService.getMostRecent(entity);
         final String preview;
         final String time;
+        final Date date;
         if (comment == null) {
             preview = "";
-            time = "New";
+            time = "new";
+            date = DateUtil.now();
         } else {
             preview = comment.getComment();
             time = DurationUtil.pretty(comment.getPostedAt());
+            date = comment.getPostedAt();
         }
 
-        return MessengerThread.builder().id(id).icon(ICONS.getOrDefault(id, DEFAULT_ICON)).preview(preview).time(time).build();
+        return new MessengerThread(id, ICONS.getOrDefault(id, DEFAULT_ICON), time, preview, date);
     }
 
     @Transactional

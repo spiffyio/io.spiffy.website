@@ -9,4 +9,5 @@ import io.spiffy.common.api.discussion.dto.MessengerMessage;
 @EqualsAndHashCode(callSuper = false)
 public class MessageResponse extends AjaxResponse {
     private final MessengerMessage message;
+    private final String idempotentId;
 }

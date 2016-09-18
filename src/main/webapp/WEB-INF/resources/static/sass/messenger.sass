@@ -8,6 +8,28 @@
   overflow-y: auto
   overflow-x: hidden
 
++max-width($md)
+  .chats
+    width: 3em
+
+  .chats-header
+    .title
+      display: none
+
+    .icon
+      padding: 0
+
+  .chats-body
+    width: 100%
+    margin: 0.5em 0 !important
+
+  .chat-thread
+    .chat-thread-information
+      display: none
+
+  .chat
+    width: calc(100% - 3em - 1px) !important
+
 .chats-header
   +size(3em, 100%)
   border-bottom: 1px $w2 solid

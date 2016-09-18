@@ -26,6 +26,7 @@ window.addEventListener 'popstate', (event) ->
 $(document).ready (e) ->
   $('form.new').spiffy().options
     success: (form, json) ->
+      form.find('input[type="text"]').val ''
       json.thread.display = 'none'
       Messenger.addThread json.thread
       Messenger.open $('[data-thread-id="' + json.thread.id + '"]')
@@ -33,9 +34,26 @@ $(document).ready (e) ->
 
   $('form.message').spiffy().options
     success: (form, json) ->
+      form.find('input[type="text"]').val ''
+      form.find('input[name="idempotentId"]').val json.idempotentId
       json.message.display = 'none'
       Messenger.addMessage json.message
+      form.find('input[type="text"]').focus()
       return
+
+  thread = $ '.chat-thread.active'
+  id = thread.data 'thread-id'
+  url = '/messages/' + id
+  func = () ->
+    if not thread.hasClass 'active' then return
+    data = { }
+    message = $ '[data-message-id]:first'
+    if message.is '[data-message-id]:first' then data.after = message.data 'message-id'
+    $.get { url: url, dataType: 'json', data: data, success: (data) ->
+      Messenger.loadMessages data
+      setTimeout func, 10000
+    }
+  func()
   return
 
 Messenger =

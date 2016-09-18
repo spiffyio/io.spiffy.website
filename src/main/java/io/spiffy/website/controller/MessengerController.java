@@ -24,12 +24,13 @@ import io.spiffy.common.api.discussion.output.GetMessagesOutput;
 import io.spiffy.common.api.discussion.output.GetThreadsOutput;
 import io.spiffy.common.api.discussion.output.PostMessageOutput;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.util.UIDUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.*;
 
 @RequestMapping("/messages")
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class MessengerController extends Controller {
 
     private final DiscussionClient discussionClient;
@@ -97,7 +98,7 @@ public class MessengerController extends Controller {
         }
 
         final PostMessageOutput output = discussionClient.postMessage(context.getAccountId(), set, idempotentId, message);
-        return new MessageResponse(output.getMessage());
+        return new MessageResponse(output.getMessage(), UIDUtil.generateIdempotentId());
     }
 
     private ModelAndView thread(final Context context, final String thread) {

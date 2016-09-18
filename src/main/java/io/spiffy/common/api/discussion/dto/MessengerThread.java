@@ -5,6 +5,10 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -14,4 +18,7 @@ public class MessengerThread {
     private String icon;
     private String time;
     private String preview;
+
+    @JsonIgnore
+    private Date date;
 }
