@@ -64,6 +64,7 @@
 <meta name="theme-color" content="#c0effd">
 
 <s:resource file="application" type="css" version="6" />
+<s:resource file="jquery-ui" type="css" />
 <c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 </c:if>

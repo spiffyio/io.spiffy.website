@@ -24,9 +24,10 @@ import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
+import io.spiffy.website.response.SuccessResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;
@@ -36,6 +37,17 @@ public class UploadController extends Controller {
     @RequestMapping("/upload")
     public ModelAndView upload(final Context context) {
         return mav("upload", context);
+    }
+
+    @ResponseBody
+    @AccessControl
+    @RequestMapping(value = "/crop", method = RequestMethod.GET)
+    public AjaxResponse upload(final Context context, final @RequestParam int x, final @RequestParam int y,
+            final @RequestParam int size, final @RequestParam int width, final @RequestParam int height) throws IOException {
+        // final MediaType type = MediaType.getEnum(file.getContentType());
+        // final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type,
+        // file.getBytes());
+        return new SuccessResponse(true);
     }
 
     @ResponseBody

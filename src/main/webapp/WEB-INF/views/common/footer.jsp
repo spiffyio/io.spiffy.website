@@ -74,6 +74,7 @@
 </script>
 
 <s:resource file="jquery" type="js" />
+<s:resource file="jquery-ui" type="js" />
 <s:resource file="parsley" type="js" />
 <s:resource file="dropzone" type="js" />
 <s:resource file="jquery.isinviewport" type="js" />

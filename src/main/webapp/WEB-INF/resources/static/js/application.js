@@ -589,7 +589,7 @@ Messenger = {
   }
 };
 
-var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
+var addedfile, adjustColumns, closeModal, cropDetails, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
 
 addedfile = function(file) {
   var div, form, func, img, message, preview, processing, source, src, video;
@@ -697,8 +697,22 @@ Dropzone.options.dzForm = {
   }
 };
 
+cropDetails = function() {
+  var crop, details, img;
+  crop = $('#crop');
+  img = crop.parent().find('img');
+  details = {
+    'x': Math.floor((crop.css('left')).slice(0, -2)),
+    'y': Math.floor((crop.css('top')).slice(0, -2)),
+    'size': Math.floor(crop.width()),
+    'width': Math.floor(img.width()),
+    'height': Math.floor(img.height())
+  };
+  return details;
+};
+
 $(document).ready(function(e) {
-  var hash;
+  var crop, hash, img;
   $('[data-modal]').click(function(e) {
     openModal($(this).data('modal'));
   });
@@ -713,8 +727,37 @@ $(document).ready(function(e) {
       });
     }
   }
+  crop = $('#crop');
+  crop.draggable({
+    containment: 'parent'
+  }).resizable({
+    handles: 'all',
+    containment: 'parent',
+    aspectRatio: 1
+  });
+  img = crop.parent().find('img');
+  img.one('load', function() {
+    var height, min, size, width;
+    height = img.height();
+    width = img.width();
+    min = Math.min(height, width);
+    size = Math.ceil(min * 0.8);
+    crop.css({
+      'display': 'initial',
+      'top': (height - size) / 2,
+      'left': (width - size) / 2,
+      'width': size,
+      'height': size
+    });
+    img.parent().parent().css('background', 'initial');
+  });
+  img.each(function() {
+    if (this.complete) {
+      $(this).load();
+    }
+  });
   $('[data-unprocessed]').each(function() {
-    var div, img, post, processing, source, src, type, video;
+    var div, post, processing, source, src, type, video;
     div = $(this);
     post = div.data('unprocessed');
     src = sessionStorage.getItem('src:' + post);
@@ -886,7 +929,7 @@ $(document).ready(function(e) {
     menu.toggleClass('show');
   });
   $(document).on('click', '.thismedia', function(e) {
-    var form, img, input;
+    var form, input;
     img = $(this);
     img.toggleClass('clicked');
     form = $('form.delete');

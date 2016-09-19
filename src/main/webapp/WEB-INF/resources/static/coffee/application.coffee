@@ -99,6 +99,19 @@ Dropzone.options.dzForm = {
     return
 }
 
+cropDetails = () ->
+  crop = $ '#crop'
+  img = crop.parent().find 'img'
+
+  details =
+    'x': Math.floor (crop.css 'left').slice(0, -2)
+    'y': Math.floor (crop.css 'top').slice(0, -2)
+    'size': Math.floor crop.width()
+    'width': Math.floor img.width()
+    'height': Math.floor img.height()
+
+  return details
+
 $(document).ready (e) ->
   $('[data-modal]').click (e) ->
     openModal $(this).data('modal')
@@ -114,6 +127,30 @@ $(document).ready (e) ->
       $('input[name="fingerprint"]').each () ->
         $(this).val hash
         return
+
+  crop = $ '#crop'
+  crop.draggable({ containment: 'parent' }).resizable({ handles: 'all', containment: 'parent', aspectRatio: 1 })
+
+  img = crop.parent().find 'img'
+  img.one 'load', () ->
+    height = img.height()
+    width = img.width()
+
+    min = Math.min(height, width)
+    size = Math.ceil(min * 0.8)
+
+    crop.css
+      'display': 'initial'
+      'top': (height - size) / 2
+      'left': (width - size) / 2
+      'width': size
+      'height': size
+    img.parent().parent().css 'background', 'initial'
+    return
+
+  img.each () ->
+    if this.complete then $(this).load()
+    return
 
   $('[data-unprocessed]').each () ->
     div = $ this
