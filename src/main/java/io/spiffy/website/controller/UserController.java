@@ -25,7 +25,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.NotificationsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private final MediaClient mediaClient;
@@ -39,7 +39,7 @@ public class UserController extends Controller {
             throw new UnknownUserException(user);
         }
 
-        return redirect("/" + user + "/stream", context);
+        return mav("profile", context);
     }
 
     @AccessControl
