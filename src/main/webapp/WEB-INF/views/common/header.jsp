@@ -65,6 +65,7 @@
 
 <s:resource file="application" type="css" version="6" />
 <s:resource file="jquery-ui" type="css" />
+<s:resource file="croppie" type="css" />
 <c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 </c:if>

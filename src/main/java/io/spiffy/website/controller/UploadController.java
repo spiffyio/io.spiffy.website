@@ -24,14 +24,16 @@ import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
-import io.spiffy.website.response.SuccessResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;
     private final StreamClient streamClient;
+
+    private static final String FORM_POST = "post";
+    private static final String FORM_PROFILE = "profile";
 
     @AccessControl
     @RequestMapping("/upload")
@@ -41,20 +43,14 @@ public class UploadController extends Controller {
 
     @ResponseBody
     @AccessControl
-    @RequestMapping(value = "/crop", method = RequestMethod.GET)
-    public AjaxResponse upload(final Context context, final @RequestParam int x, final @RequestParam int y,
-            final @RequestParam int size, final @RequestParam int width, final @RequestParam int height) throws IOException {
-        // final MediaType type = MediaType.getEnum(file.getContentType());
-        // final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type,
-        // file.getBytes());
-        return new SuccessResponse(true);
-    }
-
-    @ResponseBody
-    @AccessControl
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
-            final @RequestParam String idempotentId) throws IOException {
+            final @RequestParam String idempotentId, final @RequestParam(defaultValue = FORM_POST) String form)
+            throws IOException {
+        if (FORM_PROFILE.equalsIgnoreCase(form)) {
+            // foo
+        }
+
         final MediaType type = MediaType.getEnum(file.getContentType());
         final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type, file.getBytes());
         return new UploadResponse(name);

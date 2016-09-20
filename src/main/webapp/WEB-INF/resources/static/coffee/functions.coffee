@@ -68,3 +68,17 @@ initModalSize = ->
   height = ($(window).height() - 125) + 'px'
   $('.modal-body').css 'max-height', height
   height
+
+dataURItoBlob = (dataURI) ->
+  parts = dataURI.split ','
+  meta = parts[0]
+  data = parts[1]
+
+  byteString = if meta.containsIgnoreCase 'base64' then atob data else unescape data
+  mimeType = meta.split(':')[1].split(';')[0]
+
+  bytes = new Uint8Array byteString.length
+  for c, i in byteString.split ''
+    bytes[i] = c.charCodeAt 0
+
+  new Blob [bytes], { type: mimeType }

@@ -17,7 +17,7 @@ Width = {
   xl: 1200
 };
 
-var blank, confirmation, contains, defined, go, handler, high, initModalSize, medium, overrideHandler, preventDefault, quality, refresh;
+var blank, confirmation, contains, dataURItoBlob, defined, go, handler, high, initModalSize, medium, overrideHandler, preventDefault, quality, refresh;
 
 preventDefault = function(e) {
   e.preventDefault();
@@ -46,13 +46,13 @@ high = function(img) {
 };
 
 quality = function(img, q, old, callback) {
-  var i, image, len, o, src;
+  var image, j, len, o, src;
   if (old == null) {
     old = ['a', 'l', 'm', 'h'];
   }
   src = img.attr('src');
-  for (i = 0, len = old.length; i < len; i++) {
-    o = old[i];
+  for (j = 0, len = old.length; j < len; j++) {
+    o = old[j];
     src = src.replace('q=' + o, 'q=' + q);
   }
   image = new Image();
@@ -110,6 +110,24 @@ initModalSize = function() {
   height = ($(window).height() - 125) + 'px';
   $('.modal-body').css('max-height', height);
   return height;
+};
+
+dataURItoBlob = function(dataURI) {
+  var byteString, bytes, c, data, i, j, len, meta, mimeType, parts, ref;
+  parts = dataURI.split(',');
+  meta = parts[0];
+  data = parts[1];
+  byteString = meta.containsIgnoreCase('base64') ? atob(data) : unescape(data);
+  mimeType = meta.split(':')[1].split(';')[0];
+  bytes = new Uint8Array(byteString.length);
+  ref = byteString.split('');
+  for (i = j = 0, len = ref.length; j < len; i = ++j) {
+    c = ref[i];
+    bytes[i] = c.charCodeAt(0);
+  }
+  return new Blob([bytes], {
+    type: mimeType
+  });
 };
 
 var Spiffy, base, base1, base2, base3, base4, base5;
@@ -589,7 +607,97 @@ Messenger = {
   }
 };
 
-var addedfile, adjustColumns, closeModal, cropDetails, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
+var profileDZ, profileDZAddedFile;
+
+Dropzone.autoDiscover = false;
+
+profileDZ = new Dropzone('form#profile-dz', {
+  paramName: 'file',
+  maxFiles: 1,
+  maxFilesize: 200,
+  uploadMultiple: false,
+  createImageThumbnails: true,
+  autoProcessQueue: false,
+  accept: function(file, done) {
+    var type;
+    file.acceptDimensions = done;
+    file.rejectDimensions = function() {
+      return done('image must be at least 160 x 160 pixels');
+    };
+    type = file.type;
+    if (type.equalsIgnoreCase('image/jpg')) {
+      done();
+    } else if (type.equalsIgnoreCase('image/jpeg')) {
+      done();
+    } else if (type.equalsIgnoreCase('image/png')) {
+      done();
+    } else {
+      done('unable to upload file: ' + file.name);
+    }
+  },
+  init: function() {
+    this.on('thumbnail', function(file) {
+      if (file.width < 160 || file.height < 160) {
+        file.rejectDimensions();
+      } else {
+        file.acceptDimensions();
+      }
+    });
+    return this.on('addedfile', function(file) {
+      profileDZAddedFile(file);
+    });
+  }
+});
+
+profileDZAddedFile = function(file) {
+  var croppie, div, form, message, src;
+  if (file.accepted == null) {
+    setTimeout(function() {
+      return profileDZAddedFile(file);
+    }, 10);
+    return;
+  }
+  if (!file.accepted) {
+    form = $(profileDZ.element);
+    message = form.find('.message');
+    message.html('unable to upload file: ' + file.name);
+    message.slideDown();
+    form.animate({
+      height: '10em'
+    }, 500);
+    return;
+  }
+  if (profileDZ.options.autoProcessQueue) {
+    return;
+  }
+  $(profileDZ.element).hide();
+  openModal();
+  src = URL.createObjectURL(file);
+  div = $('.profile-container');
+  croppie = new Croppie(div.find('.croppie')[0], {
+    url: src,
+    enableOrientation: true,
+    viewport: {
+      width: 160,
+      height: 160,
+      type: 'square'
+    }
+  });
+  div.find('.button.primary').click(function() {
+    croppie.result({
+      size: 'original'
+    }).then(function(canvas) {
+      var blob;
+      blob = dataURItoBlob(canvas);
+      profileDZ.removeAllFiles(true);
+      profileDZ.options.autoProcessQueue = true;
+      profileDZ.addFile(blob);
+    });
+    return croppie.get();
+  });
+};
+
+var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
 
 addedfile = function(file) {
   var div, form, func, img, message, preview, processing, source, src, video;
@@ -610,7 +718,6 @@ addedfile = function(file) {
     }, 500);
     return;
   }
-  $('#dz-form').hide();
   form = $('form.submit');
   preview = form.find('div.preview');
   div = $(document.createElement('div'));
@@ -697,22 +804,8 @@ Dropzone.options.dzForm = {
   }
 };
 
-cropDetails = function() {
-  var crop, details, img;
-  crop = $('#crop');
-  img = crop.parent().find('img');
-  details = {
-    'x': Math.floor((crop.css('left')).slice(0, -2)),
-    'y': Math.floor((crop.css('top')).slice(0, -2)),
-    'size': Math.floor(crop.width()),
-    'width': Math.floor(img.width()),
-    'height': Math.floor(img.height())
-  };
-  return details;
-};
-
 $(document).ready(function(e) {
-  var crop, hash, img;
+  var hash;
   $('[data-modal]').click(function(e) {
     openModal($(this).data('modal'));
   });
@@ -727,37 +820,8 @@ $(document).ready(function(e) {
       });
     }
   }
-  crop = $('#crop');
-  crop.draggable({
-    containment: 'parent'
-  }).resizable({
-    handles: 'all',
-    containment: 'parent',
-    aspectRatio: 1
-  });
-  img = crop.parent().find('img');
-  img.one('load', function() {
-    var height, min, size, width;
-    height = img.height();
-    width = img.width();
-    min = Math.min(height, width);
-    size = Math.ceil(min * 0.8);
-    crop.css({
-      'display': 'initial',
-      'top': (height - size) / 2,
-      'left': (width - size) / 2,
-      'width': size,
-      'height': size
-    });
-    img.parent().parent().css('background', 'initial');
-  });
-  img.each(function() {
-    if (this.complete) {
-      $(this).load();
-    }
-  });
   $('[data-unprocessed]').each(function() {
-    var div, post, processing, source, src, type, video;
+    var div, img, post, processing, source, src, type, video;
     div = $(this);
     post = div.data('unprocessed');
     src = sessionStorage.getItem('src:' + post);
@@ -929,7 +993,7 @@ $(document).ready(function(e) {
     menu.toggleClass('show');
   });
   $(document).on('click', '.thismedia', function(e) {
-    var form, input;
+    var form, img, input;
     img = $(this);
     img.toggleClass('clicked');
     form = $('form.delete');

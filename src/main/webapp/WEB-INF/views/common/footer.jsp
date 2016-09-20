@@ -27,19 +27,19 @@
   <a href="/llc">SPIFFY.io, LLC</a> &copy; 2016 &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a>
 </div>
 
-<div class="modal-overlay">
-  <div class="modal">
-    <div class="modal-header">
-      <div class="content">
-        <h2>confirm</h2>
-        <s:close />
-      </div>
-    </div>
-    <div class="modal-body">
-      <div id="confirm-action" class="button danger">confirm</div>
-    </div>
-  </div>
-</div>
+<!-- <div class="modal-overlay"> -->
+<!--   <div class="modal"> -->
+<!--     <div class="modal-header"> -->
+<!--       <div class="content"> -->
+<!--         <h2>confirm</h2> -->
+<%--         <s:close /> --%>
+<!--       </div> -->
+<!--     </div> -->
+<!--     <div class="modal-body"> -->
+<!--       <div id="confirm-action" class="button danger">confirm</div> -->
+<!--     </div> -->
+<!--   </div> -->
+<!-- </div> -->
 
 <script data-template="panel-ad" type="text/x-handlebars-template">
 <ins class="adsbygoogle"
@@ -74,6 +74,7 @@
 </script>
 
 <s:resource file="jquery" type="js" />
+<s:resource file="croppie" type="js" />
 <s:resource file="jquery-ui" type="js" />
 <s:resource file="parsley" type="js" />
 <s:resource file="dropzone" type="js" />

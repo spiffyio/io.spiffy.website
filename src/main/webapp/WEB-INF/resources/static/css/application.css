@@ -661,7 +661,7 @@ div.footer {
 
 .modal-overlay .modal {
   height: auto;
-  width: 20em;
+  width: calc(300px + 5em);
   background-color: #F5F5F5;
   box-shadow: 0 0 100px #3D3D3D;
   margin: 30px auto;
