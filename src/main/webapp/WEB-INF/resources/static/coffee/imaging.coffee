@@ -6,10 +6,10 @@ $(document).ready (e) ->
 
 initProfileDZ =  ->
   profileDZ = new Dropzone 'form#profile-dz',
-    paramName: 'file',
-    maxFiles: 1,
+    paramName: 'icon',
+    maxFiles: 2,
     maxFilesize: 200,
-    uploadMultiple: false,
+    uploadMultiple: true,
     createImageThumbnails: true,
     autoProcessQueue: false,
     accept: (file, done) ->
@@ -44,8 +44,7 @@ initProfileDZ =  ->
       form.animate {height: '10em'}, 500
       return
 
-    if profileDZ.options.autoProcessQueue
-      return
+    if profileDZ.files.length is 2 then return
 
     $(profileDZ.element).hide()
     openModal '#profile-modal'
@@ -61,14 +60,13 @@ initProfileDZ =  ->
         type: 'square'
 
     div.find('.button.primary').click ->
-      croppie.result({ size: 'original' }).then (canvas) ->
-        blob = dataURItoBlob canvas
-        profileDZ.removeAllFiles true
-        profileDZ.options.autoProcessQueue = true
-        profileDZ.addFile blob
+      croppie.result({ size: { width: 160, height: 160 }, format: if file.type.equalsIgnoreCase 'image/png' then 'png' else 'jpeg' }).then (canvas) ->
         closeModal '#profile-modal'
         img = $ '.profile-icon'
         img.attr 'src', canvas
+        blob = dataURItoBlob canvas
+        profileDZ.addFile blob
+        profileDZ.processQueue()
         return
       return croppie.get()
     return

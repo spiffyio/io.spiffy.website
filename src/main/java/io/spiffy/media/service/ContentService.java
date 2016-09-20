@@ -119,13 +119,18 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
     }
 
     @Transactional
-    public ContentEntity post(final long account, final String idempotentId, final MediaType type, final byte[] value) {
+    public ContentEntity post(final long account, final String idempotentId, final MediaType type, final byte[] value,
+            final byte[] thumbnail) {
         ContentEntity entity = get(account, idempotentId);
         if (entity != null) {
             return entity;
         }
 
         final FileEntity file = fileService.post(account + "/" + idempotentId, type, value, FileEntity.Privacy.RAW);
+
+        if (thumbnail != null) {
+            fileService.post(account + "/" + idempotentId + "-thumbnail", type, thumbnail, FileEntity.Privacy.RAW);
+        }
 
         entity = new ContentEntity(account, idempotentId, asType(type, value), file);
         repository.saveOrUpdate(entity);

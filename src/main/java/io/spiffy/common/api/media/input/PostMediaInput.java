@@ -16,4 +16,5 @@ public class PostMediaInput {
     private String idempotentId;
     private MediaType type;
     private byte[] value;
+    private byte[] thumbnail;
 }

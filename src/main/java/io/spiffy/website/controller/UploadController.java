@@ -28,15 +28,12 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.SuccessResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;
     private final StreamClient streamClient;
     private final UserClient userClient;
-
-    private static final String FORM_POST = "post";
-    private static final String FORM_PROFILE = "profile";
 
     @AccessControl
     @RequestMapping("/upload")
@@ -46,18 +43,24 @@ public class UploadController extends Controller {
 
     @ResponseBody
     @AccessControl
-    @RequestMapping(value = "/upload", method = RequestMethod.POST)
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, params = { "icon[0]", "icon[1]" })
+    public AjaxResponse uploadIcon(final Context context, @RequestParam(name = "icon[0]") final MultipartFile file,
+            @RequestParam(name = "icon[1]") final MultipartFile thumbnail, final @RequestParam String idempotentId)
+            throws IOException {
+        final MediaType type = MediaType.getEnum(file.getContentType());
+        final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type, file.getBytes(),
+                thumbnail.getBytes());
+        userClient.postAccount(context.getUsername(), context.getEmail(), ObfuscateUtil.unobfuscate(name));
+        return new SuccessResponse(true);
+    }
+
+    @ResponseBody
+    @AccessControl
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, params = { "file" })
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
-            final @RequestParam String idempotentId, final @RequestParam(defaultValue = FORM_POST) String form)
-                    throws IOException {
+            final @RequestParam String idempotentId) throws IOException {
         final MediaType type = MediaType.getEnum(file.getContentType());
         final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type, file.getBytes());
-
-        if (FORM_PROFILE.equalsIgnoreCase(form)) {
-            userClient.postAccount(context.getUsername(), context.getEmail(), ObfuscateUtil.unobfuscate(name));
-            return new SuccessResponse(true);
-        }
-
         return new UploadResponse(name);
     }
 

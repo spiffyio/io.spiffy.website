@@ -12,7 +12,7 @@ import io.spiffy.common.api.media.dto.MediaType;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "MEDIA_FILES", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "type", "archived_at" }) )
+@Table(name = "MEDIA_FILES", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "type", "archived_at" }))
 public class FileEntity extends HibernateEntity {
 
     @Getter
@@ -28,7 +28,7 @@ public class FileEntity extends HibernateEntity {
     }
 
     public static final int MIN_NAME_LENGTH = 5;
-    public static final int MAX_NAME_LENGTH = 64;
+    public static final int MAX_NAME_LENGTH = 128;
 
     public static final int MIN_TYPE_LENGTH = 1;
     public static final int MAX_TYPE_LENGTH = 16;

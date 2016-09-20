@@ -620,10 +620,10 @@ $(document).ready(function(e) {
 initProfileDZ = function() {
   var profileDZ, profileDZAddedFile;
   profileDZ = new Dropzone('form#profile-dz', {
-    paramName: 'file',
-    maxFiles: 1,
+    paramName: 'icon',
+    maxFiles: 2,
     maxFilesize: 200,
-    uploadMultiple: false,
+    uploadMultiple: true,
     createImageThumbnails: true,
     autoProcessQueue: false,
     accept: function(file, done) {
@@ -674,7 +674,7 @@ initProfileDZ = function() {
       }, 500);
       return;
     }
-    if (profileDZ.options.autoProcessQueue) {
+    if (profileDZ.files.length === 2) {
       return;
     }
     $(profileDZ.element).hide();
@@ -692,16 +692,19 @@ initProfileDZ = function() {
     });
     div.find('.button.primary').click(function() {
       croppie.result({
-        size: 'original'
+        size: {
+          width: 160,
+          height: 160
+        },
+        format: file.type.equalsIgnoreCase('image/png') ? 'png' : 'jpeg'
       }).then(function(canvas) {
         var blob, img;
-        blob = dataURItoBlob(canvas);
-        profileDZ.removeAllFiles(true);
-        profileDZ.options.autoProcessQueue = true;
-        profileDZ.addFile(blob);
         closeModal('#profile-modal');
         img = $('.profile-icon');
         img.attr('src', canvas);
+        blob = dataURItoBlob(canvas);
+        profileDZ.addFile(blob);
+        profileDZ.processQueue();
       });
       return croppie.get();
     });

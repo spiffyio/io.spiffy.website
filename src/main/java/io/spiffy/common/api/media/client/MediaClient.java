@@ -21,7 +21,7 @@ import io.spiffy.common.api.media.output.GetAccountMediaOutput;
 import io.spiffy.common.api.media.output.GetMediaOutput;
 import io.spiffy.common.api.media.output.PostMediaOutput;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class MediaClient extends Client {
 
     private final DeleteMediaCall deleteMediaCall;
@@ -48,7 +48,12 @@ public class MediaClient extends Client {
     }
 
     public String postMedia(final long accountId, final String idempotentId, final MediaType type, final byte[] value) {
-        final PostMediaInput input = new PostMediaInput(accountId, idempotentId, type, value);
+        return postMedia(accountId, idempotentId, type, value, null);
+    }
+
+    public String postMedia(final long accountId, final String idempotentId, final MediaType type, final byte[] value,
+            final byte[] thumbnail) {
+        final PostMediaInput input = new PostMediaInput(accountId, idempotentId, type, value, thumbnail);
         final PostMediaOutput output = postMediaCall.call(input);
         return output.getName();
     }

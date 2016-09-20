@@ -75,7 +75,7 @@ public class VideoService extends Service<VideoEntity, VideoRepository> {
         }
 
         final byte[] posterValue = ConverterUtil.convertToPNG(value, content.getName());
-        final ImageEntity image = imageService.process(content, content.getName(), MediaType.PNG, posterValue);
+        final ImageEntity image = imageService.process(content, content.getName(), MediaType.PNG, posterValue, null);
 
         final byte[] mp4Value = ConverterUtil.convertToMP4(value, content.getName());
         final FileEntity mp4 = fileService.post(content.getName(), MediaType.MP4, mp4Value, FileEntity.Privacy.PUBLIC);

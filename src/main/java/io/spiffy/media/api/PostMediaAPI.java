@@ -20,7 +20,7 @@ public class PostMediaAPI extends API<PostMediaInput, PostMediaOutput, ContentSe
 
     protected PostMediaOutput api(final PostMediaInput input) {
         final ContentEntity entity = service.post(input.getAccountId(), input.getIdempotentId(), input.getType(),
-                input.getValue());
+                input.getValue(), input.getThumbnail());
         if (entity == null) {
             return new PostMediaOutput("error");
         }

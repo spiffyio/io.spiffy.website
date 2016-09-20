@@ -61,13 +61,23 @@ public class ImageService extends Service<ImageEntity, ImageRepository> {
             logger.warn("missing raw file for: " + content.getName());
             return null;
         }
-
         fileService.loadValue(input);
-        return process(content, content.getName(), input.getType(), input.getValue());
+
+        final FileEntity thumbnail = fileService.get(input.getName() + "-thumbnail", input.getType());
+        final byte[] thumbnailValue;
+        if (thumbnail != null) {
+            fileService.loadValue(thumbnail);
+            thumbnailValue = thumbnail.getValue();
+        } else {
+            thumbnailValue = null;
+        }
+
+        return process(content, content.getName(), input.getType(), input.getValue(), thumbnailValue);
     }
 
     @Transactional
-    public ImageEntity process(final ContentEntity content, final String name, final MediaType type, final byte[] value) {
+    public ImageEntity process(final ContentEntity content, final String name, final MediaType type, final byte[] value,
+            byte[] thumbnailValue) {
         if (value == null) {
             logger.warn("unable to retrieve raw file for: " + name);
             return null;
@@ -85,7 +95,7 @@ public class ImageService extends Service<ImageEntity, ImageRepository> {
             medium = file;
         }
 
-        final byte[] thumbnailValue = ImageUtil.thumbnail(fileValue, type, THUMBNAIL_SIZE, null);
+        thumbnailValue = thumbnailValue == null ? ImageUtil.thumbnail(fileValue, type, THUMBNAIL_SIZE, null) : thumbnailValue;
         final FileEntity thumbnail;
         if (thumbnailValue != null) {
             thumbnail = fileService.post(name + THUMBNAIL_SUFFIX, type, thumbnailValue, FileEntity.Privacy.PUBLIC);
