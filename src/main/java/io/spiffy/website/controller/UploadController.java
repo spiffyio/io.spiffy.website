@@ -18,19 +18,22 @@ import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.stream.output.PostPostOutput;
+import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
+import io.spiffy.website.response.SuccessResponse;
 import io.spiffy.website.response.UploadResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UploadController extends Controller {
 
     private final MediaClient mediaClient;
     private final StreamClient streamClient;
+    private final UserClient userClient;
 
     private static final String FORM_POST = "post";
     private static final String FORM_PROFILE = "profile";
@@ -46,13 +49,15 @@ public class UploadController extends Controller {
     @RequestMapping(value = "/upload", method = RequestMethod.POST)
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
             final @RequestParam String idempotentId, final @RequestParam(defaultValue = FORM_POST) String form)
-            throws IOException {
-        if (FORM_PROFILE.equalsIgnoreCase(form)) {
-            // foo
-        }
-
+                    throws IOException {
         final MediaType type = MediaType.getEnum(file.getContentType());
         final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type, file.getBytes());
+
+        if (FORM_PROFILE.equalsIgnoreCase(form)) {
+            userClient.postAccount(context.getUsername(), context.getEmail(), ObfuscateUtil.unobfuscate(name));
+            return new SuccessResponse(true);
+        }
+
         return new UploadResponse(name);
     }
 

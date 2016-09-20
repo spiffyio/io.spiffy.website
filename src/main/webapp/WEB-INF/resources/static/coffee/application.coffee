@@ -327,12 +327,12 @@ $(document).ready (e) ->
 
   return
 
-openModal = () ->
-  $('.modal-overlay').slideDown 500
+openModal = (selector = '.modal-overlay') ->
+  $(selector).slideDown 500
   return
 
-closeModal = () ->
-  $('.modal-overlay').slideUp 250
+closeModal = (selector = '.modal-overlay') ->
+  $(selector).slideUp 250
   return
 
 fingerprint = () ->

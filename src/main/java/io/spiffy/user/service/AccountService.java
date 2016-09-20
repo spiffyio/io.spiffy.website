@@ -83,7 +83,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
-    public AccountEntity post(final String username, final String emailAddress) {
+    public AccountEntity post(final String username, final String emailAddress, final Long iconId) {
         validateUsername(username);
 
         final AccountEntity entityByUserName = getByUserName(username);
@@ -111,6 +111,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
 
         entity.setEmailAddressId(emailAddressId);
         entity.setEmailAddress(emailAddress);
+        entity.setIconId(iconId);
 
         repository.saveOrUpdate(entity);
 
@@ -135,7 +136,7 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
             return new RegisterAccountOutput(RegisterAccountOutput.Error.EXISTING_USERNAME);
         }
 
-        account = post(userName, email);
+        account = post(userName, email, null);
         credentialService.post(account.getId(), password);
 
         if (StringUtils.isEmpty(account.getEmailVerificationToken())) {

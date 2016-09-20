@@ -31,19 +31,7 @@ import io.spiffy.discussion.repository.ThreadRepository;
 
 public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
 
-    private static final Map<String, String> ICONS;
     private static final String DEFAULT_ICON = "//cdn.spiffy.io/media/DxrwtJ-Cg.jpg";
-
-    static {
-        final Map<String, String> icons = new HashMap<>();
-        icons.put("john", "//cdn.spiffy.io/media/MPMBQx-Cg.jpg");
-        icons.put("johnrich", "//cdn.spiffy.io/media/CVQrJj-Cg.jpg");
-        icons.put("maj", "//cdn.spiffy.io/media/MTdfxC-Cg.jpg");
-        icons.put("cjsmile", "//cdn.spiffy.io/media/CnPfCX-Cg.jpg");
-        icons.put("dadtv1234", "//cdn.spiffy.io/media/GQfhNV-Cg.jpg");
-
-        ICONS = Collections.unmodifiableMap(icons);
-    }
 
     private final CommentService commentService;
     private final ParticipantService participantService;
@@ -143,8 +131,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         final Account account = userClient.getAccount(comment.getAccountId());
 
         return new MessengerMessage(ObfuscateUtil.obfuscate(comment.getId()),
-                comment.getAccountId() == accountId ? "right" : "left",
-                ICONS.getOrDefault(account.getUsername().toLowerCase(), DEFAULT_ICON), comment.getComment());
+                comment.getAccountId() == accountId ? "right" : "left", account.getIconUrl(), comment.getComment());
     }
 
     @Transactional
@@ -206,6 +193,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
         final List<Account> accounts = new ArrayList<>();
         participants.forEach(p -> accounts.add(userClient.getAccount(p.getAccountId())));
 
+        String iconUrl = DEFAULT_ICON;
         final List<String> names = new ArrayList<>();
         for (final Account account : accounts) {
             if (account == null) {
@@ -214,7 +202,12 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
                 continue;
             }
 
+            iconUrl = account.getIconUrl();
             names.add(account.getUsername());
+        }
+
+        if (names.size() != 1) {
+            iconUrl = DEFAULT_ICON;
         }
 
         final String id = StringUtils.join(names, ",");
@@ -233,7 +226,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
             date = comment.getPostedAt();
         }
 
-        return new MessengerThread(id, ICONS.getOrDefault(id.toLowerCase(), DEFAULT_ICON), time, preview, date);
+        return new MessengerThread(id, iconUrl, time, preview, date);
     }
 
     @Transactional

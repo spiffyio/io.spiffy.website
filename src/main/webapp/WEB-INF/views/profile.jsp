@@ -7,8 +7,9 @@
 </jsp:include>
 
 <div style="position: relative; display: inline-block;">
-  <img src="//cdn-beta.spiffy.io/media/HHzxwP-Cg.png" />
+  <img class="profile-icon" style="width: 160px; height: 160px;" src="<c:out value="${ profile.iconUrl }" />" />
   
+  <c:if test="${ (not empty account) and (account.id eq profile.id) }">
   <form id="profile-dz" class="dropzone full" action="/upload" enctype="multipart/form-data" <s:csrf name="upload" /> style="width: auto; height: auto; position: absolute; top: 1em; left: 1em; bottom: 1em; right: 1em; border-color: #F5F5F5;">
     <div class="dz-message"></div>
     <img src="<s:resource file="svg/upload.svg" />" />
@@ -17,9 +18,10 @@
     <input type="hidden" name="form" value="profile" />
     <div class="dz-message"></div>
   </form>
+  </c:if>
 </div>
 
-<div class="modal-overlay">
+<div id="profile-modal" class="modal-overlay">
   <div class="modal">
     <div class="modal-header">
       <div class="content">

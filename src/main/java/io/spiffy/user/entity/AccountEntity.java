@@ -39,6 +39,10 @@ public class AccountEntity extends HibernateEntity {
     private Long emailVerificationTokenId;
 
     @Setter
+    @Column(name = "icon_id")
+    private Long iconId;
+
+    @Setter
     @Transient
     private String emailAddress;
 

@@ -11,6 +11,6 @@ public class GetAccountCall extends SpiffyCall<GetAccountInput, GetAccountOutput
 
     @Inject
     public GetAccountCall(final WebTarget target) {
-        super(GetAccountOutput.class, target.path("user/getaccount"));
+        super(GetAccountOutput.class, target.path("user/getaccount"), null);
     }
 }

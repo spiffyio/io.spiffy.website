@@ -25,7 +25,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.NotificationsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private final MediaClient mediaClient;
@@ -38,6 +38,8 @@ public class UserController extends Controller {
         if (account == null) {
             throw new UnknownUserException(user);
         }
+
+        context.addAttribute("profile", account);
 
         return mav("profile", context);
     }

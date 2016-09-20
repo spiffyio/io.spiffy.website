@@ -12,6 +12,7 @@ public class Account {
     private String username;
     private String email;
     private Boolean emailVerified;
+    private String iconUrl;
 
     public Account(final long id) {
         this.id = id;

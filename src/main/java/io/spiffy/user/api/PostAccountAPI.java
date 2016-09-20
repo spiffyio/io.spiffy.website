@@ -19,7 +19,7 @@ public class PostAccountAPI extends API<PostAccountInput, PostOutput, AccountSer
     }
 
     protected PostOutput api(final PostAccountInput input) {
-        final AccountEntity entity = service.post(input.getUserName(), input.getEmailAddress());
+        final AccountEntity entity = service.post(input.getUserName(), input.getEmailAddress(), input.getIconId());
         final Long id = entity != null ? entity.getId() : null;
         return new PostOutput(id);
     }

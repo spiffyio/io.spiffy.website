@@ -607,94 +607,105 @@ Messenger = {
   }
 };
 
-var profileDZ, profileDZAddedFile;
+var initProfileDZ;
 
 Dropzone.autoDiscover = false;
 
-profileDZ = new Dropzone('form#profile-dz', {
-  paramName: 'file',
-  maxFiles: 1,
-  maxFilesize: 200,
-  uploadMultiple: false,
-  createImageThumbnails: true,
-  autoProcessQueue: false,
-  accept: function(file, done) {
-    var type;
-    file.acceptDimensions = done;
-    file.rejectDimensions = function() {
-      return done('image must be at least 160 x 160 pixels');
-    };
-    type = file.type;
-    if (type.equalsIgnoreCase('image/jpg')) {
-      done();
-    } else if (type.equalsIgnoreCase('image/jpeg')) {
-      done();
-    } else if (type.equalsIgnoreCase('image/png')) {
-      done();
-    } else {
-      done('unable to upload file: ' + file.name);
-    }
-  },
-  init: function() {
-    this.on('thumbnail', function(file) {
-      if (file.width < 160 || file.height < 160) {
-        file.rejectDimensions();
-      } else {
-        file.acceptDimensions();
-      }
-    });
-    return this.on('addedfile', function(file) {
-      profileDZAddedFile(file);
-    });
+$(document).ready(function(e) {
+  if ($('form#profile-dz').length) {
+    return initProfileDZ();
   }
 });
 
-profileDZAddedFile = function(file) {
-  var croppie, div, form, message, src;
-  if (file.accepted == null) {
-    setTimeout(function() {
-      return profileDZAddedFile(file);
-    }, 10);
-    return;
-  }
-  if (!file.accepted) {
-    form = $(profileDZ.element);
-    message = form.find('.message');
-    message.html('unable to upload file: ' + file.name);
-    message.slideDown();
-    form.animate({
-      height: '10em'
-    }, 500);
-    return;
-  }
-  if (profileDZ.options.autoProcessQueue) {
-    return;
-  }
-  $(profileDZ.element).hide();
-  openModal();
-  src = URL.createObjectURL(file);
-  div = $('.profile-container');
-  croppie = new Croppie(div.find('.croppie')[0], {
-    url: src,
-    enableOrientation: true,
-    viewport: {
-      width: 160,
-      height: 160,
-      type: 'square'
+initProfileDZ = function() {
+  var profileDZ, profileDZAddedFile;
+  profileDZ = new Dropzone('form#profile-dz', {
+    paramName: 'file',
+    maxFiles: 1,
+    maxFilesize: 200,
+    uploadMultiple: false,
+    createImageThumbnails: true,
+    autoProcessQueue: false,
+    accept: function(file, done) {
+      var type;
+      file.acceptDimensions = done;
+      file.rejectDimensions = function() {
+        return done('image must be at least 160 x 160 pixels');
+      };
+      type = file.type;
+      if (type.equalsIgnoreCase('image/jpg')) {
+        done();
+      } else if (type.equalsIgnoreCase('image/jpeg')) {
+        done();
+      } else if (type.equalsIgnoreCase('image/png')) {
+        done();
+      } else {
+        done('unable to upload file: ' + file.name);
+      }
+    },
+    init: function() {
+      this.on('thumbnail', function(file) {
+        if (file.width < 160 || file.height < 160) {
+          file.rejectDimensions();
+        } else {
+          file.acceptDimensions();
+        }
+      });
+      return this.on('addedfile', function(file) {
+        profileDZAddedFile(file);
+      });
     }
   });
-  div.find('.button.primary').click(function() {
-    croppie.result({
-      size: 'original'
-    }).then(function(canvas) {
-      var blob;
-      blob = dataURItoBlob(canvas);
-      profileDZ.removeAllFiles(true);
-      profileDZ.options.autoProcessQueue = true;
-      profileDZ.addFile(blob);
+  return profileDZAddedFile = function(file) {
+    var croppie, div, form, message, src;
+    if (file.accepted == null) {
+      setTimeout(function() {
+        return profileDZAddedFile(file);
+      }, 10);
+      return;
+    }
+    if (!file.accepted) {
+      form = $(profileDZ.element);
+      message = form.find('.message');
+      message.html('unable to upload file: ' + file.name);
+      message.slideDown();
+      form.animate({
+        height: '10em'
+      }, 500);
+      return;
+    }
+    if (profileDZ.options.autoProcessQueue) {
+      return;
+    }
+    $(profileDZ.element).hide();
+    openModal('#profile-modal');
+    src = URL.createObjectURL(file);
+    div = $('.profile-container');
+    croppie = new Croppie(div.find('.croppie')[0], {
+      url: src,
+      enableOrientation: true,
+      viewport: {
+        width: 160,
+        height: 160,
+        type: 'square'
+      }
     });
-    return croppie.get();
-  });
+    div.find('.button.primary').click(function() {
+      croppie.result({
+        size: 'original'
+      }).then(function(canvas) {
+        var blob, img;
+        blob = dataURItoBlob(canvas);
+        profileDZ.removeAllFiles(true);
+        profileDZ.options.autoProcessQueue = true;
+        profileDZ.addFile(blob);
+        closeModal('#profile-modal');
+        img = $('.profile-icon');
+        img.attr('src', canvas);
+      });
+      return croppie.get();
+    });
+  };
 };
 
 var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
@@ -1049,12 +1060,18 @@ $(document).ready(function(e) {
   });
 });
 
-openModal = function() {
-  $('.modal-overlay').slideDown(500);
+openModal = function(selector) {
+  if (selector == null) {
+    selector = '.modal-overlay';
+  }
+  $(selector).slideDown(500);
 };
 
-closeModal = function() {
-  $('.modal-overlay').slideUp(250);
+closeModal = function(selector) {
+  if (selector == null) {
+    selector = '.modal-overlay';
+  }
+  $(selector).slideUp(250);
 };
 
 fingerprint = function() {
