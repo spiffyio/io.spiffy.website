@@ -18,10 +18,10 @@
     </div>
     <c:if test="${ (empty account) or (account.id ne profile.id) }">
     <div class="profile-button">
-      <a href="#">FOLLOW</a>
+      <a href="/messages/<c:out value="${ profile.username }" />">MESSAGE</a>
     </div>
     <div class="profile-button">
-      <a href="/messages/<c:out value="${ profile.username }" />">MESSAGE</a>
+      <a href="#" class="action-button"><c:if test="${ follows }">UN</c:if>FOLLOW</a>
     </div>
     </c:if>
     <c:if test="${ (not empty account) and (account.id eq profile.id) }">
@@ -60,6 +60,12 @@
   <c:if test="${ not empty user }"><input type="hidden" name="user" value="<c:out value="${ user }" />"/></c:if>
   <input type="hidden" name="quantity" />
 </form>
+
+<c:if test="${ (empty account) or (account.id ne profile.id) }">
+<form class="profile-action" action="+/action" <s:csrf name="action" /> data-loading="header">
+  <input type="hidden" name="action" />
+</form>
+</c:if>
 
 <c:if test="${ (not empty account) and (account.id eq profile.id) }">
 <form id="icon-dz" class="dropzone full" action="/upload" enctype="multipart/form-data" <s:csrf name="upload" /> style="display: none;">

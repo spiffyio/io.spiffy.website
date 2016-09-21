@@ -110,6 +110,20 @@ $(document).ready (e) ->
     go $(this).data('uri')
     return
 
+  $('.action-button').click (e) ->
+    form = $ 'form.profile-action'
+    input = form.find '[name="action"]'
+    input.attr 'value', $(this).html()
+    form.submit()
+    return
+
+  $('form.profile-action').spiffy().options
+    success: (form) ->
+      input = form.find '[name="action"]'
+      val = input.attr 'value'
+      $('.action-button').html if 'FOLLOW'.equalsIgnoreCase val then 'UNFOLLOW' else 'FOLLOW'
+      return
+
   if $('input[name="fingerprint"]')
     hash = fingerprint()
     if hash?

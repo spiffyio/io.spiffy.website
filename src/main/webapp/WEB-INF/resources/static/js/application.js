@@ -928,6 +928,21 @@ $(document).ready(function(e) {
   $('[data-uri]').click(function(e) {
     go($(this).data('uri'));
   });
+  $('.action-button').click(function(e) {
+    var form, input;
+    form = $('form.profile-action');
+    input = form.find('[name="action"]');
+    input.attr('value', $(this).html());
+    form.submit();
+  });
+  $('form.profile-action').spiffy().options({
+    success: function(form) {
+      var input, val;
+      input = form.find('[name="action"]');
+      val = input.attr('value');
+      $('.action-button').html('FOLLOW'.equalsIgnoreCase(val) ? 'UNFOLLOW' : 'FOLLOW');
+    }
+  });
   if ($('input[name="fingerprint"]')) {
     hash = fingerprint();
     if (hash != null) {

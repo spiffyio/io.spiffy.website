@@ -49,6 +49,8 @@ public class FollowerService extends Service<FollowerEntity, FollowerRepository>
 
         entity.setArchivedAt(DateUtil.now());
 
+        repository.saveOrUpdate(entity);
+
         return;
     }
 }

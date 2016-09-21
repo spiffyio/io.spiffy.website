@@ -8,14 +8,9 @@ import javax.inject.Inject;
 
 import io.spiffy.common.Client;
 import io.spiffy.common.api.GetInput;
-import io.spiffy.common.api.stream.call.GetPostCall;
-import io.spiffy.common.api.stream.call.GetPostsCall;
-import io.spiffy.common.api.stream.call.PostActionCall;
-import io.spiffy.common.api.stream.call.PostPostCall;
+import io.spiffy.common.api.stream.call.*;
 import io.spiffy.common.api.stream.dto.Post;
-import io.spiffy.common.api.stream.input.GetPostsInput;
-import io.spiffy.common.api.stream.input.PostActionInput;
-import io.spiffy.common.api.stream.input.PostPostInput;
+import io.spiffy.common.api.stream.input.*;
 import io.spiffy.common.api.stream.output.GetPostOutput;
 import io.spiffy.common.api.stream.output.GetPostsOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
@@ -24,10 +19,20 @@ import io.spiffy.common.api.stream.output.PostPostOutput;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class StreamClient extends Client {
 
+    private final FollowCall followCall;
+    private final FollowsCall followsCall;
     private final GetPostCall getPostCall;
     private final GetPostsCall getPostsCall;
     private final PostActionCall postActionCall;
     private final PostPostCall postPostCall;
+
+    public void follow(final long followerId, final long followeeId, final FollowInput.Action action) {
+        followCall.call(new FollowInput(followerId, followeeId, action));
+    }
+
+    public boolean follows(final long followerId, final long followeeId) {
+        return Boolean.TRUE.equals(followsCall.call(new FollowsInput(followerId, followeeId)).getResult());
+    }
 
     public List<Post> getPosts(final int maxResults) {
         return getPosts(new GetPostsInput(null, null, null, maxResults, true));

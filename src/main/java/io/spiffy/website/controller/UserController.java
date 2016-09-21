@@ -14,6 +14,8 @@ import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.dto.ContentType;
 import io.spiffy.common.api.media.output.GetAccountMediaOutput;
 import io.spiffy.common.api.notification.client.NotificationClient;
+import io.spiffy.common.api.stream.client.StreamClient;
+import io.spiffy.common.api.stream.input.FollowInput;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
@@ -31,6 +33,7 @@ public class UserController extends Controller {
     private final HomeController homeController;
     private final MediaClient mediaClient;
     private final NotificationClient notificationClient;
+    private final StreamClient streamClient;
     private final UserClient userClient;
 
     @RequestMapping("/{user}")
@@ -41,6 +44,17 @@ public class UserController extends Controller {
         }
 
         context.addAttribute("profile", account);
+
+        final boolean follows;
+        if (context.getAccountId() == null) {
+            follows = false;
+        } else if (context.getAccountId() == account.getId()) {
+            follows = false;
+        } else {
+            follows = streamClient.follows(context.getAccountId(), account.getId());
+        }
+
+        context.addAttribute("follows", follows);
 
         homeController.prepareContext(context, account, null);
 
@@ -71,6 +85,21 @@ public class UserController extends Controller {
     @Csrf("action")
     @RequestMapping(value = "/{user}/action", method = RequestMethod.POST)
     public AjaxResponse action(final Context context, final @PathVariable String user, final @RequestParam String action) {
+        final Account account = userClient.getAccount(user);
+        if (account == null) {
+            throw new UnknownUserException(user);
+        }
+
+        if (context.getAccountId() == account.getId()) {
+            return new BadRequestResponse("account", "cannot follow yourself", null);
+        }
+
+        if ("follow".equalsIgnoreCase(action)) {
+            streamClient.follow(context.getAccountId(), account.getId(), FollowInput.Action.FOLLOW);
+        } else if ("unfollow".equalsIgnoreCase(action)) {
+            streamClient.follow(context.getAccountId(), account.getId(), FollowInput.Action.UNFOLLOW);
+        }
+
         return new SuccessResponse(true);
     }
 
