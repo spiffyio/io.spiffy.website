@@ -47,7 +47,7 @@ public class PostRepository extends HibernateRepository<PostEntity> {
         c.add(Restrictions.eqOrIsNull("processed", Boolean.TRUE));
         c.add(Restrictions.or(Restrictions.isNull("status"), Restrictions.ne("status", PostEntity.Status.REPORTED)));
 
-        if (accountIds != null) {
+        if (accountIds != null && !accountIds.isEmpty()) {
             c.add(Restrictions.in("accountId", accountIds));
         }
 

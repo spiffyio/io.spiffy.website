@@ -25,7 +25,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.NotificationsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
     private final HomeController homeController;
@@ -34,7 +34,7 @@ public class UserController extends Controller {
     private final UserClient userClient;
 
     @RequestMapping("/{user}")
-    public ModelAndView home(final Context context, final @PathVariable String user) {
+    public ModelAndView profile(final Context context, final @PathVariable String user) {
         final Account account = userClient.getAccount(user);
         if (account == null) {
             throw new UnknownUserException(user);
@@ -45,6 +45,12 @@ public class UserController extends Controller {
         homeController.prepareContext(context, account, null);
 
         return mav("profile", context);
+    }
+
+    @AccessControl
+    @RequestMapping("/profile")
+    public ModelAndView profile(final Context context) {
+        return redirect("/" + context.getUsername(), context);
     }
 
     @AccessControl

@@ -21,7 +21,7 @@ import io.spiffy.common.api.stream.output.GetPostsOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.api.stream.output.PostPostOutput;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class StreamClient extends Client {
 
     private final GetPostCall getPostCall;
@@ -30,19 +30,24 @@ public class StreamClient extends Client {
     private final PostPostCall postPostCall;
 
     public List<Post> getPosts(final int maxResults) {
-        return getPosts(new GetPostsInput(null, null, maxResults, true));
+        return getPosts(new GetPostsInput(null, null, null, maxResults, true));
     }
 
     public List<Post> getPosts(final Long first, final int maxResults, final boolean includeFirst) {
-        return getPosts(new GetPostsInput(null, first, maxResults, includeFirst));
+        return getPosts(new GetPostsInput(null, null, first, maxResults, includeFirst));
     }
 
     public List<Post> getPostsByAccount(final Long accountId, final int maxResults) {
-        return getPosts(new GetPostsInput(accountId, null, maxResults, true));
+        return getPosts(new GetPostsInput(accountId, GetPostsInput.Type.FOLLOWEE, null, maxResults, true));
     }
 
     public List<Post> getPosts(final Long accountId, final Long first, final int maxResults, final boolean includeFirst) {
-        return getPosts(new GetPostsInput(accountId, first, maxResults, includeFirst));
+        return getPosts(accountId, GetPostsInput.Type.FOLLOWEE, first, maxResults, includeFirst);
+    }
+
+    public List<Post> getPosts(final Long accountId, final GetPostsInput.Type type, final Long first, final int maxResults,
+            final boolean includeFirst) {
+        return getPosts(new GetPostsInput(accountId, type, first, maxResults, includeFirst));
     }
 
     private List<Post> getPosts(final GetPostsInput input) {

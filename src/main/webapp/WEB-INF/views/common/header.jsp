@@ -75,7 +75,7 @@
 <div class="header">
   <div class="menu">
     <ul>
-      <li class="logo"><a href="/"><img class="header-icon" src="<s:resource file="svg/icon.svg" />" /><img class="header-logo" src="<s:resource file="svg/logo.svg" />" /></a></li>
+      <li class="logo"><a href="/stream"><img class="header-icon" src="<s:resource file="svg/icon.svg" />" /><img class="header-logo" src="<s:resource file="svg/logo.svg" />" /></a></li>
       <c:if test="${ empty account }">
       <li class="text"><a href="/register">register</a></li>
       <li class="text"><a href="/login">login</a></li>
@@ -116,6 +116,7 @@
         <form class="friends" action="/friends" <s:csrf name="friends" /> data-loading="none" style="display: none;"></form>
       </li>
       <li><a href="/upload"><img src="<s:resource file="svg/upload.svg" />" /></a></li>
+      <li><a href="/"><img src="<s:resource file="svg/home.svg" />" /></a></li>
       </c:if>
     </ul>
   </div>

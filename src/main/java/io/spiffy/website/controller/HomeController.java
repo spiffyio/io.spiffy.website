@@ -14,6 +14,7 @@ import io.spiffy.common.Controller;
 import io.spiffy.common.api.discussion.client.DiscussionClient;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.stream.dto.Post;
+import io.spiffy.common.api.stream.input.GetPostsInput;
 import io.spiffy.common.api.stream.input.PostActionInput;
 import io.spiffy.common.api.stream.output.GetPostOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
@@ -44,17 +45,29 @@ public class HomeController extends Controller {
     private final StreamClient streamClient;
     private final UserClient userClient;
 
-    @RequestMapping({ "/", "/stream" })
-    public ModelAndView home(final Context context, final @RequestParam(required = false) String user,
+    @RequestMapping("/")
+    public ModelAndView home(final Context context, final @RequestParam(required = false) String start) {
+        prepareContext(context, context.getAccount(), GetPostsInput.Type.FOLLOWER, start);
+
+        return mav("stream", context);
+    }
+
+    @RequestMapping("/stream")
+    public ModelAndView stream(final Context context, final @RequestParam(required = false) String user,
             final @RequestParam(required = false) String start) {
         final Account account = userClient.getAccount(new Account(user));
-        prepareContext(context, account, start);
+        prepareContext(context, account, GetPostsInput.Type.FOLLOWEE, start);
 
         return mav("stream", context);
     }
 
     public void prepareContext(final Context context, final Account account, final String start) {
-        final List<Post> posts = streamClient.getPosts(account == null ? null : account.getId(),
+        prepareContext(context, account, GetPostsInput.Type.FOLLOWEE, start);
+    }
+
+    public void prepareContext(final Context context, final Account account, final GetPostsInput.Type type,
+            final String start) {
+        final List<Post> posts = streamClient.getPosts(account == null ? null : account.getId(), type,
                 start == null ? null : ObfuscateUtil.unobfuscate(start), 10, true);
         if (CollectionUtils.isEmpty(posts)) {
             return;

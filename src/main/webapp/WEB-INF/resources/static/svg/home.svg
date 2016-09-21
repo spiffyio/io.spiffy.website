@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<style type="text/css">
+	.st0{fill:#12B1DE;}
+	.st1{fill:none;stroke:#12B1DE;stroke-width:4;stroke-miterlimit:10;}
+</style>
+<g>
+	<path class="st0" d="M23.3,14V26H8.7V14H23.3 M27.3,10H4.7V30h22.6V10L27.3,10z"/>
+</g>
+<line class="st1" x1="17.1" y1="2.8" x2="3.1" y2="10.8"/>
+<line class="st1" x1="15.1" y1="2.8" x2="29.3" y2="10.8"/>
+</svg>
+
