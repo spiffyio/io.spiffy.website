@@ -104,6 +104,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
     public GetMessagesOutput getMessages(final ThreadDTO thread, final long accountId, final Set<String> participants,
             final String after) {
         thread.setEntityId(getThreadId(accountId, participants));
+        createThread(thread, accountId, participants);
         final ThreadEntity entity = get(thread);
 
         final List<CommentEntity> entities = commentService.getMessages(entity, after);
@@ -120,6 +121,7 @@ public class ThreadService extends Service<ThreadEntity, ThreadRepository> {
     public PostMessageOutput postMessage(final ThreadDTO thread, final long accountId, final Set<String> participants,
             final String idempotentId, final String comment) {
         thread.setEntityId(getThreadId(accountId, participants));
+        createThread(thread, accountId, participants);
         final ThreadEntity entity = get(thread);
 
         final CommentEntity e = commentService.post(entity, idempotentId, accountId, DateUtil.now(), comment);

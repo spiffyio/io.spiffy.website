@@ -63,7 +63,7 @@
 <meta name="msapplication-TileImage" content="<s:resource file="favicon/mstile-144x144.png" />">
 <meta name="theme-color" content="#c0effd">
 
-<s:resource file="application" type="css" version="7" />
+<s:resource file="application" type="css" version="8" />
 <s:resource file="croppie" type="css" />
 <c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
