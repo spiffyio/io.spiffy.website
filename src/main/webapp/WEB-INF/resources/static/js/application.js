@@ -687,6 +687,11 @@ initIconDZ = function() {
       return this.on('addedfile', function(file) {
         iconDZAddedFile(file);
       });
+    },
+    success: function(file, response) {
+      var form;
+      form = $('form#icon-dz');
+      form.spiffy().enable().loading('header', false);
     }
   });
   $(document).on('click', '#edit-icon', function(e) {
@@ -711,6 +716,8 @@ initIconDZ = function() {
       return;
     }
     if (iconDZ.files.length === 2) {
+      form = $('form#icon-dz');
+      form.spiffy().loading('header', true, 5000);
       return;
     }
     $(iconDZ.element).hide();
@@ -763,6 +770,11 @@ initBannerDZ = function() {
       return this.on('addedfile', function(file) {
         bannerDZAddedFile(file);
       });
+    },
+    success: function(file, response) {
+      var form;
+      form = $('form#banner-dz');
+      form.spiffy().enable().loading('header', false);
     }
   });
   $(document).on('click', '#edit-banner', function(e) {
@@ -786,6 +798,8 @@ initBannerDZ = function() {
       }, 500);
       return;
     }
+    form = $('form#banner-dz');
+    form.spiffy().loading('header', true, 5000);
     src = URL.createObjectURL(file);
     img = $('.profile-banner');
     img.attr('src', src);
@@ -804,7 +818,7 @@ addedfile = function(file) {
     return;
   }
   if (!file.accepted) {
-    form = $('#dz-form');
+    form = $('#file-dz');
     message = form.find('.message');
     message.html('unable to upload file: ' + file.name);
     message.slideDown();
@@ -849,56 +863,62 @@ addedfile = function(file) {
     div.append(img);
   }
   preview.prepend(div);
+  $('#file-dz').slideUp();
   form.slideDown();
 };
 
-Dropzone.options.dzForm = {
-  paramName: 'file',
-  maxFiles: 1,
-  maxFilesize: 200,
-  uploadMultiple: false,
-  createImageThumbnails: false,
-  autoProcessQueue: true,
-  acceptedFiles: ".jpeg,.jpg,.png,.gif,.mov,.mp4,.mpeg4,.mpeg,.webm",
-  accept: function(file, done) {
-    var type;
-    type = file.type;
-    if (type.equalsIgnoreCase('image/gif')) {
-      done();
-    } else if (type.equalsIgnoreCase('image/jpg')) {
-      done();
-    } else if (type.equalsIgnoreCase('image/jpeg')) {
-      done();
-    } else if (type.equalsIgnoreCase('image/png')) {
-      done();
-    } else if (type.equalsIgnoreCase('video/mov')) {
-      done();
-    } else if (type.equalsIgnoreCase('video/mp4')) {
-      done();
-    } else if (type.equalsIgnoreCase('video/mpeg4')) {
-      done();
-    } else if (type.equalsIgnoreCase('video/quicktime')) {
-      done();
-    } else if (type.equalsIgnoreCase('video/webm')) {
-      done();
-    } else {
-      done('unable to upload file: ' + file.name);
-    }
-  },
-  init: function() {
-    this.on('addedfile', function(file) {
-      addedfile(file);
+$(document).ready(function(e) {
+  var iconDZ;
+  if ($('form#file-dz').length) {
+    return iconDZ = new Dropzone('form#file-dz', {
+      paramName: 'file',
+      maxFiles: 1,
+      maxFilesize: 200,
+      uploadMultiple: false,
+      createImageThumbnails: false,
+      autoProcessQueue: true,
+      acceptedFiles: ".jpeg,.jpg,.png,.gif,.mov,.mp4,.mpeg4,.mpeg,.webm",
+      accept: function(file, done) {
+        var type;
+        type = file.type;
+        if (type.equalsIgnoreCase('image/gif')) {
+          done();
+        } else if (type.equalsIgnoreCase('image/jpg')) {
+          done();
+        } else if (type.equalsIgnoreCase('image/jpeg')) {
+          done();
+        } else if (type.equalsIgnoreCase('image/png')) {
+          done();
+        } else if (type.equalsIgnoreCase('video/mov')) {
+          done();
+        } else if (type.equalsIgnoreCase('video/mp4')) {
+          done();
+        } else if (type.equalsIgnoreCase('video/mpeg4')) {
+          done();
+        } else if (type.equalsIgnoreCase('video/quicktime')) {
+          done();
+        } else if (type.equalsIgnoreCase('video/webm')) {
+          done();
+        } else {
+          done('unable to upload file: ' + file.name);
+        }
+      },
+      init: function() {
+        this.on('addedfile', function(file) {
+          addedfile(file);
+        });
+        return this.on('uploadprogress', function(file) {});
+      },
+      success: function(file, response) {
+        var form, media;
+        form = $('form.submit');
+        form.spiffy().enable().loading('header', false);
+        media = form.find('input[name="media"]');
+        media.val(response.name);
+      }
     });
-    return this.on('uploadprogress', function(file) {});
-  },
-  success: function(file, response) {
-    var form, media;
-    form = $('form.submit');
-    form.spiffy().enable().loading('header', false);
-    media = form.find('input[name="media"]');
-    media.val(response.name);
   }
-};
+});
 
 $(document).ready(function(e) {
   var hash;
@@ -948,7 +968,7 @@ $(document).ready(function(e) {
       div.html(img);
     }
   });
-  $('form:not(#dz-form)').submit(function(e) {
+  $('form:not(.dropzone)').submit(function(e) {
     var form;
     preventDefault(e);
     form = $(this);

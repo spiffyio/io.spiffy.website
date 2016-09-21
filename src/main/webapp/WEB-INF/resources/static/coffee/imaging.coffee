@@ -52,6 +52,10 @@ initIconDZ =  ->
       this.on 'addedfile', (file) ->
         iconDZAddedFile file
         return
+    success: (file, response) ->
+      form = $ 'form#icon-dz'
+      form.spiffy().enable().loading 'header', false
+      return
 
   $(document).on 'click', '#edit-icon', (e) ->
     iconDZ.removeAllFiles true
@@ -71,7 +75,10 @@ initIconDZ =  ->
       form.animate {height: '10em'}, 500
       return
 
-    if iconDZ.files.length is 2 then return
+    if iconDZ.files.length is 2
+      form = $ 'form#icon-dz'
+      form.spiffy().loading 'header', true, 5000
+      return
 
     $(iconDZ.element).hide()
     openModal '#icon-modal'
@@ -108,6 +115,10 @@ initBannerDZ =  ->
       this.on 'addedfile', (file) ->
         bannerDZAddedFile file
         return
+    success: (file, response) ->
+      form = $ 'form#banner-dz'
+      form.spiffy().enable().loading 'header', false
+      return
 
   $(document).on 'click', '#edit-banner', (e) ->
     bannerDZ.removeAllFiles true
@@ -126,6 +137,9 @@ initBannerDZ =  ->
       message.slideDown()
       form.animate {height: '10em'}, 500
       return
+
+    form = $ 'form#banner-dz'
+    form.spiffy().loading 'header', true, 5000
 
     src = URL.createObjectURL(file)
     img = $ '.profile-banner'

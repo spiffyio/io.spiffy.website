@@ -13,7 +13,7 @@ addedfile = (file) ->
     return
 
   if not file.accepted
-    form = $ '#dz-form'
+    form = $ '#file-dz'
     message = form.find '.message'
     message.html 'unable to upload file: ' + file.name
     message.slideDown()
@@ -61,43 +61,45 @@ addedfile = (file) ->
     img.attr 'src', '/static/png/processing.png'
     div.append img
   preview.prepend div
+  $('#file-dz').slideUp()
   form.slideDown()
   return
 
-Dropzone.options.dzForm = {
-  paramName: 'file',
-  maxFiles: 1,
-  maxFilesize: 200,
-  uploadMultiple: false,
-  createImageThumbnails: false,
-  autoProcessQueue: true,
-  acceptedFiles: ".jpeg,.jpg,.png,.gif,.mov,.mp4,.mpeg4,.mpeg,.webm",
-  accept: (file, done) ->
-    type = file.type
-    if type.equalsIgnoreCase 'image/gif' then done()
-    else if type.equalsIgnoreCase 'image/jpg' then done()
-    else if type.equalsIgnoreCase 'image/jpeg' then done()
-    else if type.equalsIgnoreCase 'image/png' then done()
-    else if type.equalsIgnoreCase 'video/mov' then done()
-    else if type.equalsIgnoreCase 'video/mp4' then done()
-    else if type.equalsIgnoreCase 'video/mpeg4' then done()
-    else if type.equalsIgnoreCase 'video/quicktime' then done()
-    else if type.equalsIgnoreCase 'video/webm' then done()
-    else done 'unable to upload file: ' + file.name
-    return
-  init: () ->
-    this.on 'addedfile', (file) ->
-      addedfile file
-      return
-    this.on 'uploadprogress', (file) ->
-      return
-  success: (file, response) ->
-    form = $ 'form.submit'
-    form.spiffy().enable().loading 'header', false
-    media = form.find 'input[name="media"]'
-    media.val response.name
-    return
-}
+$(document).ready (e) ->
+  if $('form#file-dz').length
+    iconDZ = new Dropzone 'form#file-dz',
+      paramName: 'file',
+      maxFiles: 1,
+      maxFilesize: 200,
+      uploadMultiple: false,
+      createImageThumbnails: false,
+      autoProcessQueue: true,
+      acceptedFiles: ".jpeg,.jpg,.png,.gif,.mov,.mp4,.mpeg4,.mpeg,.webm",
+      accept: (file, done) ->
+        type = file.type
+        if type.equalsIgnoreCase 'image/gif' then done()
+        else if type.equalsIgnoreCase 'image/jpg' then done()
+        else if type.equalsIgnoreCase 'image/jpeg' then done()
+        else if type.equalsIgnoreCase 'image/png' then done()
+        else if type.equalsIgnoreCase 'video/mov' then done()
+        else if type.equalsIgnoreCase 'video/mp4' then done()
+        else if type.equalsIgnoreCase 'video/mpeg4' then done()
+        else if type.equalsIgnoreCase 'video/quicktime' then done()
+        else if type.equalsIgnoreCase 'video/webm' then done()
+        else done 'unable to upload file: ' + file.name
+        return
+      init: () ->
+        this.on 'addedfile', (file) ->
+          addedfile file
+          return
+        this.on 'uploadprogress', (file) ->
+          return
+      success: (file, response) ->
+        form = $ 'form.submit'
+        form.spiffy().enable().loading 'header', false
+        media = form.find 'input[name="media"]'
+        media.val response.name
+        return
 
 $(document).ready (e) ->
   $('[data-modal]').click (e) ->
@@ -150,7 +152,7 @@ $(document).ready (e) ->
       div.html img
     return
 
-  $('form:not(#dz-form)').submit (e) ->
+  $('form:not(.dropzone)').submit (e) ->
     preventDefault e
     form = $ this
     form.spiffy().submit()

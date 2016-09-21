@@ -87,7 +87,7 @@
           <img class="close" src="<s:resource file="svg/close.svg" />" />
         </a>
         <ul class="sub-menu">
-          <li><a href="/<c:out value="${ account.username }" />/stream">stream</a></li>
+          <li><a href="/<c:out value="${ account.username }" />">profile</a></li>
           <li><a href="/<c:out value="${ account.username }" />/images">images</a></li>
           <li><a href="/<c:out value="${ account.username }" />/videos">videos</a></li>
           <li><a href="/sessions">sessions</a></li>
@@ -99,21 +99,21 @@
           <img src="<s:resource file="svg/bell.svg" />" />
           <span class="notification-count"><c:if test="${ context.notificationCount ne 0 }"><c:out value="${ context.notificationCount }" /></c:if></span>
         </a>
-        <form class="notifications" action="/notifications" <s:csrf name="notifications" /> data-loading="none"></form>
+        <form class="notifications" action="/notifications" <s:csrf name="notifications" /> data-loading="none" style="display: none;"></form>
       </li>
       <li>
         <a href="/messages" class="notifications">
           <img src="<s:resource file="svg/message.svg" />" />
           <span class="message-count"><c:if test="${ context.messageCount ne 0 }"><c:out value="${ context.messageCount }" /></c:if></span>
         </a>
-        <form class="messages" action="/messages" <s:csrf name="messages" /> data-loading="none"></form>
+        <form class="messages" action="/messages" <s:csrf name="messages" /> data-loading="none" style="display: none;"></form>
       </li>
       <li style="display: none;">
         <a href="/friends" class="notifications">
           <img src="<s:resource file="svg/friend.svg" />" />
           <span class="friend-count"><c:if test="${ context.friendCount ne 0 }"><c:out value="${ context.friendCount }" /></c:if></span>
         </a>
-        <form class="friends" action="/friends" <s:csrf name="friends" /> data-loading="none"></form>
+        <form class="friends" action="/friends" <s:csrf name="friends" /> data-loading="none" style="display: none;"></form>
       </li>
       <li><a href="/upload"><img src="<s:resource file="svg/upload.svg" />" /></a></li>
       </c:if>
