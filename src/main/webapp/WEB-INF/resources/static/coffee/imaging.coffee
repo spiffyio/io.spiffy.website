@@ -7,6 +7,7 @@ $(document).ready (e) ->
 initProfileDZ =  ->
   profileDZ = new Dropzone 'form#profile-dz',
     paramName: 'icon',
+    clickable: $('#edit-icon')[0],
     maxFiles: 2,
     maxFilesize: 200,
     uploadMultiple: true,

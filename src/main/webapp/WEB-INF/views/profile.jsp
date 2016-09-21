@@ -12,8 +12,8 @@
     <div style="position: relative; display: inline-block; margin-top: -5em; border: 0.25em solid #F5F5F5; float: left;">
       <img class="profile-icon" style="width: 160px; height: 160px;" src="<c:out value="${ profile.iconUrl }" />" />
       
-      <c:if test="${ (not empty account) and (account.id eq profile.id) and false }">
-      <form id="profile-dz" class="dropzone full" action="/upload" enctype="multipart/form-data" <s:csrf name="upload" /> style="width: auto; height: auto; position: absolute; top: 1em; left: 1em; bottom: 1em; right: 1em; border-color: #F5F5F5;">
+      <c:if test="${ (not empty account) and (account.id eq profile.id) }">
+      <form id="profile-dz" class="dropzone full" action="/upload" enctype="multipart/form-data" <s:csrf name="upload" /> style="display: none;">
         <div class="dz-message"></div>
         <img src="<s:resource file="svg/upload.svg" />" />
         <div class="message error">ahhhh</div> 
@@ -23,15 +23,25 @@
       </form>
       </c:if>
     </div>
-    <div style="margin-left: 3em; display: inline-block; height: 3em; width: 10em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
-      <a href="#">STREAM</a>
+    <div style="margin-left: 0.5em; display: inline-block; height: 3em; width: 10em; text-align: left; font-weight: bold; line-height: 3em; text-transform: uppercase;">
+      <c:out value="${ profile.username  }" />
     </div>
-    <div style="display: inline-block; height: 3em; width: 10em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
-      <a href="/messages/<c:out value="${ profile.username }" />">MESSAGE</a>
-    </div>
-    <div style="display: inline-block; height: 3em; width: 10em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
+    <c:if test="${ (empty account) or (account.id ne profile.id) }">
+    <div style="float: right; display: inline-block; height: 3em; width: 6em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
       <a href="#">FOLLOW</a>
     </div>
+    <div style="float: right; display: inline-block; height: 3em; width: 6em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
+      <a href="/messages/<c:out value="${ profile.username }" />">MESSAGE</a>
+    </div>
+    </c:if>
+    <c:if test="${ (not empty account) and (account.id eq profile.id) }">
+    <div id="edit-icon" style="float: right; display: inline-block; height: 3em; width: 10em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
+      EDIT ICON
+    </div>
+    <div style="float: right; display: inline-block; height: 3em; width: 10em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
+      <a href="#">EDIT BANNER</a>
+    </div>
+    </c:if>
   </div>
 </div>
 
