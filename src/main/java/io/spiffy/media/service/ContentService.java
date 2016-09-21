@@ -170,6 +170,11 @@ public class ContentService extends Service<ContentEntity, ContentRepository> {
             videoService.delete(entity);
         }
 
+        if (entity.getFile() != null) {
+            final FileEntity thumbnail = fileService.get(entity.getFile().getName() + "-thumbnail", entity.getFile().getType());
+            fileService.delete(thumbnail);
+        }
+
         fileService.delete(entity.getFile());
     }
 

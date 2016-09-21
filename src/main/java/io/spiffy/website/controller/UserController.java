@@ -25,9 +25,10 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.NotificationsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserController extends Controller {
 
+    private final HomeController homeController;
     private final MediaClient mediaClient;
     private final NotificationClient notificationClient;
     private final UserClient userClient;
@@ -40,6 +41,8 @@ public class UserController extends Controller {
         }
 
         context.addAttribute("profile", account);
+
+        homeController.prepareContext(context, account, null);
 
         return mav("profile", context);
     }

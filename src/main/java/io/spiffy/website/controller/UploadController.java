@@ -31,6 +31,9 @@ import io.spiffy.website.response.UploadResponse;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UploadController extends Controller {
 
+    private static final String FORM_ICON = "form=icon";
+    private static final String FORM_FILE = "form=file";
+
     private final MediaClient mediaClient;
     private final StreamClient streamClient;
     private final UserClient userClient;
@@ -43,7 +46,7 @@ public class UploadController extends Controller {
 
     @ResponseBody
     @AccessControl
-    @RequestMapping(value = "/upload", method = RequestMethod.POST, params = { "icon[0]", "icon[1]" })
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, params = { FORM_ICON })
     public AjaxResponse uploadIcon(final Context context, @RequestParam(name = "icon[0]") final MultipartFile file,
             @RequestParam(name = "icon[1]") final MultipartFile thumbnail, final @RequestParam String idempotentId)
             throws IOException {
@@ -56,7 +59,7 @@ public class UploadController extends Controller {
 
     @ResponseBody
     @AccessControl
-    @RequestMapping(value = "/upload", method = RequestMethod.POST, params = { "file" })
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, params = { FORM_FILE })
     public AjaxResponse upload(final Context context, @RequestParam final MultipartFile file,
             final @RequestParam String idempotentId) throws IOException {
         final MediaType type = MediaType.getEnum(file.getContentType());

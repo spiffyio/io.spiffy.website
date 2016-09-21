@@ -11,6 +11,7 @@
   <img src="<s:resource file="svg/upload.svg" />" />
   <div class="message error">ahhhh</div> 
   <s:idempotent />
+  <input type="hidden" name="form" value="file" />
 </form>
 
 <form class="submit full" action="/submit" data-name="submit" <s:csrf name="submit" /> data-disabled="true" hidden>

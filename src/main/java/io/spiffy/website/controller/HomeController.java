@@ -30,7 +30,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -48,10 +48,16 @@ public class HomeController extends Controller {
     public ModelAndView home(final Context context, final @RequestParam(required = false) String user,
             final @RequestParam(required = false) String start) {
         final Account account = userClient.getAccount(new Account(user));
+        prepareContext(context, account, start);
+
+        return mav("stream", context);
+    }
+
+    public void prepareContext(final Context context, final Account account, final String start) {
         final List<Post> posts = streamClient.getPosts(account == null ? null : account.getId(),
                 start == null ? null : ObfuscateUtil.unobfuscate(start), 10, true);
         if (CollectionUtils.isEmpty(posts)) {
-            return mav("stream", context);
+            return;
         }
 
         if (posts.size() >= 5) {
@@ -61,18 +67,18 @@ public class HomeController extends Controller {
             posts.add(8, Post.ad());
         }
 
-        context.addAttribute(USER_KEY, user);
+        context.addAttribute(USER_KEY, account == null ? null : account.getUsername());
         context.addAttribute(AFTER_KEY, posts.get(posts.size() - 1).getPostId());
         context.addAttribute(POSTS_KEY, posts);
-
-        return mav("stream", context);
     }
 
     @RequestMapping("/{user}/stream")
     public ModelAndView userStream(final Context context, final @PathVariable String user,
             final @RequestParam(required = false) String start) {
         final Account account = userClient.getAccount(new Account(user));
-        return home(context, account != null ? account.getUsername() : null, start);
+        prepareContext(context, account, start);
+
+        return mav("stream", context);
     }
 
     @RequestMapping("/stream/{postId}")
