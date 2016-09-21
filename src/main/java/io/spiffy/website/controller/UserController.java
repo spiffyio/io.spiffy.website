@@ -25,7 +25,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.NotificationsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private final HomeController homeController;
@@ -58,6 +58,14 @@ public class UserController extends Controller {
     @RequestMapping("/friends")
     public ModelAndView friends(final Context context) {
         return mav("friends", context);
+    }
+
+    @ResponseBody
+    @AccessControl
+    @Csrf("action")
+    @RequestMapping(value = "/{user}/action", method = RequestMethod.POST)
+    public AjaxResponse action(final Context context, final @PathVariable String user, final @RequestParam String action) {
+        return new SuccessResponse(true);
     }
 
     @ResponseBody

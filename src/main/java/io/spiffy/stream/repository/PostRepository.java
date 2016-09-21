@@ -1,5 +1,7 @@
 package io.spiffy.stream.repository;
 
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,13 +36,19 @@ public class PostRepository extends HibernateRepository<PostEntity> {
     }
 
     public List<PostEntity> get(final Long accountId, final Long first, final int maxResults, final boolean includeFirst) {
+        final Set<Long> accountIds = accountId == null ? null : new HashSet<>(Arrays.asList(accountId));
+        return get(accountIds, first, maxResults, includeFirst);
+    }
+
+    public List<PostEntity> get(final Set<Long> accountIds, final Long first, final int maxResults,
+            final boolean includeFirst) {
         final Criteria c = createCriteria();
         c.addOrder(Order.desc("postedAt"));
         c.add(Restrictions.eqOrIsNull("processed", Boolean.TRUE));
         c.add(Restrictions.or(Restrictions.isNull("status"), Restrictions.ne("status", PostEntity.Status.REPORTED)));
 
-        if (accountId != null) {
-            c.add(Restrictions.eq("accountId", accountId));
+        if (accountIds != null) {
+            c.add(Restrictions.in("accountId", accountIds));
         }
 
         if (first != null) {

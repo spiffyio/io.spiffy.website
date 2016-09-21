@@ -1,5 +1,6 @@
 package io.spiffy.stream.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -18,9 +19,12 @@ import io.spiffy.stream.repository.PostRepository;
 
 public class PostService extends Service<PostEntity, PostRepository> {
 
+    private final FollowerService followerService;
+
     @Inject
-    public PostService(final PostRepository repository) {
+    public PostService(final PostRepository repository, final FollowerService followerService) {
         super(repository);
+        this.followerService = followerService;
     }
 
     @Transactional
@@ -41,6 +45,17 @@ public class PostService extends Service<PostEntity, PostRepository> {
     @Transactional
     public List<PostEntity> get(final Long accountId, final Long first, final int maxResults, final boolean includeFirst) {
         return repository.get(accountId, first, maxResults, includeFirst);
+    }
+
+    @Transactional
+    public List<PostEntity> getByFollowees(final Long accountId, final Long first, final int maxResults,
+            final boolean includeFirst) {
+        final Set<Long> followees = followerService.getFollowees(accountId);
+        if (followees.isEmpty()) {
+            return new ArrayList<PostEntity>();
+        }
+
+        return repository.get(followees, first, maxResults, includeFirst);
     }
 
     @Transactional
