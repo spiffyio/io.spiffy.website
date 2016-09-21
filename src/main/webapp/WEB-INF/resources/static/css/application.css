@@ -1303,6 +1303,96 @@ div.comments div.comment {
   float: left;
 }
 
+div.profile-button:hover {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+div.profile-button:active {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+div.profile-bar {
+  width: 100%;
+  max-width: 768px;
+  display: inline-block;
+  text-align: left;
+}
+
+@media only screen and (max-width: 767px) {
+  div.profile-bar {
+    text-align: center;
+  }
+}
+
+div.profile-icon-container {
+  margin-top: -5em;
+  margin-bottom: -5em;
+  float: left;
+  display: inline-block;
+  border: 0.25em solid #F5F5F5;
+  background: #F5F5F5;
+}
+
+@media only screen and (max-width: 767px) {
+  div.profile-icon-container {
+    float: none;
+    margin-bottom: 0em;
+  }
+}
+
+div.profile-icon-container img.profile-icon {
+  height: 160px;
+  width: 160px;
+}
+
+div.profile-name {
+  height: 3em;
+  width: auto;
+  margin-left: 0.5em;
+  padding-right: 2em;
+  display: inline-block;
+  text-align: left;
+  font-weight: bold;
+  line-height: 3em;
+  text-transform: uppercase;
+}
+
+@media only screen and (max-width: 479px) {
+  div.profile-name {
+    height: 1.5em;
+    width: 100%;
+    padding: 0;
+    margin-left: 0;
+    text-align: center;
+    line-height: 1.5em;
+  }
+}
+
+div.profile-button {
+  height: 3em;
+  width: auto;
+  float: right;
+  display: inline-block;
+  padding: 0 1em;
+  text-align: center;
+  font-weight: bold;
+  line-height: 3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #5FD4F5;
+}
+
+@media only screen and (max-width: 479px) {
+  div.profile-button {
+    height: 2em;
+    width: 100%;
+    padding: 0;
+    float: none;
+    text-align: center;
+    line-height: 2em;
+  }
+}
+
 div.dz-preview {
   display: none;
 }

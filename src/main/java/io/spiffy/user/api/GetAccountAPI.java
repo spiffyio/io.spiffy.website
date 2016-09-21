@@ -58,8 +58,20 @@ public class GetAccountAPI extends API<GetAccountInput, GetAccountOutput, Accoun
             iconUrl = DEFAULT_ICON;
         }
 
+        final String bannerUrl;
+        if (entity.getBannerId() != null) {
+            final GetMediaOutput media = mediaClient.getMedia(entity.getBannerId());
+            if (media.getContent() != null) {
+                bannerUrl = media.getContent().getFile();
+            } else {
+                bannerUrl = DEFAULT_ICON;
+            }
+        } else {
+            bannerUrl = DEFAULT_ICON;
+        }
+
         output.setAccount(new Account(entity.getId(), entity.getUserName(), entity.getEmailAddress(), entity.getEmailVerified(),
-                iconUrl));
+                iconUrl, bannerUrl));
 
         return output;
     }

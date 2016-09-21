@@ -71,6 +71,7 @@ Dropzone.options.dzForm = {
   uploadMultiple: false,
   createImageThumbnails: false,
   autoProcessQueue: true,
+  acceptedFiles: ".jpeg,.jpg,.png,.gif,.mov,.mp4,.mpeg4,.mpeg,.webm",
   accept: (file, done) ->
     type = file.type
     if type.equalsIgnoreCase 'image/gif' then done()

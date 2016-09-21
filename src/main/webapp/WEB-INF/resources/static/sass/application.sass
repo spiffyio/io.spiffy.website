@@ -791,6 +791,72 @@ div.comments
     text-align: initial
     float: left
 
+div.profile-button:hover
+  background: rgba(0, 0, 0, 0.1)
+
+div.profile-button:active
+  background: rgba(0, 0, 0, 0.3)
+
+div.profile-bar
+  width: 100%
+  max-width: $md
+  display: inline-block
+  text-align: left
+
+  +max-width($md)
+    text-align: center
+
+div.profile-icon-container
+  margin-top: -5em
+  margin-bottom: -5em
+  float: left
+  display: inline-block
+  border: 0.25em solid $w1
+  background: $w1
+
+  +max-width($md)
+    float: none
+    margin-bottom: 0em
+
+  img.profile-icon
+    +size(160px, 160px)
+
+div.profile-name
+  +size(3em, auto)
+  margin-left: 0.5em
+  padding-right: 2em
+  display: inline-block
+  text-align: left
+  font-weight: bold
+  line-height: 3em
+  text-transform: uppercase
+
+  +max-width($sm)
+    +size(1.5em, 100%)
+    padding: 0
+    margin-left: 0
+    text-align: center
+    line-height: 1.5em
+
+div.profile-button
+  +size(3em, auto)
+  float: right
+  display: inline-block
+  padding: 0 1em
+  text-align: center
+  font-weight: bold
+  line-height: 3em
+  text-transform: uppercase
+  cursor: pointer
+  color: $b3
+
+  +max-width($sm)
+    +size(2em, 100%)
+    padding: 0
+    float: none
+    text-align: center
+    line-height: 2em
+
 div.dz-preview
   display: none
 

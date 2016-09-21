@@ -43,6 +43,10 @@ public class AccountEntity extends HibernateEntity {
     private Long iconId;
 
     @Setter
+    @Column(name = "banner_id")
+    private Long bannerId;
+
+    @Setter
     @Transient
     private String emailAddress;
 

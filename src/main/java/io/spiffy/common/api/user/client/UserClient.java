@@ -17,7 +17,7 @@ import io.spiffy.common.api.user.output.*;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UserClient extends Client {
 
     final AuthenticateAccountCall authenticateAccountCall;
@@ -93,8 +93,8 @@ public class UserClient extends Client {
         return output.getId() != null;
     }
 
-    public long postAccount(final String userName, final String emailAddress, final Long iconId) {
-        final PostAccountInput input = new PostAccountInput(userName, emailAddress, iconId);
+    public long postAccount(final String userName, final String emailAddress, final Long iconId, final Long bannerId) {
+        final PostAccountInput input = new PostAccountInput(userName, emailAddress, iconId, bannerId);
         final PostOutput output = postAccountCall.call(input);
         return output.getId();
     }

@@ -5,41 +5,31 @@
 <jsp:include page="common/header.jsp" />
 
 <div style="width: 100%; max-height: 20em; overflow: hidden; display: flex; align-items: center; text-align: center;">
-  <img src="//cdn.spiffy.io/media/HnRPtk.jpg" style="width: 100vw;"/>
+  <img class="profile-banner" src="<c:out value="${ profile.bannerUrl }" />" style="width: 100vw;"/>
 </div>
-<div style="width: 100%; height: 3em; background: #F5F5F5; text-align: center;">
-  <div style="width: 100%; max-width: 800px; display: inline-block; text-align: left;">
-    <div style="position: relative; display: inline-block; margin-top: -5em; border: 0.25em solid #F5F5F5; float: left;">
-      <img class="profile-icon" style="width: 160px; height: 160px;" src="<c:out value="${ profile.iconUrl }" />" />
-      
-      <c:if test="${ (not empty account) and (account.id eq profile.id) }">
-      <form id="profile-dz" class="dropzone full" action="/upload" enctype="multipart/form-data" <s:csrf name="upload" /> style="display: none;">
-        <div class="dz-message"></div>
-        <img src="<s:resource file="svg/upload.svg" />" />
-        <div class="message error">ahhhh</div> 
-        <s:idempotent />
-        <input type="hidden" name="form" value="icon" />
-        <div class="dz-message"></div>
-      </form>
-      </c:if>
+<div style="width: 100%; height: auto; display: inline-block; background: #F5F5F5; text-align: center;">
+  <div class="profile-bar">
+    <div class="profile-icon-container">
+      <img class="profile-icon" src="<c:out value="${ profile.iconUrl }" />" />
     </div>
-    <div style="margin-left: 0.5em; display: inline-block; height: 3em; width: 10em; text-align: left; font-weight: bold; line-height: 3em; text-transform: uppercase;">
+    <br class="md-hidden" />
+    <div class="profile-name">
       <c:out value="${ profile.username  }" />
     </div>
     <c:if test="${ (empty account) or (account.id ne profile.id) }">
-    <div style="float: right; display: inline-block; height: 3em; width: 6em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
+    <div class="profile-button">
       <a href="#">FOLLOW</a>
     </div>
-    <div style="float: right; display: inline-block; height: 3em; width: 6em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
+    <div class="profile-button">
       <a href="/messages/<c:out value="${ profile.username }" />">MESSAGE</a>
     </div>
     </c:if>
     <c:if test="${ (not empty account) and (account.id eq profile.id) }">
-    <div id="edit-icon" style="float: right; display: inline-block; height: 3em; width: 10em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
-      EDIT ICON
+    <div class="profile-button" id="edit-icon">
+      CHANGE ICON
     </div>
-    <div style="float: right; display: inline-block; height: 3em; width: 10em; text-align: center; font-weight: bold; line-height: 3em; text-transform: uppercase; cursor: pointer;">
-      <a href="#">EDIT BANNER</a>
+    <div class="profile-button" id="edit-banner">
+      CHANGE BANNER
     </div>
     </c:if>
   </div>
@@ -71,7 +61,22 @@
   <input type="hidden" name="quantity" />
 </form>
 
-<div id="profile-modal" class="modal-overlay">
+<c:if test="${ (not empty account) and (account.id eq profile.id) }">
+<form id="icon-dz" class="dropzone full" action="/upload" enctype="multipart/form-data" <s:csrf name="upload" /> style="display: none;">
+  <div class="dz-message"></div>
+  <img src="<s:resource file="svg/upload.svg" />" />
+  <s:idempotent />
+  <input type="hidden" name="form" value="icon" />
+  <div class="dz-message"></div>
+</form>
+<form id="banner-dz" class="dropzone full" action="/upload" enctype="multipart/form-data" <s:csrf name="upload" /> style="display: none;">
+  <div class="dz-message"></div>
+  <img src="<s:resource file="svg/upload.svg" />" />
+  <s:idempotent />
+  <input type="hidden" name="form" value="banner" />
+  <div class="dz-message"></div>
+</form>
+<div id="icon-modal" class="modal-overlay">
   <div class="modal">
     <div class="modal-header">
       <div class="content">
@@ -80,12 +85,13 @@
       </div>
     </div>
     <div class="modal-body">
-      <div class="profile-container" style="display: inline-block; text-align: center;">
-        <div class="croppie"></div>
+      <div class="icon-container" style="display: inline-block; text-align: center;">
+        <div class="spiffy-croppie"></div>
         <div class="button primary" style="width: 5em;">save</div>
       </div>
     </div>
   </div>
 </div>
+</c:if>
 
 <jsp:include page="common/footer.jsp" />

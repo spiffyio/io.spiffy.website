@@ -13,4 +13,5 @@ public class PostAccountInput {
     private String userName;
     private String emailAddress;
     private Long iconId;
+    private Long bannerId;
 }

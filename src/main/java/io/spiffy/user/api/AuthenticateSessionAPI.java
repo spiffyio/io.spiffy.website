@@ -48,8 +48,20 @@ public class AuthenticateSessionAPI extends API<AuthenticateSessionInput, Authen
             iconUrl = DEFAULT_ICON;
         }
 
+        final String bannerUrl;
+        if (entity.getBannerId() != null) {
+            final GetMediaOutput output = mediaClient.getMedia(entity.getBannerId());
+            if (output.getContent() != null) {
+                bannerUrl = output.getContent().getFile();
+            } else {
+                bannerUrl = DEFAULT_ICON;
+            }
+        } else {
+            bannerUrl = DEFAULT_ICON;
+        }
+
         final Account account = new Account(entity.getId(), entity.getUserName(),
-                emailClient.getEmailAddress(entity.getEmailAddressId()), entity.getEmailVerified(), iconUrl);
+                emailClient.getEmailAddress(entity.getEmailAddressId()), entity.getEmailVerified(), iconUrl, bannerUrl);
 
         return new AuthenticateSessionOutput(account);
     }

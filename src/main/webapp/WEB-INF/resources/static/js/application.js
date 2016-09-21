@@ -607,19 +607,50 @@ Messenger = {
   }
 };
 
-var initProfileDZ;
+var initBannerDZ, initIconDZ;
 
 Dropzone.autoDiscover = false;
 
 $(document).ready(function(e) {
-  if ($('form#profile-dz').length) {
-    return initProfileDZ();
+  if ($('form#icon-dz').length) {
+    initIconDZ();
+  }
+  if ($('form#banner-dz').length) {
+    return initBannerDZ();
   }
 });
 
-initProfileDZ = function() {
-  var profileDZ, profileDZAddedFile;
-  profileDZ = new Dropzone('form#profile-dz', {
+initIconDZ = function() {
+  var croppie, div, iconDZ, iconDZAddedFile;
+  div = $('.icon-container');
+  croppie = new Croppie(div.find('.spiffy-croppie')[0], {
+    enableOrientation: true,
+    viewport: {
+      width: 160,
+      height: 160,
+      type: 'square'
+    }
+  });
+  div.find('.button.primary').click(function() {
+    croppie.result({
+      size: {
+        width: 160,
+        height: 160
+      },
+      format: croppie.format
+    }).then(function(canvas) {
+      var blob, img;
+      closeModal('#icon-modal');
+      img = $('.profile-icon');
+      img.attr('src', canvas);
+      blob = dataURItoBlob(canvas);
+      blob.name = 'thumbnail.' + croppie.format;
+      iconDZ.addFile(blob);
+      iconDZ.processQueue();
+    });
+    return croppie.get();
+  });
+  iconDZ = new Dropzone('form#icon-dz', {
     paramName: 'icon',
     clickable: $('#edit-icon')[0],
     maxFiles: 2,
@@ -627,6 +658,7 @@ initProfileDZ = function() {
     uploadMultiple: true,
     createImageThumbnails: true,
     autoProcessQueue: false,
+    acceptedFiles: ".jpeg,.jpg,.png",
     accept: function(file, done) {
       var type;
       file.acceptDimensions = done;
@@ -653,20 +685,23 @@ initProfileDZ = function() {
         }
       });
       return this.on('addedfile', function(file) {
-        profileDZAddedFile(file);
+        iconDZAddedFile(file);
       });
     }
   });
-  return profileDZAddedFile = function(file) {
-    var croppie, div, form, message, src;
+  $(document).on('click', '#edit-icon', function(e) {
+    return iconDZ.removeAllFiles(true);
+  });
+  return iconDZAddedFile = function(file) {
+    var form, message, src;
     if (file.accepted == null) {
       setTimeout(function() {
-        return profileDZAddedFile(file);
+        return iconDZAddedFile(file);
       }, 10);
       return;
     }
     if (!file.accepted) {
-      form = $(profileDZ.element);
+      form = $(iconDZ.element);
       message = form.find('.message');
       message.html('unable to upload file: ' + file.name);
       message.slideDown();
@@ -675,40 +710,85 @@ initProfileDZ = function() {
       }, 500);
       return;
     }
-    if (profileDZ.files.length === 2) {
+    if (iconDZ.files.length === 2) {
       return;
     }
-    $(profileDZ.element).hide();
-    openModal('#profile-modal');
+    $(iconDZ.element).hide();
+    openModal('#icon-modal');
     src = URL.createObjectURL(file);
-    div = $('.profile-container');
-    croppie = new Croppie(div.find('.croppie')[0], {
-      url: src,
-      enableOrientation: true,
-      viewport: {
-        width: 160,
-        height: 160,
-        type: 'square'
+    div = $('.icon-container');
+    croppie.bind({
+      url: src
+    });
+    croppie.format = file.type.equalsIgnoreCase('image/png') ? 'png' : 'jpeg';
+  };
+};
+
+initBannerDZ = function() {
+  var bannerDZ, bannerDZAddedFile;
+  bannerDZ = new Dropzone('form#banner-dz', {
+    paramName: 'banner',
+    clickable: $('#edit-banner')[0],
+    maxFiles: 1,
+    maxFilesize: 200,
+    uploadMultiple: false,
+    createImageThumbnails: true,
+    autoProcessQueue: true,
+    acceptedFiles: ".jpeg,.jpg,.png",
+    accept: function(file, done) {
+      var type;
+      file.acceptDimensions = done;
+      file.rejectDimensions = function() {
+        return done('image must be at least 320 x 180 pixels');
+      };
+      type = file.type;
+      if (type.equalsIgnoreCase('image/jpg')) {
+        done();
+      } else if (type.equalsIgnoreCase('image/jpeg')) {
+        done();
+      } else if (type.equalsIgnoreCase('image/png')) {
+        done();
+      } else {
+        done('unable to upload file: ' + file.name);
       }
-    });
-    div.find('.button.primary').click(function() {
-      croppie.result({
-        size: {
-          width: 160,
-          height: 160
-        },
-        format: file.type.equalsIgnoreCase('image/png') ? 'png' : 'jpeg'
-      }).then(function(canvas) {
-        var blob, img;
-        closeModal('#profile-modal');
-        img = $('.profile-icon');
-        img.attr('src', canvas);
-        blob = dataURItoBlob(canvas);
-        profileDZ.addFile(blob);
-        profileDZ.processQueue();
+    },
+    init: function() {
+      this.on('thumbnail', function(file) {
+        if (file.width < 320 || file.height < 180) {
+          file.rejectDimensions();
+        } else {
+          file.acceptDimensions();
+        }
       });
-      return croppie.get();
-    });
+      return this.on('addedfile', function(file) {
+        bannerDZAddedFile(file);
+      });
+    }
+  });
+  $(document).on('click', '#edit-banner', function(e) {
+    return bannerDZ.removeAllFiles(true);
+  });
+  return bannerDZAddedFile = function(file) {
+    var form, img, message, src;
+    if (file.accepted == null) {
+      setTimeout(function() {
+        return bannerDZAddedFile(file);
+      }, 10);
+      return;
+    }
+    if (!file.accepted) {
+      form = $(bannerDZ.element);
+      message = form.find('.message');
+      message.html('unable to upload file: ' + file.name);
+      message.slideDown();
+      form.animate({
+        height: '10em'
+      }, 500);
+      return;
+    }
+    src = URL.createObjectURL(file);
+    img = $('.profile-banner');
+    img.attr('src', src);
   };
 };
 
@@ -779,6 +859,7 @@ Dropzone.options.dzForm = {
   uploadMultiple: false,
   createImageThumbnails: false,
   autoProcessQueue: true,
+  acceptedFiles: ".jpeg,.jpg,.png,.gif,.mov,.mp4,.mpeg4,.mpeg,.webm",
   accept: function(file, done) {
     var type;
     type = file.type;

@@ -31,6 +31,7 @@ import io.spiffy.website.response.UploadResponse;
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class UploadController extends Controller {
 
+    private static final String FORM_BANNER = "form=banner";
     private static final String FORM_ICON = "form=icon";
     private static final String FORM_FILE = "form=file";
 
@@ -46,6 +47,17 @@ public class UploadController extends Controller {
 
     @ResponseBody
     @AccessControl
+    @RequestMapping(value = "/upload", method = RequestMethod.POST, params = { FORM_BANNER })
+    public AjaxResponse uploadBanner(final Context context, @RequestParam(name = "banner") final MultipartFile file,
+            final @RequestParam String idempotentId) throws IOException {
+        final MediaType type = MediaType.getEnum(file.getContentType());
+        final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type, file.getBytes());
+        userClient.postAccount(context.getUsername(), context.getEmail(), null, ObfuscateUtil.unobfuscate(name));
+        return new SuccessResponse(true);
+    }
+
+    @ResponseBody
+    @AccessControl
     @RequestMapping(value = "/upload", method = RequestMethod.POST, params = { FORM_ICON })
     public AjaxResponse uploadIcon(final Context context, @RequestParam(name = "icon[0]") final MultipartFile file,
             @RequestParam(name = "icon[1]") final MultipartFile thumbnail, final @RequestParam String idempotentId)
@@ -53,7 +65,7 @@ public class UploadController extends Controller {
         final MediaType type = MediaType.getEnum(file.getContentType());
         final String name = mediaClient.postMedia(context.getAccountId(), idempotentId, type, file.getBytes(),
                 thumbnail.getBytes());
-        userClient.postAccount(context.getUsername(), context.getEmail(), ObfuscateUtil.unobfuscate(name));
+        userClient.postAccount(context.getUsername(), context.getEmail(), ObfuscateUtil.unobfuscate(name), null);
         return new SuccessResponse(true);
     }
 
