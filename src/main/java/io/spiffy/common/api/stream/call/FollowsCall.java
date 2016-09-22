@@ -11,6 +11,6 @@ public class FollowsCall extends SpiffyCall<FollowsInput, BooleanOutput> {
 
     @Inject
     public FollowsCall(final WebTarget target) {
-        super(BooleanOutput.class, target.path("stream/follows"));
+        super(BooleanOutput.class, target.path("stream/follows"), null);
     }
 }
