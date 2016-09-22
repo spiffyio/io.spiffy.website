@@ -56,6 +56,7 @@
     <div class="source">
       <div class="account">
         <div class="thumbnail">
+          <a href="/<c:out value="${ comment.account.username }" />"><img src="<c:out value="${ comment.account.iconUrl }" />" /></a>
         </div>
         <div class="username">
           <a href="/<c:out value="${ comment.account.username }" />"><c:out value="${ comment.account.username }" /></a>

@@ -1092,6 +1092,11 @@ div.disabled:before {
   line-height: 1.5em;
 }
 
+.grid .col .panel div.source div.account img, .post-comment div.source div.account img {
+  height: 3em;
+  width: 3em;
+}
+
 .grid .col .panel div.source div.account div, .post-comment div.source div.account div {
   margin-left: 0.5em;
   float: left;

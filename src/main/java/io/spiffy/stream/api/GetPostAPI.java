@@ -54,6 +54,6 @@ public class GetPostAPI extends API<GetInput, GetPostOutput, PostService> {
         final GetMediaOutput media = mediaClient.getMedia(e.getMediaId());
         final Account account = userClient.getAccount(new Account(e.getAccountId()));
         return new Post(e.getName(), e.getDescription(), e.getPostedAt(),
-                new PublicAccount(account.getId(), account.getUsername()), media.getContent());
+                new PublicAccount(account.getId(), account.getUsername(), account.getIconUrl()), media.getContent());
     }
 }

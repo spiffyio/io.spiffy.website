@@ -43,6 +43,7 @@
       </div>
       <div class="account">
         <div class="thumbnail">
+          <a href="/<c:out value="${ post.account.username }" />"><img src="<c:out value="${ post.account.iconUrl }" />" /></a>
         </div>
         <div class="username">
           <a href="/<c:out value="${ post.account.username }" />"><c:out value="${ post.account.username }" /></a>

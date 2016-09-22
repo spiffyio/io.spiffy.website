@@ -40,7 +40,7 @@ public class GetCommentsAPI extends API<GetCommentsInput, GetCommentsOutput, Thr
 
     private Comment transform(final ThreadDTO thread, final CommentEntity e) {
         final Account account = userClient.getAccount(e.getAccountId());
-        return new Comment(thread, e.getId(), new PublicAccount(account.getId(), account.getUsername()), e.getPostedAt(),
-                e.getComment());
+        return new Comment(thread, e.getId(), new PublicAccount(account.getId(), account.getUsername(), account.getIconUrl()),
+                e.getPostedAt(), e.getComment());
     }
 }

@@ -10,4 +10,5 @@ import lombok.NoArgsConstructor;
 public class PublicAccount {
     private Long id;
     private String username;
+    private String iconUrl;
 }
