@@ -31,7 +31,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -48,6 +48,8 @@ public class HomeController extends Controller {
     @RequestMapping("/")
     public ModelAndView home(final Context context, final @RequestParam(required = false) String start) {
         prepareContext(context, context.getAccount(), GetPostsInput.Type.FOLLOWER, start);
+
+        context.addAttribute("followees", "followees");
 
         return mav("stream", context);
     }
@@ -158,10 +160,19 @@ public class HomeController extends Controller {
     @Csrf("posts")
     @RequestMapping(value = "/posts", method = RequestMethod.POST)
     public AjaxResponse posts(final Context context, final @RequestParam(required = false) String user,
-            final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "10") int quantity) {
-        final Account account = userClient.getAccount(new Account(user));
-        final List<Post> posts = streamClient.getPosts(account == null ? null : account.getId(),
-                after == null ? null : ObfuscateUtil.unobfuscate(after), quantity, false);
+            final @RequestParam(required = false) String after, final @RequestParam(defaultValue = "10") int quantity,
+            final @RequestParam(required = false) String followees) {
+
+        final List<Post> posts;
+        if (context.getAccountId() != null && "followees".equalsIgnoreCase(followees)) {
+            posts = streamClient.getPosts(context.getAccountId(), GetPostsInput.Type.FOLLOWER,
+                    after == null ? null : ObfuscateUtil.unobfuscate(after), quantity, false);
+        } else {
+            final Account account = userClient.getAccount(new Account(user));
+            posts = streamClient.getPosts(account == null ? null : account.getId(),
+                    after == null ? null : ObfuscateUtil.unobfuscate(after), quantity, false);
+        }
+
         if (CollectionUtils.isEmpty(posts)) {
             return new PostsResponse(null, null);
         }
