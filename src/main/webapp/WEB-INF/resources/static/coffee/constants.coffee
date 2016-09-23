@@ -1,13 +1,17 @@
-Config =
-  cdn: '//cdn.spiffy.io/static'
+Spiffy = {}
 
-Keys =
-  left: 37
-  right: 39
+Spiffy.constants =
+  config:
+    CDN: '//cdn.spiffy.io'
+  key:
+    LEFT: 37
+    RIGHT: 39
+  size:
+    width:
+      XS: 320
+      SM: 480
+      MD: 768
+      LG: 992
+      XL: 120
 
-Width =
-  xs: 320
-  sm: 480
-  md: 768
-  lg: 992
-  xl: 1200
+Spiffy.c = Spiffy.constants

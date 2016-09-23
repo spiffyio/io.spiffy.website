@@ -6,11 +6,11 @@ String::contains           ?= (s) -> s == '' or @indexOf(s) > -1
 String::containsIgnoreCase ?= (s) -> s == '' or @toUpperCase().indexOf(s.toUpperCase()) > -1
 String::equalsIgnoreCase   ?= (s) -> @toUpperCase() == s.toUpperCase()
 
-Spiffy =
-  firstDefined : () ->
-    defined = argument for argument in arguments by -1 when argument?
-    if defined? then return defined
-    return undefined
+Handlebars.spiffy =
+  html: (name, data) ->
+    element = Spiffy.f.element.template name
+    template = Handlebars.compile element.html()
+    return template data
 
 jQuery.fn.spiffy = () ->
   elements = $ this

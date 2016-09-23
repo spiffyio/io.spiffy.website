@@ -1,3 +1,23 @@
+Spiffy.functions =
+  firstDefined: () ->
+    defined = argument for argument in arguments by -1 when argument?
+    if defined? then return defined
+    return undefined
+  click: (selector, handler, preventDefault = true) ->
+    $(document).on 'click', selector, (e) ->
+      if preventDefault then e.preventDefault()
+      handler e, $(this)
+      return
+    return
+  element:
+    template: (name) ->
+      selector = '[data-template="$name"]'.replace '$name', name
+      return $ selector
+
+Spiffy.f = Spiffy.functions
+
+Spiffy.firstDefined = Spiffy.f.firstDefined
+
 preventDefault = (e) ->
   e.preventDefault()
   return
@@ -7,30 +27,6 @@ handler = (handler) ->
   overrideHandler = handler if defined handler
   return refresh if not defined overrideHandler
   return overrideHandler
-
-medium = (img) ->
-  quality img, 'm', ['a', 'l'], () ->
-    high img
-    return
-  return
-
-high = (img) ->
-  quality img, 'h', ['a', 'l', 'm']
-  return
-
-quality = (img, q, old = ['a', 'l', 'm', 'h'], callback) ->
-    src = img.attr 'src'
-    for o in old
-      src = src.replace 'q=' + o, 'q=' + q
-    image = new Image()
-    image.onload ->
-      img
-        .remove 'lazy'
-        .attr 'src', src
-      if callback? then callback()
-      return
-    image.src = src
-    return
 
 confirmation = (title, action) ->
   dialog = $ '#confirmation'

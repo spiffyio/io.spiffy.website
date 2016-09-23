@@ -1,23 +1,67 @@
-var Config, Keys, Width;
+var Spiffy;
 
-Config = {
-  cdn: '//cdn.spiffy.io/static'
+Spiffy = {};
+
+Spiffy.constants = {
+  config: {
+    CDN: '//cdn.spiffy.io'
+  },
+  key: {
+    LEFT: 37,
+    RIGHT: 39
+  },
+  size: {
+    width: {
+      XS: 320,
+      SM: 480,
+      MD: 768,
+      LG: 992,
+      XL: 120
+    }
+  }
 };
 
-Keys = {
-  left: 37,
-  right: 39
+Spiffy.c = Spiffy.constants;
+
+var blank, confirmation, contains, dataURItoBlob, defined, go, handler, initModalSize, overrideHandler, preventDefault, refresh;
+
+Spiffy.functions = {
+  firstDefined: function() {
+    var argument, defined, j;
+    for (j = arguments.length - 1; j >= 0; j += -1) {
+      argument = arguments[j];
+      if (argument != null) {
+        defined = argument;
+      }
+    }
+    if (defined != null) {
+      return defined;
+    }
+    return void 0;
+  },
+  click: function(selector, handler, preventDefault) {
+    if (preventDefault == null) {
+      preventDefault = true;
+    }
+    $(document).on('click', selector, function(e) {
+      if (preventDefault) {
+        e.preventDefault();
+      }
+      handler(e, $(this));
+    });
+  },
+  element: {
+    template: function(name) {
+      var selector;
+      selector = '[data-template="$name"]'.replace('$name', name);
+      return $(selector);
+    }
+  }
 };
 
-Width = {
-  xs: 320,
-  sm: 480,
-  md: 768,
-  lg: 992,
-  xl: 1200
-};
+Spiffy.f = Spiffy.functions;
 
-var blank, confirmation, contains, dataURItoBlob, defined, go, handler, high, initModalSize, medium, overrideHandler, preventDefault, quality, refresh;
+Spiffy.firstDefined = Spiffy.f.firstDefined;
 
 preventDefault = function(e) {
   e.preventDefault();
@@ -33,36 +77,6 @@ handler = function(handler) {
     return refresh;
   }
   return overrideHandler;
-};
-
-medium = function(img) {
-  quality(img, 'm', ['a', 'l'], function() {
-    high(img);
-  });
-};
-
-high = function(img) {
-  quality(img, 'h', ['a', 'l', 'm']);
-};
-
-quality = function(img, q, old, callback) {
-  var image, j, len, o, src;
-  if (old == null) {
-    old = ['a', 'l', 'm', 'h'];
-  }
-  src = img.attr('src');
-  for (j = 0, len = old.length; j < len; j++) {
-    o = old[j];
-    src = src.replace('q=' + o, 'q=' + q);
-  }
-  image = new Image();
-  image.onload(function() {
-    img.remove('lazy').attr('src', src);
-    if (callback != null) {
-      callback();
-    }
-  });
-  image.src = src;
 };
 
 confirmation = function(title, action) {
@@ -130,7 +144,7 @@ dataURItoBlob = function(dataURI) {
   });
 };
 
-var Spiffy, base, base1, base2, base3, base4, base5;
+var base, base1, base2, base3, base4, base5;
 
 if ((base = Array.prototype).isArray == null) {
   base.isArray = function(a) {
@@ -168,19 +182,12 @@ if ((base5 = String.prototype).equalsIgnoreCase == null) {
   };
 }
 
-Spiffy = {
-  firstDefined: function() {
-    var argument, defined, i;
-    for (i = arguments.length - 1; i >= 0; i += -1) {
-      argument = arguments[i];
-      if (argument != null) {
-        defined = argument;
-      }
-    }
-    if (defined != null) {
-      return defined;
-    }
-    return void 0;
+Handlebars.spiffy = {
+  html: function(name, data) {
+    var element, template;
+    element = Spiffy.f.element.template(name);
+    template = Handlebars.compile(element.html());
+    return template(data);
   }
 };
 
@@ -404,23 +411,17 @@ jQuery.fn.spiffy = function() {
   };
 };
 
+Spiffy.f.click('a[href="#"]', function() {
+  return {};
+});
+
 var Messenger;
 
-$(document).on('click', 'a[href="#"]', function(e) {
-  e.preventDefault();
+Spiffy.f.click('.chat-thread', function(e, element) {
+  Messenger.open(element);
 });
 
-Handlebars.html = function(name, data) {
-  var template;
-  template = Handlebars.compile($('[data-template="' + name + '"]').html());
-  return template(data);
-};
-
-$(document).on('click', '.chat-thread', function(e) {
-  Messenger.open($(this));
-});
-
-$(document).on('click', '.new-message', function(e) {
+Spiffy.f.click('.new-message', function() {
   Messenger["new"]();
 });
 
@@ -501,7 +502,7 @@ Messenger = {
       return;
     }
     container = $(container);
-    container.prepend(Handlebars.html(template, data));
+    container.prepend(Handlebars.spiffy.html(template, data));
     element = $(selector);
     element.slideDown();
     element.animate({
@@ -1273,10 +1274,10 @@ loadPosts = function(posts) {
       post: post
     }));
     cols = 3;
-    if ($(window).width() < Width.xl) {
+    if ($(window).width() < Spiffy.c.size.width.XL) {
       cols = 2;
     }
-    if ($(window).width() < Width.md) {
+    if ($(window).width() < Spiffy.c.size.width.MD) {
       cols = 1;
     }
     col = $('.col[data-index="' + (i % cols) + '"]');
@@ -1308,13 +1309,17 @@ adjustColumns = function() {
       col = $('.col[data-index="1"]');
       panel = col.find('.panel:last');
     }
+    if ($('.col[data-index="0"]').find('.panel').length > $('.col[data-index="1"]').find('.panel').length) {
+      col = $('.col[data-index="0"]');
+      panel = col.find('.panel:last');
+    }
     input = form.find('input[name="after"]');
     input.val(panel.data('post-id'));
   }
-  if ($(window).width() < Width.xl) {
+  if ($(window).width() < Spiffy.c.size.width.XL) {
     emptyColumn(2);
   }
-  if ($(window).width() < Width.md) {
+  if ($(window).width() < Spiffy.c.size.width.MD) {
     emptyColumn(1);
   }
 };
@@ -1369,21 +1374,21 @@ sortColumn = function(i) {
 $(window).resize(function(e) {
   var width;
   width = $(window).width();
-  if ((width > window.pWidth) && (width >= Width.md)) {
+  if ((width > window.pWidth) && (width >= Spiffy.c.size.width.MD)) {
     $('.subheader').show();
     fillColumn(1, 2);
   }
-  if ((width < window.pWidth) && (width < Width.md)) {
+  if ((width < window.pWidth) && (width < Spiffy.c.size.width.MD)) {
     $('.subheader').hide();
     $('.hamburger').removeClass('active');
     emptyColumn(1);
   }
-  if ((width > window.pWidth) && (width >= Width.xl)) {
+  if ((width > window.pWidth) && (width >= Spiffy.c.size.width.XL)) {
     emptyColumn(1);
     fillColumn(1, 3);
     fillColumn(2, 3);
   }
-  if ((width < window.pWidth) && (width < Width.xl)) {
+  if ((width < window.pWidth) && (width < Spiffy.c.size.width.XL)) {
     emptyColumn(2);
   }
   window.pWidth = width;

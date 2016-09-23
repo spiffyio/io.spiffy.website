@@ -1,6 +1,7 @@
 # @prepros-prepend constants.coffee
 # @prepros-prepend functions.coffee
 # @prepros-prepend extension.coffee
+# @prepros-prepend global.coffee
 # @prepros-prepend messenger.coffee
 # @prepros-prepend imaging.coffee
 
@@ -431,8 +432,8 @@ loadPosts = (posts) ->
     panel.append template({ post: post })
 
     cols = 3
-    if ($(window).width() < Width.xl) then cols = 2
-    if ($(window).width() < Width.md) then cols = 1
+    if ($(window).width() < Spiffy.c.size.width.XL) then cols = 2
+    if ($(window).width() < Spiffy.c.size.width.MD) then cols = 1
 
     col = $('.col[data-index="' + (i % cols) + '"]')
 
@@ -461,11 +462,14 @@ adjustColumns = () ->
     if panel.data('post-id').equalsIgnoreCase 'ad'
       col = $ '.col[data-index="1"]'
       panel = col.find '.panel:last'
+    if $('.col[data-index="0"]').find('.panel').length > $('.col[data-index="1"]').find('.panel').length
+      col = $ '.col[data-index="0"]'
+      panel = col.find '.panel:last'
     input = form.find 'input[name="after"]'
     input.val panel.data('post-id')
 
-  if ($(window).width() < Width.xl) then emptyColumn 2
-  if ($(window).width() < Width.md) then emptyColumn 1
+  if ($(window).width() < Spiffy.c.size.width.XL) then emptyColumn 2
+  if ($(window).width() < Spiffy.c.size.width.MD) then emptyColumn 1
 
   return
 
@@ -508,18 +512,18 @@ sortColumn = (i) ->
 
 $(window).resize (e) ->
   width = $(window).width()
-  if (width > window.pWidth) and (width >= Width.md)
+  if (width > window.pWidth) and (width >= Spiffy.c.size.width.MD)
     $('.subheader').show()
     fillColumn 1, 2
-  if (width < window.pWidth) and (width < Width.md)
+  if (width < window.pWidth) and (width < Spiffy.c.size.width.MD)
     $('.subheader').hide()
     $('.hamburger').removeClass 'active'
     emptyColumn 1
-  if (width > window.pWidth) and (width >= Width.xl)
+  if (width > window.pWidth) and (width >= Spiffy.c.size.width.XL)
     emptyColumn 1
     fillColumn 1, 3
     fillColumn 2, 3
-  if (width < window.pWidth) and (width < Width.xl)
+  if (width < window.pWidth) and (width < Spiffy.c.size.width.XL)
     emptyColumn 2
   window.pWidth = width
   return

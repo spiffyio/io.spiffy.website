@@ -1,16 +1,8 @@
-$(document).on 'click', 'a[href="#"]', (e) ->
-  e.preventDefault()
+Spiffy.f.click '.chat-thread', (e, element) ->
+  Messenger.open element
   return
 
-Handlebars.html = (name, data) ->
-  template = Handlebars.compile($('[data-template="' + name + '"]').html())
-  return template(data)
-
-$(document).on 'click', '.chat-thread', (e) ->
-  Messenger.open $(this)
-  return
-
-$(document).on 'click', '.new-message', (e) ->
+Spiffy.f.click '.new-message', () ->
   Messenger.new()
   return
 
@@ -70,7 +62,7 @@ Messenger =
     if element.is selector then return
 
     container = $ container
-    container.prepend Handlebars.html(template, data)
+    container.prepend Handlebars.spiffy.html(template, data)
 
     element = $ selector
     element.slideDown()

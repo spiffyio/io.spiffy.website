@@ -56,19 +56,16 @@ public class AlertService extends Service<AlertEntity, AlertRepository> {
             return null;
         }
 
-        final String actionUrl = "/stream/" + post.getPostId();
-        final String iconUrl;
-
         alert.setReadAt(DateUtil.now());
         repository.saveOrUpdate(alert);
 
         final Content content = post.getContent();
-        if (content != null) {
-            iconUrl = content.getPoster() != null ? content.getPoster().getThumbnail() : content.getThumbnail();
-        } else {
+        if (content == null) {
             return null;
         }
 
+        final String actionUrl = "/stream/" + post.getPostId();
+        final String iconUrl = content.getPoster() != null ? content.getPoster().getThumbnail() : content.getThumbnail();
         final String message = "new comment!";
 
         return new Notification(actionUrl, iconUrl, message);
