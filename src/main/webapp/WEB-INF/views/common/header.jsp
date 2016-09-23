@@ -13,8 +13,6 @@
     <c:set var="include_bar" value="true" />
   </c:when>
   <c:when test="${ param.style eq 'embed' }">
-    <c:set var="include_centered" value="true" />
-    <c:set var="include_embed_onload" value="true" />
   </c:when>
   <c:when test="${ param.style eq 'exception' }">
     <c:set var="include_centered" value="true" />
@@ -69,7 +67,7 @@
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 </c:if>
 </head>
-<body <c:if test="${ include_embed_onload }"> onload="document.getElementById('embeded').src = window.location.href;" </c:if>>
+<body>
 
 <c:if test="${ include_bar }">
 <div class="header">

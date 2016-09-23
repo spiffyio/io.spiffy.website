@@ -8,6 +8,7 @@ import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
+import io.spiffy.common.api.media.dto.Content;
 import io.spiffy.common.api.notification.dto.Notification;
 import io.spiffy.common.api.notification.output.GetNotificationsOutput;
 import io.spiffy.common.api.stream.client.StreamClient;
@@ -56,12 +57,19 @@ public class AlertService extends Service<AlertEntity, AlertRepository> {
         }
 
         final String actionUrl = "/stream/" + post.getPostId();
-        final String iconUrl = post.getContent().getPoster() != null ? post.getContent().getPoster().getThumbnail()
-                : post.getContent().getThumbnail();
-        final String message = "new comment!";
+        final String iconUrl;
 
         alert.setReadAt(DateUtil.now());
         repository.saveOrUpdate(alert);
+
+        final Content content = post.getContent();
+        if (content != null) {
+            iconUrl = content.getPoster() != null ? content.getPoster().getThumbnail() : content.getThumbnail();
+        } else {
+            return null;
+        }
+
+        final String message = "new comment!";
 
         return new Notification(actionUrl, iconUrl, message);
     }

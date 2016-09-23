@@ -31,7 +31,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -114,6 +114,17 @@ public class HomeController extends Controller {
         context.addAttribute(COMMENTS_KEY, discussionClient.getComments(EntityType.POST, "" + post, null, 24));
 
         return mav("post", context);
+    }
+
+    @RequestMapping("/stream/{postId}/embed")
+    public ModelAndView embed(final Context context, final @PathVariable String postId) {
+        final GetPostOutput output = streamClient.getPost(postId);
+        if (GetPostOutput.Error.UNKNOWN_POST.equals(output.getError())) {
+            throw new UnknownPostException();
+        }
+
+        context.addAttribute(POST_KEY, output.getPost());
+        return mav("embed", context);
     }
 
     @ResponseBody
