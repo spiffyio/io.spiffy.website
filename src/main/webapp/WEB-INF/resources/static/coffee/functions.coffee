@@ -13,6 +13,10 @@ Spiffy.functions =
     template: (name) ->
       selector = '[data-template="$name"]'.replace '$name', name
       return $ selector
+  timeout:
+    retry: (attempt, call) ->
+      setTimeout call, Spiffy.c.timeout.RETRY * attempt * attempt
+      return
 
 Spiffy.f = Spiffy.functions
 

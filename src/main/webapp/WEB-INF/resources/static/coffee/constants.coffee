@@ -3,6 +3,8 @@ Spiffy = {}
 Spiffy.constants =
   config:
     CDN: '//cdn.spiffy.io'
+  timeout:
+    RETRY: 5000
   key:
     LEFT: 37
     RIGHT: 39

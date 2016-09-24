@@ -6,6 +6,9 @@ Spiffy.constants = {
   config: {
     CDN: '//cdn.spiffy.io'
   },
+  timeout: {
+    RETRY: 5000
+  },
   key: {
     LEFT: 37,
     RIGHT: 39
@@ -55,6 +58,11 @@ Spiffy.functions = {
       var selector;
       selector = '[data-template="$name"]'.replace('$name', name);
       return $(selector);
+    }
+  },
+  timeout: {
+    retry: function(attempt, call) {
+      setTimeout(call, Spiffy.c.timeout.RETRY * attempt * attempt);
     }
   }
 };
@@ -411,9 +419,38 @@ jQuery.fn.spiffy = function() {
   };
 };
 
+var poll;
+
 Spiffy.f.click('a[href="#"]', function() {
   return {};
 });
+
+$(document).ready(function() {
+  return poll('init');
+});
+
+poll = function(value, attempt) {
+  if (attempt == null) {
+    attempt = 1;
+  }
+  return $.get({
+    url: '/longpoll',
+    dataType: 'json',
+    data: {
+      value: value
+    },
+    cache: false,
+    success: function(data) {
+      console.log(data);
+      poll(data.value);
+    },
+    error: function() {
+      Spiffy.f.timeout.retry(attempt, function() {
+        poll(value, attempt + 1);
+      });
+    }
+  });
+};
 
 var Messenger;
 
