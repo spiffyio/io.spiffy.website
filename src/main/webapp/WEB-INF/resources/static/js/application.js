@@ -2,33 +2,58 @@ var Spiffy;
 
 Spiffy = {};
 
-Spiffy.constants = {
-  config: {
-    CDN: '//cdn.spiffy.io'
-  },
-  timeout: {
-    RETRY: 5000
-  },
-  key: {
-    LEFT: 37,
-    RIGHT: 39
-  },
-  size: {
-    width: {
-      XS: 320,
-      SM: 480,
-      MD: 768,
-      LG: 992,
-      XL: 120
-    }
+Spiffy.constants = {};
+
+Spiffy.c = Spiffy.constants;
+
+Spiffy.c["enum"] = {
+  loglevel: {
+    FATAL: 0,
+    ERROR: 1,
+    WARN: 2,
+    INFO: 3,
+    DEBUG: 4,
+    TRACE: 5
   }
 };
 
-Spiffy.c = Spiffy.constants;
+Spiffy.c.param = {
+  ATTEMPT: 1,
+  ETAG: void 0
+};
+
+Spiffy.c.timeout = {
+  RETRY: 5000
+};
+
+Spiffy.c.key = {
+  LEFT: 37,
+  RIGHT: 39
+};
+
+Spiffy.c.size = {};
+
+Spiffy.c.size.width = {
+  XS: 320,
+  SM: 480,
+  MD: 768,
+  LG: 992,
+  XL: 120
+};
+
+Spiffy.c.config = {
+  CDN: '//cdn.spiffy.io',
+  LOGLEVEL: Spiffy.c["enum"].loglevel.TRACE
+};
 
 var blank, confirmation, contains, dataURItoBlob, defined, go, handler, initModalSize, overrideHandler, preventDefault, refresh;
 
 Spiffy.functions = {
+  log: function(level, value) {
+    if (level <= Spiffy.c.config.LOGLEVEL) {
+      console.log(value);
+    }
+  },
   firstDefined: function() {
     var argument, defined, j;
     for (j = arguments.length - 1; j >= 0; j += -1) {
@@ -419,37 +444,55 @@ jQuery.fn.spiffy = function() {
   };
 };
 
-var poll;
+var notifications, poll;
 
 Spiffy.f.click('a[href="#"]', function() {
   return {};
 });
 
 $(document).ready(function() {
-  return poll('init');
+  return poll();
 });
 
-poll = function(value, attempt) {
-  if (attempt == null) {
-    attempt = 1;
+poll = function(etag, attempt) {
+  if (etag == null) {
+    etag = Spiffy.c.param.ETAG;
   }
+  if (attempt == null) {
+    attempt = Spiffy.c.param.ATTEMPT;
+  }
+  Spiffy.f.log(Spiffy.c["enum"].loglevel.INFO, 'polling...' + (etag != null ? ' [etag: ' + etag + ']' : ''));
   return $.get({
     url: '/longpoll',
     dataType: 'json',
-    data: {
-      value: value
+    beforeSend: function(xhr) {
+      if (etag != null) {
+        xhr.setRequestHeader('If-None-Match', etag);
+      }
     },
-    cache: false,
-    success: function(data) {
+    success: function(data, status, xhr) {
       console.log(data);
-      poll(data.value);
+      notifications(data.notifications);
+      poll(xhr.getResponseHeader('ETag'));
     },
     error: function() {
       Spiffy.f.timeout.retry(attempt, function() {
-        poll(value, attempt + 1);
+        poll(etag, attempt + 1);
       });
     }
   });
+};
+
+notifications = function(count) {
+  var span;
+  span = $('span.notification-count');
+  if (count === 0) {
+    document.title = 'SPIFFY.io';
+    span.html('');
+  } else {
+    document.title = '(' + count + ') SPIFFY.io';
+    span.html(count);
+  }
 };
 
 var Messenger;
@@ -1056,26 +1099,6 @@ $(document).ready(function(e) {
       return refresh();
     }
   });
-  $('form.notifications').spiffy().options({
-    success: function(form, data) {
-      var func, span;
-      span = $('span.notification-count');
-      if (data.count === 0) {
-        document.title = 'SPIFFY.io';
-        span.html('');
-      } else {
-        document.title = '(' + data.count + ') SPIFFY.io';
-        span.html(data.count);
-      }
-      func = function() {
-        return form.submit();
-      };
-      setTimeout(func, 30000);
-    }
-  });
-  setTimeout(function() {
-    return $('form.notifications').submit();
-  }, 15000);
   $('form.submit').spiffy().options({
     success: function(form, data) {
       sessionStorage.setItem('src:' + data.name, form.data('media-src'));

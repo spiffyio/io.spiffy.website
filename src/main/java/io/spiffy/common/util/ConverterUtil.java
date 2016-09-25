@@ -2,9 +2,11 @@ package io.spiffy.common.util;
 
 import lombok.Getter;
 
-import java.io.*;
+import java.io.Closeable;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -44,7 +46,7 @@ public class ConverterUtil {
         }
 
         synchronized (initialized) {
-            final List<String> lines = run("ls");
+            final List<String> lines = CommandLineUtil.run("ls");
             for (final String line : lines) {
                 if (StringUtils.containsIgnoreCase(line, "ffmpeg")) {
                     initialized = true;
@@ -52,11 +54,11 @@ public class ConverterUtil {
                 }
             }
 
-            run("wget \"https://cdn.spiffy.io/static/ffmpeg/linux.zip\" -O \"ffmpeg.zip\"");
-            run("unzip ffmpeg.zip");
-            run("rm -f ffmpeg.zip");
-            run("chmod u+x ffprobe");
-            run("chmod u+x ffmpeg");
+            CommandLineUtil.run("wget \"https://cdn.spiffy.io/static/ffmpeg/linux.zip\" -O \"ffmpeg.zip\"");
+            CommandLineUtil.run("unzip ffmpeg.zip");
+            CommandLineUtil.run("rm -f ffmpeg.zip");
+            CommandLineUtil.run("chmod u+x ffprobe");
+            CommandLineUtil.run("chmod u+x ffmpeg");
             initialized = true;
         }
     }
@@ -103,7 +105,7 @@ public class ConverterUtil {
             if (out.exists()) {
                 out.delete();
             }
-            run(String.format(type.getTemplate(), in.getAbsolutePath(), out.getAbsolutePath()));
+            CommandLineUtil.run(String.format(type.getTemplate(), in.getAbsolutePath(), out.getAbsolutePath()));
             return Files.readAllBytes(out.toPath());
         } catch (final IOException e) {
             logger.warn("unable to save out: " + name, e);
@@ -116,46 +118,6 @@ public class ConverterUtil {
                 out.delete();
             }
         }
-    }
-
-    private static final ProcessBuilder getProcessBuilder(final String command) {
-        if ("WINDOWS".equalsIgnoreCase(AppConfig.getShell())) {
-            return new ProcessBuilder("cmd.exe", "/c", command);
-        }
-
-        if ("MAC".equalsIgnoreCase(AppConfig.getShell())) {
-            return new ProcessBuilder("/bin/bash", "-c", "/usr/local/bin/" + command);
-        }
-
-        return new ProcessBuilder("/bin/bash", "-c", command); // AMAZON LINUX
-    }
-
-    public static List<String> run(final String command) {
-        final List<String> output = new ArrayList<>();
-
-        Process process = null;
-        BufferedReader reader = null;
-        try {
-            final ProcessBuilder pb = getProcessBuilder(command);
-            pb.redirectErrorStream(true);
-
-            process = pb.start();
-            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                output.add(line);
-            }
-        } catch (final IOException e) {
-            logger.warn("unable to run command: " + command, e);
-        } finally {
-            close(reader);
-            if (process != null) {
-                process.destroy();
-            }
-        }
-
-        return output;
     }
 
     private static void close(final Closeable closeable) {

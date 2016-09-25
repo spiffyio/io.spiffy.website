@@ -35,6 +35,9 @@ public class AppConfig {
     private static final String shell;
 
     @Getter
+    private static final String cacheEndpoint;
+
+    @Getter
     private static final String cdnEndpoint;
 
     @Getter
@@ -84,6 +87,7 @@ public class AppConfig {
         shell = System.getProperty("shell");
 
         if (LOCAL.equalsIgnoreCase(stage)) {
+            cacheEndpoint = "localhost";
             cdnEndpoint = "//cdn-beta.spiffy.io";
             endpoint = "http://localhost:1280";
             resourceEndpoint = "//localhost:1280/static/";
@@ -98,6 +102,7 @@ public class AppConfig {
             showStacktrace = true;
             suffix = "-beta";
         } else if (BETA.equalsIgnoreCase(stage)) {
+            cacheEndpoint = "spiffy-beta-cache.h8qrmc.cfg.usw2.cache.amazonaws.com";
             cdnEndpoint = "//cdn-beta.spiffy.io";
             endpoint = "https://beta.spiffy.io";
             resourceEndpoint = "//cdn-beta.spiffy.io/static/";
@@ -112,6 +117,7 @@ public class AppConfig {
             showStacktrace = true;
             suffix = "-beta";
         } else if (PROD.equalsIgnoreCase(stage)) {
+            cacheEndpoint = null;
             cdnEndpoint = "//cdn.spiffy.io";
             endpoint = "https://spiffy.io";
             resourceEndpoint = "//cdn.spiffy.io/static/";

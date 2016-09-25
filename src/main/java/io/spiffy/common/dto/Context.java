@@ -44,6 +44,8 @@ public class Context {
     public static final String SESSION_TOKEN_COOKIE = "session-token";
 
     public static final String ACCEPT = "Accept";
+    public static final String ETAG = "ETag";
+    public static final String IF_NONE_MATCH = "If-None-Match";
     public static final String REFERRER = "Referer";
     public static final String USER_AGENT = "User-Agent";
     public static final String SPIFFY_FORWARDED_SESSION = "SPIFFY-Forwarded-Session";
@@ -158,6 +160,10 @@ public class Context {
         return request.getRequestURI();
     }
 
+    public String getIfNoneMatch() {
+        return getHeader(IF_NONE_MATCH);
+    }
+
     public String getReferrer() {
         return getHeader(REFERRER);
     }
@@ -236,6 +242,18 @@ public class Context {
         }
 
         response.sendRedirect(uri);
+    }
+
+    public void setResponseHeader(final String name, final Object value) {
+        if (response == null) {
+            return;
+        }
+
+        response.setHeader(name, value.toString());
+    }
+
+    public void setResponseETag(final int hashCode) {
+        setResponseHeader(ETAG, hashCode);
     }
 
     public void setResponseStatus(final HttpStatus status) {

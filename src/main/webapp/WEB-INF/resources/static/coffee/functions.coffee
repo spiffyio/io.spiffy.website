@@ -1,4 +1,8 @@
 Spiffy.functions =
+  log: (level, value) ->
+    if level <= Spiffy.c.config.LOGLEVEL
+      console.log value
+    return
   firstDefined: () ->
     defined = argument for argument in arguments by -1 when argument?
     if defined? then return defined

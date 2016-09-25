@@ -1,5 +1,8 @@
 package io.spiffy.common.config;
 
+import java.io.IOException;
+import java.net.InetSocketAddress;
+
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
@@ -13,6 +16,8 @@ import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.sns.AmazonSNSClient;
 import com.amazonaws.services.sqs.AmazonSQSClient;
+
+import net.spy.memcached.MemcachedClient;
 
 @Configuration
 public class BeanConfig {
@@ -42,6 +47,12 @@ public class BeanConfig {
         final AmazonSQSClient client = new AmazonSQSClient(awsCredentials);
         client.setRegion(Region.getRegion(Regions.US_WEST_2));
         return client;
+    }
+
+    @Bean
+    public MemcachedClient getMemcachedClient() throws IOException {
+        final String hostname = AppConfig.getCacheEndpoint();
+        return new MemcachedClient(new InetSocketAddress(hostname, 11211));
     }
 
     @Bean
