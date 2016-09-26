@@ -1,7 +1,5 @@
 package io.spiffy.website.controller;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.net.UnknownHostException;
@@ -16,36 +14,29 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import io.spiffy.common.Controller;
 import io.spiffy.common.dto.Context;
-import io.spiffy.common.manager.CacheManager;
+import io.spiffy.website.cache.Poll;
+import io.spiffy.website.cache.PollCache;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class PollController extends Controller {
 
-    private final CacheManager cacheManager;
-
-    @Data
-    @AllArgsConstructor
-    public static class Poll {
-        private int notifications;
-    }
-
+    private final PollCache pollCache;
     private static Map<Long, Poll> polls = new HashMap<>();
 
     @ResponseBody
     @RequestMapping("/set")
-    public String set(final Context context, final @RequestParam int value) throws UnknownHostException {
+    public Poll set(final Context context, final @RequestParam int value) throws UnknownHostException {
         final Poll poll;
         synchronized (polls) {
-            poll = polls.getOrDefault(context.getAccountId(), new Poll(value));
-            polls.put(context.getAccountId(), poll);
+            poll = polls.getOrDefault(context.getAccountId(), new Poll());
+            poll.setNotifications(value);
         }
 
         synchronized (poll) {
-            poll.setNotifications(value);
             poll.notifyAll();
         }
 
-        return "{\"host\":\"" + cacheManager.get("foo") + "\"}";
+        return poll;
     }
 
     @ResponseBody
@@ -55,13 +46,13 @@ public class PollController extends Controller {
 
         final Poll poll;
         synchronized (polls) {
-            poll = polls.getOrDefault(context.getAccountId(), new Poll(0));
+            poll = polls.getOrDefault(context.getAccountId(), new Poll());
             polls.put(context.getAccountId(), poll);
         }
 
         if (Integer.toString(poll.hashCode()).equalsIgnoreCase(value)) {
             synchronized (poll) {
-                poll.wait();
+                poll.wait(300000);
             }
         }
 
