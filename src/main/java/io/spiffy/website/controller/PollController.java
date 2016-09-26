@@ -2,61 +2,44 @@ package io.spiffy.website.controller;
 
 import lombok.RequiredArgsConstructor;
 
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.inject.Inject;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import io.spiffy.common.Controller;
+import io.spiffy.common.api.notification.client.NotificationClient;
 import io.spiffy.common.dto.Context;
+import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.cache.Poll;
-import io.spiffy.website.cache.PollCache;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class PollController extends Controller {
 
-    private final PollCache pollCache;
-    private static Map<Long, Poll> polls = new HashMap<>();
+    private final NotificationClient notificationClient;
 
     @ResponseBody
-    @RequestMapping("/set")
-    public Poll set(final Context context, final @RequestParam int value) throws UnknownHostException {
-        final Poll poll;
-        synchronized (polls) {
-            poll = polls.getOrDefault(context.getAccountId(), new Poll());
-            poll.setNotifications(value);
-        }
-
-        synchronized (poll) {
-            poll.notifyAll();
-        }
-
-        return poll;
-    }
-
-    @ResponseBody
+    @AccessControl
     @RequestMapping("/longpoll")
     public Poll longpoll(final Context context) throws InterruptedException {
         final String value = context.getIfNoneMatch();
 
-        final Poll poll;
-        synchronized (polls) {
-            poll = polls.getOrDefault(context.getAccountId(), new Poll());
-            polls.put(context.getAccountId(), poll);
-        }
+        final Poll poll = new Poll();
+        updatePoll(context, poll);
 
-        if (Integer.toString(poll.hashCode()).equalsIgnoreCase(value)) {
+        if (StringUtils.equalsIgnoreCase(value, Integer.toString(poll.hashCode()))) {
             synchronized (poll) {
-                poll.wait(300000);
+                poll.wait(15000);
             }
+            updatePoll(context, poll);
         }
 
         context.setResponseETag(poll.hashCode());
         return poll;
+    }
+
+    private void updatePoll(final Context context, final Poll poll) {
+        poll.setNotifications(notificationClient.getUnreadCount(context.getAccountId()));
     }
 }

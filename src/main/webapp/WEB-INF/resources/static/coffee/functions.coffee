@@ -18,8 +18,14 @@ Spiffy.functions =
       selector = '[data-template="$name"]'.replace '$name', name
       return $ selector
   timeout:
+    simple: (timeout, call) ->
+      setTimeout call, timeout
+      return
     retry: (attempt, call) ->
-      setTimeout call, Spiffy.c.timeout.RETRY * attempt * attempt
+      if attempt >= Spiffy.c.retry.MAX_COUNT
+        Spiffy.f.log Spiffy.c.enum.loglevel.ERROR, 'max retry attempts exceeded... ' + call
+        return
+      setTimeout call, Spiffy.c.retry.TIMEOUT * attempt * attempt
       return
 
 Spiffy.f = Spiffy.functions

@@ -13,7 +13,6 @@ poll = (etag = Spiffy.c.param.ETAG, attempt = Spiffy.c.param.ATTEMPT) ->
         xhr.setRequestHeader 'If-None-Match', etag
       return
     success: (data, status, xhr) ->
-      console.log data
       notifications data.notifications
       poll xhr.getResponseHeader 'ETag'
       return

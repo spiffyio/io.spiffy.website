@@ -15,8 +15,9 @@ Spiffy.c.param =
   ATTEMPT: 1
   ETAG: undefined
 
-Spiffy.c.timeout =
-  RETRY: 5000
+Spiffy.c.retry =
+  MAX_COUNT: 3
+  TIMEOUT: 5000
 
 Spiffy.c.key =
   LEFT: 37

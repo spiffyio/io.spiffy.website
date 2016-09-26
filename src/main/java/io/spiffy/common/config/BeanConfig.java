@@ -51,10 +51,6 @@ public class BeanConfig {
 
     @Bean
     public MemcachedClient getMemcachedClient() throws IOException {
-        if (true) {
-            return null;
-        }
-
         final String hostname = AppConfig.getCacheEndpoint();
         return new MemcachedClient(new InetSocketAddress(hostname, 11211));
     }

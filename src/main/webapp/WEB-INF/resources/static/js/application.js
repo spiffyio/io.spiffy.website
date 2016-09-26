@@ -22,8 +22,9 @@ Spiffy.c.param = {
   ETAG: void 0
 };
 
-Spiffy.c.timeout = {
-  RETRY: 5000
+Spiffy.c.retry = {
+  MAX_COUNT: 3,
+  TIMEOUT: 5000
 };
 
 Spiffy.c.key = {
@@ -86,8 +87,15 @@ Spiffy.functions = {
     }
   },
   timeout: {
+    simple: function(timeout, call) {
+      setTimeout(call, timeout);
+    },
     retry: function(attempt, call) {
-      setTimeout(call, Spiffy.c.timeout.RETRY * attempt * attempt);
+      if (attempt >= Spiffy.c.retry.MAX_COUNT) {
+        Spiffy.f.log(Spiffy.c["enum"].loglevel.ERROR, 'max retry attempts exceeded... ' + call);
+        return;
+      }
+      setTimeout(call, Spiffy.c.retry.TIMEOUT * attempt * attempt);
     }
   }
 };
@@ -471,7 +479,6 @@ poll = function(etag, attempt) {
       }
     },
     success: function(data, status, xhr) {
-      console.log(data);
       notifications(data.notifications);
       poll(xhr.getResponseHeader('ETag'));
     },
