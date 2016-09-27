@@ -469,6 +469,10 @@ poll = function(etag, attempt) {
   if (attempt == null) {
     attempt = Spiffy.c.param.ATTEMPT;
   }
+  if ($('meta[name="account"]').length === 0) {
+    Spiffy.f.log(Spiffy.c["enum"].loglevel.INFO, 'polling disabled...');
+    return;
+  }
   Spiffy.f.log(Spiffy.c["enum"].loglevel.INFO, 'polling...' + (etag != null ? ' [etag: ' + etag + ']' : ''));
   return $.get({
     url: '/longpoll',

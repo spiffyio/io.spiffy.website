@@ -4,6 +4,9 @@ $(document).ready ->
   poll()
 
 poll = (etag = Spiffy.c.param.ETAG, attempt = Spiffy.c.param.ATTEMPT) ->
+  if $('meta[name="account"]').length is 0
+    Spiffy.f.log Spiffy.c.enum.loglevel.INFO, 'polling disabled...'
+    return  
   Spiffy.f.log Spiffy.c.enum.loglevel.INFO, 'polling...' + if etag? then ' [etag: ' + etag + ']' else ''
   $.get
     url: '/longpoll'

@@ -61,6 +61,10 @@
 <meta name="msapplication-TileImage" content="<s:resource file="favicon/mstile-144x144.png" />">
 <meta name="theme-color" content="#c0effd">
 
+<c:if test="${ not empty account }">
+<meta name="account" content="<c:out value="${ account.username }" />">
+</c:if>
+
 <s:resource file="application" type="css" version="9" />
 <s:resource file="croppie" type="css" />
 <c:if test="${ include_captcha }">

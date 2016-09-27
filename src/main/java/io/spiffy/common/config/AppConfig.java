@@ -117,7 +117,7 @@ public class AppConfig {
             showStacktrace = true;
             suffix = "-beta";
         } else if (PROD.equalsIgnoreCase(stage)) {
-            cacheEndpoint = null;
+            cacheEndpoint = "spiffy-prod-cache.h8qrmc.cfg.usw2.cache.amazonaws.com";
             cdnEndpoint = "//cdn.spiffy.io";
             endpoint = "https://spiffy.io";
             resourceEndpoint = "//cdn.spiffy.io/static/";
