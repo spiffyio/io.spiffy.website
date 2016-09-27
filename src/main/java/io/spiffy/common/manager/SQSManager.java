@@ -41,18 +41,25 @@ public abstract class SQSManager<E extends Event> extends Manager {
         final ReceiveMessageResult result = client.receiveMessage(url);
         final List<Message> messages = result.getMessages();
         for (final Message message : messages) {
-            final MessageBody body = JsonUtil.deserialize(MessageBody.class, message.getBody());
-            final String json = body.getMessage();
+            final String messageBody = message.getBody();
+
+            final MessageBody body = JsonUtil.deserialize(MessageBody.class, messageBody);
+            final String json = body == null ? message.getBody() : messageBody;
 
             try {
                 process(JsonUtil.deserialize(eventClass, json), json);
             } catch (final Exception e) {
+                e.printStackTrace();
                 logger.error("unable to process event", e);
                 client.sendMessage(dlqUrl, message.getBody());
             }
 
             client.deleteMessage(url, message.getReceiptHandle());
         }
+    }
+
+    protected void push(final E event) {
+        client.sendMessage(url, JsonUtil.serialize(event));
     }
 
     protected abstract void process(final E event, final String json);
