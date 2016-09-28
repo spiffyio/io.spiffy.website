@@ -44,7 +44,6 @@ public class Context {
     public static final String SESSION_TOKEN_COOKIE = "session-token";
 
     public static final String ACCEPT = "Accept";
-    public static final String ETAG = "ETag";
     public static final String IF_NONE_MATCH = "If-None-Match";
     public static final String REFERRER = "Referer";
     public static final String USER_AGENT = "User-Agent";
@@ -56,6 +55,10 @@ public class Context {
     public static final String X_FORWARDED_HOST = "X-Forwarded-Host";
     public static final String X_FORWARDED_PROTO = "X-Forwarded-Proto";
     public static final String X_SSL_SECURE = "X-SSL-Secure";
+
+    public static final String CONTENT_SECURITY_POLICY = "Content-Security-Policy";
+    public static final String ETAG = "ETag";
+    public static final String X_FRAME_OPTIONS = "X-Frame-Options";
 
     private final HttpServletRequest request;
     private final HttpServletResponse response;
@@ -254,6 +257,14 @@ public class Context {
 
     public void setResponseETag(final int hashCode) {
         setResponseHeader(ETAG, hashCode);
+    }
+
+    public void setResponseEmbeddable(final boolean embeddable) {
+        final String csp = embeddable ? "*" : "'none'";
+        final String xfo = embeddable ? "ALLOW" : "DENY";
+
+        setResponseHeader(CONTENT_SECURITY_POLICY, "frame-ancestors " + csp);
+        setResponseHeader(X_FRAME_OPTIONS, xfo);
     }
 
     public void setResponseStatus(final HttpStatus status) {
