@@ -43,6 +43,7 @@ public class ValidationUtil {
         invalidUsernames.add("official");
         invalidUsernames.add("spiffy");
         invalidUsernames.add("spiffyio");
+        invalidUsernames.add("embed");
 
         INVALID_USERNAMES = Collections.unmodifiableSet(invalidUsernames);
     }

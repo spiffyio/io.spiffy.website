@@ -1,39 +1,87 @@
-Spiffy.functions =
-  log: (level, value) ->
-    if level <= Spiffy.c.config.LOGLEVEL
-      console.log value
-    return
-  firstDefined: () ->
-    defined = argument for argument in arguments by -1 when argument?
-    if defined? then return defined
-    return undefined
-  click: (selector, handler, preventDefault = true) ->
-    $(document).on 'click', selector, (e) ->
-      if preventDefault then e.preventDefault()
-      handler e, $(this)
-      return
-    return
-  element:
-    template: (name) ->
-      selector = '[data-template="$name"]'.replace '$name', name
-      return $ selector
-  timeout:
-    simple: (timeout, call) ->
-      setTimeout call, timeout
-      return
-    retry: (attempt, call) ->
-      if attempt >= Spiffy.c.retry.MAX_COUNT
-        Spiffy.f.log Spiffy.c.enum.loglevel.ERROR, 'max retry attempts exceeded... ' + call
-        return
-      setTimeout call, Spiffy.c.retry.TIMEOUT * attempt * attempt
-      return
-
+Spiffy.functions = {}
 Spiffy.f = Spiffy.functions
 
+Spiffy.f.log = (level, value) ->
+  if level <= Spiffy.c.config.LOGLEVEL
+    console.log value
+  return
+
+Spiffy.f.authenticated = ->
+  return $('meta[name="account"]').length isnt 0
+
+Spiffy.f.first = ->
+  defined = argument for argument in arguments by -1 when argument?
+  return defined
+
+Spiffy.f.firstDefined = Spiffy.f.first
 Spiffy.firstDefined = Spiffy.f.firstDefined
 
-preventDefault = (e) ->
+Spiffy.f.click = (selector, handler, preventDefault = true) ->
+  $(document).on 'click', selector, (e) ->
+    if preventDefault then Spiffy.f.prevent e
+    handler e, $(this)
+    return
+  return
+
+Spiffy.f.prevent = (e) ->
   e.preventDefault()
+  return
+
+Spiffy.f.element = {}
+
+Spiffy.f.element.template = (name) ->
+  selector = '[data-template="$name"]'.replace '$name', name
+  return $ selector
+
+Spiffy.f.timeout = {}
+
+Spiffy.f.timeout.simple = (timeout, call) ->
+  setTimeout call, timeout
+  return
+
+Spiffy.f.timeout.retry = (attempt, call) ->
+  if attempt >= Spiffy.c.retry.MAX_COUNT
+    Spiffy.f.log Spiffy.c.enum.loglevel.ERROR, 'max retry attempts exceeded... ' + call
+    return
+  setTimeout call, Spiffy.c.retry.TIMEOUT * attempt * attempt
+  return
+
+Spiffy.f.update = {}
+
+Spiffy.f.update.notifications = (count) ->
+  span = $ 'span.notification-count'
+  if count is 0
+    document.title = 'SPIFFY.io'
+    span.html ''
+  else
+    document.title = '(' + count + ') SPIFFY.io'
+    span.html count
+  return
+
+Spiffy.f.update.poll = (etag = Spiffy.c.param.ETAG, attempt = Spiffy.c.param.ATTEMPT) ->
+  if not Spiffy.f.authenticated()
+    Spiffy.f.log Spiffy.c.enum.loglevel.INFO, 'polling disabled...'
+    return
+  Spiffy.f.log Spiffy.c.enum.loglevel.INFO, 'polling...' + if etag? then ' [etag: ' + etag + ']' else ''
+  $.get
+    url: '/longpoll'
+    dataType: 'json'
+    beforeSend: (xhr) ->
+      if etag?
+        xhr.setRequestHeader 'If-None-Match', etag
+      return
+    success: (data, status, xhr) ->
+      Spiffy.f.update.notifications data.notifications
+      Spiffy.f.update.poll xhr.getResponseHeader 'ETag'
+      return
+    error: ->
+      Spiffy.f.timeout.retry attempt, ->
+        Spiffy.f.update.poll etag, attempt+1
+        return
+      return
+
+preventDefault = (e) ->
+  Spiffy.f.prevent e
   return
 
 overrideHandler = refresh
@@ -50,7 +98,7 @@ confirmation = (title, action) ->
   dialog
     .find '.continue'
     .on 'click', (e) ->
-      e.preventDefault()
+      Spiffy.f.prevent e
       action()
   dialog.modal 'show'
   return
@@ -62,17 +110,9 @@ refresh = ->
   location.reload true
   window.location = self.location
 
-blank = (v) ->
-  if not defined v then return true
-  v is ''
-
 defined = (v) ->
   if typeof v is 'undefined' then return false
   v isnt 'undefined'
-
-contains = (s, v) ->
-  index = s.indexOf v
-  index > -1
 
 initModalSize = ->
   height = ($(window).height() - 125) + 'px'

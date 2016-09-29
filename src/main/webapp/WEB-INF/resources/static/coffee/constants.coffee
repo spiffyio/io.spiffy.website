@@ -2,14 +2,15 @@ Spiffy = {}
 Spiffy.constants = {}
 Spiffy.c = Spiffy.constants
 
-Spiffy.c.enum =
-  loglevel:
-    FATAL: 0
-    ERROR: 1
-    WARN: 2
-    INFO: 3
-    DEBUG: 4
-    TRACE: 5
+Spiffy.c.enum = {}
+
+Spiffy.c.enum.loglevel =
+  FATAL: 0
+  ERROR: 1
+  WARN: 2
+  INFO: 3
+  DEBUG: 4
+  TRACE: 5
 
 Spiffy.c.param =
   ATTEMPT: 1

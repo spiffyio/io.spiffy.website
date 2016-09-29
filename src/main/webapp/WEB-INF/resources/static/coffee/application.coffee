@@ -103,14 +103,6 @@ $(document).ready (e) ->
         return
 
 $(document).ready (e) ->
-  $('[data-modal]').click (e) ->
-    openModal $(this).data('modal')
-    return
-
-  $('[data-uri]').click (e) ->
-    go $(this).data('uri')
-    return
-
   $('.action-button').click (e) ->
     form = $ 'form.profile-action'
     input = form.find '[name="action"]'
@@ -168,7 +160,7 @@ $(document).ready (e) ->
     return
 
   $('form:not(.dropzone)').submit (e) ->
-    preventDefault e
+    Spiffy.f.prevent e
     form = $ this
     form.spiffy().submit()
     return
@@ -202,13 +194,13 @@ $(document).ready (e) ->
       go '/stream/' + data.name
 
   $('a[data-form]').click (e) ->
-    preventDefault e
+    Spiffy.f.prevent e
     form = $ 'form.' + $(this).data('form')
     form.submit()
     return
 
   $('a[data-session-id]').click (e) ->
-    preventDefault e
+    Spiffy.f.prevent e
     form = $ 'form.logout'
     form.find('input[name="session"]').val($(this).data('session-id'))
     form.submit()
@@ -248,14 +240,6 @@ $(document).ready (e) ->
       return
     return
 
-  $('.close').click (e) ->
-    closeModal()
-    return
-
-  $('.modal-overlay').click (e) ->
-    if $(e.target).hasClass 'modal-overlay' then closeModal()
-    return
-
   $('video[data-autoplay="true"]').each () ->
     video = $ this
     if (not video.is ':in-viewport') or (not video.is ':in-viewport(' + (video[0].getBoundingClientRect().bottom - video[0].getBoundingClientRect().top) + ')')
@@ -265,13 +249,6 @@ $(document).ready (e) ->
     else if video[0].paused
       video[0].play()
       video.parents('div.video:first').removeClass 'paused'
-    return
-
-  $(document).on 'click', 'a.menu', (e) ->
-    toggle = $ this
-    toggle.toggleClass 'expanded'
-    menu = toggle.parent().find '.sub-menu'
-    menu.toggleClass 'show'
     return
 
   $(document).on 'click', '.thismedia', (e) ->
@@ -296,22 +273,6 @@ $(document).ready (e) ->
         return
     return
 
-  $(document).on 'click', '[data-go]', (e) ->
-    button = $ this
-    go button.data('go') + location.search
-    return
-
-  $(document).on 'click', 'video', (e) ->
-    video = $ this
-    video.attr 'data-clicked', true
-    if video[0].paused
-      video[0].play()
-      video.parents('div.video:first').removeClass 'paused'
-    else
-      video[0].pause()
-      video.parents('div.video:first').addClass 'paused'
-    return
-
   adjustColumns()
 
   $('div.input').each () ->
@@ -325,7 +286,6 @@ $(document).ready (e) ->
     span.html Spiffy.firstDefined div.data('error-message'), 'error'
     div.append span
     return
-
   return
 
 openModal = (selector = '.modal-overlay') ->

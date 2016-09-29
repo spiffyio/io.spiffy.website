@@ -3,12 +3,14 @@
 <%@ taglib uri="/WEB-INF/tld/spiffy.tld" prefix="s"%>
 
 <c:set var="include_ads" value="true" />
+<c:set var="include_footer" value="true" />
 <c:choose>
   <c:when test="${ param.style eq 'authenticate' }">
     <c:set var="include_fingerprint" value="true" />
     <c:set var="include_ads" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'embed' }">
+    <c:set var="include_footer" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'exception' }">
   </c:when>
@@ -20,12 +22,16 @@
 </c:choose>
 <c:set var="include_fingerprint" value="true" />
 
+<c:if test="${ include_footer }">
   <div class="footer-padding"></div>
+</c:if>
 </div>
   
+<c:if test="${ include_footer }">
 <div class="footer">
   <a href="/llc">SPIFFY.io, LLC</a> &copy; 2016 &middot; <a href="/privacy">Privacy</a> &middot; <a href="/terms">Terms</a>
 </div>
+</c:if>
 
 <div id="confirm-modal" class="modal-overlay">
   <div class="modal">

@@ -6,15 +6,15 @@ Spiffy.constants = {};
 
 Spiffy.c = Spiffy.constants;
 
-Spiffy.c["enum"] = {
-  loglevel: {
-    FATAL: 0,
-    ERROR: 1,
-    WARN: 2,
-    INFO: 3,
-    DEBUG: 4,
-    TRACE: 5
-  }
+Spiffy.c["enum"] = {};
+
+Spiffy.c["enum"].loglevel = {
+  FATAL: 0,
+  ERROR: 1,
+  WARN: 2,
+  INFO: 3,
+  DEBUG: 4,
+  TRACE: 5
 };
 
 Spiffy.c.param = {
@@ -47,65 +47,123 @@ Spiffy.c.config = {
   LOGLEVEL: Spiffy.c["enum"].loglevel.TRACE
 };
 
-var blank, confirmation, contains, dataURItoBlob, defined, go, handler, initModalSize, overrideHandler, preventDefault, refresh;
+var confirmation, dataURItoBlob, defined, go, handler, initModalSize, overrideHandler, preventDefault, refresh;
 
-Spiffy.functions = {
-  log: function(level, value) {
-    if (level <= Spiffy.c.config.LOGLEVEL) {
-      console.log(value);
-    }
-  },
-  firstDefined: function() {
-    var argument, defined, j;
-    for (j = arguments.length - 1; j >= 0; j += -1) {
-      argument = arguments[j];
-      if (argument != null) {
-        defined = argument;
-      }
-    }
-    if (defined != null) {
-      return defined;
-    }
-    return void 0;
-  },
-  click: function(selector, handler, preventDefault) {
-    if (preventDefault == null) {
-      preventDefault = true;
-    }
-    $(document).on('click', selector, function(e) {
-      if (preventDefault) {
-        e.preventDefault();
-      }
-      handler(e, $(this));
-    });
-  },
-  element: {
-    template: function(name) {
-      var selector;
-      selector = '[data-template="$name"]'.replace('$name', name);
-      return $(selector);
-    }
-  },
-  timeout: {
-    simple: function(timeout, call) {
-      setTimeout(call, timeout);
-    },
-    retry: function(attempt, call) {
-      if (attempt >= Spiffy.c.retry.MAX_COUNT) {
-        Spiffy.f.log(Spiffy.c["enum"].loglevel.ERROR, 'max retry attempts exceeded... ' + call);
-        return;
-      }
-      setTimeout(call, Spiffy.c.retry.TIMEOUT * attempt * attempt);
-    }
-  }
-};
+Spiffy.functions = {};
 
 Spiffy.f = Spiffy.functions;
 
+Spiffy.f.log = function(level, value) {
+  if (level <= Spiffy.c.config.LOGLEVEL) {
+    console.log(value);
+  }
+};
+
+Spiffy.f.authenticated = function() {
+  return $('meta[name="account"]').length !== 0;
+};
+
+Spiffy.f.first = function() {
+  var argument, defined, j;
+  for (j = arguments.length - 1; j >= 0; j += -1) {
+    argument = arguments[j];
+    if (argument != null) {
+      defined = argument;
+    }
+  }
+  return defined;
+};
+
+Spiffy.f.firstDefined = Spiffy.f.first;
+
 Spiffy.firstDefined = Spiffy.f.firstDefined;
 
-preventDefault = function(e) {
+Spiffy.f.click = function(selector, handler, preventDefault) {
+  if (preventDefault == null) {
+    preventDefault = true;
+  }
+  $(document).on('click', selector, function(e) {
+    if (preventDefault) {
+      Spiffy.f.prevent(e);
+    }
+    handler(e, $(this));
+  });
+};
+
+Spiffy.f.prevent = function(e) {
   e.preventDefault();
+};
+
+Spiffy.f.element = {};
+
+Spiffy.f.element.template = function(name) {
+  var selector;
+  selector = '[data-template="$name"]'.replace('$name', name);
+  return $(selector);
+};
+
+Spiffy.f.timeout = {};
+
+Spiffy.f.timeout.simple = function(timeout, call) {
+  setTimeout(call, timeout);
+};
+
+Spiffy.f.timeout.retry = function(attempt, call) {
+  if (attempt >= Spiffy.c.retry.MAX_COUNT) {
+    Spiffy.f.log(Spiffy.c["enum"].loglevel.ERROR, 'max retry attempts exceeded... ' + call);
+    return;
+  }
+  setTimeout(call, Spiffy.c.retry.TIMEOUT * attempt * attempt);
+};
+
+Spiffy.f.update = {};
+
+Spiffy.f.update.notifications = function(count) {
+  var span;
+  span = $('span.notification-count');
+  if (count === 0) {
+    document.title = 'SPIFFY.io';
+    span.html('');
+  } else {
+    document.title = '(' + count + ') SPIFFY.io';
+    span.html(count);
+  }
+};
+
+Spiffy.f.update.poll = function(etag, attempt) {
+  if (etag == null) {
+    etag = Spiffy.c.param.ETAG;
+  }
+  if (attempt == null) {
+    attempt = Spiffy.c.param.ATTEMPT;
+  }
+  if (!Spiffy.f.authenticated()) {
+    Spiffy.f.log(Spiffy.c["enum"].loglevel.INFO, 'polling disabled...');
+    return;
+  }
+  Spiffy.f.log(Spiffy.c["enum"].loglevel.INFO, 'polling...' + (etag != null ? ' [etag: ' + etag + ']' : ''));
+  return $.get({
+    url: '/longpoll',
+    dataType: 'json',
+    beforeSend: function(xhr) {
+      if (etag != null) {
+        xhr.setRequestHeader('If-None-Match', etag);
+      }
+    },
+    success: function(data, status, xhr) {
+      Spiffy.f.update.notifications(data.notifications);
+      Spiffy.f.update.poll(xhr.getResponseHeader('ETag'));
+    },
+    error: function() {
+      Spiffy.f.timeout.retry(attempt, function() {
+        Spiffy.f.update.poll(etag, attempt + 1);
+      });
+    }
+  });
+};
+
+preventDefault = function(e) {
+  Spiffy.f.prevent(e);
 };
 
 overrideHandler = refresh;
@@ -125,7 +183,7 @@ confirmation = function(title, action) {
   dialog = $('#confirmation');
   dialog.find('.modal-title').text(title);
   dialog.find('.continue').on('click', function(e) {
-    e.preventDefault();
+    Spiffy.f.prevent(e);
     return action();
   });
   dialog.modal('show');
@@ -140,24 +198,11 @@ refresh = function() {
   return window.location = self.location;
 };
 
-blank = function(v) {
-  if (!defined(v)) {
-    return true;
-  }
-  return v === '';
-};
-
 defined = function(v) {
   if (typeof v === 'undefined') {
     return false;
   }
   return v !== 'undefined';
-};
-
-contains = function(s, v) {
-  var index;
-  index = s.indexOf(v);
-  return index > -1;
 };
 
 initModalSize = function() {
@@ -452,64 +497,50 @@ jQuery.fn.spiffy = function() {
   };
 };
 
-var notifications, poll;
-
 Spiffy.f.click('a[href="#"]', function() {
   return {};
 });
 
-$(document).ready(function() {
-  return poll();
+Spiffy.f.click('a.menu', function(e, toggle) {
+  var menu;
+  toggle.toggleClass('expanded');
+  menu = toggle.parent().find('.sub-menu');
+  menu.toggleClass('show');
 });
 
-poll = function(etag, attempt) {
-  if (etag == null) {
-    etag = Spiffy.c.param.ETAG;
-  }
-  if (attempt == null) {
-    attempt = Spiffy.c.param.ATTEMPT;
-  }
-  if ($('meta[name="account"]').length === 0) {
-    Spiffy.f.log(Spiffy.c["enum"].loglevel.INFO, 'polling disabled...');
-    return;
-  }
-  Spiffy.f.log(Spiffy.c["enum"].loglevel.INFO, 'polling...' + (etag != null ? ' [etag: ' + etag + ']' : ''));
-  return $.get({
-    url: '/longpoll',
-    dataType: 'json',
-    beforeSend: function(xhr) {
-      if (etag != null) {
-        xhr.setRequestHeader('If-None-Match', etag);
-      }
-    },
-    success: function(data, status, xhr) {
-      notifications(data.notifications);
-      poll(xhr.getResponseHeader('ETag'));
-    },
-    error: function() {
-      Spiffy.f.timeout.retry(attempt, function() {
-        poll(etag, attempt + 1);
-      });
-    }
-  });
-};
+Spiffy.f.click('[data-go]', function(e, button) {
+  go(button.data('go') + location.search);
+});
 
-notifications = function(count) {
-  var span;
-  span = $('span.notification-count');
-  if (count === 0) {
-    document.title = 'SPIFFY.io';
-    span.html('');
-  } else {
-    document.title = '(' + count + ') SPIFFY.io';
-    span.html(count);
+Spiffy.f.click('.close', function() {
+  closeModal();
+});
+
+Spiffy.f.click('.modal-overlay', function(e) {
+  if ($(e.target).hasClass('modal-overlay')) {
+    closeModal();
   }
-};
+});
+
+Spiffy.f.click('video', function(e, video) {
+  video.attr('data-clicked', true);
+  if (video[0].paused) {
+    video[0].play();
+    video.parents('div.video:first').removeClass('paused');
+  } else {
+    video[0].pause();
+    video.parents('div.video:first').addClass('paused');
+  }
+});
+
+$(document).ready(function() {
+  return Spiffy.f.update.poll();
+});
 
 var Messenger;
 
-Spiffy.f.click('.chat-thread', function(e, element) {
-  Messenger.open(element);
+Spiffy.f.click('.chat-thread', function(e, thread) {
+  Messenger.open(thread);
 });
 
 Spiffy.f.click('.new-message', function() {
@@ -1014,12 +1045,6 @@ $(document).ready(function(e) {
 
 $(document).ready(function(e) {
   var hash;
-  $('[data-modal]').click(function(e) {
-    openModal($(this).data('modal'));
-  });
-  $('[data-uri]').click(function(e) {
-    go($(this).data('uri'));
-  });
   $('.action-button').click(function(e) {
     var form, input;
     form = $('form.profile-action');
@@ -1077,7 +1102,7 @@ $(document).ready(function(e) {
   });
   $('form:not(.dropzone)').submit(function(e) {
     var form;
-    preventDefault(e);
+    Spiffy.f.prevent(e);
     form = $(this);
     form.spiffy().submit();
   });
@@ -1119,13 +1144,13 @@ $(document).ready(function(e) {
   });
   $('a[data-form]').click(function(e) {
     var form;
-    preventDefault(e);
+    Spiffy.f.prevent(e);
     form = $('form.' + $(this).data('form'));
     form.submit();
   });
   $('a[data-session-id]').click(function(e) {
     var form;
-    preventDefault(e);
+    Spiffy.f.prevent(e);
     form = $('form.logout');
     form.find('input[name="session"]').val($(this).data('session-id'));
     form.submit();
@@ -1167,14 +1192,6 @@ $(document).ready(function(e) {
       form.submit();
     });
   });
-  $('.close').click(function(e) {
-    closeModal();
-  });
-  $('.modal-overlay').click(function(e) {
-    if ($(e.target).hasClass('modal-overlay')) {
-      closeModal();
-    }
-  });
   $('video[data-autoplay="true"]').each(function() {
     var video;
     video = $(this);
@@ -1187,13 +1204,6 @@ $(document).ready(function(e) {
       video[0].play();
       video.parents('div.video:first').removeClass('paused');
     }
-  });
-  $(document).on('click', 'a.menu', function(e) {
-    var menu, toggle;
-    toggle = $(this);
-    toggle.toggleClass('expanded');
-    menu = toggle.parent().find('.sub-menu');
-    menu.toggleClass('show');
   });
   $(document).on('click', '.thismedia', function(e) {
     var form, img, input;
@@ -1218,23 +1228,6 @@ $(document).ready(function(e) {
           input.remove();
         }
       });
-    }
-  });
-  $(document).on('click', '[data-go]', function(e) {
-    var button;
-    button = $(this);
-    go(button.data('go') + location.search);
-  });
-  $(document).on('click', 'video', function(e) {
-    var video;
-    video = $(this);
-    video.attr('data-clicked', true);
-    if (video[0].paused) {
-      video[0].play();
-      video.parents('div.video:first').removeClass('paused');
-    } else {
-      video[0].pause();
-      video.parents('div.video:first').addClass('paused');
     }
   });
   adjustColumns();

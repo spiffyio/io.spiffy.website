@@ -1,5 +1,5 @@
-Spiffy.f.click '.chat-thread', (e, element) ->
-  Messenger.open element
+Spiffy.f.click '.chat-thread', (e, thread) ->
+  Messenger.open thread
   return
 
 Spiffy.f.click '.new-message', () ->

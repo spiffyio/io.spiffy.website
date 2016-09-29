@@ -1,36 +1,32 @@
-Spiffy.f.click 'a[href="#"]', () -> { }
+Spiffy.f.click 'a[href="#"]', -> { }
+
+Spiffy.f.click 'a.menu', (e, toggle) ->
+  toggle.toggleClass 'expanded'
+  menu = toggle.parent().find '.sub-menu'
+  menu.toggleClass 'show'
+  return
+
+Spiffy.f.click '[data-go]', (e, button) ->
+  go button.data('go') + location.search
+  return
+
+Spiffy.f.click '.close', ->
+  closeModal()
+  return
+
+Spiffy.f.click '.modal-overlay', (e) ->
+  if $(e.target).hasClass 'modal-overlay' then closeModal()
+  return
+
+Spiffy.f.click 'video', (e, video) ->
+  video.attr 'data-clicked', true
+  if video[0].paused
+    video[0].play()
+    video.parents('div.video:first').removeClass 'paused'
+  else
+    video[0].pause()
+    video.parents('div.video:first').addClass 'paused'
+  return
 
 $(document).ready ->
-  poll()
-
-poll = (etag = Spiffy.c.param.ETAG, attempt = Spiffy.c.param.ATTEMPT) ->
-  if $('meta[name="account"]').length is 0
-    Spiffy.f.log Spiffy.c.enum.loglevel.INFO, 'polling disabled...'
-    return  
-  Spiffy.f.log Spiffy.c.enum.loglevel.INFO, 'polling...' + if etag? then ' [etag: ' + etag + ']' else ''
-  $.get
-    url: '/longpoll'
-    dataType: 'json'
-    beforeSend: (xhr) ->
-      if etag?
-        xhr.setRequestHeader 'If-None-Match', etag
-      return
-    success: (data, status, xhr) ->
-      notifications data.notifications
-      poll xhr.getResponseHeader 'ETag'
-      return
-    error: ->
-      Spiffy.f.timeout.retry attempt, ->
-        poll etag, attempt+1
-        return
-      return
-
-notifications = (count) ->
-    span = $ 'span.notification-count'
-    if count is 0
-      document.title = 'SPIFFY.io'
-      span.html ''
-    else
-      document.title = '(' + count + ') SPIFFY.io'
-      span.html count
-    return
+  Spiffy.f.update.poll()

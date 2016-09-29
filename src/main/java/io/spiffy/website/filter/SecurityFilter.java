@@ -21,8 +21,6 @@ public class SecurityFilter extends Filter {
             return Result.Continue;
         }
 
-        System.out.println(uri);
-
         final boolean embeddable = StringUtils.endsWithIgnoreCase(uri, "/embed")
                 || StringUtils.containsIgnoreCase(uri, "/embed/");
         context.setResponseEmbeddable(embeddable);
