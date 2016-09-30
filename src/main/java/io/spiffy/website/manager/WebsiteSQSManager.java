@@ -52,11 +52,18 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
 
     public void process(final IngestEvent content, final String json) {
         if (IngestPostEvent.SUB_TYPE.equalsIgnoreCase(content.getSubType())) {
+            logger.info(String.format("processing IngestEvent subType: %s", content.getSubType()));
             final IngestPostEvent event = JsonUtil.deserialize(IngestPostEvent.class, json);
+            logger.info(String.format("accountId: %s, address: %s, description: %s", event.getAccountId(), event.getAddress(),
+                    event.getDescription()));
             processPost(event.getAccountId(), event.getAddress(), event.getDescription());
         } else if (IngestSourceEvent.SUB_TYPE.equalsIgnoreCase(content.getSubType())) {
+            logger.info(String.format("processing IngestEvent subType: %s", content.getSubType()));
             final IngestSourceEvent event = JsonUtil.deserialize(IngestSourceEvent.class, json);
+            logger.info(String.format("accountId: %s, address: %s", event.getAccountId(), event.getAddress()));
             processSource(event.getAccountId(), event.getAddress());
+        } else {
+            logger.warn(String.format("unhandled IngestEvent subType: %s", content.getSubType()));
         }
     }
 
@@ -64,6 +71,7 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
         try {
             return Jsoup.connect(address).userAgent(USER_AGENT).referrer("http://www.google.com").get();
         } catch (final Exception e) {
+            logger.info(String.format("unable to retrieve address: %s", address), e);
             return null;
         }
     }
@@ -74,14 +82,19 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
             return;
         }
 
+        logger.info(String.format("processing source, accountId: %s, address: %s", accountId, address));
+
         if (StringUtils.containsIgnoreCase(address, "reddit.com")) {
+            logger.warn(String.format("determined to be a reddit source..."));
             processRedditSource(accountId, document);
         } else if (StringUtils.containsIgnoreCase(address, "xkcd.com")) {
+            logger.warn(String.format("determined to be a xkcd source..."));
             processXKCDSource(accountId, document);
         }
     }
 
     private void processRedditSource(final long accountId, final Document document) {
+        logger.info(String.format("processing as reddit source..."));
         final Elements links = document.getElementsByClass("outbound");
 
         for (final Element link : links) {
@@ -102,6 +115,7 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
     }
 
     private void processXKCDSource(final long accountId, final Document document) {
+        logger.info(String.format("processing as xkcd source..."));
         final Element comic = document.getElementById("comic");
         final Element image = comic.getElementsByTag("img").first();
 
@@ -117,6 +131,8 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
     }
 
     public void pushSource(final long accountId, final String address) {
+        logger.info(String.format("pushing next source, accountId: %s, address: %s", accountId, address));
+
         final IngestSourceEvent event = new IngestSourceEvent();
         event.setAccountId(accountId);
         event.setAddress(address);
@@ -125,6 +141,9 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
     }
 
     private void pushPost(final long accountId, final String address, final String description) {
+        logger.info(String.format("pushing next post, accountId: %s, address: %s, description: %s", accountId, address,
+                description));
+
         final IngestPostEvent event = new IngestPostEvent();
         event.setAccountId(accountId);
         event.setAddress(address);
@@ -134,6 +153,9 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
     }
 
     private void processPost(final long accountId, final String address, final String description) {
+        logger.info(
+                String.format("processing post, accountId: %s, address: %s, description: %s", accountId, address, description));
+
         final String idempotentId = accountId + "-" + address;
         final Long media = getMedia(accountId, idempotentId, address, new HashSet<String>());
 
@@ -144,6 +166,7 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
 
     private Long getMedia(final long accountId, final String idempotentId, final String address, final Set<String> stack) {
         if (stack.contains(address)) {
+            logger.warn(String.format("infinite recurssion detected for address: %s", address));
             return null;
         }
 
@@ -158,32 +181,26 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
         }
 
         if (StringUtils.endsWithIgnoreCase(address, ".gifv")) {
-            try {
-                final Document document = getDocument(address);
-                final Element source = document.getElementsByTag("source").first();
-                return getMedia(accountId, idempotentId, source.attr("src"), stack);
-            } catch (final Exception e) {
-                return null;
-            }
+            final Document document = getDocument(address);
+            final Element source = document.getElementsByTag("source").first();
+            return getMedia(accountId, idempotentId, source.attr("src"), stack);
         }
 
         final MediaType type = MediaType.getEnum(address.substring(address.lastIndexOf('.') + 1));
         if (type == null) {
-            try {
-                final String mediaAddress;
-                final Document document = getDocument(address);
-                final Elements video = document.getElementsByAttributeValue("property", "og:video");
-                if (!video.isEmpty()) {
-                    mediaAddress = video.get(0).attr("content");
-                } else {
-                    final Elements image = document.getElementsByAttributeValue("property", "og:image");
-                    mediaAddress = image.get(0).attr("content");
-                }
+            logger.info(String.format("failed to determine mediaType for address: %s, inspecting document...", address));
 
-                return getMedia(accountId, idempotentId, mediaAddress, stack);
-            } catch (final Exception e) {
-                return null;
+            final String mediaAddress;
+            final Document document = getDocument(address);
+            final Elements video = document.getElementsByAttributeValue("property", "og:video");
+            if (!video.isEmpty()) {
+                mediaAddress = video.get(0).attr("content");
+            } else {
+                final Elements image = document.getElementsByAttributeValue("property", "og:image");
+                mediaAddress = image.get(0).attr("content");
             }
+
+            return getMedia(accountId, idempotentId, mediaAddress, stack);
         }
 
         final byte[] bytes;
@@ -196,11 +213,13 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
                 bytes = IOUtils.toByteArray(is);
             }
         } catch (final Exception e) {
+            logger.warn(String.format("failed to retrieve media at address: %s", address), e);
             return null;
         }
 
         final String name = mediaClient.postMedia(accountId, idempotentId, type, bytes);
         if (name == null) {
+            logger.warn(String.format("failed to post media for accountId: %s, idempotentId: %s", accountId, idempotentId));
             return null;
         }
 

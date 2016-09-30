@@ -26,31 +26,42 @@ public abstract class SQSManager<E extends Event> extends Manager {
 
     private final AmazonSQSClient client;
     private final Class<E> eventClass;
+    private final String queue;
     private final String url;
     private final String dlqUrl;
 
     protected SQSManager(final AmazonSQSClient client, final Class<E> eventClass, final String queue) {
         this.client = client;
         this.eventClass = eventClass;
+        this.queue = queue;
         url = String.format(URL_TEMPLATE, queue);
         dlqUrl = String.format(DLQ_URL_TEMPLATE, queue);
     }
 
     @Scheduled(fixedRate = 10000)
     public void poll() {
+        logger.info(String.format("polling from queue: %s...", queue));
+
         final ReceiveMessageResult result = client.receiveMessage(url);
         final List<Message> messages = result.getMessages();
+
+        logger.info(String.format("retrieved: %s messages...", messages.size()));
+
         for (final Message message : messages) {
+            logger.info(String.format("processing message: %s...", message.getMessageId()));
+
             final String messageBody = message.getBody();
 
             final MessageBody body = JsonUtil.deserialize(MessageBody.class, messageBody);
             final String json = body.getMessage() != null ? body.getMessage() : messageBody;
 
             try {
+                final E event = JsonUtil.deserialize(eventClass, json);
+                logger.info(String.format("message type: %s, subType: %s...", event.getType(), event.getSubType()));
                 process(JsonUtil.deserialize(eventClass, json), json);
+                logger.info(String.format("processed message: %s...", message.getMessageId()));
             } catch (final Exception e) {
-                e.printStackTrace();
-                logger.error("unable to process event", e);
+                logger.warn(String.format("failed to process message: %s...", message.getMessageId()), e);
                 client.sendMessage(dlqUrl, message.getBody());
             }
 
