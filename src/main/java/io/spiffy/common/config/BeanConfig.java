@@ -6,6 +6,7 @@ import java.net.InetSocketAddress;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Link;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -63,7 +64,7 @@ public class BeanConfig {
     @Primary
     @Bean(name = "webTarget")
     public WebTarget getWebTarget(final Client client) {
-        return client.target(AppConfig.getRestEndpoint());
+        return client.target(Link.fromPath(AppConfig.getRestEndpoint()).build());
     }
 
     @Bean(name = "googleWebTarget")

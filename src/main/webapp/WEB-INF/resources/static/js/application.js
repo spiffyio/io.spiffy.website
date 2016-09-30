@@ -145,6 +145,7 @@ Spiffy.f.update.poll = function(etag, attempt) {
   return $.get({
     url: '/longpoll',
     dataType: 'json',
+    cache: false,
     beforeSend: function(xhr) {
       if (etag != null) {
         xhr.setRequestHeader('If-None-Match', etag);

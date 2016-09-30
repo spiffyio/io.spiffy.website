@@ -46,10 +46,6 @@ public abstract class SQSManager<E extends Event> extends Manager {
             final MessageBody body = JsonUtil.deserialize(MessageBody.class, messageBody);
             final String json = body.getMessage() != null ? body.getMessage() : messageBody;
 
-            System.out.println("body: " + body);
-            System.out.println("messageBody: " + messageBody);
-            System.out.println("json: " + json);
-
             try {
                 process(JsonUtil.deserialize(eventClass, json), json);
             } catch (final Exception e) {

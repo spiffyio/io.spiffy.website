@@ -66,6 +66,7 @@ Spiffy.f.update.poll = (etag = Spiffy.c.param.ETAG, attempt = Spiffy.c.param.ATT
   $.get
     url: '/longpoll'
     dataType: 'json'
+    cache: false
     beforeSend: (xhr) ->
       if etag?
         xhr.setRequestHeader 'If-None-Match', etag

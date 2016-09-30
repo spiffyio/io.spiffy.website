@@ -122,8 +122,6 @@ public class UserAgentUtil {
             return LINUX_OS;
         }
 
-        System.out.println(userAgent);
-
         return UNKNOWN_BROWSER;
     }
 }

@@ -9,39 +9,36 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import io.spiffy.common.Controller;
+import io.spiffy.common.api.notification.client.NotificationClient;
 import io.spiffy.common.dto.Context;
+import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.cache.Poll;
 import io.spiffy.website.cache.PollCache;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class DebugController extends Controller {
 
     private final PollCache pollCache;
+    private final NotificationClient notificationClient;
 
     @ResponseBody
+    @AccessControl
     @RequestMapping("/debug/poll")
-    public Poll longpoll(final Context context, final @RequestParam Long key,
-            final @RequestParam(required = false) Long notifications, final @RequestParam(required = false) Integer etag)
-                    throws InterruptedException {
+    public Poll longpoll(final Context context, final @RequestParam(required = false) Integer etag)
+            throws InterruptedException {
         final Poll poll;
-        if (notifications != null) {
-            poll = pollCache.get(key, () -> newPoll(0));
-            poll.setNotifications(notifications);
-            pollCache.put(key, poll);
-        } else if (etag != null) {
-            poll = pollCache.get(key, () -> newPoll(0), etag);
+        if (etag != null) {
+            poll = pollCache.get(context.getAccountId(), () -> newPoll(context), etag);
         } else {
-            poll = pollCache.get(key, () -> newPoll(0));
+            poll = pollCache.get(context.getAccountId(), () -> newPoll(context));
         }
-
-        System.out.println(poll.hashCode());
 
         return poll;
     }
 
-    private Poll newPoll(final long notifications) {
+    private Poll newPoll(final Context context) {
         final Poll poll = new Poll();
-        poll.setNotifications(notifications);
+        poll.setNotifications(notificationClient.getUnreadCount(context.getAccountId()));
         return poll;
     }
 }

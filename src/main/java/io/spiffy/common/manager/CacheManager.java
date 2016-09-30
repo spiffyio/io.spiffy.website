@@ -8,7 +8,7 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import io.spiffy.common.Manager;
-import io.spiffy.common.config.HostConfig;
+import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.ThreadUtil;
 import io.spiffy.website.cache.Listener;
 
@@ -54,7 +54,7 @@ public abstract class CacheManager<Key, Value> extends Manager {
         ThreadUtil.run(() -> {
             notifyListeners(key, value.hashCode());
             cache.put(key, value);
-            client.set(key.toString(), timeout, value);
+            client.set(prefix + key, timeout, value);
         });
 
         return value;
@@ -114,8 +114,11 @@ public abstract class CacheManager<Key, Value> extends Manager {
                     value.wait(timeout * 1000);
                 } catch (final InterruptedException e) {
                     logger.warn("unable to wait...", e);
+                    return value;
                 }
             }
+
+            return get(key);
         }
 
         return value;
@@ -141,8 +144,8 @@ public abstract class CacheManager<Key, Value> extends Manager {
     }
 
     private void notifyHost(final String host, final Key key) {
-        if (HostConfig.getPrivateEndpoint().equals(host)) {
-            final Value value = cache.getIfPresent(prefix + key);
+        if (AppConfig.getInstanceId().equals(host)) {
+            final Value value = cache.getIfPresent(key);
             if (value != null) {
                 synchronized (value) {
                     value.notifyAll();
@@ -159,7 +162,7 @@ public abstract class CacheManager<Key, Value> extends Manager {
             listener = new Listener();
         }
 
-        listener.addHost(HostConfig.getPrivateEndpoint(), hashCode);
+        listener.addHost(AppConfig.getInstanceId(), hashCode);
         client.add(listenerKey, timeout, listener);
     }
 }

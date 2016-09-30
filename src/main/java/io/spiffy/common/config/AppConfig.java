@@ -4,6 +4,8 @@ import lombok.Getter;
 
 import java.security.InvalidParameterException;
 
+import io.spiffy.common.util.CommandLineUtil;
+
 public class AppConfig {
 
     private static final String LOCAL = "local";
@@ -59,6 +61,9 @@ public class AppConfig {
     private static final String emailPattern;
 
     @Getter
+    private static final String instanceId;
+
+    @Getter
     private static final String passwordPattern;
 
     @Getter
@@ -96,6 +101,7 @@ public class AppConfig {
             ffmpegInitialized = true;
             ffmpegPrefix = "";
             forwardToProd = false;
+            instanceId = "desktop";
             passwordPattern = "^password|testpass$";
             requireRecaptcha = false;
             secure = false;
@@ -111,6 +117,7 @@ public class AppConfig {
             ffmpegInitialized = false;
             ffmpegPrefix = "./";
             forwardToProd = true;
+            instanceId = CommandLineUtil.run("curl -L http://instance-data/latest/meta-data/instance-id -s").get(0);
             passwordPattern = "^[!@#$%^&+=a-zA-Z0-9]{8,}$";
             requireRecaptcha = false;
             secure = true;
@@ -126,6 +133,7 @@ public class AppConfig {
             ffmpegInitialized = false;
             ffmpegPrefix = "./";
             forwardToProd = false;
+            instanceId = CommandLineUtil.run("curl -L http://instance-data/latest/meta-data/instance-id -s").get(0);
             passwordPattern = "^[!@#$%^&+=a-zA-Z0-9]{8,}$";
             requireRecaptcha = true;
             secure = true;
