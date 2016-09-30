@@ -4,18 +4,23 @@
 
 <c:set var="include_ads" value="true" />
 <c:set var="include_footer" value="true" />
+<c:set var="include_addthis" value="true" />
 <c:choose>
   <c:when test="${ param.style eq 'authenticate' }">
     <c:set var="include_fingerprint" value="true" />
+    <c:set var="include_addthis" value="false" />
     <c:set var="include_ads" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'embed' }">
     <c:set var="include_footer" value="false" />
+    <c:set var="include_addthis" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'exception' }">
+    <c:set var="include_addthis" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'upload' }">
     <c:set var="include_ads" value="false" />
+    <c:set var="include_addthis" value="false" />
   </c:when>
   <c:otherwise>
   </c:otherwise>
@@ -107,5 +112,8 @@
   ga('create', 'UA-71103800-1', 'auto');
   ga('send', 'pageview');
 </script>
+<c:if test="${ include_addthis }">
+<script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-57eb5c2992f77f45"></script>
+</c:if>
 </body>
 </html>

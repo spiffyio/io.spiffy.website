@@ -1,6 +1,7 @@
 package io.spiffy.website.manager;
 
 import java.io.InputStream;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.HashSet;
 import java.util.Set;
@@ -44,7 +45,7 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
     }
 
     @Override
-    @Scheduled(fixedRate = 600000)
+    @Scheduled(fixedRate = 1200000)
     public void poll() {
         super.poll();
     }
@@ -188,7 +189,10 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
         final byte[] bytes;
         try {
             final URL url = new URL(address);
-            try (final InputStream is = url.openStream()) {
+            final HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestProperty("User-Agent", USER_AGENT);
+
+            try (final InputStream is = connection.getInputStream()) {
                 bytes = IOUtils.toByteArray(is);
             }
         } catch (final Exception e) {

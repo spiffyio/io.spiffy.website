@@ -12,7 +12,7 @@ import io.spiffy.common.Controller;
 import io.spiffy.common.api.notification.client.NotificationClient;
 import io.spiffy.common.dto.Context;
 import io.spiffy.website.annotation.AccessControl;
-import io.spiffy.website.cache.Poll;
+import io.spiffy.website.response.LongpollResponse;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class PollController extends Controller {
@@ -22,10 +22,10 @@ public class PollController extends Controller {
     @ResponseBody
     @AccessControl
     @RequestMapping("/longpoll")
-    public Poll longpoll(final Context context) throws InterruptedException {
+    public LongpollResponse longpoll(final Context context) throws InterruptedException {
         final String value = context.getIfNoneMatch();
 
-        final Poll poll = new Poll();
+        final LongpollResponse poll = new LongpollResponse();
         updatePoll(context, poll);
 
         if (StringUtils.equalsIgnoreCase(value, Integer.toString(poll.hashCode()))) {
@@ -39,7 +39,7 @@ public class PollController extends Controller {
         return poll;
     }
 
-    private void updatePoll(final Context context, final Poll poll) {
+    private void updatePoll(final Context context, final LongpollResponse poll) {
         poll.setNotifications(notificationClient.getUnreadCount(context.getAccountId()));
     }
 }

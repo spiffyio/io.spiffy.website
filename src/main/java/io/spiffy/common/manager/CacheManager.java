@@ -1,6 +1,5 @@
 package io.spiffy.common.manager;
 
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
@@ -8,15 +7,12 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 
 import io.spiffy.common.Manager;
-import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.ThreadUtil;
-import io.spiffy.website.cache.Listener;
 
 import net.spy.memcached.MemcachedClient;
 
 public abstract class CacheManager<Key, Value> extends Manager {
 
-    private static final String LISTENER_PREFIX = "Listener:";
     private static final int DEFAULT_HASH_CODE = 0;
 
     private final MemcachedClient client;
@@ -52,7 +48,6 @@ public abstract class CacheManager<Key, Value> extends Manager {
         }
 
         ThreadUtil.run(() -> {
-            notifyListeners(key, value.hashCode());
             cache.put(key, value);
             client.set(prefix + key, timeout, value);
         });
@@ -105,64 +100,6 @@ public abstract class CacheManager<Key, Value> extends Manager {
         }
 
         put(key, value);
-
-        if (value.hashCode() == hashCode) {
-            registerListener(key, value.hashCode());
-
-            synchronized (value) {
-                try {
-                    value.wait(timeout * 1000);
-                } catch (final InterruptedException e) {
-                    logger.warn("unable to wait...", e);
-                    return value;
-                }
-            }
-
-            return get(key);
-        }
-
         return value;
-    }
-
-    private void notifyListeners(final Key key, final int hashCode) {
-        final String listenerKey = LISTENER_PREFIX + prefix + key;
-
-        final Listener listener = (Listener) client.get(listenerKey);
-        if (listener == null) {
-            return;
-        }
-
-        if (listener.getHosts() == null) {
-            return;
-        }
-
-        for (final Entry<String, Integer> host : listener.getHosts().entrySet()) {
-            if (host.getValue() != hashCode) {
-                notifyHost(host.getKey(), key);
-            }
-        }
-    }
-
-    private void notifyHost(final String host, final Key key) {
-        if (AppConfig.getInstanceId().equals(host)) {
-            final Value value = cache.getIfPresent(key);
-            if (value != null) {
-                synchronized (value) {
-                    value.notifyAll();
-                }
-            }
-        }
-    }
-
-    private void registerListener(final Key key, final int hashCode) {
-        final String listenerKey = LISTENER_PREFIX + prefix + key;
-
-        Listener listener = (Listener) client.get(listenerKey);
-        if (listener == null) {
-            listener = new Listener();
-        }
-
-        listener.addHost(AppConfig.getInstanceId(), hashCode);
-        client.add(listenerKey, timeout, listener);
     }
 }
