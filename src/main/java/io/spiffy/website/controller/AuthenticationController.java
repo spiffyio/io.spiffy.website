@@ -25,7 +25,7 @@ import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.response.*;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class AuthenticationController extends Controller {
 
     private static final String EMAIL_KEY = "email";
@@ -43,7 +43,7 @@ public class AuthenticationController extends Controller {
     private final UserClient userClient;
 
     @AccessControl
-    @RequestMapping("/account")
+    @RequestMapping({ "/account", "/profile" })
     public ModelAndView account(final Context context) {
         return redirect("/" + context.getUsername(), context);
     }

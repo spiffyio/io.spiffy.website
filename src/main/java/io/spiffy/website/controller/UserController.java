@@ -62,12 +62,6 @@ public class UserController extends Controller {
     }
 
     @AccessControl
-    @RequestMapping("/profile")
-    public ModelAndView profile(final Context context) {
-        return redirect("/" + context.getUsername(), context);
-    }
-
-    @AccessControl
     @RequestMapping("/notifications")
     public ModelAndView notifications(final Context context) {
         context.addAttribute("notifications", notificationClient.getNoficiations(context.getAccountId()));

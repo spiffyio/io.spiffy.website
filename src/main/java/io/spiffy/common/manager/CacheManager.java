@@ -1,10 +1,6 @@
 package io.spiffy.common.manager;
 
 import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
-
-import com.google.common.cache.Cache;
-import com.google.common.cache.CacheBuilder;
 
 import io.spiffy.common.Manager;
 import io.spiffy.common.util.ThreadUtil;
@@ -13,10 +9,7 @@ import net.spy.memcached.MemcachedClient;
 
 public abstract class CacheManager<Key, Value> extends Manager {
 
-    private static final int DEFAULT_HASH_CODE = 0;
-
     private final MemcachedClient client;
-    private final Cache<Key, Value> cache;
     private final String prefix;
     private final int timeout;
 
@@ -24,10 +17,6 @@ public abstract class CacheManager<Key, Value> extends Manager {
         this.client = client;
         this.prefix = prefix;
         this.timeout = timeout;
-        this.cache = CacheBuilder //
-                .newBuilder() //
-                .expireAfterAccess(timeout, TimeUnit.SECONDS) //
-                .build();
     }
 
     public Value put(final Key key, final Value value) {
@@ -47,10 +36,7 @@ public abstract class CacheManager<Key, Value> extends Manager {
             return value;
         }
 
-        ThreadUtil.run(() -> {
-            cache.put(key, value);
-            client.set(prefix + key, timeout, value);
-        });
+        ThreadUtil.run(() -> client.set(prefix + key, timeout, value));
 
         return value;
     }
@@ -60,17 +46,7 @@ public abstract class CacheManager<Key, Value> extends Manager {
         final String keyString = prefix + key;
         ThreadUtil.run(() -> client.touch(keyString, timeout));
 
-        final Value local = cache.getIfPresent(key);
-        if (local != null) {
-            return local;
-        }
-
-        final Value distributed = (Value) client.get(keyString);
-        if (distributed != null) {
-            put(key, distributed);
-        }
-
-        return distributed;
+        return (Value) client.get(keyString);
     }
 
     public Value get(final Key key, final Value value) {
@@ -78,12 +54,8 @@ public abstract class CacheManager<Key, Value> extends Manager {
     }
 
     public Value get(final Key key, final Callable<Value> callable) {
-        return get(key, callable, DEFAULT_HASH_CODE);
-    }
-
-    public Value get(final Key key, final Callable<Value> callable, final int hashCode) {
         final Value cached = get(key);
-        if (cached != null && cached.hashCode() != hashCode) {
+        if (cached != null) {
             return cached;
         }
 
