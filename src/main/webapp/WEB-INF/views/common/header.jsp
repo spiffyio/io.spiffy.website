@@ -13,6 +13,7 @@
     <c:set var="include_bar" value="true" />
   </c:when>
   <c:when test="${ param.style eq 'embed' }">
+    <c:set var="include_embed" value="true" />
   </c:when>
   <c:when test="${ param.style eq 'exception' }">
     <c:set var="include_centered" value="true" />
@@ -65,7 +66,12 @@
 <meta name="account" content="<c:out value="${ account.username }" />">
 </c:if>
 
+<c:if test="${ not include_embed }">
 <s:resource file="application" type="css" version="11" />
+</c:if>
+<c:if test="${ include_embed }">
+<s:resource file="embed" type="css" version="1" />
+</c:if>
 <s:resource file="croppie" type="css" />
 <c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>

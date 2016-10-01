@@ -35,6 +35,8 @@
   </table>
 </div>
 
+<iframe src="http://localhost:1280/stream/KsGrmq/embed" style="width:400px;height:300px;border:0px;"></iframe>
+
 <form class="logout" <s:csrf name="logout" /> action="/logout" data-loading="header">
   <input type="hidden" name="session" />
 </form>

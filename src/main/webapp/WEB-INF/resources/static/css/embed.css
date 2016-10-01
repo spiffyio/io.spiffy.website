@@ -1,0 +1,114 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.clearfix:before, .clearfix:after {
+  content: '';
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+@media only screen and (max-width: 319px) {
+  .xs-visible {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 479px) {
+  .sm-visible {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .md-visible {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .lg-visible {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .xl-visible {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 320px) {
+  .xs-hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 480px) {
+  .sm-hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .md-hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .lg-hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .xl-hidden {
+    display: none;
+  }
+}
+
+html, body {
+  height: 100%;
+  width: 100%;
+}
+
+.body {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  display: table;
+}
+
+.body .post {
+  display: table-cell;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.body .post .media {
+  position: relative;
+  display: inline-block;
+}
+
+.body .post .information {
+  height: 3em;
+  width: 100%;
+  position: absolute;
+  bottom: 0;
+  background: #0D0D0D;
+  color: #D3D3D3;
+  line-height: 3em;
+  opacity: 0.3;
+}
+
+img, video {
+  height: auto;
+  width: auto;
+  max-height: 100vh;
+  max-width: 100vw;
+}

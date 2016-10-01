@@ -8,6 +8,7 @@
 </jsp:include>
 
 <div class="post">
+
 <div class="media <c:if test="${ empty unprocessed and (post.content.type eq 'VIDEO') }">video</c:if>">
 <c:if test="${ empty unprocessed }">
 <c:if test="${ post.content.type eq 'VIDEO' }">
@@ -27,11 +28,11 @@
   <div data-unprocessed="<c:out value="${ unprocessed }" />">
   </div>
 </c:if>
-</div>
-<div style="height: 0.25em;"></div>
 <div class="information">
   <div class="description"><c:out value="${ post.description }" /></div>
 </div>
+</div>
+
 </div>
 
 <jsp:include page="common/footer.jsp">

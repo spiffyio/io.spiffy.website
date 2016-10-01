@@ -1,3 +1,77 @@
+* {
+  padding: 0;
+  margin: 0;
+}
+
+.clearfix:before, .clearfix:after {
+  content: '';
+  display: table;
+}
+
+.clearfix:after {
+  clear: both;
+}
+
+@media only screen and (max-width: 319px) {
+  .xs-visible {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 479px) {
+  .sm-visible {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 767px) {
+  .md-visible {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 991px) {
+  .lg-visible {
+    display: none;
+  }
+}
+
+@media only screen and (max-width: 1199px) {
+  .xl-visible {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 320px) {
+  .xs-hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 480px) {
+  .sm-hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 768px) {
+  .md-hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 992px) {
+  .lg-hidden {
+    display: none;
+  }
+}
+
+@media only screen and (min-width: 1200px) {
+  .xl-hidden {
+    display: none;
+  }
+}
+
 .chats {
   height: calc(100vh - 6em);
   width: 300px;
@@ -242,11 +316,6 @@
 .message-group.right .message:before {
   right: -1em;
   border-color: #C0EFFD transparent transparent transparent;
-}
-
-* {
-  padding: 0;
-  margin: 0;
 }
 
 html, body {
@@ -884,75 +953,6 @@ div.disabled:before {
 
 .hamburger.active .inner {
   fill: #FFB60D;
-}
-
-.clearfix:before, .clearfix:after {
-  content: "";
-  display: table;
-}
-
-.clearfix:after {
-  clear: both;
-}
-
-@media only screen and (max-width: 319px) {
-  .xs-visible {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 479px) {
-  .sm-visible {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 767px) {
-  .md-visible {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 991px) {
-  .lg-visible {
-    display: none;
-  }
-}
-
-@media only screen and (max-width: 1199px) {
-  .xl-visible {
-    display: none;
-  }
-}
-
-@media only screen and (min-width: 320px) {
-  .xs-hidden {
-    display: none;
-  }
-}
-
-@media only screen and (min-width: 480px) {
-  .sm-hidden {
-    display: none;
-  }
-}
-
-@media only screen and (min-width: 768px) {
-  .md-hidden {
-    display: none;
-  }
-}
-
-@media only screen and (min-width: 992px) {
-  .lg-hidden {
-    display: none;
-  }
-}
-
-@media only screen and (min-width: 1200px) {
-  .xl-hidden {
-    display: none;
-  }
 }
 
 .grid {

@@ -24,10 +24,9 @@ import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.response.AjaxResponse;
 import io.spiffy.website.response.BadRequestResponse;
-import io.spiffy.website.response.NotificationsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserController extends Controller {
 
     private final HomeController homeController;
@@ -68,12 +67,6 @@ public class UserController extends Controller {
         return mav("notifications", context);
     }
 
-    @AccessControl
-    @RequestMapping("/friends")
-    public ModelAndView friends(final Context context) {
-        return mav("friends", context);
-    }
-
     @ResponseBody
     @AccessControl
     @Csrf("action")
@@ -95,15 +88,6 @@ public class UserController extends Controller {
         }
 
         return new SuccessResponse(true);
-    }
-
-    @ResponseBody
-    @AccessControl
-    @Csrf("notifications")
-    @RequestMapping(value = "/notifications", method = RequestMethod.POST)
-    public AjaxResponse getNotificationCount(final Context context) {
-        final long notificationCount = notificationClient.getUnreadCount(context.getAccountId());
-        return new NotificationsResponse(notificationCount);
     }
 
     @ResponseBody

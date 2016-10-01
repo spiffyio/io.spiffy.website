@@ -5,6 +5,7 @@
 <c:set var="include_ads" value="true" />
 <c:set var="include_footer" value="true" />
 <c:set var="include_addthis" value="true" />
+<c:set var="include_templates" value="true" />
 <c:choose>
   <c:when test="${ param.style eq 'authenticate' }">
     <c:set var="include_fingerprint" value="true" />
@@ -13,7 +14,9 @@
   </c:when>
   <c:when test="${ param.style eq 'embed' }">
     <c:set var="include_footer" value="false" />
+    <c:set var="include_templates" value="false" />
     <c:set var="include_addthis" value="false" />
+    <c:set var="include_ads" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'exception' }">
     <c:set var="include_addthis" value="false" />
@@ -38,6 +41,7 @@
 </div>
 </c:if>
 
+<c:if test="${ include_templates }">
 <div id="confirm-modal" class="modal-overlay">
   <div class="modal">
     <div class="modal-header">
@@ -84,6 +88,7 @@
 </div>
 </div>
 </script>
+</c:if>
 
 <s:resource file="jquery" type="js" />
 <s:resource file="croppie" type="js" />

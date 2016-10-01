@@ -1,10 +1,5 @@
-@import constants.sass
-@import functions.sass
+@import global.sass
 @import messenger.sass
-
-*
-  padding: 0
-  margin: 0
 
 html, body
   height: 100%
@@ -502,53 +497,6 @@ div.disabled:before
 
   .inner
     fill: $o5
-
-.clearfix:before, .clearfix:after
-  content: ""
-  display: table
-
-.clearfix:after
-  clear: both
-
-+max-width($xs)
-  .xs-visible
-    +hidden
-
-+max-width($sm)
-  .sm-visible
-    +hidden
-
-+max-width($md)
-  .md-visible
-    +hidden
-
-+max-width($lg)
-  .lg-visible
-    +hidden
-
-+max-width($xl)
-  .xl-visible
-    +hidden
-
-+min-width($xs)
-  .xs-hidden
-    +hidden
-
-+min-width($sm)
-  .sm-hidden
-    +hidden
-
-+min-width($md)
-  .md-hidden
-    +hidden
-
-+min-width($lg)
-  .lg-hidden
-    +hidden
-
-+min-width($xl)
-  .xl-hidden
-    +hidden
 
 .grid
   display: flex
