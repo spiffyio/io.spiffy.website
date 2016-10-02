@@ -29,7 +29,13 @@
   </div>
 </c:if>
 <div class="information">
-  <div class="description"><c:out value="${ post.description }" /></div>
+  <div class="icon">
+    <a href="https://spiffy.io/<c:out value="${ post.account.username }" />" target="_blank"><img src="<c:out value="${ post.account.iconUrl }" />" /></a>
+  </div>
+  <div class="description"><%--<c:out value="${ post.description }" /> --%></div>
+  <div class="logo">
+    <a href="https://spiffy.io" target="_blank"><img src="<s:resource file="svg/icon.svg" />" /></a>  
+  </div>
 </div>
 </div>
 
