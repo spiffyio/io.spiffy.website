@@ -12,6 +12,58 @@
 .clearfix:after
   clear: both
 
+div.video.paused
+  div.controls
+    display: none
+
+div.video
+  position: relative
+  overflow: hidden
+
+  div.controls
+    +size(3em, 100%)
+    position: absolute
+    bottom: -3em
+    background: rgba(0, 0, 0, 0.3)
+    transition: bottom 0.5s ease
+
+    div.pause
+      +size(2em, 2em)
+      padding: 0.5em
+      position: absolute
+      left: 1em
+
+    div.volume
+      +size(2em, 2em)
+      padding: 0.5em
+      position: absolute
+      right: 1em
+
+div.video:hover, div.video:focus
+  div.controls
+    bottom: 0
+    transition: bottom 0.5s ease
+
+div.video.paused:before
+  +size(calc(90% - 0.5em), calc(90% - 0.5em))
+  position: absolute
+  top: 5%
+  left: 5%
+  content: ''
+  border: 0.25em dashed $w1
+  pointer-events: none
+
+div.video.paused:after
+  +size(4em, 4em)
+  position: absolute
+  top: calc(50% - 2em)
+  left: calc(50% - 2em)
+  text-align: center
+  content: ''
+  background-image: url('//cdn.spiffy.io/static/svg/play.svg')
+  opacity: 0.5
+  pointer-events: none
+
 +max-width($xs)
   .xs-visible
     +hidden

@@ -67,12 +67,14 @@
 </c:if>
 
 <c:if test="${ not include_embed }">
-<s:resource file="application" type="css" version="11" />
+<s:resource file="application" type="css" version="12" />
 </c:if>
 <c:if test="${ include_embed }">
-<s:resource file="embed" type="css" version="1" />
+<s:resource file="embed" type="css" version="2" />
 </c:if>
+<c:if test="${ not include_embed }">
 <s:resource file="croppie" type="css" />
+</c:if>
 <c:if test="${ include_captcha }">
 <script src='https://www.google.com/recaptcha/api.js' async defer></script>
 </c:if>

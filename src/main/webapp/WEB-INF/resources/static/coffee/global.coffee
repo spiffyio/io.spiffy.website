@@ -18,7 +18,8 @@ Spiffy.f.click '.modal-overlay', (e) ->
   if $(e.target).hasClass 'modal-overlay' then closeModal()
   return
 
-Spiffy.f.click 'video', (e, video) ->
+Spiffy.f.click 'div.pause, video', (e, control) ->
+  video = control.parent().parent().find 'video'
   video.attr 'data-clicked', true
   if video[0].paused
     video[0].play()
@@ -27,6 +28,3 @@ Spiffy.f.click 'video', (e, video) ->
     video[0].pause()
     video.parents('div.video:first').addClass 'paused'
   return
-
-$(document).ready ->
-  Spiffy.f.update.poll()

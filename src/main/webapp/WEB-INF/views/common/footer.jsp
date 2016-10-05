@@ -6,6 +6,7 @@
 <c:set var="include_footer" value="true" />
 <c:set var="include_addthis" value="true" />
 <c:set var="include_templates" value="true" />
+<c:set var="include_fingerprint" value="true" />
 <c:choose>
   <c:when test="${ param.style eq 'authenticate' }">
     <c:set var="include_fingerprint" value="true" />
@@ -13,10 +14,12 @@
     <c:set var="include_ads" value="false" />
   </c:when>
   <c:when test="${ param.style eq 'embed' }">
+    <c:set var="include_fingerprint" value="false" />
     <c:set var="include_footer" value="false" />
     <c:set var="include_templates" value="false" />
     <c:set var="include_addthis" value="false" />
     <c:set var="include_ads" value="false" />
+    <c:set var="include_embed" value="true" />
   </c:when>
   <c:when test="${ param.style eq 'exception' }">
     <c:set var="include_addthis" value="false" />
@@ -28,7 +31,6 @@
   <c:otherwise>
   </c:otherwise>
 </c:choose>
-<c:set var="include_fingerprint" value="true" />
 
 <c:if test="${ include_footer }">
   <div class="footer-padding"></div>
@@ -91,15 +93,22 @@
 </c:if>
 
 <s:resource file="jquery" type="js" />
+<c:if test="${ not include_embed }">
 <s:resource file="croppie" type="js" />
 <s:resource file="parsley" type="js" />
 <s:resource file="dropzone" type="js" />
 <s:resource file="jquery.isinviewport" type="js" />
 <s:resource file="handlebars" type="js" />
+</c:if>
 <c:if test="${ include_fingerprint }">
 <s:resource file="fingerprint" type="js" />
 </c:if>
-<s:resource file="application" type="js" version="13" />
+<c:if test="${ not include_embed }">
+<s:resource file="application" type="js" version="14" />
+</c:if>
+<c:if test="${ include_embed }">
+<s:resource file="embed" type="js" version="2" />
+</c:if>
 <c:if test="${ include_ads }">
 <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 <script>

@@ -523,7 +523,9 @@ Spiffy.f.click('.modal-overlay', function(e) {
   }
 });
 
-Spiffy.f.click('video', function(e, video) {
+Spiffy.f.click('div.pause, video', function(e, control) {
+  var video;
+  video = control.parent().parent().find('video');
   video.attr('data-clicked', true);
   if (video[0].paused) {
     video[0].play();
@@ -532,10 +534,6 @@ Spiffy.f.click('video', function(e, video) {
     video[0].pause();
     video.parents('div.video:first').addClass('paused');
   }
-});
-
-$(document).ready(function() {
-  return Spiffy.f.update.poll();
 });
 
 var Messenger;
@@ -931,6 +929,10 @@ initBannerDZ = function() {
 };
 
 var addedfile, adjustColumns, closeModal, emptyColumn, fillColumn, fingerprint, load, loadPosts, openModal, sortColumn;
+
+$(document).ready(function() {
+  return Spiffy.f.update.poll();
+});
 
 addedfile = function(file) {
   var div, form, func, img, message, preview, processing, source, src, video;

@@ -5,6 +5,10 @@
 # @prepros-prepend messenger.coffee
 # @prepros-prepend imaging.coffee
 
+
+$(document).ready ->
+  Spiffy.f.update.poll()
+
 addedfile = (file) ->
   if not file.accepted?
     func = () ->
