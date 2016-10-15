@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<style type="text/css">
+ path, polyline, line {fill:none;stroke:#F5F5F5;stroke-width:2;stroke-miterlimit:10;}
+</style>
+<path d="M9,23H7c-2.2,0-4-1.8-4-4v-6c0-2.2,1.8-4,4-4h2c2.2,0,4,1.8,4,4v6C13,21.2,11.2,23,9,23z"/>
+<polyline points="6.7,9 13,9 13,23 6.7,23 "/>
+<path d="M18,28L18,28c-2.8,0-5-2.2-5-5V9c0-2.7,2.2-5,5-5h0"/>
+<line x1="19" y1="3" x2="19" y2="29"/>
+<path d="M20,16"/>
+<path d="M23,12c1.1,0,2,1.8,2,4s-0.9,4-2,4"/>
+</svg>
+

@@ -35,6 +35,8 @@
   </table>
 </div>
 
+<img src="<s:resource file="svg/pausee.svg" />" />
+
 <iframe src="http://localhost:1280/stream/KsGrmq/embed" style="width:600px;height:500px;border:0px;"></iframe>
 
 <form class="logout" <s:csrf name="logout" /> action="/logout" data-loading="header">
