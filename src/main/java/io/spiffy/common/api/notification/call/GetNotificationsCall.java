@@ -11,6 +11,6 @@ public class GetNotificationsCall extends SpiffyCall<GetNotificationsInput, GetN
 
     @Inject
     public GetNotificationsCall(final WebTarget target) {
-        super(GetNotificationsOutput.class, target.path("notification/getnotifications"), null);
+        super(GetNotificationsOutput.class, target.path("notification/getnotifications"));
     }
 }

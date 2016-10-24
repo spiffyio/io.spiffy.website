@@ -1,14 +1,14 @@
 package io.spiffy.common.api.user.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetSessionsInput {
+@EqualsAndHashCode(callSuper = false)
+public class GetSessionsInput extends APIInput {
     private Long accountId;
 }

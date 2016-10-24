@@ -11,6 +11,6 @@ public class RecoverAccountCall extends SpiffyCall<RecoverAccountInput, RecoverA
 
     @Inject
     public RecoverAccountCall(final WebTarget target) {
-        super(RecoverAccountOutput.class, target.path("user/recoveraccount"), null);
+        super(RecoverAccountOutput.class, target.path("user/recoveraccount"));
     }
 }

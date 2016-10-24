@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
-import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.api.user.input.VerifyEmailInput;
 import io.spiffy.user.entity.AccountEntity;
 import io.spiffy.user.service.AccountService;

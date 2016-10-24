@@ -1,14 +1,14 @@
 package io.spiffy.common.api.email.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostEmailAddressInput {
+@EqualsAndHashCode(callSuper = false)
+public class PostEmailAddressInput extends APIInput {
     private String address;
 }

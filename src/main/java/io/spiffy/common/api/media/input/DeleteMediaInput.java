@@ -1,17 +1,17 @@
 package io.spiffy.common.api.media.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
+
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class DeleteMediaInput {
+@EqualsAndHashCode(callSuper = false)
+public class DeleteMediaInput extends APIInput {
     private Long accountId;
     private List<String> names;
 }

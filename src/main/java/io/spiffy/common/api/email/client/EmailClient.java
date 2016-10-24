@@ -5,8 +5,6 @@ import lombok.RequiredArgsConstructor;
 import javax.inject.Inject;
 
 import io.spiffy.common.Client;
-import io.spiffy.common.api.GetInput;
-import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.email.call.GetEmailAddressCall;
 import io.spiffy.common.api.email.call.PostEmailAddressCall;
 import io.spiffy.common.api.email.call.SendEmailCall;
@@ -15,6 +13,8 @@ import io.spiffy.common.api.email.dto.EmailType;
 import io.spiffy.common.api.email.input.PostEmailAddressInput;
 import io.spiffy.common.api.email.input.SendEmailInput;
 import io.spiffy.common.api.email.output.GetEmailAddressOutput;
+import io.spiffy.common.api.input.GetInput;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.exception.InvalidParameterException;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))

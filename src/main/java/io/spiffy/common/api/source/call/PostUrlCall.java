@@ -4,13 +4,19 @@ import javax.inject.Inject;
 import javax.ws.rs.client.WebTarget;
 
 import io.spiffy.common.SpiffyCall;
-import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.api.source.input.PostUrlInput;
+import io.spiffy.common.manager.APICacheManager;
+
+import net.spy.memcached.MemcachedClient;
 
 public class PostUrlCall extends SpiffyCall<PostUrlInput, PostOutput> {
 
+    private static final String PATH = "source/posturl";
+
     @Inject
-    public PostUrlCall(final WebTarget target) {
-        super(PostOutput.class, target.path("source/posturl"));
+    public PostUrlCall(final WebTarget target, final MemcachedClient client) {
+        super(PostOutput.class, target.path(PATH), new APICacheManager<PostUrlInput, PostOutput>(client, PATH) {
+        });
     }
 }

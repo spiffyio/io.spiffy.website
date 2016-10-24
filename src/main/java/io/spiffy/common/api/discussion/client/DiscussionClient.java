@@ -8,12 +8,12 @@ import java.util.Set;
 import javax.inject.Inject;
 
 import io.spiffy.common.Client;
-import io.spiffy.common.api.PostOutput;
 import io.spiffy.common.api.discussion.call.*;
 import io.spiffy.common.api.discussion.dto.Comment;
 import io.spiffy.common.api.discussion.dto.ThreadDTO;
 import io.spiffy.common.api.discussion.input.*;
 import io.spiffy.common.api.discussion.output.*;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.dto.EntityType;
 
 @RequiredArgsConstructor(onConstructor = @__(@Inject))

@@ -1,15 +1,17 @@
 package io.spiffy.common.api.stream.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.output.APIOutput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostActionOutput {
+@EqualsAndHashCode(callSuper = false)
+public class PostActionOutput extends APIOutput {
+    private static final long serialVersionUID = 2883714441177370584L;
+
     public enum Error {
         INSUFFICIENT_PRIVILEGES, INVALID_POST
     }

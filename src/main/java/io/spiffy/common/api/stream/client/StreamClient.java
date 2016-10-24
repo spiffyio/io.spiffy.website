@@ -7,7 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.spiffy.common.Client;
-import io.spiffy.common.api.GetInput;
+import io.spiffy.common.api.input.GetInput;
 import io.spiffy.common.api.stream.call.*;
 import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.api.stream.input.*;

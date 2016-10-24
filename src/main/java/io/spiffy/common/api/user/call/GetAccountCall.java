@@ -1,21 +1,22 @@
 package io.spiffy.common.api.user.call;
 
-import java.util.concurrent.TimeUnit;
-
 import javax.inject.Inject;
 import javax.ws.rs.client.WebTarget;
-
-import com.google.common.cache.CacheBuilder;
 
 import io.spiffy.common.SpiffyCall;
 import io.spiffy.common.api.user.input.GetAccountInput;
 import io.spiffy.common.api.user.output.GetAccountOutput;
+import io.spiffy.common.manager.APICacheManager;
+
+import net.spy.memcached.MemcachedClient;
 
 public class GetAccountCall extends SpiffyCall<GetAccountInput, GetAccountOutput> {
 
+    private static final String PATH = "user/getaccount";
+
     @Inject
-    public GetAccountCall(final WebTarget target) {
-        super(GetAccountOutput.class, target.path("user/getaccount"),
-                CacheBuilder.newBuilder().maximumSize(1000).expireAfterAccess(15, TimeUnit.SECONDS).build());
+    public GetAccountCall(final WebTarget target, final MemcachedClient client) {
+        super(GetAccountOutput.class, target.path(PATH), new APICacheManager<GetAccountInput, GetAccountOutput>(client, PATH) {
+        });
     }
 }

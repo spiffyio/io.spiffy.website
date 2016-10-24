@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
-import io.spiffy.common.api.BooleanOutput;
+import io.spiffy.common.api.output.BooleanOutput;
 import io.spiffy.common.api.stream.input.FollowInput;
 import io.spiffy.stream.service.FollowerService;
 

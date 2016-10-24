@@ -4,18 +4,19 @@ import javax.inject.Inject;
 import javax.ws.rs.client.WebTarget;
 
 import io.spiffy.common.SpiffyCall;
-import io.spiffy.common.api.GetInput;
+import io.spiffy.common.api.input.GetInput;
 import io.spiffy.common.api.media.output.GetMediaOutput;
+import io.spiffy.common.manager.APICacheManager;
+
+import net.spy.memcached.MemcachedClient;
 
 public class GetMediaCall extends SpiffyCall<GetInput, GetMediaOutput> {
 
-    @Inject
-    public GetMediaCall(final WebTarget target) {
-        super(GetMediaOutput.class, target.path("media/getmedia"));
-    }
+    private static final String PATH = "media/getmedia";
 
-    @Override
-    public boolean cacheOutput(final GetMediaOutput output) {
-        return !GetMediaOutput.Error.UNPROCESSED_CONTENT.equals(output.getError());
+    @Inject
+    public GetMediaCall(final WebTarget target, final MemcachedClient client) {
+        super(GetMediaOutput.class, target.path(PATH), new APICacheManager<GetInput, GetMediaOutput>(client, PATH) {
+        });
     }
 }

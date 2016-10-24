@@ -1,15 +1,17 @@
 package io.spiffy.common.api.user.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.output.APIOutput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RecoverAccountOutput {
+@EqualsAndHashCode(callSuper = false)
+public class RecoverAccountOutput extends APIOutput {
+    private static final long serialVersionUID = 390720837772380731L;
+
     public enum Error {
         INVALID_TOKEN, INVALID_PASSWORD, INVALID_EMAIL, UNKNOWN_EMAIL
     }

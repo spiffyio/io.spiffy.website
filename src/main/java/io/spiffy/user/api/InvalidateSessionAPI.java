@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
-import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.api.user.input.InvalidateSessionInput;
 import io.spiffy.user.entity.SessionEntity;
 import io.spiffy.user.service.SessionService;

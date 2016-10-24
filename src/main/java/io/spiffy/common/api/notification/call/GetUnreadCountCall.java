@@ -11,6 +11,6 @@ public class GetUnreadCountCall extends SpiffyCall<GetUnreadCountInput, GetUnrea
 
     @Inject
     public GetUnreadCountCall(final WebTarget target) {
-        super(GetUnreadCountOutput.class, target.path("notification/getunreadcount"), null);
+        super(GetUnreadCountOutput.class, target.path("notification/getunreadcount"));
     }
 }

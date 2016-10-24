@@ -1,18 +1,17 @@
 package io.spiffy.common.api.email.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import io.spiffy.common.api.email.dto.EmailProperties;
 import io.spiffy.common.api.email.dto.EmailType;
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class SendEmailInput {
+@EqualsAndHashCode(callSuper = false)
+public class SendEmailInput extends APIInput {
     private EmailType type;
     private String address;
     private String idempotentId;

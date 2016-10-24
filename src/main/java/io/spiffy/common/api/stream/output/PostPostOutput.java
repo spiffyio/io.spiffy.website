@@ -1,15 +1,17 @@
 package io.spiffy.common.api.stream.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.output.APIOutput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPostOutput {
+@EqualsAndHashCode(callSuper = false)
+public class PostPostOutput extends APIOutput {
+    private static final long serialVersionUID = -7035672374342052678L;
+
     public enum Error {
         UNKNOWN_ERROR
     }

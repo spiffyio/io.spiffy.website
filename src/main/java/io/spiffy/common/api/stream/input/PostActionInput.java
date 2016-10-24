@@ -1,15 +1,15 @@
 package io.spiffy.common.api.stream.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostActionInput {
+@EqualsAndHashCode(callSuper = false)
+public class PostActionInput extends APIInput {
     public enum Action {
         DELETE, REPORT, LIKE, DISLIKE, FAVORITE, SHARE, LINK, DOWNLOAD
     }

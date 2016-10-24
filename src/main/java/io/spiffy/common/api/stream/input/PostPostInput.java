@@ -1,15 +1,15 @@
 package io.spiffy.common.api.stream.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostPostInput {
+@EqualsAndHashCode(callSuper = false)
+public class PostPostInput extends APIInput {
     private String idempotentId;
     private Long accountId;
     private Long mediaId;

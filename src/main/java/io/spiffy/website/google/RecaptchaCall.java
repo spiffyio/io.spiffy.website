@@ -12,7 +12,7 @@ public class RecaptchaCall extends Call<RecaptchaInput, RecaptchaOutput> {
 
     @Inject
     public RecaptchaCall(final @Named("googleWebTarget") WebTarget target) {
-        super(RecaptchaOutput.class, target.path("recaptcha/api/siteverify"), null);
+        super(RecaptchaOutput.class, target.path("recaptcha/api/siteverify"));
     }
 
     @Override

@@ -1,19 +1,18 @@
 package io.spiffy.common.api.discussion.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
 import io.spiffy.common.api.discussion.dto.ThreadDTO;
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMessagesInput {
+@EqualsAndHashCode(callSuper = false)
+public class GetMessagesInput extends APIInput {
     private ThreadDTO thread;
     private Long accountId;
     private Set<String> participants;

@@ -11,6 +11,6 @@ public class GetAccountMediaCall extends SpiffyCall<GetAccountMediaInput, GetAcc
 
     @Inject
     public GetAccountMediaCall(final WebTarget target) {
-        super(GetAccountMediaOutput.class, target.path("media/getaccountmedia"), null);
+        super(GetAccountMediaOutput.class, target.path("media/getaccountmedia"));
     }
 }

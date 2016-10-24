@@ -1,19 +1,20 @@
 package io.spiffy.common.api.discussion.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.List;
 
 import io.spiffy.common.api.discussion.dto.MessengerThread;
+import io.spiffy.common.api.output.APIOutput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetThreadsOutput {
+@EqualsAndHashCode(callSuper = false)
+public class GetThreadsOutput extends APIOutput {
+    private static final long serialVersionUID = -1054560311147778426L;
+
     public enum Error {
 
     }

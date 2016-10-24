@@ -4,7 +4,7 @@ import javax.inject.Inject;
 import javax.ws.rs.client.WebTarget;
 
 import io.spiffy.common.SpiffyCall;
-import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.api.user.input.PostAccountInput;
 
 public class PostAccountCall extends SpiffyCall<PostAccountInput, PostOutput> {

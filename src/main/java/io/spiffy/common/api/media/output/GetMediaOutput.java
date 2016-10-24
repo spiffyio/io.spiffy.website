@@ -1,17 +1,20 @@
 package io.spiffy.common.api.media.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import io.spiffy.common.api.media.dto.Content;
+import io.spiffy.common.api.output.APIOutput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetMediaOutput {
+@EqualsAndHashCode(callSuper = false)
+public class GetMediaOutput extends APIOutput {
+    private static final long serialVersionUID = -3081019288649563041L;
+
     public enum Error {
         UNKNOWN_CONTENT, UNPROCESSED_CONTENT
     }
@@ -25,5 +28,10 @@ public class GetMediaOutput {
 
     public GetMediaOutput(final Error error) {
         this.error = error;
+    }
+
+    @JsonIgnore
+    public boolean isCacheable() {
+        return !GetMediaOutput.Error.UNPROCESSED_CONTENT.equals(error);
     }
 }

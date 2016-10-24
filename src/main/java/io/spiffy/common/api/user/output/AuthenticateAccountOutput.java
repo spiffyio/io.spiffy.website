@@ -1,15 +1,17 @@
 package io.spiffy.common.api.user.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.output.APIOutput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class AuthenticateAccountOutput {
+@EqualsAndHashCode(callSuper = false)
+public class AuthenticateAccountOutput extends APIOutput {
+    private static final long serialVersionUID = 8037483277099587425L;
+
     public enum Error {
         INVALID_PASSWORD, INVALID_EMAIL, UNKNOWN_EMAIL
     }

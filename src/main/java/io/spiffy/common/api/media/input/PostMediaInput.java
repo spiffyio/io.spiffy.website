@@ -1,17 +1,16 @@
 package io.spiffy.common.api.media.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import io.spiffy.common.api.input.APIInput;
 import io.spiffy.common.api.media.dto.MediaType;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostMediaInput {
+@EqualsAndHashCode(callSuper = false)
+public class PostMediaInput extends APIInput {
     private Long accountId;
     private String idempotentId;
     private MediaType type;

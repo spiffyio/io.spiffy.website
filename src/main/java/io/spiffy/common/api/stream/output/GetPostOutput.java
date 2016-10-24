@@ -1,17 +1,18 @@
 package io.spiffy.common.api.stream.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import io.spiffy.common.api.output.APIOutput;
 import io.spiffy.common.api.stream.dto.Post;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetPostOutput {
+@EqualsAndHashCode(callSuper = false)
+public class GetPostOutput extends APIOutput {
+    private static final long serialVersionUID = -204040365132959586L;
+
     public enum Error {
         UNKNOWN_POST, UNPROCESSED_MEDIA
     }
@@ -27,4 +28,7 @@ public class GetPostOutput {
         this.error = error;
     }
 
+    public boolean isCahceable() {
+        return !GetPostOutput.Error.UNPROCESSED_MEDIA.equals(error);
+    }
 }

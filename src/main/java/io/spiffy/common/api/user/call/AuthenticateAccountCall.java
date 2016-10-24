@@ -11,6 +11,6 @@ public class AuthenticateAccountCall extends SpiffyCall<AuthenticateAccountInput
 
     @Inject
     public AuthenticateAccountCall(final WebTarget target) {
-        super(AuthenticateAccountOutput.class, target.path("user/authenticateaccount"), null);
+        super(AuthenticateAccountOutput.class, target.path("user/authenticateaccount"));
     }
 }

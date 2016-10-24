@@ -1,15 +1,15 @@
 package io.spiffy.common.api.security.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class MatchesStringInput {
+@EqualsAndHashCode(callSuper = false)
+public class MatchesStringInput extends APIInput {
     private Long id;
     private String plainString;
 }

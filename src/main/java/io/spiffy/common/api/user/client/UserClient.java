@@ -9,7 +9,7 @@ import javax.inject.Inject;
 import org.apache.commons.lang3.StringUtils;
 
 import io.spiffy.common.Client;
-import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.api.user.call.*;
 import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.input.*;

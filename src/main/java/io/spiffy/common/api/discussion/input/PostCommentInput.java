@@ -1,17 +1,16 @@
 package io.spiffy.common.api.discussion.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import io.spiffy.common.api.discussion.dto.ThreadDTO;
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostCommentInput {
+@EqualsAndHashCode(callSuper = false)
+public class PostCommentInput extends APIInput {
     private ThreadDTO thread;
     private Long accountId;
     private String idempotentId;

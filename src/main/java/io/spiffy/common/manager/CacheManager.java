@@ -2,12 +2,15 @@ package io.spiffy.common.manager;
 
 import java.util.concurrent.Callable;
 
+import org.apache.commons.codec.binary.Base64;
+
 import io.spiffy.common.Manager;
+import io.spiffy.common.dto.Cacheable;
 import io.spiffy.common.util.ThreadUtil;
 
 import net.spy.memcached.MemcachedClient;
 
-public abstract class CacheManager<Key, Value> extends Manager {
+public abstract class CacheManager<Key, Value extends Cacheable> extends Manager {
 
     private final MemcachedClient client;
     private final String prefix;
@@ -36,14 +39,17 @@ public abstract class CacheManager<Key, Value> extends Manager {
             return value;
         }
 
-        ThreadUtil.run(() -> client.set(prefix + key, timeout, value));
+        if (value.isCacheable()) {
+            final String keyString = new String(Base64.encodeBase64((prefix + key).getBytes()));
+            ThreadUtil.run(() -> client.set(keyString, timeout, value));
+        }
 
         return value;
     }
 
     @SuppressWarnings("unchecked")
     public Value get(final Key key) {
-        final String keyString = prefix + key;
+        final String keyString = new String(Base64.encodeBase64((prefix + key).getBytes()));
         ThreadUtil.run(() -> client.touch(keyString, timeout));
 
         return (Value) client.get(keyString);

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import javax.inject.Inject;
 
 import io.spiffy.common.Client;
-import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.api.source.call.PostUrlCall;
 import io.spiffy.common.api.source.input.PostUrlInput;
 

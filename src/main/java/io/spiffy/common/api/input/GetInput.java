@@ -1,11 +1,13 @@
-package io.spiffy.common.api;
+package io.spiffy.common.api.input;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Data
+@Builder
 @NoArgsConstructor
-public class GetInput {
+@AllArgsConstructor
+@EqualsAndHashCode(callSuper = false)
+public class GetInput extends APIInput {
     private Long id;
     private String name;
 

@@ -6,7 +6,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
-import io.spiffy.common.api.GetInput;
+import io.spiffy.common.api.input.GetInput;
 import io.spiffy.common.api.media.output.GetMediaOutput;
 import io.spiffy.media.service.ContentService;
 

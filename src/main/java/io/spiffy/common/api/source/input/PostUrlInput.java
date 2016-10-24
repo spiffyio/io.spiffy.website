@@ -1,15 +1,15 @@
 package io.spiffy.common.api.source.input;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.input.APIInput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PostUrlInput {
+@EqualsAndHashCode(callSuper = false)
+public class PostUrlInput extends APIInput {
     private String url;
     private String domain;
     private String entityId;

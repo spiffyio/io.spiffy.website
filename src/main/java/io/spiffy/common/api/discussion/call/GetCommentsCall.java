@@ -11,6 +11,6 @@ public class GetCommentsCall extends SpiffyCall<GetCommentsInput, GetCommentsOut
 
     @Inject
     public GetCommentsCall(final WebTarget target) {
-        super(GetCommentsOutput.class, target.path("discussion/getcomments"), null);
+        super(GetCommentsOutput.class, target.path("discussion/getcomments"));
     }
 }

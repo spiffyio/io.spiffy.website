@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
-import io.spiffy.common.api.GetInput;
+import io.spiffy.common.api.input.GetInput;
 import io.spiffy.common.api.media.client.MediaClient;
 import io.spiffy.common.api.media.output.GetMediaOutput;
 import io.spiffy.common.api.stream.dto.Post;

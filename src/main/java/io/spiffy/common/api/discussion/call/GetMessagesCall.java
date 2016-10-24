@@ -11,6 +11,6 @@ public class GetMessagesCall extends SpiffyCall<GetMessagesInput, GetMessagesOut
 
     @Inject
     public GetMessagesCall(final WebTarget target) {
-        super(GetMessagesOutput.class, target.path("discussion/getmessages"), null);
+        super(GetMessagesOutput.class, target.path("discussion/getmessages"));
     }
 }

@@ -5,7 +5,7 @@ import javax.inject.Inject;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import io.spiffy.common.API;
-import io.spiffy.common.api.PostOutput;
+import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.api.security.input.PostStringInput;
 import io.spiffy.security.entity.EncryptedStringEntity;
 import io.spiffy.security.service.EncryptedStringService;

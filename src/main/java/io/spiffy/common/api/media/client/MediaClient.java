@@ -7,7 +7,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 import io.spiffy.common.Client;
-import io.spiffy.common.api.GetInput;
+import io.spiffy.common.api.input.GetInput;
 import io.spiffy.common.api.media.call.DeleteMediaCall;
 import io.spiffy.common.api.media.call.GetAccountMediaCall;
 import io.spiffy.common.api.media.call.GetMediaCall;

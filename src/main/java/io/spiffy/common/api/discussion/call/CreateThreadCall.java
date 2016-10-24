@@ -11,6 +11,6 @@ public class CreateThreadCall extends SpiffyCall<CreateThreadInput, CreateThread
 
     @Inject
     public CreateThreadCall(final WebTarget target) {
-        super(CreateThreadOutput.class, target.path("discussion/createthread"), null);
+        super(CreateThreadOutput.class, target.path("discussion/createthread"));
     }
 }

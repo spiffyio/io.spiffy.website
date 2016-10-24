@@ -11,6 +11,6 @@ public class GetThreadsCall extends SpiffyCall<GetThreadsInput, GetThreadsOutput
 
     @Inject
     public GetThreadsCall(final WebTarget target) {
-        super(GetThreadsOutput.class, target.path("discussion/getthreads"), null);
+        super(GetThreadsOutput.class, target.path("discussion/getthreads"));
     }
 }

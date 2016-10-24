@@ -1,15 +1,17 @@
 package io.spiffy.common.api.user.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.output.APIOutput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisterAccountOutput {
+@EqualsAndHashCode(callSuper = false)
+public class RegisterAccountOutput extends APIOutput {
+    private static final long serialVersionUID = -7662861995296913317L;
+
     public enum Error {
         INCORRECT_PASSWORD, INVALID_PASSWORD, INVALID_EMAIL, INVALID_USERNAME, EXISTING_EMAIL, EXISTING_USERNAME
     }

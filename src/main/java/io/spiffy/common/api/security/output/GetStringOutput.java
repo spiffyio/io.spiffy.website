@@ -1,14 +1,15 @@
 package io.spiffy.common.api.security.output;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import io.spiffy.common.api.output.APIOutput;
 
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetStringOutput {
+@EqualsAndHashCode(callSuper = false)
+public class GetStringOutput extends APIOutput {
+    private static final long serialVersionUID = -1360064506774395788L;
     private String plainString;
 }
