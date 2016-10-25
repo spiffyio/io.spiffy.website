@@ -2,6 +2,8 @@ package io.spiffy.common.api.stream.output;
 
 import lombok.*;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import io.spiffy.common.api.output.APIOutput;
 import io.spiffy.common.api.stream.dto.Post;
 
@@ -28,6 +30,7 @@ public class GetPostOutput extends APIOutput {
         this.error = error;
     }
 
+    @JsonIgnore
     public boolean isCahceable() {
         return !GetPostOutput.Error.UNPROCESSED_MEDIA.equals(error);
     }

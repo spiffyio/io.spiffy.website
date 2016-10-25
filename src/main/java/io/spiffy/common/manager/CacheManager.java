@@ -1,8 +1,9 @@
 package io.spiffy.common.manager;
 
+import java.util.Base64;
 import java.util.concurrent.Callable;
 
-import org.apache.commons.codec.binary.Base64;
+import org.springframework.util.DigestUtils;
 
 import io.spiffy.common.Manager;
 import io.spiffy.common.dto.Cacheable;
@@ -40,7 +41,7 @@ public abstract class CacheManager<Key, Value extends Cacheable> extends Manager
         }
 
         if (value.isCacheable()) {
-            final String keyString = new String(Base64.encodeBase64((prefix + key).getBytes()));
+            final String keyString = asCacheKey(key);
             ThreadUtil.run(() -> client.set(keyString, timeout, value));
         }
 
@@ -49,7 +50,7 @@ public abstract class CacheManager<Key, Value extends Cacheable> extends Manager
 
     @SuppressWarnings("unchecked")
     public Value get(final Key key) {
-        final String keyString = new String(Base64.encodeBase64((prefix + key).getBytes()));
+        final String keyString = asCacheKey(key);
         ThreadUtil.run(() -> client.touch(keyString, timeout));
 
         return (Value) client.get(keyString);
@@ -79,5 +80,12 @@ public abstract class CacheManager<Key, Value extends Cacheable> extends Manager
 
         put(key, value);
         return value;
+    }
+
+    // FIXME: technically cache collisions could happen, and that'd be no bueno
+    private String asCacheKey(final Key key) {
+        final byte[] bytes = key.toString().getBytes();
+        final String md5 = Base64.getEncoder().encodeToString(DigestUtils.md5Digest(bytes));
+        return prefix + md5;
     }
 }
