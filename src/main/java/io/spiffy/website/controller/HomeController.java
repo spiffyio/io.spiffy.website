@@ -2,6 +2,8 @@ package io.spiffy.website.controller;
 
 import lombok.RequiredArgsConstructor;
 
+import java.io.IOException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -46,8 +48,18 @@ public class HomeController extends Controller {
     private final UserClient userClient;
 
     @RequestMapping("/")
-    public ModelAndView home(final Context context, final @RequestParam(required = false) String start) {
+    public ModelAndView home(final Context context, final @RequestParam(required = false) String start)
+            throws InvalidKeySpecException, IOException {
         prepareContext(context, context.getAccount(), GetPostsInput.Type.FOLLOWER, start);
+
+        // final ClassLoader classLoader = getClass().getClassLoader();
+        // final File file = new File(classLoader.getResource("cdn.der").getFile());
+        //
+        // final String url = CloudFrontUrlSigner.getSignedURLWithCannedPolicy(Protocol.https,
+        // "cdn-beta.spiffy.io", file,
+        // "content/banner.png", "APKAI6LCFL5PLWBB7DAQ", DateUtil.now(5L));
+
+        // System.out.println(url);
 
         context.addAttribute("followees", "followees");
 
