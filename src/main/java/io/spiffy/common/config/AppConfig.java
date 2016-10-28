@@ -3,6 +3,12 @@ package io.spiffy.common.config;
 import lombok.Getter;
 
 import java.security.InvalidParameterException;
+import java.security.PrivateKey;
+import java.security.spec.InvalidKeySpecException;
+
+import org.apache.commons.codec.binary.Base64;
+
+import com.amazonaws.auth.RSA;
 
 import io.spiffy.common.util.CommandLineUtil;
 
@@ -41,6 +47,12 @@ public class AppConfig {
 
     @Getter
     private static final String cdnEndpoint;
+
+    @Getter
+    private static final String cdnKeyPair;
+
+    @Getter
+    private static final PrivateKey cdnPrivateKey;
 
     @Getter
     private static final String endpoint;
@@ -90,6 +102,14 @@ public class AppConfig {
         encryptionIV = System.getProperty("encryptionInitVector");
         recaptchaSecretKey = System.getProperty("recaptchaSecretKey");
         shell = System.getProperty("shell");
+
+        cdnKeyPair = System.getProperty("cdnKeyPair");
+
+        try {
+            cdnPrivateKey = RSA.privateKeyFromPKCS8(Base64.decodeBase64(System.getProperty("cdnPrivateKey")));
+        } catch (final InvalidKeySpecException e) {
+            throw new RuntimeException();
+        }
 
         if (LOCAL.equalsIgnoreCase(stage)) {
             cacheEndpoint = "localhost";

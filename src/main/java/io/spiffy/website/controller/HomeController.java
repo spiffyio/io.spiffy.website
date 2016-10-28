@@ -33,7 +33,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject) )
+@RequiredArgsConstructor(onConstructor = @__(@Inject))
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -51,15 +51,6 @@ public class HomeController extends Controller {
     public ModelAndView home(final Context context, final @RequestParam(required = false) String start)
             throws InvalidKeySpecException, IOException {
         prepareContext(context, context.getAccount(), GetPostsInput.Type.FOLLOWER, start);
-
-        // final ClassLoader classLoader = getClass().getClassLoader();
-        // final File file = new File(classLoader.getResource("cdn.der").getFile());
-        //
-        // final String url = CloudFrontUrlSigner.getSignedURLWithCannedPolicy(Protocol.https,
-        // "cdn-beta.spiffy.io", file,
-        // "content/banner.png", "APKAI6LCFL5PLWBB7DAQ", DateUtil.now(5L));
-
-        // System.out.println(url);
 
         context.addAttribute("followees", "followees");
 
