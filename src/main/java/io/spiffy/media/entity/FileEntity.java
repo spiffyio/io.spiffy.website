@@ -12,11 +12,12 @@ import io.spiffy.common.api.media.dto.MediaType;
 @Entity
 @Getter
 @NoArgsConstructor
-@Table(name = "MEDIA_FILES", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "type", "archived_at" }))
+@Table(name = "MEDIA_FILES", uniqueConstraints = @UniqueConstraint(columnNames = { "name", "type", "archived_at" }) )
 public class FileEntity extends HibernateEntity {
 
     @Getter
     public enum Privacy {
+        PRIVATE("content"), //
         PUBLIC("media"), //
         RAW("raw");
 

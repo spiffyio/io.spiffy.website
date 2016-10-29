@@ -9,6 +9,8 @@ import javax.inject.Inject;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.DigestUtils;
 
+import com.amazonaws.services.cloudfront.CloudFrontUrlSigner;
+
 import io.spiffy.common.Service;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.config.AppConfig;
@@ -94,6 +96,12 @@ public class FileService extends Service<FileEntity, FileRepository> {
     public static String getUrl(final FileEntity file) {
         if (file == null) {
             return null;
+        }
+
+        if (FileEntity.Privacy.PRIVATE.equals(file.getPrivacy())) {
+            final String url = "https:" + AppConfig.getCdnEndpoint() + "/" + getKey(file);
+            return CloudFrontUrlSigner.getSignedURLWithCannedPolicy(url, AppConfig.getCdnKeyPair(),
+                    AppConfig.getCdnPrivateKey(), DateUtil.now(5L));
         }
 
         return AppConfig.getCdnEndpoint() + "/" + getKey(file);
