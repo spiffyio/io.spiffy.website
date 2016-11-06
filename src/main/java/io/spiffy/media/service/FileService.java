@@ -1,6 +1,5 @@
 package io.spiffy.media.service;
 
-import java.security.PrivateKey;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
@@ -15,8 +14,6 @@ import com.amazonaws.services.cloudfront.CloudFrontUrlSigner;
 import io.spiffy.common.Service;
 import io.spiffy.common.api.media.dto.MediaType;
 import io.spiffy.common.config.AppConfig;
-import io.spiffy.common.config.EnvironmentVariableConfig.CDNKeyPair;
-import io.spiffy.common.config.EnvironmentVariableConfig.CDNPrivateKey;
 import io.spiffy.common.util.DateUtil;
 import io.spiffy.media.entity.FileEntity;
 import io.spiffy.media.entity.FileEntity.Privacy;
@@ -26,16 +23,11 @@ import io.spiffy.media.repository.FileRepository;
 public class FileService extends Service<FileEntity, FileRepository> {
 
     private final S3Manager mediaManager;
-    private final String cdnKeyPair;
-    private final PrivateKey cdnPrivateKey;
 
     @Inject
-    public FileService(final FileRepository repository, final S3Manager mediaManager, final CDNKeyPair cdnKeyPair,
-            final CDNPrivateKey cdnPrivateKey) {
+    public FileService(final FileRepository repository, final S3Manager mediaManager) {
         super(repository);
         this.mediaManager = mediaManager;
-        this.cdnKeyPair = cdnKeyPair.getValue();
-        this.cdnPrivateKey = cdnPrivateKey.getValue();
     }
 
     @Transactional
@@ -101,14 +93,15 @@ public class FileService extends Service<FileEntity, FileRepository> {
         repository.saveOrUpdate(entity);
     }
 
-    public String getUrl(final FileEntity file) {
+    public static String getUrl(final FileEntity file) {
         if (file == null) {
             return null;
         }
 
         if (FileEntity.Privacy.PRIVATE.equals(file.getPrivacy())) {
             final String url = "https:" + AppConfig.getCdnEndpoint() + "/" + getKey(file);
-            return CloudFrontUrlSigner.getSignedURLWithCannedPolicy(url, cdnKeyPair, cdnPrivateKey, DateUtil.now(5L));
+            return CloudFrontUrlSigner.getSignedURLWithCannedPolicy(url, AppConfig.getCdnKeyPair(),
+                    AppConfig.getCdnPrivateKey(), DateUtil.now(5L));
         }
 
         return AppConfig.getCdnEndpoint() + "/" + getKey(file);

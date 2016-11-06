@@ -21,6 +21,9 @@
     <c:set var="include_ads" value="false" />
     <c:set var="include_embed" value="true" />
   </c:when>
+  <c:when test="${ param.style eq 'messages' }">
+    <c:set var="include_addthis" value="false" />
+  </c:when>
   <c:when test="${ param.style eq 'exception' }">
     <c:set var="include_addthis" value="false" />
   </c:when>

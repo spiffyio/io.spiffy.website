@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
-import java.security.PrivateKey;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.inject.Inject;
@@ -25,27 +24,20 @@ import io.spiffy.common.DynamoRepository;
 public class EnvironmentVariableConfig {
 
     @Bean
-    public CDNKeyPair getCDNKeyPair(final EnvironmentVariableRepository repository) {
-        return new CDNKeyPair(repository.getValue("cdnKeyPair"));
-    }
+    public Initialized init(final EnvironmentVariableRepository repository) {
+        AppConfig.setApiKey(repository.getValue("apiKey"));
+        AppConfig.setCdnKeyPair(repository.getValue("cdnKeyPair"));
 
-    @Bean
-    public CDNPrivateKey getCDNPrivateKey(final EnvironmentVariableRepository repository) {
         try {
-            return new CDNPrivateKey(RSA.privateKeyFromPKCS8(Base64.decodeBase64(repository.getValue("cdnPrivateKey"))));
+            AppConfig.setCdnPrivateKey(RSA.privateKeyFromPKCS8(Base64.decodeBase64(repository.getValue("cdnPrivateKey"))));
         } catch (final InvalidKeySpecException e) {
             throw new RuntimeException();
         }
+
+        return new Initialized();
     }
 
-    @Data
-    public static class CDNKeyPair {
-        private final String value;
-    }
-
-    @Data
-    public static class CDNPrivateKey {
-        private final PrivateKey value;
+    public static class Initialized {
     }
 
     @Data

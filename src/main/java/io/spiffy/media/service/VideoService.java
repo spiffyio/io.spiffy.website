@@ -112,9 +112,9 @@ public class VideoService extends Service<VideoEntity, VideoRepository> {
         }
 
         final Content poster = imageService.getContent(name, entity.getPoster());
-        final String mp4 = fileService.getUrl(entity.getMp4());
-        final String webm = fileService.getUrl(entity.getWebm());
-        final String gif = fileService.getUrl(entity.getGif());
+        final String mp4 = FileService.getUrl(entity.getMp4());
+        final String webm = FileService.getUrl(entity.getWebm());
+        final String gif = FileService.getUrl(entity.getGif());
 
         return new Content(name, poster, mp4, webm, gif);
     }
