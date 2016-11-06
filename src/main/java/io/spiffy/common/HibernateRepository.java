@@ -9,7 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
-public abstract class HibernateRepository<E> extends Repository<E> {
+public abstract class HibernateRepository<E extends HibernateEntity> extends Repository<E> {
     public static final boolean EXCLUDE_ARCHIVED = true;
     public static final boolean INCLUDE_ARCHIVED = !EXCLUDE_ARCHIVED;
 

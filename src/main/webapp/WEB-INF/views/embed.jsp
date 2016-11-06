@@ -23,7 +23,7 @@
       </video>
       <div class="controls">
         <div class="pause"><img src="<s:resource file="svg/pause.svg" />" /></div>
-        <div class="volume"><img src="<s:resource file="svg/muted.svg" />" /></div>
+        <div class="volume"><!-- <img src="<s:resource file="svg/muted.svg" />" /> --></div>
       </div>
     </div>
     </c:if>

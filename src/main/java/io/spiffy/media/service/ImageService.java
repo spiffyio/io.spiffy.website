@@ -130,9 +130,9 @@ public class ImageService extends Service<ImageEntity, ImageRepository> {
             return null;
         }
 
-        final String file = FileService.getUrl(entity.getFile());
-        final String medium = FileService.getUrl(entity.getMedium());
-        final String thumbnail = FileService.getUrl(entity.getThumbnail());
+        final String file = fileService.getUrl(entity.getFile());
+        final String medium = fileService.getUrl(entity.getMedium());
+        final String thumbnail = fileService.getUrl(entity.getThumbnail());
 
         return new Content(name, file, medium, thumbnail);
     }
