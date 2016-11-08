@@ -62,6 +62,20 @@
 <meta name="msapplication-TileImage" content="<s:resource file="favicon/mstile-144x144.png" />">
 <meta name="theme-color" content="#c0effd">
 
+<c:if test="${ not empty social }">
+<meta property="og:title" content="<c:out value="${ social.user }" /> via SPIFFY.io">
+<meta property="og:description" content="<c:out value="${ social.description }" />">
+<meta property="og:image" content="<c:out value="${ social.image }" />">
+<meta property="og:url" content="<c:out value="${ social.url }" />">
+<meta name="twitter:card" content="summary_large_image">
+
+<meta property="og:site_name" content="SPIFFY.io, LLC">
+<meta name="twitter:image:alt" content="<c:out value="${ social.title }" /> via SPIFFY.io">
+
+<meta property="fb:app_id" content="SPIFFYio" />
+<meta name="twitter:site" content="@SPIFFYio">
+</c:if>
+
 <c:if test="${ not empty account }">
 <meta name="account" content="<c:out value="${ account.username }" />">
 </c:if>

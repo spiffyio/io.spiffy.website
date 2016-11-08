@@ -21,9 +21,11 @@ import io.spiffy.common.api.stream.input.PostActionInput;
 import io.spiffy.common.api.stream.output.GetPostOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.api.user.client.UserClient;
+import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.dto.EntityType;
+import io.spiffy.common.dto.Social;
 import io.spiffy.common.exception.UnknownPostException;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
@@ -101,20 +103,25 @@ public class HomeController extends Controller {
 
     @RequestMapping("/stream/{postId}")
     public ModelAndView post(final Context context, final @PathVariable String postId) {
-        final long post = ObfuscateUtil.unobfuscate(postId);
+        final long id = ObfuscateUtil.unobfuscate(postId);
 
         final GetPostOutput output = streamClient.getPost(postId);
         if (GetPostOutput.Error.UNKNOWN_POST.equals(output.getError())) {
             throw new UnknownPostException();
         }
 
-        context.addAttribute(POST_KEY, output.getPost());
+        final Post post = output.getPost();
+        context.addAttribute(POST_KEY, post);
 
         if (GetPostOutput.Error.UNPROCESSED_MEDIA.equals(output.getError())) {
             context.addAttribute(UNPROCESSED_KEY, postId);
         }
 
-        context.addAttribute(COMMENTS_KEY, discussionClient.getComments(EntityType.POST, "" + post, null, 24));
+        context.addAttribute(COMMENTS_KEY, discussionClient.getComments(EntityType.POST, "" + id, null, 24));
+
+        context.addAttribute("social",
+                new Social(post.getAccount().getUsername(), post.getDescription(), post.getContent().getImage(),
+                        AppConfig.getEndpoint() + context.getRequestUri(), post.getAccount().getUsername()));
 
         return mav("post", context);
     }
@@ -126,7 +133,13 @@ public class HomeController extends Controller {
             throw new UnknownPostException();
         }
 
-        context.addAttribute(POST_KEY, output.getPost());
+        final Post post = output.getPost();
+        context.addAttribute(POST_KEY, post);
+
+        context.addAttribute("social",
+                new Social(post.getAccount().getUsername(), post.getDescription(), post.getContent().getImage(),
+                        AppConfig.getEndpoint() + context.getRequestUri(), post.getAccount().getUsername()));
+
         return mav("embed", context);
     }
 

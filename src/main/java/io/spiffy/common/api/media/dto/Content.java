@@ -3,6 +3,8 @@ package io.spiffy.common.api.media.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Data
 @AllArgsConstructor
 public class Content {
@@ -18,6 +20,19 @@ public class Content {
     private String mp4;
     private String webm;
     private String gif;
+
+    @JsonIgnore
+    public String getImage() {
+        if (ContentType.IMAGE.equals(type)) {
+            return file;
+        }
+
+        if (ContentType.VIDEO.equals(type)) {
+            return poster.getFile();
+        }
+
+        return null;
+    }
 
     public Content() {
     }
