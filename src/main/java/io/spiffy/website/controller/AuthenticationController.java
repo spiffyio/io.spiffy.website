@@ -18,14 +18,17 @@ import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.api.user.output.RecoverAccountOutput;
 import io.spiffy.common.api.user.output.RegisterAccountOutput;
+import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.dto.Context;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
 import io.spiffy.website.google.GoogleClient;
+import io.spiffy.website.oauth.InformationOutput;
+import io.spiffy.website.oauth.OAuthClient;
 import io.spiffy.website.response.*;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class AuthenticationController extends Controller {
 
     private static final String EMAIL_KEY = "email";
@@ -40,6 +43,7 @@ public class AuthenticationController extends Controller {
     private static final String FORM_RECOVER = "recover";
 
     private final GoogleClient googleClient;
+    private final OAuthClient oauthClient;
     private final UserClient userClient;
 
     @AccessControl
@@ -137,6 +141,51 @@ public class AuthenticationController extends Controller {
     @RequestMapping({ "/login", "/signin" })
     public ModelAndView login(final Context context,
             final @RequestParam(required = false, defaultValue = "/") String returnUri) {
+        context.addAttribute(FORM_KEY, FORM_LOGIN);
+        context.addAttribute(RETURN_URI_KEY, returnUri);
+        return mav("authenticate", context);
+    }
+
+    @RequestMapping(value = { "/login", "/signin" }, params = "provider")
+    public ModelAndView provider(final Context context, final @RequestParam String provider,
+            final @RequestParam(required = false, defaultValue = "/") String returnUri) {
+
+        final String state = context.generateCsrfToken("login" + provider);
+        final String uri = AppConfig.getEndpoint() + "/login?provider=" + provider;
+
+        final String facebook = "https://www.facebook.com/v2.8/dialog/oauth?client_id=621885487990537&response_type=code&scope=email&state=%s&redirect_uri=%s";
+        final String google = "https://accounts.google.com/o/oauth2/v2/auth?client_id=981827005156-pfp7mgsosbjvtgv6e26tnu75lfgm07un.apps.googleusercontent.com&response_type=code&scope=email&state=%s&redirect_uri=%s";
+
+        final String template;
+        if ("facebook".equalsIgnoreCase(provider)) {
+            template = facebook;
+        } else {
+            template = google;
+        }
+
+        return redirect(String.format(template, state, uri), context);
+    }
+
+    @RequestMapping(value = { "/login", "/signin" }, params = { "provider", "error" })
+    public ModelAndView provider(final Context context, final @RequestParam String provider, final @RequestParam String error,
+            final @RequestParam(required = false, defaultValue = "/") String returnUri) {
+
+        System.out.println(error);
+
+        context.addAttribute(FORM_KEY, FORM_LOGIN);
+        context.addAttribute(RETURN_URI_KEY, returnUri);
+        return mav("authenticate", context);
+    }
+
+    @RequestMapping(value = { "/login", "/signin" }, params = { "provider", "code", "state" })
+    public ModelAndView provider(final Context context, final @RequestParam String provider, final @RequestParam String code,
+            final @RequestParam String state, final @RequestParam(required = false, defaultValue = "/") String returnUri) {
+
+        final InformationOutput output = oauthClient.authenticate(context, state, code,
+                OAuthClient.Provider.valueOf(provider.toUpperCase()));
+
+        context.addAttribute("information", output.toString());
+
         context.addAttribute(FORM_KEY, FORM_LOGIN);
         context.addAttribute(RETURN_URI_KEY, returnUri);
         return mav("authenticate", context);

@@ -7,6 +7,11 @@
 </jsp:include>
 
   <c:if test="${ form eq 'login' }">
+  
+  <c:if test="${ not empty information }">
+    <p><c:out value="${ information }" /></p>
+  </c:if>
+  
   <form class="login" <s:csrf name="login" /> data-return-uri="<c:out value="${ returnUri }" />" action="/login">
     <div class="input"><input type="email" placeholder="email" name="email" required autofocus /></div>
     <div class="input"><input type="password" placeholder="password" name="password" required /></div>

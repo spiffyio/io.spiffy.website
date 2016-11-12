@@ -92,6 +92,20 @@ public class AppConfig {
     @Setter
     private static PrivateKey cdnPrivateKey;
 
+    @Getter
+    private static final String facebookClientId;
+
+    @Getter
+    @Setter
+    private static String facebookClientSecret;
+
+    @Getter
+    private static final String googleClientId;
+
+    @Getter
+    @Setter
+    private static String googleClientSecret;
+
     static {
         stage = System.getProperty("stage");
         awsAccessKeyId = System.getProperty("AWS_ACCESS_KEY_ID");
@@ -100,6 +114,9 @@ public class AppConfig {
         encryptionIV = System.getProperty("encryptionInitVector");
         recaptchaSecretKey = System.getProperty("recaptchaSecretKey");
         shell = System.getProperty("shell");
+
+        facebookClientId = "621885487990537";
+        googleClientId = "981827005156-pfp7mgsosbjvtgv6e26tnu75lfgm07un.apps.googleusercontent.com";
 
         if (LOCAL.equalsIgnoreCase(stage)) {
             cacheEndpoint = "localhost";

@@ -94,7 +94,6 @@
 </c:if>
 </head>
 <body>
-
 <c:if test="${ include_bar }">
 <div class="header">
   <div class="menu">
