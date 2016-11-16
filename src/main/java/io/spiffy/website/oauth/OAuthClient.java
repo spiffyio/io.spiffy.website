@@ -7,15 +7,12 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import io.spiffy.common.Client;
+import io.spiffy.common.api.user.dto.Provider;
 import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.config.EnvironmentVariableConfig.Initialized;
 import io.spiffy.common.dto.Context;
 
 public class OAuthClient extends Client {
-
-    public enum Provider {
-        FACEBOOK, GOOGLE
-    }
 
     private final Map<Provider, AuthenticationCall> authenticationCalls;
     private final Map<Provider, InformationCall> informationCalls;

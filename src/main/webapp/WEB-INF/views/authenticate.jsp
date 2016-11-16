@@ -7,11 +7,6 @@
 </jsp:include>
 
   <c:if test="${ form eq 'login' }">
-  
-  <c:if test="${ not empty information }">
-    <p><c:out value="${ information }" /></p>
-  </c:if>
-  
   <form class="login" <s:csrf name="login" /> data-return-uri="<c:out value="${ returnUri }" />" action="/login">
     <div class="input"><input type="email" placeholder="email" name="email" required autofocus /></div>
     <div class="input"><input type="password" placeholder="password" name="password" required /></div>
@@ -21,8 +16,13 @@
     <div class="input"><input class="button primary" type="submit" value="login" /></div>
     <br />
     <h3 style="text-align: center;">
-      <a class="button primary" href="/forgot?returnUri=<c:out value="${ returnUri }" />">recover</a>
-      <a class="button danger" href="/register?returnUri=<c:out value="${ returnUri }" />">register</a>
+      <a class="button primary" style="width: 5em;" href="/forgot?returnUri=<c:out value="${ returnUri }" />">recover</a>
+      <a class="button danger" style="width: 5em;" href="/register?returnUri=<c:out value="${ returnUri }" />">register</a>
+    </h3>
+    <br /><hr><br />
+    <h3 style="text-align: center;">
+      <a class="button facebook" style="width: 5em;" href="/login?provider=facebook&returnUri=<c:out value="${ returnUri }" />">facebook</a>
+      <a class="button google" style="width: 5em;" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />">google</a>
     </h3>
   </form>
   </c:if>
@@ -42,6 +42,23 @@
       <a class="button primary" href="/login?returnUri=<c:out value="${ returnUri }" />">login</a>
       <a class="button danger" href="/forgot?returnUri=<c:out value="${ returnUri }" />">recover</a>
     </h3>
+    <br /><hr><br />
+    <h3 style="text-align: center;">
+      <a class="button facebook" style="width: 5em;" href="/login?provider=facebook&returnUri=<c:out value="${ returnUri }" />">facebook</a>
+      <a class="button google" style="width: 5em;" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />">google</a>
+    </h3>
+  </form>
+  </c:if>
+  
+  <c:if test="${ form eq 'create' }">
+  <form class="create" <s:csrf name="create" /> data-return-uri="<c:out value="${ returnUri }" />" action="/create">
+    <div class="input"><input type="text" placeholder="username" name="username" required autofocus /></div>
+    <input type="hidden" name="provider" value="<c:out value="${ provider }" />" />
+    <input type="hidden" name="providerId" value="<c:out value="${ providerId }" />" />
+    <input type="hidden" name="email" value="<c:out value="${ email }" />" />
+    <input type="hidden" name="fingerprint" />
+    <div class="message"></div> 
+    <div class="input"><input class="button danger" type="submit" value="register" /></div>
   </form>
   </c:if>
   

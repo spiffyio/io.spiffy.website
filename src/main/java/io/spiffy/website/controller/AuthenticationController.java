@@ -36,6 +36,7 @@ public class AuthenticationController extends Controller {
     private static final String SESSIONS_KEY = "sessions";
     private static final String TOKEN_KEY = "token";
 
+    private static final String FORM_CREATE = "create";
     private static final String FORM_FORGOT = "forgot";
     private static final String FORM_LOGIN = "login";
     private static final String FORM_REGISTER = "register";
@@ -165,13 +166,42 @@ public class AuthenticationController extends Controller {
     @RequestMapping(value = { "/login", "/signin" }, params = { "provider", "code", "state" })
     public ModelAndView provider(final Context context, final @RequestParam String provider, final @RequestParam String code,
             final @RequestParam String state, final @RequestParam(required = false, defaultValue = "/") String returnUri) {
-        final InformationOutput output = oauthClient.authenticate(context, state, code, provider);
+        final InformationOutput information = oauthClient.authenticate(context, state, code, provider);
 
-        context.addAttribute("information", output.toString());
+        final AuthenticateAccountOutput output = userClient.authenticateAccount(oauthClient.getProvider(provider),
+                information.getId(), context, null);
 
-        context.addAttribute(FORM_KEY, FORM_LOGIN);
-        context.addAttribute(RETURN_URI_KEY, returnUri);
-        return mav("authenticate", context);
+        if (AuthenticateAccountOutput.Error.UNKNOWN_CREDENTIALS.equals(output.getError())) {
+            context.addAttribute(FORM_KEY, FORM_CREATE);
+            context.addAttribute(RETURN_URI_KEY, returnUri);
+            context.addAttribute("provider", provider);
+            context.addAttribute("providerId", information.getId());
+            context.addAttribute("email", information.getEmail());
+            return mav("authenticate", context);
+        }
+
+        context.initializeSession(output.getSessionToken());
+        return redirect(returnUri, context);
+    }
+
+    @ResponseBody
+    @Csrf("create")
+    @RequestMapping(value = "/create", method = RequestMethod.POST)
+    public AjaxResponse create(final Context context, final @RequestParam String username, final @RequestParam String email,
+            final @RequestParam String provider, final @RequestParam String providerId,
+            final @RequestParam(required = false) String fingerprint) {
+
+        final RegisterAccountOutput output = userClient.registerAccount(username, email, oauthClient.getProvider(provider),
+                providerId, context, fingerprint);
+        if (RegisterAccountOutput.Error.INVALID_USERNAME.equals(output.getError())) {
+            return new BadRequestResponse("username", "invalid username", "min length: 3, max length: 25");
+        } else if (RegisterAccountOutput.Error.EXISTING_USERNAME.equals(output.getError())) {
+            return new BadRequestResponse("username", "existing username",
+                    "<span class=\"clickable\" data-go=\"/login\">existing user? click here to login.</span>");
+        }
+
+        context.initializeSession(output.getSessionToken());
+        return new LoginResponse(output.getSessionToken());
     }
 
     @ResponseBody

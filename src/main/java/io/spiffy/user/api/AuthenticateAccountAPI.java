@@ -20,7 +20,7 @@ public class AuthenticateAccountAPI extends API<AuthenticateAccountInput, Authen
 
     protected AuthenticateAccountOutput api(final AuthenticateAccountInput input) {
         try {
-            return service.authenticate(input.getEmail(), input.getPassword(), input.getSessionId(), input.getFingerprint(),
+            return service.authenticate(input.getCredentials(), input.getSessionId(), input.getFingerprint(),
                     input.getUserAgent(), input.getIpAddress());
         } catch (final InvalidParameterException e) {
             return new AuthenticateAccountOutput(AuthenticateAccountOutput.Error.INVALID_EMAIL);

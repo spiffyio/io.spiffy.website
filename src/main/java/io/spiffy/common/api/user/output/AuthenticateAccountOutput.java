@@ -13,7 +13,7 @@ public class AuthenticateAccountOutput extends APIOutput {
     private static final long serialVersionUID = 8037483277099587425L;
 
     public enum Error {
-        INVALID_PASSWORD, INVALID_EMAIL, UNKNOWN_EMAIL
+        INVALID_PASSWORD, INVALID_EMAIL, UNKNOWN_CREDENTIALS, UNKNOWN_EMAIL
     }
 
     private Long accountId;

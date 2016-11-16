@@ -10,6 +10,8 @@ import io.spiffy.common.api.email.client.EmailClient;
 import io.spiffy.common.api.email.dto.EmailProperties;
 import io.spiffy.common.api.email.dto.EmailType;
 import io.spiffy.common.api.security.client.SecurityClient;
+import io.spiffy.common.api.user.dto.Credentials;
+import io.spiffy.common.api.user.dto.Provider;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.api.user.output.RecoverAccountOutput;
 import io.spiffy.common.api.user.output.RegisterAccountOutput;
@@ -17,6 +19,7 @@ import io.spiffy.common.config.AppConfig;
 import io.spiffy.common.util.UIDUtil;
 import io.spiffy.common.util.ValidationUtil;
 import io.spiffy.user.entity.AccountEntity;
+import io.spiffy.user.entity.CredentialEntity;
 import io.spiffy.user.entity.SessionEntity;
 import io.spiffy.user.entity.TemporaryCredentialEntity;
 import io.spiffy.user.repository.AccountRepository;
@@ -63,7 +66,14 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     @Transactional
     public AccountEntity getByEmailAddress(final String emailAddress) {
         final long emailAddressId = getEmailAddressId(emailAddress);
-        return getByEmailAddressId(emailAddressId);
+        final Credentials credentials = new Credentials(Provider.EMAIL, "" + emailAddressId, null);
+
+        final CredentialEntity entity = credentialService.getByCredentials(credentials);
+        if (entity == null) {
+            return null;
+        }
+
+        return entity.getAccount();
     }
 
     @Transactional
@@ -83,17 +93,26 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
-    public AccountEntity post(final String username, final String emailAddress, final Long iconId, final Long bannerId) {
+    public AccountEntity post(final String username, final String emailAddress, final Long iconId, final Long bannerId,
+            Credentials credentials) {
         validateUsername(username);
 
         final AccountEntity entityByUserName = getByUserName(username);
 
-        final long emailAddressId = getEmailAddressId(emailAddress);
-        final AccountEntity entityByEmailAddressId = getByEmailAddressId(emailAddressId);
+        if (credentials == null) {
+            if (entityByUserName == null) {
+                throw new RuntimeException();
+            }
+            final CredentialEntity credentialEntity = credentialService.getByAccount(entityByUserName);
+            credentials = new Credentials(credentialEntity.getProvider(), credentialEntity.getProviderId(), null);
+        }
 
-        ValidationUtil.validateSameOrNull("AccountEntity userName, emailAddressId", entityByUserName, entityByEmailAddressId);
+        final CredentialEntity credentialEntity = credentialService.getByCredentials(credentials);
+        final AccountEntity entityByCredentials = credentialEntity != null ? credentialEntity.getAccount() : null;
 
-        AccountEntity entity = entityByUserName != null ? entityByUserName : entityByEmailAddressId;
+        ValidationUtil.validateSameOrNull("AccountEntity userName, credentials", entityByUserName, entityByCredentials);
+
+        AccountEntity entity = entityByUserName != null ? entityByUserName : entityByCredentials;
         if (entity == null) {
             entity = new AccountEntity();
         } else {
@@ -102,15 +121,24 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
 
         entity.setUserName(username);
 
-        if (entity.getEmailAddressId() == null || emailAddressId != entity.getEmailAddressId()) {
-            final String token = UIDUtil.generateIdempotentId();
-            entity.setEmailVerificationToken(token);
-            entity.setEmailVerificationTokenId(securityClient.encryptString(token));
-            entity.setEmailVerified(false);
+        final Long emailAddressId = getEmailAddressId(emailAddress);
+        if (emailAddressId != null && emailAddressId != entity.getEmailAddressId()) {
+            if (Provider.EMAIL.equals(credentials.getProvider())) {
+                final String token = UIDUtil.generateIdempotentId();
+                entity.setEmailVerificationToken(token);
+                entity.setEmailVerificationTokenId(securityClient.encryptString(token));
+                entity.setEmailVerified(false);
+            } else {
+                entity.setEmailVerified(true);
+            }
+
+            entity.setEmailAddressId(emailAddressId);
+            entity.setEmailAddress(emailAddress);
         }
 
-        entity.setEmailAddressId(emailAddressId);
-        entity.setEmailAddress(emailAddress);
+        if (entity.getEmailVerified() == null) {
+            entity.setEmailVerified(false);
+        }
 
         if (iconId != null) {
             entity.setIconId(iconId);
@@ -126,25 +154,28 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
-    public RegisterAccountOutput register(final String userName, final String email, final String password) {
-        final long emailAddressId = getEmailAddressId(email);
-
-        AccountEntity account = getByUserName(userName);
-        if (account != null && account.getEmailAddressId() != emailAddressId) {
-            return new RegisterAccountOutput(RegisterAccountOutput.Error.EXISTING_USERNAME);
+    public RegisterAccountOutput register(final String username, final String email, final Credentials credentials) {
+        if (Provider.EMAIL.equals(credentials.getProvider())) {
+            credentials.setProviderId("" + getEmailAddressId(credentials.getProviderId()));
         }
 
-        account = getByEmailAddressId(emailAddressId);
-        if (account != null && !StringUtils.equalsIgnoreCase(account.getUserName(), userName)) {
+        final CredentialEntity credentialEntity = credentialService.getByCredentials(credentials);
+        if (credentialEntity != null) {
+            if (credentialService.matches(credentialEntity, credentials)) {
+                return new RegisterAccountOutput();
+            }
+
+            // TODO: this could be other password mismatches in the future
             return new RegisterAccountOutput(RegisterAccountOutput.Error.EXISTING_EMAIL);
         }
 
-        if (account != null && !credentialService.matches(account.getId(), password)) {
+        AccountEntity account = getByUserName(username);
+        if (account != null) {
             return new RegisterAccountOutput(RegisterAccountOutput.Error.EXISTING_USERNAME);
         }
 
-        account = post(userName, email, null, null);
-        credentialService.post(account.getId(), password);
+        account = post(username, email, null, null, credentials);
+        credentialService.post(account, credentials);
 
         if (StringUtils.isEmpty(account.getEmailVerificationToken())) {
             return new RegisterAccountOutput();
@@ -175,16 +206,21 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     }
 
     @Transactional
-    public AuthenticateAccountOutput authenticate(final String email, final String password, final String sessionId,
+    public AuthenticateAccountOutput authenticate(final Credentials credentials, final String sessionId,
             final String fingerprint, final String userAgent, final String ipAddress) {
-        final AccountEntity account = getByEmailAddress(email);
-        if (account == null) {
-            return new AuthenticateAccountOutput(AuthenticateAccountOutput.Error.UNKNOWN_EMAIL);
+        final CredentialEntity credentialEntity = credentialService.getByCredentials(credentials);
+        if (credentialEntity == null) {
+            if (Provider.EMAIL.equals(credentials.getProvider())) {
+                return new AuthenticateAccountOutput(AuthenticateAccountOutput.Error.UNKNOWN_EMAIL);
+            }
+            return new AuthenticateAccountOutput(AuthenticateAccountOutput.Error.UNKNOWN_CREDENTIALS);
         }
 
-        if (!credentialService.matches(account.getId(), password)) {
+        if (!credentialService.matches(credentialEntity, credentials)) {
             return new AuthenticateAccountOutput(AuthenticateAccountOutput.Error.INVALID_PASSWORD);
         }
+
+        final AccountEntity account = credentialEntity.getAccount();
 
         final SessionEntity session = sessionService.validatedCreate(sessionId, account.getId(), fingerprint, userAgent,
                 ipAddress);
@@ -219,7 +255,8 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
             return new RecoverAccountOutput(RecoverAccountOutput.Error.INVALID_TOKEN);
         }
 
-        credentialService.post(account.getId(), password);
+        final Long emailAddressId = getEmailAddressId(email);
+        credentialService.post(account, new Credentials(Provider.EMAIL, "" + emailAddressId, password));
         temporaryCredentialService.invalidate(account.getId(), token);
 
         final SessionEntity session = sessionService.validatedCreate(sessionId, account.getId(), fingerprint, userAgent,
@@ -293,7 +330,11 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
                 AccountEntity.MAX_USER_NAME_LENGTH);
     }
 
-    private long getEmailAddressId(final String emailAddress) {
-        return emailClient.postEmailAddress(emailAddress);
+    private Long getEmailAddressId(final String email) {
+        if (email == null) {
+            return null;
+        }
+
+        return emailClient.postEmailAddress(email);
     }
 }

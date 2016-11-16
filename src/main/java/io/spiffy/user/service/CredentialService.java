@@ -6,7 +6,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import io.spiffy.common.Service;
 import io.spiffy.common.api.security.client.SecurityClient;
+import io.spiffy.common.api.user.dto.Credentials;
+import io.spiffy.common.api.user.dto.Provider;
 import io.spiffy.common.util.ValidationUtil;
+import io.spiffy.user.entity.AccountEntity;
 import io.spiffy.user.entity.CredentialEntity;
 import io.spiffy.user.repository.CredentialRepository;
 
@@ -26,26 +29,47 @@ public class CredentialService extends Service<CredentialEntity, CredentialRepos
     }
 
     @Transactional
-    public CredentialEntity getByAccountId(final long accountId) {
-        return repository.getByAccountId(accountId);
+    public CredentialEntity getByAccount(final AccountEntity account) {
+        return repository.getByAccount(account);
     }
 
     @Transactional
-    public CredentialEntity post(final long accountId, final String password) {
-        CredentialEntity entity = getByAccountId(accountId);
+    public CredentialEntity getByCredentials(final Credentials credentials) {
+        return repository.getByProviderAccount(credentials.getProvider(), credentials.getProviderId());
+    }
 
-        if (entity != null) {
-            if (securityClient.matchesHashedString(entity.getPasswordId(), password)) {
-                return entity;
-            }
+    @Transactional
+    public CredentialEntity post(final AccountEntity account, final Credentials credentials) {
+        validateProviderId(credentials.getProviderId());
+
+        final CredentialEntity byAccount = getByAccount(account);
+        final CredentialEntity byCredentials = getByCredentials(credentials);
+
+        CredentialEntity entity;
+        if (byAccount == null) {
+            entity = byCredentials;
+        } else if (byCredentials == null) {
+            entity = byAccount;
         } else {
-            entity = new CredentialEntity(accountId);
+            if (byAccount.getId() != byCredentials.getId()) {
+                throw new RuntimeException("credentials already used for a different account");
+            }
+            entity = byAccount;
         }
 
-        validatePassword(password);
+        if (entity == null) {
+            entity = new CredentialEntity(account, credentials.getProvider(), credentials.getProviderId());
+        }
 
-        final long passwordId = securityClient.hashString(password);
-        entity.setPasswordId(passwordId);
+        if (Provider.EMAIL.equals(credentials.getProvider())) {
+            if (securityClient.matchesHashedString(entity.getPasswordId(), credentials.getPassword())) {
+                return entity;
+            }
+
+            validatePassword(credentials.getPassword());
+            final long passwordId = securityClient.hashString(credentials.getPassword());
+            entity.setPasswordId(passwordId);
+        }
 
         repository.saveOrUpdate(entity);
 
@@ -53,13 +77,36 @@ public class CredentialService extends Service<CredentialEntity, CredentialRepos
     }
 
     @Transactional
-    public boolean matches(final long accountId, final String password) {
-        final CredentialEntity entity = getByAccountId(accountId);
+    public boolean matches(final Credentials credentials) {
+        final CredentialEntity entity = getByCredentials(credentials);
+        return matches(entity, credentials);
+    }
+
+    @Transactional
+    public boolean matches(final AccountEntity account, final Credentials credentials) {
+        final CredentialEntity entity = getByCredentials(credentials);
+        if (matches(entity, credentials)) {
+            return false;
+        }
+
+        return account.getId() == entity.getAccount().getId();
+    }
+
+    public boolean matches(final CredentialEntity entity, final Credentials credentials) {
         if (entity == null) {
             return false;
         }
 
-        return securityClient.matchesHashedString(entity.getPasswordId(), password);
+        if (Provider.EMAIL.equals(credentials.getProvider())) {
+            return securityClient.matchesHashedString(entity.getPasswordId(), credentials.getPassword());
+        }
+
+        return true;
+    }
+
+    protected void validateProviderId(final String providerId) {
+        ValidationUtil.validateLength("CredentialEntity.providerId", providerId, CredentialEntity.MIN_PROVIDER_ID_LENGTH,
+                CredentialEntity.MAX_PROVIDER_ID_LENGTH);
     }
 
     protected void validatePassword(final String password) {

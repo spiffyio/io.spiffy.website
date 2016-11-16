@@ -21,7 +21,7 @@ public class RegisterAccountAPI extends API<RegisterAccountInput, RegisterAccoun
 
     protected RegisterAccountOutput api(final RegisterAccountInput input) {
         try {
-            return service.register(input.getUserName(), input.getEmailAddress(), input.getPassword());
+            return service.register(input.getUsername(), input.getEmail(), input.getCredentials());
         } catch (final ValidationException e) {
             if (e.getMessage().contains("CredentialEntity.password")) {
                 return new RegisterAccountOutput(RegisterAccountOutput.Error.INVALID_PASSWORD);

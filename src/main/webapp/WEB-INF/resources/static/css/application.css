@@ -844,6 +844,10 @@ div.disabled:before {
   opacity: 0.15;
 }
 
+hr {
+  border-top: 0.25em dashed #5F5F5F;
+}
+
 .button {
   height: 2em;
   width: auto;
@@ -859,6 +863,26 @@ div.disabled:before {
 
 .button:hover {
   background: #5F5F5F;
+}
+
+.button.facebook {
+  background: #3B5998;
+  color: #FFFFFF;
+}
+
+.button.facebook:hover {
+  background: #FFFFFF;
+  color: #3B5998;
+}
+
+.button.google {
+  background: #DD4B39;
+  color: #FFFFFF;
+}
+
+.button.google:hover {
+  background: #FFFFFF;
+  color: #DD4B39;
 }
 
 .button.primary {

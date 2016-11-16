@@ -359,6 +359,9 @@ div.disabled:before
   background: $w3
   opacity: 0.15
 
+hr
+	border-top: 0.25em dashed $w3
+
 .button
   +size(2em, auto)
   padding: 0 1em
@@ -372,6 +375,22 @@ div.disabled:before
 
 .button:hover
   background: $w3
+
+.button.facebook
+  background: $fb
+  color: $w0
+
+.button.facebook:hover
+  background: $w0
+  color: $fb
+
+.button.google
+  background: $gp
+  color: $w0
+
+.button.google:hover
+  background: $w0
+  color: $gp
 
 .button.primary
   background: $b5

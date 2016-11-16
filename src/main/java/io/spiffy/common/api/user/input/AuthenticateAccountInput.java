@@ -3,6 +3,7 @@ package io.spiffy.common.api.user.input;
 import lombok.*;
 
 import io.spiffy.common.api.input.APIInput;
+import io.spiffy.common.api.user.dto.Credentials;
 
 @Data
 @Builder
@@ -10,8 +11,7 @@ import io.spiffy.common.api.input.APIInput;
 @AllArgsConstructor
 @EqualsAndHashCode(callSuper = false)
 public class AuthenticateAccountInput extends APIInput {
-    private String email;
-    private String password;
+    private Credentials credentials;
     private String sessionId;
     private String fingerprint;
     private String userAgent;

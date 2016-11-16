@@ -14,7 +14,6 @@ import io.spiffy.common.HibernateEntity;
 @Getter
 @NoArgsConstructor
 @Table(name = "USER_ACCOUNTS", uniqueConstraints = { @UniqueConstraint(columnNames = { "user_name", "archived_at" }),
-        @UniqueConstraint(columnNames = { "email_address_id", "archived_at" }),
         @UniqueConstraint(columnNames = { "email_verification_token_id", "archived_at" }) })
 public class AccountEntity extends HibernateEntity {
 
@@ -26,7 +25,7 @@ public class AccountEntity extends HibernateEntity {
     private String userName;
 
     @Setter
-    @Column(name = "email_address_id", nullable = false)
+    @Column(name = "email_address_id")
     private Long emailAddressId;
 
     @Setter

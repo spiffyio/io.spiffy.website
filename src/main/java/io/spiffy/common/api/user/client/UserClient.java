@@ -11,13 +11,15 @@ import org.apache.commons.lang3.StringUtils;
 import io.spiffy.common.Client;
 import io.spiffy.common.api.output.PostOutput;
 import io.spiffy.common.api.user.call.*;
+import io.spiffy.common.api.user.dto.Credentials;
+import io.spiffy.common.api.user.dto.Provider;
 import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.input.*;
 import io.spiffy.common.api.user.output.*;
 import io.spiffy.common.dto.Account;
 import io.spiffy.common.dto.Context;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class UserClient extends Client {
 
     final AuthenticateAccountCall authenticateAccountCall;
@@ -34,8 +36,20 @@ public class UserClient extends Client {
 
     public AuthenticateAccountOutput authenticateAccount(final String email, final String password, final Context context,
             final String fingerprint) {
-        final AuthenticateAccountInput input = new AuthenticateAccountInput(email, password, context.getSessionId(),
-                fingerprint, context.getUserAgent(), context.getIPAddress());
+        final Credentials credentials = new Credentials(Provider.EMAIL, email, password);
+        return authenticateAccount(credentials, context, fingerprint);
+    }
+
+    public AuthenticateAccountOutput authenticateAccount(final Provider provider, final String providerId,
+            final Context context, final String fingerprint) {
+        final Credentials credentials = new Credentials(provider, providerId, null);
+        return authenticateAccount(credentials, context, fingerprint);
+    }
+
+    public AuthenticateAccountOutput authenticateAccount(final Credentials credentials, final Context context,
+            final String fingerprint) {
+        final AuthenticateAccountInput input = new AuthenticateAccountInput(credentials, context.getSessionId(), fingerprint,
+                context.getUserAgent(), context.getIPAddress());
         return authenticateAccountCall.call(input);
     }
 
@@ -106,13 +120,25 @@ public class UserClient extends Client {
         return recoverAccountCall.call(input);
     }
 
-    public RegisterAccountOutput registerAccount(final String userName, final String emailAddress, final String password,
+    public RegisterAccountOutput registerAccount(final String username, final String email, final String password,
             final Context context, final String fingerprint) {
-        final RegisterAccountInput input = new RegisterAccountInput(userName, emailAddress, password);
+        final Credentials credentials = new Credentials(Provider.EMAIL, email, password);
+        return registerAccount(username, email, credentials, context, fingerprint);
+    }
+
+    public RegisterAccountOutput registerAccount(final String username, final String email, final Provider provider,
+            final String providerId, final Context context, final String fingerprint) {
+        final Credentials credentials = new Credentials(provider, providerId, null);
+        return registerAccount(username, email, credentials, context, fingerprint);
+    }
+
+    public RegisterAccountOutput registerAccount(final String username, final String email, final Credentials credentials,
+            final Context context, final String fingerprint) {
+        final RegisterAccountInput input = new RegisterAccountInput(username, email, credentials);
         final RegisterAccountOutput output = registerAccountCall.call(input);
 
         if (output.getError() == null) {
-            final String token = authenticateAccount(emailAddress, password, context, fingerprint).getSessionToken();
+            final String token = authenticateAccount(credentials, context, fingerprint).getSessionToken();
             output.setSessionToken(token);
         }
 
