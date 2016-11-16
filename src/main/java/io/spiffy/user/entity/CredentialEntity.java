@@ -25,6 +25,7 @@ public class CredentialEntity extends HibernateEntity {
     @JoinColumn(name = "account_id", nullable = false)
     private AccountEntity account;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "provider", length = MAX_PROVIDER_LENGTH, nullable = false)
     private Provider provider;
 

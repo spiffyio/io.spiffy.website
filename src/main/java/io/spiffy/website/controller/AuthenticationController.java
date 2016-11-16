@@ -13,15 +13,19 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import io.spiffy.common.Controller;
+import io.spiffy.common.api.security.client.SecurityClient;
 import io.spiffy.common.api.user.client.UserClient;
+import io.spiffy.common.api.user.dto.Provider;
 import io.spiffy.common.api.user.dto.Session;
 import io.spiffy.common.api.user.output.AuthenticateAccountOutput;
 import io.spiffy.common.api.user.output.RecoverAccountOutput;
 import io.spiffy.common.api.user.output.RegisterAccountOutput;
 import io.spiffy.common.dto.Context;
+import io.spiffy.common.util.JsonUtil;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
 import io.spiffy.website.annotation.Csrf;
+import io.spiffy.website.dto.TokenizedCredentials;
 import io.spiffy.website.google.GoogleClient;
 import io.spiffy.website.oauth.InformationOutput;
 import io.spiffy.website.oauth.OAuthClient;
@@ -44,6 +48,7 @@ public class AuthenticationController extends Controller {
 
     private final GoogleClient googleClient;
     private final OAuthClient oauthClient;
+    private final SecurityClient securityClient;
     private final UserClient userClient;
 
     @AccessControl
@@ -168,15 +173,18 @@ public class AuthenticationController extends Controller {
             final @RequestParam String state, final @RequestParam(required = false, defaultValue = "/") String returnUri) {
         final InformationOutput information = oauthClient.authenticate(context, state, code, provider);
 
-        final AuthenticateAccountOutput output = userClient.authenticateAccount(oauthClient.getProvider(provider),
-                information.getId(), context, null);
+        final Provider providerEnum = oauthClient.getProvider(provider);
+        final AuthenticateAccountOutput output = userClient.authenticateAccount(providerEnum, information.getId(), context,
+                null);
 
         if (AuthenticateAccountOutput.Error.UNKNOWN_CREDENTIALS.equals(output.getError())) {
+            final TokenizedCredentials tokenized = new TokenizedCredentials(providerEnum, information.getId(),
+                    information.getEmail());
+            final String token = securityClient.tokenizeString(JsonUtil.serialize(tokenized));
+
             context.addAttribute(FORM_KEY, FORM_CREATE);
             context.addAttribute(RETURN_URI_KEY, returnUri);
-            context.addAttribute("provider", provider);
-            context.addAttribute("providerId", information.getId());
-            context.addAttribute("email", information.getEmail());
+            context.addAttribute(TOKEN_KEY, token);
             return mav("authenticate", context);
         }
 
@@ -187,12 +195,13 @@ public class AuthenticationController extends Controller {
     @ResponseBody
     @Csrf("create")
     @RequestMapping(value = "/create", method = RequestMethod.POST)
-    public AjaxResponse create(final Context context, final @RequestParam String username, final @RequestParam String email,
-            final @RequestParam String provider, final @RequestParam String providerId,
+    public AjaxResponse create(final Context context, final @RequestParam String username, final @RequestParam String token,
             final @RequestParam(required = false) String fingerprint) {
+        final String json = securityClient.untokenizeString(token);
+        final TokenizedCredentials tokenized = JsonUtil.deserialize(TokenizedCredentials.class, json);
 
-        final RegisterAccountOutput output = userClient.registerAccount(username, email, oauthClient.getProvider(provider),
-                providerId, context, fingerprint);
+        final RegisterAccountOutput output = userClient.registerAccount(username, tokenized.getEmail(), tokenized.getProvider(),
+                tokenized.getProviderId(), context, fingerprint);
         if (RegisterAccountOutput.Error.INVALID_USERNAME.equals(output.getError())) {
             return new BadRequestResponse("username", "invalid username", "min length: 3, max length: 25");
         } else if (RegisterAccountOutput.Error.EXISTING_USERNAME.equals(output.getError())) {

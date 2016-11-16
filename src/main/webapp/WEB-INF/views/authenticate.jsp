@@ -53,9 +53,7 @@
   <c:if test="${ form eq 'create' }">
   <form class="create" <s:csrf name="create" /> data-return-uri="<c:out value="${ returnUri }" />" action="/create">
     <div class="input"><input type="text" placeholder="username" name="username" required autofocus /></div>
-    <input type="hidden" name="provider" value="<c:out value="${ provider }" />" />
-    <input type="hidden" name="providerId" value="<c:out value="${ providerId }" />" />
-    <input type="hidden" name="email" value="<c:out value="${ email }" />" />
+    <input type="hidden" name="token" value="<c:out value="${ token }" />" />
     <input type="hidden" name="fingerprint" />
     <div class="message"></div> 
     <div class="input"><input class="button danger" type="submit" value="register" /></div>
