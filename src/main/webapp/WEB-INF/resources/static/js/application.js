@@ -1484,17 +1484,25 @@ $(window).scroll(function(e) {
   });
 });
 
-$(window).scroll(function(e) {
-  $('div.col').each(function() {
-    var col, panel;
-    col = $(this);
-    panel = col.find('div.panel:last');
-    if (panel == null) {
-      return;
-    }
-    if (panel.is(':in-viewport')) {
-      $('form.load-posts').submit();
-    }
+$(document).ready(function() {
+  var href;
+  href = location.href;
+  if (href.endsWith('#')) {
+    history.replaceState({}, document.title, href.substring(0, href.length - 1));
+  }
+  return $(window).scroll(function(e) {
+    $('div.col').each(function() {
+      var col, form, panel;
+      col = $(this);
+      panel = col.find('div.panel:last');
+      if (panel == null) {
+        return;
+      }
+      if (panel.is(':in-viewport')) {
+        form = $('form.load-posts');
+        form.submit();
+      }
+    });
   });
 });
 

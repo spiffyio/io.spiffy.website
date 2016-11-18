@@ -491,15 +491,20 @@ $(window).scroll (e) ->
     return
   return
 
-$(window).scroll (e) ->
-  $('div.col').each () ->
-    col = $(this)
-    panel = col.find('div.panel:last')
-    if not panel? then return
-    if panel.is ':in-viewport'
-      $('form.load-posts').submit()
+$(document).ready ->
+  href = location.href
+  if href.endsWith '#'
+    history.replaceState {}, document.title, href.substring(0, href.length - 1)
+  $(window).scroll (e) ->
+    $('div.col').each () ->
+      col = $(this)
+      panel = col.find('div.panel:last')
+      if not panel? then return
+      if panel.is ':in-viewport'
+        form = $ 'form.load-posts'
+        form.submit()
+      return
     return
-  return
 
 (($) ->
   'use strict'

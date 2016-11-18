@@ -107,7 +107,7 @@
 <s:resource file="fingerprint" type="js" />
 </c:if>
 <c:if test="${ not include_embed }">
-<s:resource file="application" type="js" version="14" />
+<s:resource file="application" type="js" version="15" />
 </c:if>
 <c:if test="${ include_embed }">
 <s:resource file="embed" type="js" version="2" />
