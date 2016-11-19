@@ -93,6 +93,13 @@ public class AppConfig {
     private static PrivateKey cdnPrivateKey;
 
     @Getter
+    private static final String amazonClientId;
+
+    @Getter
+    @Setter
+    private static String amazonClientSecret;
+
+    @Getter
     private static final String facebookClientId;
 
     @Getter
@@ -106,6 +113,13 @@ public class AppConfig {
     @Setter
     private static String googleClientSecret;
 
+    @Getter
+    private static final String twitterClientId;
+
+    @Getter
+    @Setter
+    private static String twitterClientSecret;
+
     static {
         stage = System.getProperty("stage");
         awsAccessKeyId = System.getProperty("AWS_ACCESS_KEY_ID");
@@ -115,8 +129,10 @@ public class AppConfig {
         recaptchaSecretKey = System.getProperty("recaptchaSecretKey");
         shell = System.getProperty("shell");
 
+        amazonClientId = "amzn1.application-oa2-client.bf0412ab053244b79c1340ed218188dd";
         facebookClientId = "621885487990537";
         googleClientId = "981827005156-pfp7mgsosbjvtgv6e26tnu75lfgm07un.apps.googleusercontent.com";
+        twitterClientId = "cChdtiKz8IaFQRhpGPoKQ8utz";
 
         if (LOCAL.equalsIgnoreCase(stage)) {
             cacheEndpoint = "localhost";

@@ -177,6 +177,8 @@ public class AuthenticationController extends Controller {
         final AuthenticateAccountOutput output = userClient.authenticateAccount(providerEnum, information.getId(), context,
                 null);
 
+        System.out.println(information);
+
         if (AuthenticateAccountOutput.Error.UNKNOWN_CREDENTIALS.equals(output.getError())) {
             final TokenizedCredentials tokenized = new TokenizedCredentials(providerEnum, information.getId(),
                     information.getEmail());

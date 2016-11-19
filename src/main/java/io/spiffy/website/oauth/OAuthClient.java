@@ -21,30 +21,37 @@ public class OAuthClient extends Client {
     private final Map<Provider, String> urlTemplates;
 
     @Inject
-    public OAuthClient(final Initialized initialized, final FacebookAuthenticationCall facebookAuthenticationCall,
-            final GoogleAuthenticationCall googleAuthenticationCall, final FacebookInformationCall facebookInformationCall,
-            final GoogleInformationCall googleInformationCall) {
+    public OAuthClient(final Initialized initialized, final AmazonAuthenticationCall amazonAuthenticationCall,
+            final FacebookAuthenticationCall facebookAuthenticationCall,
+            final GoogleAuthenticationCall googleAuthenticationCall, final AmazonInformationCall amazonInformationCall,
+            final FacebookInformationCall facebookInformationCall, final GoogleInformationCall googleInformationCall) {
         final Map<Provider, AuthenticationCall> authenticationCalls = new HashMap<>();
+        authenticationCalls.put(Provider.AMAZON, amazonAuthenticationCall);
         authenticationCalls.put(Provider.FACEBOOK, facebookAuthenticationCall);
         authenticationCalls.put(Provider.GOOGLE, googleAuthenticationCall);
         this.authenticationCalls = Collections.unmodifiableMap(authenticationCalls);
 
         final Map<Provider, InformationCall> informationCalls = new HashMap<>();
+        informationCalls.put(Provider.AMAZON, amazonInformationCall);
         informationCalls.put(Provider.FACEBOOK, facebookInformationCall);
         informationCalls.put(Provider.GOOGLE, googleInformationCall);
         this.informationCalls = Collections.unmodifiableMap(informationCalls);
 
         final Map<Provider, String> clientIds = new HashMap<>();
+        clientIds.put(Provider.AMAZON, AppConfig.getAmazonClientId());
         clientIds.put(Provider.FACEBOOK, AppConfig.getFacebookClientId());
         clientIds.put(Provider.GOOGLE, AppConfig.getGoogleClientId());
         this.clientIds = Collections.unmodifiableMap(clientIds);
 
         final Map<Provider, String> clientSecrets = new HashMap<>();
+        clientSecrets.put(Provider.AMAZON, AppConfig.getAmazonClientSecret());
         clientSecrets.put(Provider.FACEBOOK, AppConfig.getFacebookClientSecret());
         clientSecrets.put(Provider.GOOGLE, AppConfig.getGoogleClientSecret());
         this.clientSecrets = Collections.unmodifiableMap(clientSecrets);
 
         final Map<Provider, String> urlTemplates = new HashMap<>();
+        urlTemplates.put(Provider.AMAZON,
+                "https://www.amazon.com/ap/oa?client_id=%s&response_type=code&scope=profile&state=%s&redirect_uri=%s");
         urlTemplates.put(Provider.FACEBOOK,
                 "https://www.facebook.com/v2.8/dialog/oauth?client_id=%s&response_type=code&scope=email&state=%s&redirect_uri=%s");
         urlTemplates.put(Provider.GOOGLE,
@@ -65,6 +72,9 @@ public class OAuthClient extends Client {
 
         final AuthenticationInput input = new AuthenticationInput(clientId, clientSecret, uri, code);
         final AuthenticationOutput output = authenticationCalls.get(provider).call(input);
+
+        System.out.println(output);
+
         return informationCalls.get(provider).call(new InformationInput(output.getAccessToken()));
     }
 

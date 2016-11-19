@@ -27,8 +27,10 @@ public class EnvironmentVariableConfig {
     public Initialized init(final EnvironmentVariableRepository repository) {
         AppConfig.setApiKey(repository.getValue("apiKey"));
         AppConfig.setCdnKeyPair(repository.getValue("cdnKeyPair"));
+        AppConfig.setAmazonClientSecret(repository.getValue("amazonClientSecret"));
         AppConfig.setFacebookClientSecret(repository.getValue("facebookClientSecret"));
         AppConfig.setGoogleClientSecret(repository.getValue("googleClientSecret"));
+        AppConfig.setTwitterClientSecret(repository.getValue("twitterClientSecret"));
 
         try {
             AppConfig.setCdnPrivateKey(RSA.privateKeyFromPKCS8(Base64.decodeBase64(repository.getValue("cdnPrivateKey"))));
