@@ -28,9 +28,8 @@
     <br style="clear: both;"/>
     <div style="text-align: center;">
       <a class="button social" href="/login?provider=facebook&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-facebook.svg" />" /></a>
-      <a class="button social" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-google.svg" />" /></a>
       <a class="button social" href="/login?provider=amazon&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-amazon.svg" />" /></a>
-      <a class="button social" href="/login?provider=twitter&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-twitter.svg" />" /></a>
+      <a class="button social" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-google.svg" />" /></a>
     </div>
   </form>
   </c:if>
@@ -59,9 +58,8 @@
     <br style="clear: both;"/>
     <div style="text-align: center;">
       <a class="button social" href="/login?provider=facebook&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-facebook.svg" />" /></a>
-      <a class="button social" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-google.svg" />" /></a>
       <a class="button social" href="/login?provider=amazon&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-amazon.svg" />" /></a>
-      <a class="button social" href="/login?provider=twitter&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-twitter.svg" />" /></a>
+      <a class="button social" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-google.svg" />" /></a>
     </div>
   </form>
   </c:if>

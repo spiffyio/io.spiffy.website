@@ -73,8 +73,6 @@ public class OAuthClient extends Client {
         final AuthenticationInput input = new AuthenticationInput(clientId, clientSecret, uri, code);
         final AuthenticationOutput output = authenticationCalls.get(provider).call(input);
 
-        System.out.println(output);
-
         return informationCalls.get(provider).call(new InformationInput(output.getAccessToken()));
     }
 
@@ -87,7 +85,6 @@ public class OAuthClient extends Client {
         final String clientId = clientIds.get(provider);
         final String state = context.generateCsrfToken("login" + provider);
         final String uri = AppConfig.getEndpoint() + "/login?provider=" + provider.name().toLowerCase();
-
         return String.format(urlTemplate, clientId, state, uri);
     }
 

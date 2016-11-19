@@ -35,6 +35,7 @@ import io.spiffy.website.response.*;
 public class AuthenticationController extends Controller {
 
     private static final String EMAIL_KEY = "email";
+    private static final String ERROR_KEY = "error";
     private static final String FORM_KEY = "form";
     private static final String RETURN_URI_KEY = "returnUri";
     private static final String SESSIONS_KEY = "sessions";
@@ -160,9 +161,7 @@ public class AuthenticationController extends Controller {
     @RequestMapping(value = { "/login", "/signin" }, params = { "provider", "error" })
     public ModelAndView provider(final Context context, final @RequestParam String provider, final @RequestParam String error,
             final @RequestParam(required = false, defaultValue = "/") String returnUri) {
-
-        System.out.println(error);
-
+        context.addAttribute(ERROR_KEY, error);
         context.addAttribute(FORM_KEY, FORM_LOGIN);
         context.addAttribute(RETURN_URI_KEY, returnUri);
         return mav("authenticate", context);
@@ -176,8 +175,6 @@ public class AuthenticationController extends Controller {
         final Provider providerEnum = oauthClient.getProvider(provider);
         final AuthenticateAccountOutput output = userClient.authenticateAccount(providerEnum, information.getId(), context,
                 null);
-
-        System.out.println(information);
 
         if (AuthenticateAccountOutput.Error.UNKNOWN_CREDENTIALS.equals(output.getError())) {
             final TokenizedCredentials tokenized = new TokenizedCredentials(providerEnum, information.getId(),
