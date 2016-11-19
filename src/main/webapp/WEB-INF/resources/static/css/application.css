@@ -865,24 +865,22 @@ hr {
   background: #5F5F5F;
 }
 
-.button.facebook {
-  background: #3B5998;
-  color: #FFFFFF;
-}
-
-.button.facebook:hover {
+.button.social {
+  height: 2em;
+  width: 2em;
+  padding: 0.5em;
+  margin: 0.25em;
   background: #FFFFFF;
-  color: #3B5998;
+  border-radius: 0.5em;
 }
 
-.button.google {
-  background: #DD4B39;
-  color: #FFFFFF;
+.button.social img {
+  height: 100%;
+  width: 100%;
 }
 
-.button.google:hover {
-  background: #FFFFFF;
-  color: #DD4B39;
+.button.social:hover {
+  background: #D3D3D3;
 }
 
 .button.primary {

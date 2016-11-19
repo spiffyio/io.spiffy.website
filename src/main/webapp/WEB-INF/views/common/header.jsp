@@ -81,7 +81,7 @@
 </c:if>
 
 <c:if test="${ not include_embed }">
-<s:resource file="application" type="css" version="13" />
+<s:resource file="application" type="css" version="14" />
 </c:if>
 <c:if test="${ include_embed }">
 <s:resource file="embed" type="css" version="2" />

@@ -20,7 +20,7 @@
 <p style="width: 100%; text-align: center;">
   <a href="https://facebook.com/SPIFFYio"><img src="<s:resource file="svg/social-facebook.svg" />" /></a>
   <a href="https://twitter.com/SPIFFYio"><img src="<s:resource file="svg/social-twitter.svg" />" /></a>
-  <a href="https://plus.google.com/+SPIFFYio"><img src="<s:resource file="svg/social-google.svg" />" /></a>
+  <a href="https://plus.google.com/+SPIFFYio"><img src="<s:resource file="svg/social-google-plus.svg" />" /></a>
   <a href="https://linkedin.com/company/SPIFFY.io-LLC"><img src="<s:resource file="svg/social-linkedin.svg" />" /></a>
 </p>
 <p style="width: 100%; text-align: center;">

@@ -376,21 +376,18 @@ hr
 .button:hover
   background: $w3
 
-.button.facebook
-  background: $fb
-  color: $w0
-
-.button.facebook:hover
+.button.social
+  +size(2em, 2em)
+  padding: 0.5em
+  margin: 0.25em
   background: $w0
-  color: $fb
+  border-radius: 0.5em
 
-.button.google
-  background: $gp
-  color: $w0
+  img
+    +size(100%, 100%)
 
-.button.google:hover
-  background: $w0
-  color: $gp
+.button.social:hover
+  background: $w2
 
 .button.primary
   background: $b5

@@ -129,7 +129,7 @@ public class AppConfig {
         recaptchaSecretKey = System.getProperty("recaptchaSecretKey");
         shell = System.getProperty("shell");
 
-        amazonClientId = "amzn1.application-oa2-client.bf0412ab053244b79c1340ed218188dd";
+        amazonClientId = "amzn1.application-oa2-client.048ff3ecde5b4bfcaf07042e182eb4d9";
         facebookClientId = "621885487990537";
         googleClientId = "981827005156-pfp7mgsosbjvtgv6e26tnu75lfgm07un.apps.googleusercontent.com";
         twitterClientId = "cChdtiKz8IaFQRhpGPoKQ8utz";

@@ -19,11 +19,19 @@
       <a class="button primary" style="width: 5em;" href="/forgot?returnUri=<c:out value="${ returnUri }" />">recover</a>
       <a class="button danger" style="width: 5em;" href="/register?returnUri=<c:out value="${ returnUri }" />">register</a>
     </h3>
-    <br /><hr><br />
-    <h3 style="text-align: center;">
-      <a class="button facebook" style="width: 5em;" href="/login?provider=facebook&returnUri=<c:out value="${ returnUri }" />">facebook</a>
-      <a class="button google" style="width: 5em;" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />">google</a>
-    </h3>
+    <br />
+    <div style="width: 100%; text-align: center;">
+      <div style="width: calc(50% - 2em); display: inline-block; border-bottom: #D3D3D3 dashed 0.5em;"></div>
+      <h2 style="padding: 0 0.5em; display: inline-block; color: #3D3D3D;">or</h2>
+      <div style="width: calc(50% - 2em); display: inline-block; border-bottom: #D3D3D3 dashed 0.5em;"></div>
+    </div>
+    <br style="clear: both;"/>
+    <div style="text-align: center;">
+      <a class="button social" href="/login?provider=facebook&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-facebook.svg" />" /></a>
+      <a class="button social" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-google.svg" />" /></a>
+      <a class="button social" href="/login?provider=amazon&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-amazon.svg" />" /></a>
+      <a class="button social" href="/login?provider=twitter&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-twitter.svg" />" /></a>
+    </div>
   </form>
   </c:if>
   
@@ -42,11 +50,19 @@
       <a class="button primary" href="/login?returnUri=<c:out value="${ returnUri }" />">login</a>
       <a class="button danger" href="/forgot?returnUri=<c:out value="${ returnUri }" />">recover</a>
     </h3>
-    <br /><hr><br />
-    <h3 style="text-align: center;">
-      <a class="button facebook" style="width: 5em;" href="/login?provider=facebook&returnUri=<c:out value="${ returnUri }" />">facebook</a>
-      <a class="button google" style="width: 5em;" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />">google</a>
-    </h3>
+    <br />
+    <div style="width: 100%; text-align: center;">
+      <div style="width: calc(50% - 2em); display: inline-block; border-bottom: #D3D3D3 dashed 0.5em;"></div>
+      <h2 style="padding: 0 0.5em; display: inline-block; color: #3D3D3D;">or</h2>
+      <div style="width: calc(50% - 2em); display: inline-block; border-bottom: #D3D3D3 dashed 0.5em;"></div>
+    </div>
+    <br style="clear: both;"/>
+    <div style="text-align: center;">
+      <a class="button social" href="/login?provider=facebook&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-facebook.svg" />" /></a>
+      <a class="button social" href="/login?provider=google&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-google.svg" />" /></a>
+      <a class="button social" href="/login?provider=amazon&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-amazon.svg" />" /></a>
+      <a class="button social" href="/login?provider=twitter&returnUri=<c:out value="${ returnUri }" />"><img src="<s:resource file="svg/social-twitter.svg" />" /></a>
+    </div>
   </form>
   </c:if>
   
