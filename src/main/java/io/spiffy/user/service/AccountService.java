@@ -208,6 +208,10 @@ public class AccountService extends Service<AccountEntity, AccountRepository> {
     @Transactional
     public AuthenticateAccountOutput authenticate(final Credentials credentials, final String sessionId,
             final String fingerprint, final String userAgent, final String ipAddress) {
+        if (Provider.EMAIL.equals(credentials.getProvider())) {
+            credentials.setProviderId("" + getEmailAddressId(credentials.getProviderId()));
+        }
+
         final CredentialEntity credentialEntity = credentialService.getByCredentials(credentials);
         if (credentialEntity == null) {
             if (Provider.EMAIL.equals(credentials.getProvider())) {
