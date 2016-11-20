@@ -43,12 +43,14 @@ public class PostRepository extends HibernateRepository<PostEntity> {
     public List<PostEntity> get(final Set<Long> accountIds, final Long first, final int maxResults,
             final boolean includeFirst) {
         final Criteria c = createCriteria();
-        c.addOrder(Order.desc("postedAt"));
         c.add(Restrictions.eqOrIsNull("processed", Boolean.TRUE));
         c.add(Restrictions.or(Restrictions.isNull("status"), Restrictions.ne("status", PostEntity.Status.REPORTED)));
 
         if (accountIds != null && !accountIds.isEmpty()) {
+            c.addOrder(Order.desc("postedAt"));
             c.add(Restrictions.in("accountId", accountIds));
+        } else {
+            c.add(Restrictions.sqlRestriction("1=1 ORDER BY rand()"));
         }
 
         if (first != null) {
