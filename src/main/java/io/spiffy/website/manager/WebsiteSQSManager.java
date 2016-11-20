@@ -45,7 +45,7 @@ public class WebsiteSQSManager extends SQSManager<IngestEvent> {
     }
 
     @Override
-    @Scheduled(fixedRate = 1200000)
+    @Scheduled(fixedRate = 12000000)
     public void poll() {
         super.poll();
     }
