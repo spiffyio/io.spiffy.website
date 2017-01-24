@@ -13,9 +13,11 @@ import io.spiffy.common.manager.SNSManager;
 
 public class MediaSNSManager extends SNSManager {
 
+    public static final String TOPIC = "spiffyio-media";
+
     @Inject
     public MediaSNSManager(final AmazonSNSClient client) {
-        super(client, "spiffyio-media");
+        super(client, TOPIC);
     }
 
     public void publish(final long id) {

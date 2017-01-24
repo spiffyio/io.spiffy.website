@@ -15,8 +15,6 @@ import org.springframework.context.annotation.Primary;
 import com.amazonaws.auth.AWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
-import com.amazonaws.services.sns.AmazonSNSClient;
-import com.amazonaws.services.sqs.AmazonSQSClient;
 
 import net.spy.memcached.MemcachedClient;
 
@@ -36,18 +34,9 @@ public class BeanConfig {
         };
     }
 
-    @Bean(name = "amazonSNSClient")
-    public AmazonSNSClient getAmazonSNSClient(final AWSCredentials awsCredentials) {
-        final AmazonSNSClient client = new AmazonSNSClient(awsCredentials);
-        client.setRegion(Region.getRegion(Regions.US_WEST_2));
-        return client;
-    }
-
-    @Bean(name = "amazonSQSClient")
-    public AmazonSQSClient getAmazonSQSClient(final AWSCredentials awsCredentials) {
-        final AmazonSQSClient client = new AmazonSQSClient(awsCredentials);
-        client.setRegion(Region.getRegion(Regions.US_WEST_2));
-        return client;
+    @Bean(name = "amazonRegion")
+    public Region getAmazonRegion() {
+        return Region.getRegion(Regions.US_WEST_2);
     }
 
     @Bean

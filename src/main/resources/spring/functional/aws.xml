@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="amazonDynamoDBClient" class="io.spiffy.common.mock.AmazonDynamoDBClientMock" />
+    
+  <bean id="amazonS3Client" class="io.spiffy.common.mock.AmazonS3ClientMock" />
+  
+  <bean id="amazonSNSClient" class="io.spiffy.common.mock.AmazonSNSClientMock" />
+  
+  <bean id="amazonSQSClient" class="io.spiffy.common.mock.AmazonSQSClientMock" />
+</beans>

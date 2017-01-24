@@ -40,6 +40,8 @@ public class PollController extends Controller {
     }
 
     private void updatePoll(final Context context, final LongpollResponse poll) {
-        poll.setNotifications(notificationClient.getUnreadCount(context.getAccountId()));
+        final long accountId = context.getAccountId();
+        final long unreadCount = notificationClient.getUnreadCount(accountId);
+        poll.setNotifications(unreadCount);
     }
 }

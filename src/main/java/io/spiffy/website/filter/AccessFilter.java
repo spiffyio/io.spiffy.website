@@ -41,6 +41,10 @@ public class AccessFilter extends Filter {
             return Result.Continue;
         }
 
+        if ("67.174.28.213".equalsIgnoreCase(context.getIPAddress())) {
+            return Result.Continue;
+        }
+
         final String uri = context.getRequestUri();
         context.sendRedirect("https://spiffy.io" + uri);
         return Result.Halt;

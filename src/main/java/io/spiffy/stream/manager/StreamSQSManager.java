@@ -12,7 +12,7 @@ import io.spiffy.stream.service.PostService;
 
 public class StreamSQSManager extends SQSManager<MediaEvent> {
 
-    private static final String QUEUE_NAME = "spiffyio-stream";
+    public static final String QUEUE_NAME = "spiffyio-stream";
 
     private final PostService service;
 

@@ -11,7 +11,7 @@ import io.spiffy.discussion.service.ThreadService;
 
 public class DiscussionSQSManager extends SQSManager<CommentEvent> {
 
-    private static final String QUEUE_NAME = "spiffyio-discussion";
+    public static final String QUEUE_NAME = "spiffyio-discussion";
 
     private final ThreadService service;
 

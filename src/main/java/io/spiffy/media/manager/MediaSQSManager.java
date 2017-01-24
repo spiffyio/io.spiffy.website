@@ -12,7 +12,7 @@ import io.spiffy.media.service.ContentService;
 
 public class MediaSQSManager extends SQSManager<MediaEvent> {
 
-    private static final String QUEUE_NAME = "spiffyio-media";
+    public static final String QUEUE_NAME = "spiffyio-media";
 
     private final ContentService service;
 

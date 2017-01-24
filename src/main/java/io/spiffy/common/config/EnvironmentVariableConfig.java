@@ -4,6 +4,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
+import java.security.NoSuchProviderException;
 import java.security.spec.InvalidKeySpecException;
 
 import javax.inject.Inject;
@@ -33,8 +36,13 @@ public class EnvironmentVariableConfig {
         AppConfig.setTwitterClientSecret(repository.getValue("twitterClientSecret"));
 
         try {
-            AppConfig.setCdnPrivateKey(RSA.privateKeyFromPKCS8(Base64.decodeBase64(repository.getValue("cdnPrivateKey"))));
-        } catch (final InvalidKeySpecException e) {
+            final String cdnPrivateKey = repository.getValue("cdnPrivateKey");
+            if ("mock".equalsIgnoreCase(cdnPrivateKey)) {
+                AppConfig.setCdnPrivateKey(KeyPairGenerator.getInstance("DSA", "SUN").generateKeyPair().getPrivate());
+            } else {
+                AppConfig.setCdnPrivateKey(RSA.privateKeyFromPKCS8(Base64.decodeBase64(repository.getValue("cdnPrivateKey"))));
+            }
+        } catch (final InvalidKeySpecException | NoSuchAlgorithmException | NoSuchProviderException e) {
             throw new RuntimeException();
         }
 

@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+  <bean id="amazonDynamoDBClient" class="com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient">
+    <constructor-arg ref="awsCredentials" />
+  </bean>
+  
+  <bean id="amazonS3Client" class="com.amazonaws.services.s3.AmazonS3Client">
+    <constructor-arg ref="awsCredentials" />
+  </bean>
+  
+  <bean id="amazonSNSClient" class="com.amazonaws.services.sns.AmazonSNSClient">
+    <constructor-arg ref="awsCredentials" />
+    <property name="region">
+      <ref bean="amazonRegion" />
+    </property>
+  </bean>
+  
+  <bean id="amazonSQSClient" class="com.amazonaws.services.sqs.AmazonSQSClient">
+    <constructor-arg ref="awsCredentials" />
+    <property name="region">
+      <ref bean="amazonRegion" />
+    </property>
+  </bean>
+</beans>

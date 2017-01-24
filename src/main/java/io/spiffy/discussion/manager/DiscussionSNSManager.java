@@ -12,9 +12,11 @@ import io.spiffy.common.manager.SNSManager;
 
 public class DiscussionSNSManager extends SNSManager {
 
+    public static final String TOPIC = "spiffyio-discussion";
+
     @Inject
     public DiscussionSNSManager(final AmazonSNSClient client) {
-        super(client, "spiffyio-discussion");
+        super(client, TOPIC);
     }
 
     public void publish(final long commentId) {

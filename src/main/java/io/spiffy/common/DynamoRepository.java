@@ -9,6 +9,8 @@ import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapperConfig.Table
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBTable;
 
 import io.spiffy.common.config.AppConfig;
+import io.spiffy.common.mock.AmazonDynamoDBClientMock;
+import io.spiffy.common.mock.DynamoDBMapperMock;
 
 public abstract class DynamoRepository<E extends DynamoEntity> extends Repository<E> {
 
@@ -23,7 +25,12 @@ public abstract class DynamoRepository<E extends DynamoEntity> extends Repositor
         client.setRegion(Region.getRegion(Regions.US_WEST_2));
 
         this.entityClass = clazz;
-        this.mapper = new DynamoDBMapper(client, config);
+
+        if (AmazonDynamoDBClientMock.class.isAssignableFrom(client.getClass())) {
+            this.mapper = new DynamoDBMapperMock(client, config);
+        } else {
+            this.mapper = new DynamoDBMapper(client, config);
+        }
     }
 
     public void save(final E entity) {

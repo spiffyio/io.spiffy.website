@@ -59,9 +59,13 @@ public class CredentialService extends Service<CredentialEntity, CredentialRepos
 
         if (entity == null) {
             entity = new CredentialEntity(account, credentials.getProvider(), credentials.getProviderId());
-        }
 
-        if (Provider.EMAIL.equals(credentials.getProvider())) {
+            if (Provider.EMAIL.equals(credentials.getProvider())) {
+                validatePassword(credentials.getPassword());
+                final long passwordId = securityClient.hashString(credentials.getPassword());
+                entity.setPasswordId(passwordId);
+            }
+        } else if (Provider.EMAIL.equals(credentials.getProvider())) {
             if (securityClient.matchesHashedString(entity.getPasswordId(), credentials.getPassword())) {
                 return entity;
             }

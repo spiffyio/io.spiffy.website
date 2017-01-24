@@ -14,6 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import io.spiffy.common.Controller;
 import io.spiffy.common.api.discussion.client.DiscussionClient;
+import io.spiffy.common.api.media.dto.Content;
 import io.spiffy.common.api.stream.client.StreamClient;
 import io.spiffy.common.api.stream.dto.Post;
 import io.spiffy.common.api.stream.input.GetPostsInput;
@@ -22,10 +23,7 @@ import io.spiffy.common.api.stream.output.GetPostOutput;
 import io.spiffy.common.api.stream.output.PostActionOutput;
 import io.spiffy.common.api.user.client.UserClient;
 import io.spiffy.common.config.AppConfig;
-import io.spiffy.common.dto.Account;
-import io.spiffy.common.dto.Context;
-import io.spiffy.common.dto.EntityType;
-import io.spiffy.common.dto.Social;
+import io.spiffy.common.dto.*;
 import io.spiffy.common.exception.UnknownPostException;
 import io.spiffy.common.util.ObfuscateUtil;
 import io.spiffy.website.annotation.AccessControl;
@@ -35,7 +33,7 @@ import io.spiffy.website.response.BadRequestResponse;
 import io.spiffy.website.response.PostsResponse;
 import io.spiffy.website.response.SuccessResponse;
 
-@RequiredArgsConstructor(onConstructor = @__(@Inject))
+@RequiredArgsConstructor(onConstructor = @__(@Inject) )
 public class HomeController extends Controller {
 
     private static final String AFTER_KEY = "after";
@@ -119,9 +117,14 @@ public class HomeController extends Controller {
 
         context.addAttribute(COMMENTS_KEY, discussionClient.getComments(EntityType.POST, "" + id, null, 24));
 
-        context.addAttribute("social",
-                new Social(post.getAccount().getUsername(), post.getDescription(), post.getContent().getImage(),
-                        AppConfig.getEndpoint() + context.getRequestUri(), post.getAccount().getUsername()));
+        final PublicAccount account = post.getAccount();
+        final Content content = post.getContent();
+        final String image = content != null ? content.getImage() : "";
+
+        final Social social = new Social(account.getUsername(), post.getDescription(), image,
+                AppConfig.getEndpoint() + context.getRequestUri(), account.getUsername());
+
+        context.addAttribute("social", social);
 
         return mav("post", context);
     }

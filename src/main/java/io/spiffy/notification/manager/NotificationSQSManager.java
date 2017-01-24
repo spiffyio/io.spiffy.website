@@ -13,7 +13,7 @@ import io.spiffy.notification.service.AlertService;
 
 public class NotificationSQSManager extends SQSManager<CommentEvent> {
 
-    private static final String QUEUE_NAME = "spiffyio-notification";
+    public static final String QUEUE_NAME = "spiffyio-notification";
 
     private final AlertService service;
 
